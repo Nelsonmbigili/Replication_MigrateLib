@@ -1,0 +1,76 @@
+mig: gugarosa@learnergy__870d8a6b__matplotlib__seaborn__870d8a6b__matplotlib__seaborn
+repo: gugarosa@learnergy__870d8a6b__matplotlib__seaborn
+commit: 870d8a6b8be9957ea22bf0acac076c8f72c3a85d
+source: matplotlib
+target: seaborn
+premig:
+  name: premig
+  status: finished
+  source_version: 3.10.1
+  target_version: 0.13.2
+  finished_at: '2025-04-22 11:32:42'
+  project_coverage: 82.81841109709963
+  total_tests: 169
+  passed_tests: 169
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 12.727272727272727
+  files:
+  - path: learnergy/visual/convergence.py
+    file_change_coverage: 14.285714285714286
+    covered_changed_lines: 6,47-48
+    uncovered_changed_lines: 46,49-50,52,54-57,59-68
+  - path: learnergy/visual/image.py
+    file_change_coverage: 20.0
+    covered_changed_lines: 6,137
+    uncovered_changed_lines: 136,138-141,143,145-146
+  - path: learnergy/visual/tensor.py
+    file_change_coverage: 8.333333333333334
+    covered_changed_lines: 4,49
+    uncovered_changed_lines: 10,14,20-22,24-30,36,45-47,50-55
+  test_diffs:
+  - test_id: tests/learnergy/visual/test_convergence.py::test_convergence_plot
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: module ''seaborn'' has no attribute ''subplots''.
+      Did you mean: ''rugplot''?'
+  - test_id: tests/learnergy/visual/test_image.py::test_create_rgb_mosaic
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''NoneType'' object is not subscriptable'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 4.761904761904762
+  files:
+  - path: learnergy/visual/convergence.py
+    file_change_coverage: 4.761904761904762
+    covered_changed_lines: '6'
+    uncovered_changed_lines: 57-61,63,65-68,70-79
+  test_diffs:
+  - test_id: tests/learnergy/visual/test_convergence.py::test_convergence_plot
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: NameError
+    error_message: 'NameError: name ''plt'' is not defined'
+  - test_id: tests/learnergy/visual/test_image.py::test_create_rgb_mosaic
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''NoneType'' object is not subscriptable'
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []

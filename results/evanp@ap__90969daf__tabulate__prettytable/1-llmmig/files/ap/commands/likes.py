@@ -1,0 +1,39 @@
+from .command import Command
+from prettytable import PrettyTable
+
+class LikesCommand(Command):
+    """`likes` command"""
+
+    def __init__(self, args, env):
+        super().__init__(args, env)
+        self.id = args.id
+        self.limit = args.limit
+        self.offset = args.offset
+
+    def run(self):
+        """Run the command"""
+
+        obj = self.get_object(self.id)
+        if obj is None:
+            raise ValueError("Object not found")
+
+        if "likes" not in obj:
+            raise ValueError("Object has no likes")
+
+        likes_id = self.to_id(obj["likes"])
+
+        likes_slice = self.collection_slice(likes_id, self.offset, self.limit)
+
+        # Create a PrettyTable object
+        table = PrettyTable()
+        table.field_names = ["id", "actor", "published"]
+
+        for item in likes_slice:
+            id = self.to_id(item)
+            activity = self.to_object(item, ["actor", "published"])
+            actor = self.to_webfinger(activity["actor"])
+            published = activity.get("published")
+            table.add_row([id, actor, published])
+
+        # Print the PrettyTable
+        print(table)

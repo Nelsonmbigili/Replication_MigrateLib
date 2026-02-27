@@ -1,0 +1,32 @@
+from decimal import Decimal
+from typing import Dict, List
+
+import aiohttp
+from pydantic import BaseModel, Field
+
+from dundie.settings import API_BASE_URL
+
+
+class USDRate(BaseModel):
+    code: str = Field(default="USD")
+    codein: str = Field(default="USD")
+    name: str = Field(default="Dolar/Dolar")
+    value: Decimal = Field(alias="high")
+
+
+async def get_rates(currencies: List[str]) -> Dict[str, USDRate]:
+    """Gets current rate for USD vs Currency"""
+    return_data = {}
+    async with aiohttp.ClientSession() as session:
+        for currency in currencies:
+            if currency == "USD":
+                return_data[currency] = USDRate(high=1)
+            else:
+                async with session.get(API_BASE_URL.format(currency=currency)) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        return_data[currency] = USDRate(**data["USD" + currency])
+                    else:
+                        return_data[currency] = USDRate(name="api/error", high=0)
+
+    return return_data

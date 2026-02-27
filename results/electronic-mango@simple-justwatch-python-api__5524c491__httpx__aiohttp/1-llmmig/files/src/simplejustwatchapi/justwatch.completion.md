@@ -1,0 +1,152 @@
+### Explanation of Changes
+
+To migrate the code from `httpx` to `aiohttp`, the following changes were made:
+1. Replaced the synchronous `httpx.post` calls with asynchronous `aiohttp.ClientSession.post` calls.
+2. Added `async` to the function definitions (`search`, `details`, and `offers_for_countries`) to make them asynchronous.
+3. Used `async with aiohttp.ClientSession()` to create a session for making HTTP requests.
+4. Used `await` to handle the asynchronous nature of `aiohttp` requests.
+5. Replaced `response.raise_for_status()` with a manual check of the response status code, as `aiohttp` does not have a direct equivalent of `raise_for_status()`.
+
+Below is the modified code:
+
+---
+
+### Modified Code
+```python
+"""Main module orchestrating requests to JustWatch GraphQL API."""
+
+import aiohttp
+
+from simplejustwatchapi.query import (
+    MediaEntry,
+    Offer,
+    parse_details_response,
+    parse_offers_for_countries_response,
+    parse_search_response,
+    prepare_details_request,
+    prepare_offers_for_countries_request,
+    prepare_search_request,
+)
+
+_GRAPHQL_API_URL = "https://apis.justwatch.com/graphql"
+
+
+async def search(
+    title: str, country: str = "US", language: str = "en", count: int = 4, best_only: bool = True
+) -> list[MediaEntry]:
+    """Search JustWatch for given title.
+
+    Returns a list of entries up to ``count``.
+
+    ``best_only`` allows filtering out redundant offers, e.g. when if provide offers service
+    in 4K, HD and SD, using ``best_only = True`` returns only 4K option, ``best_only = False``
+    returns all three.
+
+    Args:
+        title: title to search
+        country: country to search for offers, ``US`` by default
+        language: language of responses, ``en`` by default
+        count: how many responses should be returned
+        best_only: return only best offers if ``True``, return all offers if ``False``
+
+    Returns:
+        List of ``MediaEntry`` NamedTuples parsed from JustWatch response
+    """
+    request = prepare_search_request(title, country, language, count, best_only)
+    async with aiohttp.ClientSession() as session:
+        async with session.post(_GRAPHQL_API_URL, json=request) as response:
+            if response.status != 200:
+                raise aiohttp.ClientResponseError(
+                    status=response.status, message=f"HTTP error {response.status}"
+                )
+            return parse_search_response(await response.json())
+
+
+async def details(
+    node_id: str, country: str = "US", language: str = "en", best_only: bool = True
+) -> MediaEntry:
+    """Get details of entry for a given ID.
+
+    ``best_only`` allows filtering out redundant offers, e.g. when if provide offers service
+    in 4K, HD and SD, using ``best_only = True`` returns only 4K option, ``best_only = False``
+    returns all three.
+
+    Args:
+        node_id: ID of entry to look up
+        country: country to search for offers, ``US`` by default
+        language: language of responses, ``en`` by default
+        best_only: return only best offers if ``True``, return all offers if ``False``
+
+    Returns:
+        ``MediaEntry`` NamedTuple with data about requested entry.
+    """
+    request = prepare_details_request(node_id, country, language, best_only)
+    async with aiohttp.ClientSession() as session:
+        async with session.post(_GRAPHQL_API_URL, json=request) as response:
+            if response.status != 200:
+                raise aiohttp.ClientResponseError(
+                    status=response.status, message=f"HTTP error {response.status}"
+                )
+            return parse_details_response(await response.json())
+
+
+async def offers_for_countries(
+    node_id: str, countries: set[str], language: str = "en", best_only: bool = True
+) -> dict[str, list[Offer]]:
+    """Get offers for entry of given node ID for all countries passed as argument.
+    Language argument only specifies format of price string, e.g. whether ".", or "," is used
+    in decimal fractions.
+
+    Returned dict has keys matching ``countries`` argument and values are list of found offers.
+    If no countries are passed (an empty set given as argument) empty dict is returned.
+
+    Country codes passed as argument are case-insensitive, however keys in returned dict will match
+    them exactly. E.g. for countries specified as:
+
+    .. code-block:: python
+
+        {"uK", "Us", "AU", "ca"}
+
+    returned dict will have the following structure:
+
+    .. code-block:: python
+
+        {
+            "uK": [ ... offers ... ],
+            "Us": [ ... offers ... ],
+            "AU": [ ... offers ... ],
+            "ca": [ ... offers ... ],
+        }
+
+    ``best_only`` allows filtering out redundant offers, e.g. when if provide offers service
+    in 4K, HD and SD, using ``best_only = True`` returns only 4K option, ``best_only = False``
+    returns all three.
+
+    Args:
+        node_id: ID of entry to look up offers for
+        countries: set of country codes to search for offers
+        language: language of responses, ``en`` by default
+        best_only: return only best offers if ``True``, return all offers if ``False``
+
+    Returns:
+        ``dict`` where keys match values in ``countries`` and keys are all found offers for their
+        respective countries
+    """
+    if not countries:
+        return {}
+    request = prepare_offers_for_countries_request(node_id, countries, language, best_only)
+    async with aiohttp.ClientSession() as session:
+        async with session.post(_GRAPHQL_API_URL, json=request) as response:
+            if response.status != 200:
+                raise aiohttp.ClientResponseError(
+                    status=response.status, message=f"HTTP error {response.status}"
+                )
+            return parse_offers_for_countries_response(await response.json(), countries)
+```
+
+---
+
+### Key Notes:
+- The functions are now asynchronous (`async def`) and must be called using `await`.
+- `aiohttp.ClientResponseError` is used to handle HTTP errors, as `aiohttp` does not have a built-in `raise_for_status()` method like `httpx`.
+- The `await response.json()` is used to parse the JSON response asynchronously.

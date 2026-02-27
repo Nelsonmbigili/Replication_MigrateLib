@@ -1,0 +1,102 @@
+### Explanation of Changes
+To migrate the code from `fastapi` to `sanic`, the following changes were made:
+1. **Router Replacement**: `fastapi.APIRouter` is replaced with `sanic.Blueprint` for routing.
+2. **Dependency Injection**: `fastapi.Depends` is replaced with `sanic` middleware or direct function calls to pass dependencies.
+3. **HTTPException Handling**: `fastapi.HTTPException` is replaced with `sanic.exceptions.SanicException` for error handling.
+4. **Request Handling**: `fastapi`'s request body parsing and response model handling are replaced with `sanic`'s `request.json` and manual response construction.
+5. **Async Execution**: `asyncio.get_event_loop().run_in_executor` is used directly in `sanic` to handle the `ThreadPoolExecutor` for background tasks.
+6. **Route Registration**: The `@router.post` decorator is replaced with `@blueprint.post` for registering routes in `sanic`.
+
+### Modified Code
+```python
+import asyncio
+import logging
+from concurrent.futures import ThreadPoolExecutor
+
+import numpy as np
+from sanic import Blueprint, Sanic, response
+from sanic.exceptions import SanicException
+
+from ..prometheus import Counter, Summary, get_prometheus_metric
+from ..toolkit import Dao
+from ..toolkit import Experiment as EvExperiment
+from .req import Experiment
+from .res import Result
+
+_logger = logging.getLogger("epstats")
+evaluation_duration_metric = get_prometheus_metric(
+    "evaluation_duration_seconds", Summary, ["exp_id", "is_performance_test"]
+)
+query_duration_metric = get_prometheus_metric("query_duration_seconds", Summary, ["exp_id", "is_performance_test"])
+stats_computation_duration_metric = get_prometheus_metric(
+    "stats_computation_duration_seconds", Summary, ["exp_id", "is_performance_test"]
+)
+evaluation_errors_metric = get_prometheus_metric("evaluation_errors_total", Counter)
+evaluation_successes_metric = get_prometheus_metric("evaluation_successes_total", Counter)
+evaluation_requests_metric = get_prometheus_metric("evaluation_requests_total", Counter)
+
+
+def get_evaluate_router(get_dao, get_executor_pool) -> Blueprint:
+    def _evaluate(experiment: EvExperiment, dao: Dao):
+        try:
+            is_performance_test = experiment.query_parameters.get("is_performance_test") is True
+            with evaluation_duration_metric.labels(experiment.id, is_performance_test).time():
+                _logger.debug(f"Loading goals for experiment [{experiment.id}]")
+                with query_duration_metric.labels(experiment.id, is_performance_test).time():
+                    goals = dao.get_agg_goals(experiment).sort_values(["exp_variant_id", "goal"])
+                    _logger.info(f"Retrieved {len(goals)} goals in experiment [{experiment.id}]")
+                with stats_computation_duration_metric.labels(experiment.id, is_performance_test).time():
+                    evaluation = experiment.evaluate_agg(goals)
+                    evaluation_successes_metric.inc()
+                _logger.info(
+                    f"Evaluation response: [{experiment.id}]",
+                    {
+                        "metrics": (
+                            evaluation.metrics.replace([np.inf, -np.inf], "inf")
+                            .replace(np.nan, None)
+                            .to_dict("records"),
+                        )
+                    },
+                )
+            return Result.from_evaluation(experiment, evaluation)
+        except Exception as e:
+            _logger.error(f"Cannot evaluate experiment [{experiment.id}] because of {e}")
+            _logger.exception(e)
+            evaluation_errors_metric.inc()
+            raise SanicException(
+                f"Cannot evaluate experiment [{experiment.id}] because of {e}", status_code=500
+            )
+
+    blueprint = Blueprint("evaluate")
+
+    @blueprint.post("/evaluate")
+    async def evaluate_experiment(request):
+        """
+        Evaluates single `Experiment`.
+        """
+        try:
+            experiment_data = request.json
+            experiment = Experiment(**experiment_data)
+            evaluation_pool = get_executor_pool()
+            dao = get_dao()
+
+            _logger.info(f"Evaluation request: [{experiment.id}]", experiment.dict())
+            evaluation_requests_metric.inc()
+
+            loop = asyncio.get_event_loop()
+            result = await loop.run_in_executor(
+                evaluation_pool, _evaluate, experiment.to_experiment(), dao
+            )
+            return response.json(result.dict())
+        except Exception as e:
+            _logger.error(f"Error during evaluation: {e}")
+            raise SanicException(f"Error during evaluation: {e}", status_code=500)
+
+    return blueprint
+```
+
+### Key Notes:
+- The `SanicException` is used for error handling, similar to `HTTPException` in `fastapi`.
+- The `request.json` is used to parse the incoming JSON payload, and the `response.json` is used to return the response.
+- Dependency injection (`get_dao` and `get_executor_pool`) is handled by directly calling the provided functions.
+- The `Blueprint` object is used to define and register routes, similar to `APIRouter` in `fastapi`.

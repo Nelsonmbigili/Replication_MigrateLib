@@ -1,0 +1,442 @@
+"""
+Object models for products related endpoints args and response.
+"""
+
+from uuid import UUID
+from datetime import datetime
+from typing import List
+from enum import Enum
+
+import httpx  # Updated import from requests to httpx
+
+from coinbaseadvanced.models.common import BaseModel
+from coinbaseadvanced.models.error import CoinbaseAdvancedTradeAPIError
+
+
+class ProductType(Enum):
+    """
+    Enum representing different product types.
+    """
+
+    SPOT = "SPOT"
+
+
+GRANULARITY_MAP_IN_MINUTES = {
+    "ONE_MINUTE": 1,
+    "FIVE_MINUTE": 5,
+    "FIFTEEN_MINUTE": 15,
+    "THIRTY_MINUTE": 30,
+    "ONE_HOUR": 60,
+    "TWO_HOUR": 120,
+    "SIX_HOUR": 360,
+    "ONE_DAY": 1440,
+}
+
+
+class Granularity(Enum):
+    """
+    Enum representing time range for product candles.
+    """
+
+    UNKNOWN = "UNKNOWN_GRANULARITY"
+    ONE_MINUTE = "ONE_MINUTE"
+    FIVE_MINUTE = "FIVE_MINUTE"
+    FIFTEEN_MINUTE = "FIFTEEN_MINUTE"
+    THIRTY_MINUTE = "THIRTY_MINUTE"
+    ONE_HOUR = "ONE_HOUR"
+    TWO_HOUR = "TWO_HOUR"
+    SIX_HOUR = "SIX_HOUR"
+    ONE_DAY = "ONE_DAY"
+
+
+class Product(BaseModel):
+    """
+    Object representing a product.
+    """
+
+    product_id: str
+    price: str
+    price_percentage_change_24h: str
+    volume_24h: int
+    volume_percentage_change_24h: str
+    base_increment: str
+    quote_increment: str
+    quote_min_size: str
+    quote_max_size: int
+    base_min_size: str
+    base_max_size: int
+    base_name: str
+    quote_name: str
+    watched: bool
+    is_disabled: bool
+    new: bool
+    status: str
+    cancel_only: bool
+    limit_only: bool
+    post_only: bool
+    trading_disabled: bool
+    auction_mode: bool
+    product_type: str
+    quote_currency_id: str
+    base_currency_id: str
+    mid_market_price: str
+    fcm_trading_session_details: str
+    alias: str
+    alias_to: list
+    base_display_symbol: str
+    quote_display_symbol: str
+
+    def __init__(self,
+                 product_id: str,
+                 price: str,
+                 price_percentage_change_24h: str,
+                 volume_24h: int,
+                 volume_percentage_change_24h: str,
+                 base_increment: str,
+                 quote_increment: str,
+                 quote_min_size: str,
+                 quote_max_size: int,
+                 base_min_size: str,
+                 base_max_size: int,
+                 base_name: str,
+                 quote_name: str,
+                 watched: bool,
+                 is_disabled: bool,
+                 new: bool,
+                 status: str,
+                 cancel_only: bool,
+                 limit_only: bool,
+                 post_only: bool,
+                 trading_disabled: bool,
+                 auction_mode: bool,
+                 product_type: str,
+                 quote_currency_id: str,
+                 base_currency_id: str,
+                 mid_market_price: str,
+                 fcm_trading_session_details: str,
+                 alias: str,
+                 alias_to: list,
+                 base_display_symbol: str,
+                 quote_display_symbol: str, **kwargs
+                 ) -> None:
+        self.product_id = product_id
+        self.price = price
+        self.price_percentage_change_24h = price_percentage_change_24h
+        self.volume_24h = volume_24h
+        self.volume_percentage_change_24h = volume_percentage_change_24h
+        self.base_increment = base_increment
+        self.quote_increment = quote_increment
+        self.quote_min_size = quote_min_size
+        self.quote_max_size = quote_max_size
+        self.base_min_size = base_min_size
+        self.base_max_size = base_max_size
+        self.base_name = base_name
+        self.quote_name = quote_name
+        self.watched = watched
+        self.is_disabled = is_disabled
+        self.new = new
+        self.status = status
+        self.cancel_only = cancel_only
+        self.limit_only = limit_only
+        self.post_only = post_only
+        self.trading_disabled = trading_disabled
+        self.auction_mode = auction_mode
+        self.product_type = product_type
+        self.quote_currency_id = quote_currency_id
+        self.base_currency_id = base_currency_id
+        self.mid_market_price = mid_market_price
+        self.fcm_trading_session_details = fcm_trading_session_details
+        self.alias = alias
+        self.alias_to = alias_to
+        self.base_display_symbol = base_display_symbol
+        self.quote_display_symbol = quote_display_symbol
+
+        self.kwargs = kwargs
+
+    @classmethod
+    def from_response(cls, response: httpx.Response) -> 'Product':  # Updated type hint
+        """
+        Factory Method.
+        """
+
+        if not response.ok:
+            raise CoinbaseAdvancedTradeAPIError.not_ok_response(response)
+
+        result = response.json()
+        product_dict = result
+        return cls(**product_dict)
+
+
+class ProductsPage(BaseModel):
+    """
+    Products Page.
+    """
+
+    products: List[Product]
+    num_products: int
+
+    def __init__(self, products: list, num_products: int, **kwargs) -> None:
+        self.products = list(map(lambda x: Product(**x), products)) \
+            if products is not None else []
+
+        self.num_products = num_products
+
+        self.kwargs = kwargs
+
+    @classmethod
+    def from_response(cls, response: httpx.Response) -> 'ProductsPage':  # Updated type hint
+        """
+        Factory Method.
+        """
+
+        if not response.ok:
+            raise CoinbaseAdvancedTradeAPIError.not_ok_response(response)
+
+        result = response.json()
+        return cls(**result)
+
+    def __iter__(self):
+        return self.products.__iter__()
+
+
+class Candle(BaseModel):
+    """
+    Candle object.
+    """
+
+    start: str
+    low: str
+    high: str
+    open: str
+    close: str
+    volume: int
+
+    def __init__(self,
+                 start: str,
+                 low: str,
+                 high: str,
+                 open: str,
+                 close: str,
+                 volume: int, **kwargs) -> None:
+        self.start = start
+        self.low = low
+        self.high = high
+        self.open = open
+        self.close = close
+        self.volume = volume
+
+        self.kwargs = kwargs
+
+
+class CandlesPage(BaseModel):
+    """
+    Page of product candles.
+    """
+
+    candles: List[Candle]
+
+    def __init__(self, candles: list, **kwargs) -> None:
+        self.candles = list(map(lambda x: Candle(**x), candles)
+                            ) if candles is not None else []
+
+        self.kwargs = kwargs
+
+    @classmethod
+    def from_response(cls, response: httpx.Response) -> 'CandlesPage':  # Updated type hint
+        """
+        Factory Method.
+        """
+
+        if not response.ok:
+            raise CoinbaseAdvancedTradeAPIError.not_ok_response(response)
+
+        result = response.json()
+        return cls(**result)
+
+    def __iter__(self):
+        return self.candles.__iter__()
+
+
+class Bid(BaseModel):
+    """
+    Represents a bid in a trading market.
+
+    Attributes:
+        price (str): The price of the bid.
+        size (str): The size of the bid.
+    """
+
+    price: str
+    size: str
+
+    def __init__(self, price: str, size: str, **kwargs):
+        self.price = price
+        self.size = size
+
+        self.kwargs = kwargs
+
+
+class Ask(BaseModel):
+    """
+    Represents an ask order in a trading market.
+
+    Attributes:
+        price (str): The price of the ask order.
+        size (str): The size of the ask order.
+    """
+
+    price: str
+    size: str
+
+    def __init__(self, price: str, size: str, **kwargs):
+        self.price = price
+        self.size = size
+
+        self.kwargs = kwargs
+
+
+class BidAsk(BaseModel):
+    """
+    BidAsk object.
+    """
+
+    product_id: str
+    bids: List[Bid]
+    asks: List[Ask]
+    time: str
+
+    def __init__(self, product_id: str, bids: list, asks: list, time: str, **kwargs) -> None:
+        self.product_id = product_id
+        self.bids = list(map(lambda x: Bid(**x), bids)
+                         ) if bids is not None else []
+        self.asks = list(map(lambda x: Ask(**x), asks)
+                         ) if asks is not None else []
+        self.time = time
+
+        self.kwargs = kwargs
+
+
+class BidAsksPage(BaseModel):
+    """
+    Page of bid/asks for products.
+    """
+
+    pricebooks: List
+
+    def __init__(self, pricebooks: list, **kwargs) -> None:
+        self.pricebooks = list(map(lambda x: BidAsk(
+            **x), pricebooks)) if pricebooks is not None else []
+
+        self.kwargs = kwargs
+
+    @classmethod
+    def from_response(cls, response: httpx.Response) -> 'BidAsksPage':  # Updated type hint
+        """
+        Factory Method.
+        """
+
+        if not response.ok:
+            raise CoinbaseAdvancedTradeAPIError.not_ok_response(response)
+
+        result = response.json()
+        return cls(**result)
+
+    def __iter__(self):
+        return self.pricebooks.__iter__()
+
+
+class ProductBook(BaseModel):
+    """
+    Product bid/asks.
+    """
+
+    pricebook: BidAsk
+
+    def __init__(self, pricebook: dict, **kwargs) -> None:
+        self.pricebook = BidAsk(**pricebook)
+
+        self.kwargs = kwargs
+
+    @classmethod
+    def from_response(cls, response: httpx.Response) -> 'ProductBook':  # Updated type hint
+        """
+        Factory Method.
+        """
+
+        if not response.ok:
+            raise CoinbaseAdvancedTradeAPIError.not_ok_response(response)
+
+        result = response.json()
+        return cls(**result)
+
+
+class Trade(BaseModel):
+    """
+    Trade object data.
+    """
+
+    trade_id: UUID
+    product_id: str
+    price: str
+    size: int
+    time: datetime
+    side: str
+    bid: str
+    ask: str
+
+    def __init__(self,
+                 trade_id: UUID,
+                 product_id: str,
+                 price: str,
+                 size: int,
+                 time: datetime,
+                 side: str,
+                 bid: str,
+                 ask: str, **kwargs) -> None:
+        self.trade_id = trade_id
+        self.product_id = product_id
+        self.price = price
+        self.size = size
+        self.time = time
+        self.side = side
+        self.bid = bid
+        self.ask = ask
+
+        self.kwargs = kwargs
+
+
+class TradesPage(BaseModel):
+    """
+    Page of trades.
+    """
+
+    trades: List[Trade]
+    best_bid: str
+    best_ask: str
+
+    def __init__(self,
+                 trades: list,
+                 best_bid: str,
+                 best_ask: str, **kwargs
+                 ) -> None:
+        self.trades = list(map(lambda x: Trade(**x), trades)
+                           ) if trades is not None else []
+        self.best_bid = best_bid
+        self.best_ask = best_ask
+
+        self.kwargs = kwargs
+
+    @classmethod
+    def from_response(cls, response: httpx.Response) -> 'TradesPage':  # Updated type hint
+        """
+        Factory Method.
+        """
+
+        if not response.ok:
+            raise CoinbaseAdvancedTradeAPIError.not_ok_response(response)
+
+        result = response.json()
+        return cls(**result)
+
+    def __iter__(self):
+        return self.trades.__iter__()

@@ -1,0 +1,318 @@
+{
+  "exitcode": 1,
+  "summary": {
+    "failed": 2,
+    "passed": 6,
+    "total": 8,
+    "collected": 8
+  },
+  "collectors": [
+    {
+      "nodeid": "",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": ".",
+          "type": "Dir"
+        }
+      ]
+    },
+    {
+      "nodeid": "apyrat",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "apyrat.egg-info",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "tests/cli_test.py",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "tests/cli_test.py::test_main_download_video_with_quality",
+          "type": "Function",
+          "lineno": 6
+        },
+        {
+          "nodeid": "tests/cli_test.py::test_main_download_video_without_quality",
+          "type": "Function",
+          "lineno": 24
+        },
+        {
+          "nodeid": "tests/cli_test.py::test_get_quality_available",
+          "type": "Function",
+          "lineno": 34
+        },
+        {
+          "nodeid": "tests/cli_test.py::test_get_quality_not_available",
+          "type": "Function",
+          "lineno": 41
+        },
+        {
+          "nodeid": "tests/cli_test.py::test_get_quality_not_available_no_confirm",
+          "type": "Function",
+          "lineno": 48
+        }
+      ]
+    },
+    {
+      "nodeid": "tests/test_apyrat.py",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "tests/test_apyrat.py::test_get_available_videos_single_video",
+          "type": "Function",
+          "lineno": 4
+        },
+        {
+          "nodeid": "tests/test_apyrat.py::test_default_quality",
+          "type": "Function",
+          "lineno": 23
+        },
+        {
+          "nodeid": "tests/test_apyrat.py::test_download_when_file_exists",
+          "type": "Function",
+          "lineno": 29
+        }
+      ]
+    },
+    {
+      "nodeid": "tests",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "tests/cli_test.py",
+          "type": "Module"
+        },
+        {
+          "nodeid": "tests/test_apyrat.py",
+          "type": "Module"
+        }
+      ]
+    },
+    {
+      "nodeid": ".",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "apyrat",
+          "type": "Package"
+        },
+        {
+          "nodeid": "apyrat.egg-info",
+          "type": "Dir"
+        },
+        {
+          "nodeid": "tests",
+          "type": "Package"
+        }
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "nodeid": "tests/cli_test.py::test_main_download_video_with_quality",
+      "lineno": 6,
+      "outcome": "failed",
+      "keywords": [
+        "test_main_download_video_with_quality",
+        "cli_test.py",
+        "tests",
+        "codewithemad@apyrat__de1852d8__requests__requests_futures",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\codewithemad@apyrat__de1852d8__requests__requests_futures\\tests\\cli_test.py",
+          "lineno": 21,
+          "message": "AssertionError: assert 1 == 0\n +  where 1 = <Result ContentTooShortError('retrieval incomplete: got only 2954153 out of 40829697 bytes')>.exit_code"
+        },
+        "traceback": [
+          {
+            "path": "tests\\cli_test.py",
+            "lineno": 21,
+            "message": "AssertionError"
+          }
+        ],
+        "longrepr": "def test_main_download_video_with_quality():\n        runner = CliRunner()\n        with patch(\n            \"apyrat.apyrat.Downloader._get_available_qualities\",\n            return_value=[\"480\", \"720\", \"1080\"],\n        ) as mock_qualities:\n            result = runner.invoke(\n                main,\n                [\n                    \"https://www.aparat.com/v/qur3I\",\n                    \"-q\",\n                    \"720\",\n                ],\n            )\n>       assert result.exit_code == 0\nE       AssertionError: assert 1 == 0\nE        +  where 1 = <Result ContentTooShortError('retrieval incomplete: got only 2954153 out of 40829697 bytes')>.exit_code\n\ntests\\cli_test.py:21: AssertionError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/cli_test.py::test_main_download_video_without_quality",
+      "lineno": 24,
+      "outcome": "failed",
+      "keywords": [
+        "test_main_download_video_without_quality",
+        "cli_test.py",
+        "tests",
+        "codewithemad@apyrat__de1852d8__requests__requests_futures",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\codewithemad@apyrat__de1852d8__requests__requests_futures\\tests\\cli_test.py",
+          "lineno": 32,
+          "message": "AssertionError: assert 1 == 0\n +  where 1 = <Result ContentTooShortError('retrieval incomplete: got only 325733 out of 40829697 bytes')>.exit_code"
+        },
+        "traceback": [
+          {
+            "path": "tests\\cli_test.py",
+            "lineno": 32,
+            "message": "AssertionError"
+          }
+        ],
+        "longrepr": "def test_main_download_video_without_quality():\n        runner = CliRunner()\n        with patch(\n            \"apyrat.apyrat.Downloader._get_available_qualities\",\n            return_value=[\"480\", \"720\", \"1080\"],\n        ), patch(\"click.prompt\", return_value=\"720\"):\n            result = runner.invoke(main, [\"https://www.aparat.com/v/qur3I\"])\n>       assert result.exit_code == 0\nE       AssertionError: assert 1 == 0\nE        +  where 1 = <Result ContentTooShortError('retrieval incomplete: got only 325733 out of 40829697 bytes')>.exit_code\n\ntests\\cli_test.py:32: AssertionError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/cli_test.py::test_get_quality_available",
+      "lineno": 34,
+      "outcome": "passed",
+      "keywords": [
+        "test_get_quality_available",
+        "cli_test.py",
+        "tests",
+        "codewithemad@apyrat__de1852d8__requests__requests_futures",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "passed"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/cli_test.py::test_get_quality_not_available",
+      "lineno": 41,
+      "outcome": "passed",
+      "keywords": [
+        "test_get_quality_not_available",
+        "cli_test.py",
+        "tests",
+        "codewithemad@apyrat__de1852d8__requests__requests_futures",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "passed",
+        "stderr": "Quality 240 is not available\n"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/cli_test.py::test_get_quality_not_available_no_confirm",
+      "lineno": 48,
+      "outcome": "passed",
+      "keywords": [
+        "test_get_quality_not_available_no_confirm",
+        "cli_test.py",
+        "tests",
+        "codewithemad@apyrat__de1852d8__requests__requests_futures",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "passed",
+        "stderr": "Quality 240 is not available\n"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/test_apyrat.py::test_get_available_videos_single_video",
+      "lineno": 4,
+      "outcome": "passed",
+      "keywords": [
+        "test_get_available_videos_single_video",
+        "__wrapped__",
+        "patchings",
+        "test_apyrat.py",
+        "tests",
+        "codewithemad@apyrat__de1852d8__requests__requests_futures",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "passed"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/test_apyrat.py::test_default_quality",
+      "lineno": 23,
+      "outcome": "passed",
+      "keywords": [
+        "test_default_quality",
+        "test_apyrat.py",
+        "tests",
+        "codewithemad@apyrat__de1852d8__requests__requests_futures",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "passed"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/test_apyrat.py::test_download_when_file_exists",
+      "lineno": 29,
+      "outcome": "passed",
+      "keywords": [
+        "test_download_when_file_exists",
+        "__wrapped__",
+        "patchings",
+        "test_apyrat.py",
+        "tests",
+        "codewithemad@apyrat__de1852d8__requests__requests_futures",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "passed",
+        "stdout": "My Video Title\nhttps://link-to-video\n"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    }
+  ]
+}

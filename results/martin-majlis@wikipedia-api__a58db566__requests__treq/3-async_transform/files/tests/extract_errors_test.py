@@ -1,0 +1,22 @@
+import unittest
+
+from tests.mock_data import user_agent
+from tests.mock_data import wikipedia_api_request
+import wikipediaapi
+import pytest
+
+
+class TestErrorsExtracts(unittest.TestCase):
+    def setUp(self):
+        self.wiki = wikipediaapi.Wikipedia(user_agent, "en")
+        self.wiki._query = wikipedia_api_request
+
+    @pytest.mark.asyncio
+    async def test_title_before_fetching(self):
+        page = await self.wiki.page("NonExisting")
+        self.assertEqual(page.title, "NonExisting")
+
+    @pytest.mark.asyncio
+    async def test_pageid(self):
+        page = await self.wiki.page("NonExisting")
+        self.assertEqual(page.pageid, -1)

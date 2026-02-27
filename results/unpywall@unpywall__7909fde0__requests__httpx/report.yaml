@@ -1,0 +1,63 @@
+mig: unpywall@unpywall__7909fde0__requests__httpx__7909fde0__requests__httpx
+repo: unpywall@unpywall__7909fde0__requests__httpx
+commit: 7909fde0a069289226239266ec9c1d7ab30c77ae
+source: requests
+target: httpx
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 0.28.1
+  finished_at: '2025-04-22 17:28:09'
+  project_coverage: 89.96415770609319
+  total_tests: 26
+  passed_tests: 24
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 61.904761904761905
+  files:
+  - path: tests/test_cache.py
+    file_change_coverage: 100.0
+    covered_changed_lines: '5'
+    uncovered_changed_lines: ''
+  - path: tests/test_cli.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 2,28,50
+    uncovered_changed_lines: ''
+  - path: tests/test_unpywall.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 5,110
+    uncovered_changed_lines: ''
+  - path: unpywall/__init__.py
+    file_change_coverage: 57.142857142857146
+    covered_changed_lines: 1,336,424,495
+    uncovered_changed_lines: 445,455,506
+  - path: unpywall/cache.py
+    file_change_coverage: 37.5
+    covered_changed_lines: 1,180,185
+    uncovered_changed_lines: 19,108,189,194,199
+  test_diffs:
+  - test_id: tests/test_cache.py::TestUnpywallCache::test_get
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert False\n +  where False = isinstance(<Response\
+      \ [200]>, Response)\n +    where <Response [200]> = get('10.1016/j.jns.2020.116832')\n\
+      \ +      where get = <unpywall.cache.UnpywallCache object at 0x000001B820D0A7B0>.get"
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []

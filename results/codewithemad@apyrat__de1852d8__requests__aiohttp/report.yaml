@@ -1,0 +1,212 @@
+mig: codewithemad@apyrat__de1852d8__requests__aiohttp__de1852d8__requests__aiohttp
+repo: codewithemad@apyrat__de1852d8__requests__aiohttp
+commit: de1852d8dbc46292e9f74b2112d8e51ac7b26fdc
+source: requests
+target: aiohttp
+premig:
+  name: premig
+  status: finished
+  source_version: 2.31.0
+  target_version: 3.11.16
+  finished_at: '2025-04-22 08:56:31'
+  project_coverage: 83.66336633663366
+  total_tests: 8
+  passed_tests: 8
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 27.272727272727273
+  files:
+  - path: apyrat/apyrat.py
+    file_change_coverage: 27.272727272727273
+    covered_changed_lines: 3,8,39,43,46,49,51,71,97
+    uncovered_changed_lines: 40,42,44-45,47-48,50,52,73,77-78,80-81,85,88-94,99,102-103
+  test_diffs:
+  - test_id: tests/cli_test.py::test_get_quality_available
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: no running event loop'
+  - test_id: tests/cli_test.py::test_get_quality_not_available
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: no running event loop'
+  - test_id: tests/cli_test.py::test_get_quality_not_available_no_confirm
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: no running event loop'
+  - test_id: tests/cli_test.py::test_main_download_video_with_quality
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert 1 == 0\n +  where 1 = <Result RuntimeError('no\
+      \ running event loop')>.exit_code"
+  - test_id: tests/cli_test.py::test_main_download_video_without_quality
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert 1 == 0\n +  where 1 = <Result RuntimeError('no\
+      \ running event loop')>.exit_code"
+  - test_id: tests/test_apyrat.py::test_default_quality
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: no running event loop'
+  - test_id: tests/test_apyrat.py::test_download_when_file_exists
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: no running event loop'
+  - test_id: tests/test_apyrat.py::test_get_available_videos_single_video
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: no running event loop'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 46.93877551020408
+  files:
+  - path: apyrat/cli.py
+    file_change_coverage: 100.0
+    covered_changed_lines: '58'
+    uncovered_changed_lines: ''
+  - path: tests/test_apyrat.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 3,6,8,26-27,33,36
+    uncovered_changed_lines: ''
+  - path: tests/cli_test.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 5,36-37,44-45,52-53
+    uncovered_changed_lines: ''
+  - path: apyrat/apyrat.py
+    file_change_coverage: 23.529411764705884
+    covered_changed_lines: 3,8,34,43,46,49,71,97
+    uncovered_changed_lines: 39-40,42,44-45,47-48,50-52,73,77-78,80-81,85,88-94,99,102-103
+  test_diffs:
+  - test_id: tests/cli_test.py::test_get_quality_available
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: __init__() should return None, not ''coroutine'''
+  - test_id: tests/cli_test.py::test_get_quality_not_available
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: __init__() should return None, not ''coroutine'''
+  - test_id: tests/cli_test.py::test_get_quality_not_available_no_confirm
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: __init__() should return None, not ''coroutine'''
+  - test_id: tests/cli_test.py::test_main_download_video_with_quality
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: Expected ''_get_available_qualities'' to have
+      been called once. Called 0 times.'
+  - test_id: tests/test_apyrat.py::test_default_quality
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: __init__() should return None, not ''coroutine'''
+  - test_id: tests/test_apyrat.py::test_download_when_file_exists
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: __init__() should return None, not ''coroutine'''
+  - test_id: tests/test_apyrat.py::test_get_available_videos_single_video
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: __init__() should return None, not ''coroutine'''
+manual_edit:
+  name: manual_edit
+  base_round: async_transform
+  status: finished
+  project_change_coverage: 46.34146341463415
+  files:
+  - path: apyrat/apyrat.py
+    file_change_coverage: 33.333333333333336
+    covered_changed_lines: 3,8,39-40,43,46,49,51-52,71,97
+    uncovered_changed_lines: 42,44-45,47-48,50,73,77-78,80-81,85,88-94,99,102-103
+  - path: tests/cli_test.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 5,8,37-38,45-46,53-54
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/cli_test.py::test_get_quality_available
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: asyncio.run() cannot be called from a running event
+      loop'
+  - test_id: tests/cli_test.py::test_get_quality_not_available
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: asyncio.run() cannot be called from a running event
+      loop'
+  - test_id: tests/cli_test.py::test_get_quality_not_available_no_confirm
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: asyncio.run() cannot be called from a running event
+      loop'
+  - test_id: tests/cli_test.py::test_main_download_video_with_quality
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: Expected ''_get_available_qualities'' to have
+      been called once. Called 0 times.'
+  - test_id: tests/test_apyrat.py::test_default_quality
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: asyncio.run() cannot be called from a running event
+      loop'
+  - test_id: tests/test_apyrat.py::test_download_when_file_exists
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: asyncio.run() cannot be called from a running event
+      loop'
+  - test_id: tests/test_apyrat.py::test_get_available_videos_single_video
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: asyncio.run() cannot be called from a running event
+      loop'

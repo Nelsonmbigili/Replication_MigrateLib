@@ -1,0 +1,71 @@
+mig: skyme5@snapchat-dl__9b382d01__requests__httpx__9b382d01__requests__httpx
+repo: skyme5@snapchat-dl__9b382d01__requests__httpx
+commit: 9b382d01f467a9d13b1bf7db67196321d2638c6d
+source: requests
+target: httpx
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 0.28.1
+  finished_at: '2025-04-22 16:45:31'
+  project_coverage: 99.58333333333333
+  total_tests: 14
+  passed_tests: 14
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 66.66666666666667
+  files:
+  - path: snapchat_dl/downloader.py
+    file_change_coverage: 42.857142857142854
+    covered_changed_lines: 5,27-28
+    uncovered_changed_lines: 29,31,44,47
+  - path: snapchat_dl/snapchat_dl.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 8,42,46
+    uncovered_changed_lines: ''
+  - path: tests/test_downlaoder.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 7,37
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/test_downlaoder.py::Test_downloader::test_download_url
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: get() got an unexpected keyword argument ''stream'''
+  - test_id: tests/test_downlaoder.py::Test_downloader::test_download_url_raise
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: get() got an unexpected keyword argument ''stream'''
+  - test_id: tests/test_downlaoder.py::Test_downloader::test_empty_download
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: get() got an unexpected keyword argument ''stream'''
+  - test_id: tests/test_snapchat_dl.py::TestSnapchat_dl::test_invalid_username
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: APIResponseError
+    error_message: snapchat_dl.utils.APIResponseError
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []

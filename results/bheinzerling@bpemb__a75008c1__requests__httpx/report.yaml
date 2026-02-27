@@ -1,0 +1,57 @@
+mig: bheinzerling@bpemb__a75008c1__requests__httpx__a75008c1__requests__httpx
+repo: bheinzerling@bpemb__a75008c1__requests__httpx
+commit: a75008c1e1850a4fedea5c2bd221d379afafc0ac
+source: requests
+target: httpx
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 0.28.1
+  finished_at: '2025-04-22 08:21:23'
+  project_coverage: 83.81502890173411
+  total_tests: 20
+  passed_tests: 19
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 50.0
+  files:
+  - path: bpemb/util.py
+    file_change_coverage: 50.0
+    covered_changed_lines: 15,17
+    uncovered_changed_lines: 23,33
+  test_diffs:
+  - test_id: bpemb/tests/bpemb_test.py::BPEmbTest::test_pickle_custom_cache_dir
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ImportError
+    error_message: 'ImportError: cannot import name ''InsecureRequestWarning'' from
+      ''httpx'' (D:\repos\bheinzerling@bpemb__a75008c1__requests__httpx\.venv\Lib\site-packages\httpx\__init__.py)'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit:
+  name: manual_edit
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 88.23529411764706
+  files:
+  - path: bpemb/util.py
+    file_change_coverage: 88.23529411764706
+    covered_changed_lines: 15,23-24,26-30,33-37,39-40
+    uncovered_changed_lines: 31-32
+  test_diffs: []

@@ -1,0 +1,5 @@
+The provided code does not use `matplotlib` for plotting or visualization purposes. Instead, it imports `FontProperties` from `matplotlib.font_manager` and uses it to validate the type of the returned object from the `load_font` function. Since there is no plotting or visualization logic in the code, and `altair` is a visualization library, there is no direct way to migrate this code to use `altair`. 
+
+If the goal is to replace the dependency on `matplotlib` entirely, you would need to replace the use of `FontProperties` with an equivalent functionality from another library or implement a custom solution. However, this would go beyond the scope of simply migrating to `altair`, as `altair` does not provide font management utilities.
+
+If you have additional context or specific requirements for how `altair` should be integrated, please provide that information. Otherwise, the code remains unchanged because it does not involve any functionality that `altair` can replace.

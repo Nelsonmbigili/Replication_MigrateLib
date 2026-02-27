@@ -1,0 +1,3 @@
+- fix namespace sanic.testing -> sanic_testing.testing
+- unrename public API
+- Complex application logic, could not fix migration

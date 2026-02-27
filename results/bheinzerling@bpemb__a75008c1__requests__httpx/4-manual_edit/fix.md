@@ -1,0 +1,2 @@
+- use context manager
+- use allow_redirect=true, which is the default for source lib (requests)

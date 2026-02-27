@@ -1,0 +1,77 @@
+mig: jacob-y@django-clean-architecture__103d89e4__requests__aiohttp__103d89e4__requests__aiohttp
+repo: jacob-y@django-clean-architecture__103d89e4__requests__aiohttp
+commit: 103d89e4aa9f0d58016d9cccb83649d21130c077
+source: requests
+target: aiohttp
+premig:
+  name: premig
+  status: finished
+  source_version: 2.31.0
+  target_version: 3.11.16
+  finished_at: '2025-04-23 18:32:19'
+  project_coverage: 81.07569721115537
+  total_tests: 15
+  passed_tests: 15
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 20.0
+  files:
+  - path: modules/Application/PluginAdaptors/HTTPMixin.py
+    file_change_coverage: 20.0
+    covered_changed_lines: 1-2,11,20,28,43
+    uncovered_changed_lines: 14,16,21-26,29-40,45-46,48-49
+  test_diffs:
+  - test_id: tests/Unit/Application/test_paypal_adaptor.py::PayPalAdaptorTest::test_capture
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: ''coroutine'' object has no attribute ''get'''
+  - test_id: tests/Unit/Application/test_paypal_adaptor.py::PayPalAdaptorTest::test_create
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: ''coroutine'' object has no attribute ''get'''
+  - test_id: tests/Unit/Application/test_paypal_adaptor.py::PayPalAdaptorTest::test_status
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: ''coroutine'' object has no attribute ''get'''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 40.625
+  files:
+  - path: modules/Application/PluginAdaptors/PayPal/PayPalPluginAdaptor.py
+    file_change_coverage: 50.0
+    covered_changed_lines: 19,25,33
+    uncovered_changed_lines: 21,27,35
+  - path: modules/Domain/Services/PayPalService.py
+    file_change_coverage: 37.5
+    covered_changed_lines: 13,18,22
+    uncovered_changed_lines: 15-16,19-20,23
+  - path: tests/Unit/Domain/test_paypal_service.py
+    file_change_coverage: 70.0
+    covered_changed_lines: 8,55-56,83-84,99-100
+    uncovered_changed_lines: 76,93,109
+  - path: modules/Application/PluginAdaptors/HTTPMixin.py
+    file_change_coverage: 20.0
+    covered_changed_lines: 1-2,11,20,28,43
+    uncovered_changed_lines: 14,16,21-26,29-40,45-46,48-49
+  - path: tests/Unit/Application/test_paypal_adaptor.py
+    file_change_coverage: 70.0
+    covered_changed_lines: 8,443,445,478,481,502,505
+    uncovered_changed_lines: 465,489,513
+  test_diffs: []

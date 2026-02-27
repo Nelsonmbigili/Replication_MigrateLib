@@ -1,0 +1,80 @@
+# Copyright (c) 2024 Dell Inc. or its subsidiaries.
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+import logging
+import aiohttp
+from PyPowerFlex import base_client
+from PyPowerFlex import exceptions
+from PyPowerFlex import utils
+LOG = logging.getLogger(__name__)
+
+class ServiceTemplate(base_client.EntityRequest):
+    async def get(self, filters=None, full=None, limit=None, offset=None, sort=None, include_attachments=None):
+        """
+        Retrieve all Service Templates with filter, sort, pagination
+        :param filters: (Optional) The filters to apply to the results.
+        :param full: (Optional) Whether to return full details for each result.
+        :param limit: (Optional) Page limit.
+        :param offset: (Optional) Pagination offset.
+        :param sort: (Optional) The field to sort the results by.
+        :param include_attachments: (Optional) Whether to include attachments.
+        :return: A list of dictionary containing the retrieved Service Templates.
+        """
+        params = dict(
+            filter=filters,
+            full=full,
+            limit=limit,
+            offset=offset,
+            sort=sort,
+            includeAttachments=include_attachments
+        )
+        url = utils.build_uri_with_params(self.service_template_url, **params)
+        r, response = await self.send_get_request(url)
+        if r.status != 200:  # aiohttp uses numeric status codes
+            msg = (f'Failed to retrieve service templates. Error: {response}')
+            LOG.error(msg)
+            raise exceptions.PowerFlexClientException(msg)
+        return response
+
+    async def get_by_id(self, service_template_id, for_deployment=False):
+        """
+        Retrieve a Service Template by its ID.
+        :param service_template_id: The ID of the Service Template to retrieve.
+        :param for_deployment: (Optional) Whether to retrieve the Service Template for deployment.
+        :return: A dictionary containing the retrieved Service Template.
+        """
+        url = f'{self.service_template_url}/{service_template_id}'
+        if for_deployment:
+            url += '?forDeployment=true'
+        r, response = await self.send_get_request(url)
+        if r.status != 200:  # aiohttp uses numeric status codes
+            msg = (f'Failed to retrieve service template by id {service_template_id}. Error: {response}')
+            LOG.error(msg)
+            raise exceptions.PowerFlexClientException(msg)
+        return response
+
+    async def send_get_request(self, url):
+        """
+        Helper method to send a GET request using aiohttp.
+        :param url: The URL to send the GET request to.
+        :return: A tuple containing the response object and the parsed JSON response.
+        """
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                try:
+                    response_data = await response.json()
+                except aiohttp.ContentTypeError:
+                    response_data = await response.text()
+                return response, response_data

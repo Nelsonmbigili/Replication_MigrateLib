@@ -1,0 +1,122 @@
+mig: rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp__e35d6be5__httpx__aiohttp
+repo: rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp
+commit: e35d6be5060d10e0ea35b5d215816d354c6e580e
+source: httpx
+target: aiohttp
+premig:
+  name: premig
+  status: finished
+  source_version: 0.28.1
+  target_version: 3.11.18
+  finished_at: '2025-04-22 15:18:30'
+  project_coverage: 90.66427289048474
+  total_tests: 27
+  passed_tests: 26
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 16.666666666666668
+  files:
+  - path: dundie/utils/exchange.py
+    file_change_coverage: 16.666666666666668
+    covered_changed_lines: 4,17
+    uncovered_changed_lines: 20-23,25-30
+  test_diffs:
+  - test_id: tests/test_add.py::test_add_balance_for_dept
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+  - test_id: tests/test_add.py::test_add_balance_for_person
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+  - test_id: tests/test_add.py::test_add_movement
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+  - test_id: tests/test_read.py::test_read_all_data
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+  - test_id: tests/test_read.py::test_read_only_one_dept
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+  - test_id: tests/test_read.py::test_read_only_one_person
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+  - test_id: tests/test_read.py::test_read_with_query
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 82.92682926829268
+  files:
+  - path: dundie/utils/exchange.py
+    file_change_coverage: 50.0
+    covered_changed_lines: 4,17,20-23
+    uncovered_changed_lines: 25-30
+  - path: dundie/utils/auth.py
+    file_change_coverage: 100.0
+    covered_changed_lines: '17'
+    uncovered_changed_lines: ''
+  - path: dundie/core.py
+    file_change_coverage: 75.0
+    covered_changed_lines: 50,71,90
+    uncovered_changed_lines: '93'
+  - path: tests/test_add.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 28,30,61,63,65,69,74,76,78,82
+    uncovered_changed_lines: ''
+  - path: tests/test_read.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 11,13,36,39,43,48,50,52,56,58,60,64,66,68
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/test_add.py::test_add_balance_for_dept
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: assert Decimal(''500.000'') == (Decimal(''500.000'')
+      + 100)'
+  - test_id: tests/test_add.py::test_add_balance_for_person
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: assert Decimal(''500.000'') == (Decimal(''500.000'')
+      - 30)'
+  - test_id: tests/test_add.py::test_add_movement
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert Decimal('500.000') == 470\n +  where Decimal('500.000')\
+      \ = Balance(id=2, person_id=2, value=Decimal('500.000')).value"

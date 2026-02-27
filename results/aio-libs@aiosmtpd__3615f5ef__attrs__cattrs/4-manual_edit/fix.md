@@ -1,0 +1,1 @@
+- llm migrated to dataclasses instead of cattr. this is entirely wrong.

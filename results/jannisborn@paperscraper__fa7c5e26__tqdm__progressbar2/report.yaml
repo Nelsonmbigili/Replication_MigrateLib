@@ -1,0 +1,105 @@
+mig: jannisborn@paperscraper__fa7c5e26__tqdm__progressbar2__fa7c5e26__tqdm__progressbar2
+repo: jannisborn@paperscraper__fa7c5e26__tqdm__progressbar2
+commit: fa7c5e268fb9df477f8764ade4badc8e52faf144
+source: tqdm
+target: progressbar2
+premig:
+  name: premig
+  status: finished
+  source_version: 4.67.1
+  target_version: 4.5.0
+  finished_at: '2025-04-23 20:42:09'
+  project_coverage: 89.17944093778179
+  total_tests: 47
+  passed_tests: 42
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 43.10344827586207
+  files:
+  - path: paperscraper/arxiv/arxiv.py
+    file_change_coverage: 14.285714285714286
+    covered_changed_lines: 5,57
+    uncovered_changed_lines: 56,58-67,77
+  - path: paperscraper/get_dumps/biorxiv.py
+    file_change_coverage: 60.0
+    covered_changed_lines: 9,45-46,49,53,57
+    uncovered_changed_lines: 44,47-48,50
+  - path: paperscraper/get_dumps/medrxiv.py
+    file_change_coverage: 50.0
+    covered_changed_lines: 9,44-45
+    uncovered_changed_lines: 43,46-47
+  - path: paperscraper/get_dumps/utils/chemrxiv/utils.py
+    file_change_coverage: 27.272727272727273
+    covered_changed_lines: 12,136-137
+    uncovered_changed_lines: 92-95,121,138-139,154
+  - path: paperscraper/pdf.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 13,152-154,165
+    uncovered_changed_lines: ''
+  - path: paperscraper/tests/test_pdf.py
+    file_change_coverage: 50.0
+    covered_changed_lines: 8,163,166-167,169-170
+    uncovered_changed_lines: 161-162,164-165,168,171
+  test_diffs:
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_chemrxiv
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: chemrxiv should still be running after 15 seconds\n\
+      assert False\n +  where False = run_function_with_timeout(<function chemrxiv\
+      \ at 0x000002ED0F9211C0>, 15)\n +    where run_function_with_timeout = <paperscraper.tests.test_dump.TestDumper\
+      \ object at 0x000002ED0FE717F0>.run_function_with_timeout"
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_chemrxiv_date
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: object of type ''generator'' has no len()'
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_dump_existence_initial
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: Initial length of QUERY_FN_DICT should be 2\n\
+      assert 4 == 2\n +  where 4 = len({'arxiv': <function get_and_dump_arxiv_papers\
+      \ at 0x000002ED787CA700>, 'chemrxiv': <bound method XRXivQuery.search_keyw...query.XRXivQuery\
+      \ object at 0x000002ED76C7FB30>>, 'pubmed': <function get_and_dump_pubmed_papers\
+      \ at 0x000002ED7880F600>})"
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_medrxiv
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: medrxiv should still be running after 15 seconds\n\
+      assert False\n +  where False = run_function_with_timeout(<function medrxiv\
+      \ at 0x000002ED0F922B60>, 15)\n +    where run_function_with_timeout = <paperscraper.tests.test_dump.TestDumper\
+      \ object at 0x000002ED0FE71130>.run_function_with_timeout"
+  - test_id: paperscraper/xrxiv/tests/test_xrxiv.py::TestXRXiv::test_get_medrxiv
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: object of type ''generator'' has no len()'
+  - test_id: paperscraper/xrxiv/tests/test_xrxiv.py::TestXRXiv::test_xriv_querier
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: KeyError
+    error_message: 'KeyError: ''title'''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []

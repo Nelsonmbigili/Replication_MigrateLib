@@ -1,0 +1,87 @@
+mig: gillesvink@nukedockerbuild__69afa626__requests__treq__69afa626__requests__treq
+repo: gillesvink@nukedockerbuild__69afa626__requests__treq
+commit: 69afa626f58e7336b92e11bb47d05ec381326b1b
+source: requests
+target: treq
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 24.9.1
+  finished_at: '2025-04-22 10:29:34'
+  project_coverage: 99.70845481049562
+  total_tests: 58
+  passed_tests: 58
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 36.36363636363637
+  files:
+  - path: src/nukedockerbuild/creator/collector.py
+    file_change_coverage: 28.571428571428573
+    covered_changed_lines: 10-12,25
+    uncovered_changed_lines: 27-36
+  - path: tests/dockerfile_creator/creator/test_collector.py
+    file_change_coverage: 42.10526315789474
+    covered_changed_lines: 6,19,23,25,61-62,76,78
+    uncovered_changed_lines: 64,66,68,70-72,80-81,83-84,89
+  test_diffs:
+  - test_id: tests/dockerfile_creator/creator/test_collector.py::test_fetch_json_data
+    before: passed
+    after: skipped
+    failed_phase: ''
+    exception: the test was skipped
+    error_message: ''
+  - test_id: tests/dockerfile_creator/creator/test_collector.py::test_fetch_json_data_but_no_data_found[403]
+    before: passed
+    after: skipped
+    failed_phase: ''
+    exception: the test was skipped
+    error_message: ''
+  - test_id: tests/dockerfile_creator/creator/test_collector.py::test_fetch_json_data_but_no_data_found[404]
+    before: passed
+    after: skipped
+    failed_phase: ''
+    exception: the test was skipped
+    error_message: ''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 70.58823529411765
+  files:
+  - path: src/nukedockerbuild/creator/collector.py
+    file_change_coverage: 64.28571428571429
+    covered_changed_lines: 10-12,25,27-28,34-36
+    uncovered_changed_lines: 29-33
+  - path: tests/dockerfile_creator/creator/test_collector.py
+    file_change_coverage: 75.0
+    covered_changed_lines: 6,19,23,25,61-63,65,67,72,77,79,81-82,90
+    uncovered_changed_lines: 69,71,73,84-85
+  test_diffs:
+  - test_id: tests/dockerfile_creator/creator/test_collector.py::test_fetch_json_data
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: object AsyncMock can''t be used in ''await'' expression'
+  - test_id: tests/dockerfile_creator/creator/test_collector.py::test_fetch_json_data_but_no_data_found[403]
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: object AsyncMock can''t be used in ''await'' expression'
+  - test_id: tests/dockerfile_creator/creator/test_collector.py::test_fetch_json_data_but_no_data_found[404]
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: object AsyncMock can''t be used in ''await'' expression'

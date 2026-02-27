@@ -1,0 +1,136 @@
+### Explanation of Changes
+
+The original code uses the `requests` library for HTTP operations, specifically for mocking HTTP responses using the `Response` class. To migrate to `urllib3`, the following changes were made:
+
+1. **Replace `requests.Response` with `urllib3.response.HTTPResponse`**:
+   - The `Response` class from `requests` is replaced with `HTTPResponse` from `urllib3`.
+   - The `HTTPResponse` class requires a `body` parameter for content, which is passed as a `BytesIO` object.
+
+2. **Adjust Mock Response Creation**:
+   - The `mock_response` function is updated to use `HTTPResponse` instead of `Response`.
+   - The `body` parameter of `HTTPResponse` is set using `io.BytesIO` to handle the content as a byte stream.
+   - The `headers` parameter is passed directly to `HTTPResponse`.
+
+3. **No Changes to Functionality**:
+   - The rest of the code remains unchanged, as the migration only affects the mocking of HTTP responses.
+
+### Modified Code
+
+```python
+import json
+import io
+from unittest.mock import MagicMock
+
+import pytest
+from urllib3.response import HTTPResponse
+
+from pynubank import NuException, MockHttpClient  # Assuming this is part of the application
+from pynubank.utils.certificate_generator import CertificateGenerator
+from pynubank.utils.discovery import Discovery
+
+headers = {
+    'WWW-Authenticate': 'device-authorization encrypted-code="abc123", sent-to="john@doe"'
+}
+
+
+def fake_update_proxy(self: Discovery):
+    self.proxy_list_app_url = {
+        'gen_certificate': 'https://some-url/gen-cert',
+    }
+
+
+def mock_response(content=None, return_headers=None, status_code=200):
+    body = None
+    if content:
+        body = io.BytesIO(json.dumps(content).encode())
+    return HTTPResponse(
+        body=body,
+        headers=return_headers,
+        status=status_code
+    )
+
+
+def test_request_code_fails_when_status_code_is_different_from_401(monkeypatch):
+    http = MockHttpClient()
+    monkeypatch.setattr(http, 'raw_post', MagicMock(return_value=mock_response()))
+
+    generator = CertificateGenerator('123456789', 'hunter12', '1234', http_client=http)
+
+    with pytest.raises(NuException) as ex:
+        email = generator.request_code()
+
+        assert ex is not None
+        assert email is None
+
+
+def test_request_code_fails_when_there_is_no_authenticate_header(monkeypatch):
+    http = MockHttpClient()
+    monkeypatch.setattr(http, 'raw_post', MagicMock(return_value=mock_response(None, {}, 401)))
+
+    generator = CertificateGenerator('123456789', 'hunter12', '1234', http_client=http)
+
+    with pytest.raises(NuException) as ex:
+        email = generator.request_code()
+
+        assert ex is not None
+        assert email is None
+
+
+def test_request_code(monkeypatch):
+    http = MockHttpClient()
+    monkeypatch.setattr(http, 'raw_post', MagicMock(return_value=mock_response(None, headers, 401)))
+
+    generator = CertificateGenerator('123456789', 'hunter12', '1234', http_client=http)
+
+    email = generator.request_code()
+
+    assert email == 'john@doe'
+    assert generator.encrypted_code == 'abc123'
+
+
+def test_exchange_certs_fails_when_called_without_request_code(monkeypatch):
+    http = MockHttpClient()
+
+    generator = CertificateGenerator('123456789', 'hunter12', '1234', http_client=http)
+
+    with pytest.raises(NuException) as ex:
+        cert1, cert2 = generator.exchange_certs('1234')
+
+        assert cert1 is None
+        assert cert2 is None
+        assert ex is not None
+
+
+def test_exchange_cert_fails_when_status_code_is_different_from_200(monkeypatch):
+    http = MockHttpClient()
+    monkeypatch.setattr(http, 'raw_post', MagicMock(return_value=mock_response(None, headers, 401)))
+
+    generator = CertificateGenerator('123456789', 'hunter12', '1234', http_client=http)
+
+    generator.request_code()
+
+    with pytest.raises(NuException) as ex:
+        cert1, cert2 = generator.exchange_certs('1234')
+
+        assert cert1 is None
+        assert cert2 is None
+        assert ex is not None
+
+
+def test_exchange_certs(monkeypatch, gen_certificate_return):
+    http = MockHttpClient()
+    monkeypatch.setattr(http, 'raw_post', MagicMock(return_value=mock_response(None, headers, 401)))
+
+    generator = CertificateGenerator('123456789', 'hunter12', '1234', http_client=http)
+
+    generator.request_code()
+    monkeypatch.setattr(http, 'raw_post', MagicMock(return_value=mock_response(gen_certificate_return, headers, 200)))
+    cert1, cert2 = generator.exchange_certs('1234')
+
+    assert cert1 is not None
+    assert cert2 is not None
+```
+
+### Key Points
+- The `mock_response` function now uses `urllib3.response.HTTPResponse` with `io.BytesIO` for the `body`.
+- The rest of the code remains unchanged, ensuring compatibility with the existing application.

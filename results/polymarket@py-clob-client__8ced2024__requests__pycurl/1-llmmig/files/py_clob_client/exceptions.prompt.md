@@ -1,0 +1,47 @@
+The following Python code currently uses the library "requests" version 2.32.3.
+Migrate this code to use the library "pycurl" version 7.45.6 instead.
+
+**Instructions:**
+1. **Explain the Changes**: Begin the output with a brief explanation of the specific changes you made to migrate from "requests" to "pycurl".
+2. **Provide the Modified Code**: After the explanation, present the modified code. Provide the entire code after migration even if only a part of it is changed.
+
+**Important Guidelines**:
+- Only make changes directly related to migrating between "requests" and "pycurl".
+- Do not refactor, reformat, optimize, or alter the original coding style.
+- The code given to you is part of a larger application. Do not change the names of classes, functions, or variables, because it can break the application.
+
+Original code:
+```python
+from requests import Response
+
+
+class PolyException(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+
+class PolyApiException(PolyException):
+    def __init__(self, resp: Response = None, error_msg=None):
+        assert resp is not None or error_msg is not None
+        if resp is not None:
+            self.status_code = resp.status_code
+            self.error_msg = self._get_message(resp)
+        if error_msg is not None:
+            self.error_msg = error_msg
+            self.status_code = None
+
+    def _get_message(self, resp: Response):
+        try:
+            return resp.json()
+        except Exception:
+            return resp.text
+
+    def __repr__(self):
+        return "PolyApiException[status_code={}, error_message={}]".format(
+            self.status_code, self.error_msg
+        )
+
+    def __str__(self):
+        return self.__repr__()
+
+```

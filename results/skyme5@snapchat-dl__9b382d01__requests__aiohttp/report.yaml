@@ -1,0 +1,83 @@
+mig: skyme5@snapchat-dl__9b382d01__requests__aiohttp__9b382d01__requests__aiohttp
+repo: skyme5@snapchat-dl__9b382d01__requests__aiohttp
+commit: 9b382d01f467a9d13b1bf7db67196321d2638c6d
+source: requests
+target: aiohttp
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 3.11.16
+  finished_at: '2025-04-22 16:42:53'
+  project_coverage: 99.58333333333333
+  total_tests: 14
+  passed_tests: 14
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 33.333333333333336
+  files:
+  - path: snapchat_dl/downloader.py
+    file_change_coverage: 12.903225806451612
+    covered_changed_lines: 1,4,6,10
+    uncovered_changed_lines: 11,25,27-34,36-38,40-41,43-54
+  - path: snapchat_dl/snapchat_dl.py
+    file_change_coverage: 66.66666666666667
+    covered_changed_lines: 7,9,44,46-47,53,55,67,108-109
+    uncovered_changed_lines: 48-52
+  - path: tests/test_downlaoder.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 7,37
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/test_downlaoder.py::Test_downloader::test_download_url_raise
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: ClientResponseError not raised'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 36.111111111111114
+  files:
+  - path: tests/test_downlaoder.py
+    file_change_coverage: 66.66666666666667
+    covered_changed_lines: 7,10,27-28,32-33,38-39
+    uncovered_changed_lines: 30,36,41-42
+  - path: snapchat_dl/downloader.py
+    file_change_coverage: 12.903225806451612
+    covered_changed_lines: 1,4,6,10
+    uncovered_changed_lines: 11,25,27-34,36-38,40-41,43-54
+  - path: snapchat_dl/snapchat_dl.py
+    file_change_coverage: 31.25
+    covered_changed_lines: 7,9,44,55,99
+    uncovered_changed_lines: 46-53,67,108-109
+  - path: tests/test_snapchat_dl.py
+    file_change_coverage: 69.23076923076923
+    covered_changed_lines: 13,50-51,56,58,64,66,71,73
+    uncovered_changed_lines: 54,62,69,77
+  test_diffs:
+  - test_id: tests/test_downlaoder.py::Test_downloader::test_empty_download
+    before: passed
+    after: error
+    failed_phase: teardown
+    exception: FileNotFoundError
+    error_message: 'FileNotFoundError: [WinError 3] The system cannot find the path
+      specified: ''.test-data'''
+  - test_id: tests/test_snapchat_dl.py::TestSnapchat_dl::test_no_stories
+    before: passed
+    after: error
+    failed_phase: teardown
+    exception: FileNotFoundError
+    error_message: 'FileNotFoundError: [WinError 3] The system cannot find the path
+      specified: ''.test-data'''

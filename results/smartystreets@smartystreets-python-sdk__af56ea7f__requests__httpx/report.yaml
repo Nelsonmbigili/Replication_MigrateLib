@@ -1,0 +1,67 @@
+mig: smartystreets@smartystreets-python-sdk__af56ea7f__requests__httpx__af56ea7f__requests__httpx
+repo: smartystreets@smartystreets-python-sdk__af56ea7f__requests__httpx
+commit: af56ea7f62d5dfdd6336510b5a4ab428f34efea1
+source: requests
+target: httpx
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 0.28.1
+  finished_at: '2025-04-22 16:48:39'
+  project_coverage: 81.01345010947763
+  total_tests: 83
+  passed_tests: 83
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 35.13513513513514
+  files:
+  - path: smartystreets_python_sdk/custom_header_sender.py
+    file_change_coverage: 33.333333333333336
+    covered_changed_lines: 1,14-15
+    uncovered_changed_lines: 16-21
+  - path: smartystreets_python_sdk/requests_sender.py
+    file_change_coverage: 35.714285714285715
+    covered_changed_lines: 1,9,18,22,29,46-47,53-54,56
+    uncovered_changed_lines: 20,30,36,38,48-50,52,55,57-62,77-78,81
+  test_diffs:
+  - test_id: test/requests_sender_test.py::TestRequestsSender::test_request_contains_correct_content
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: ''Request'' object has no attribute ''data'''
+  - test_id: test/requests_sender_test.py::TestRequestsSender::test_smartyresponse_contains_correct_payload
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: Client.send() got an unexpected keyword argument ''timeout'''
+  - test_id: test/requests_sender_test.py::TestRequestsSender::test_smartyresponse_contains_status_code_200_on_success
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: Client.send() got an unexpected keyword argument ''timeout'''
+  - test_id: test/requests_sender_test.py::TestRequestsSender::test_smartyresponse_contains_status_code_400_when_server_gives_a_400
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: Client.send() got an unexpected keyword argument ''timeout'''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []

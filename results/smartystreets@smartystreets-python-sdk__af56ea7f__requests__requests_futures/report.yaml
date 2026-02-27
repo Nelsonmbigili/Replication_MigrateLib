@@ -1,0 +1,73 @@
+mig: smartystreets@smartystreets-python-sdk__af56ea7f__requests__requests_futures__af56ea7f__requests__requests_futures
+repo: smartystreets@smartystreets-python-sdk__af56ea7f__requests__requests_futures
+commit: af56ea7f62d5dfdd6336510b5a4ab428f34efea1
+source: requests
+target: requests_futures
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 1.0.2
+  finished_at: '2025-04-22 16:48:52'
+  project_coverage: 81.01345010947763
+  total_tests: 83
+  passed_tests: 83
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 41.1764705882353
+  files:
+  - path: smartystreets_python_sdk/custom_header_sender.py
+    file_change_coverage: 28.571428571428573
+    covered_changed_lines: 1,7
+    uncovered_changed_lines: 11-15
+  - path: smartystreets_python_sdk/requests_sender.py
+    file_change_coverage: 50.0
+    covered_changed_lines: 1-2,10,28-29
+    uncovered_changed_lines: 27,30-32,37
+  test_diffs:
+  - test_id: test/custom_header_test.py::TestCustomHeaderSender::test_custom_headers_set
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: NameError
+    error_message: 'NameError: name ''Request'' is not defined'
+  - test_id: test/custom_header_test.py::TestCustomHeaderSender::test_custom_headers_used
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: NameError
+    error_message: 'NameError: name ''Request'' is not defined'
+  - test_id: test/requests_sender_test.py::TestRequestsSender::test_smartyresponse_contains_correct_payload
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: ''MockResponse'' object has no attribute ''result'''
+  - test_id: test/requests_sender_test.py::TestRequestsSender::test_smartyresponse_contains_status_code_200_on_success
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: ''MockResponse'' object has no attribute ''result'''
+  - test_id: test/requests_sender_test.py::TestRequestsSender::test_smartyresponse_contains_status_code_400_when_server_gives_a_400
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: ''MockResponse'' object has no attribute ''result'''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []

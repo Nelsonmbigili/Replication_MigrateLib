@@ -1,0 +1,63 @@
+mig: j4asper@dmr.py__8f335fd5__requests__urllib3__8f335fd5__requests__urllib3
+repo: j4asper@dmr.py__8f335fd5__requests__urllib3
+commit: 8f335fd573d85b10d4882f101352dc2d3e025dde
+source: requests
+target: urllib3
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 2.4.0
+  finished_at: '2025-04-22 12:07:06'
+  project_coverage: 96.96969696969697
+  total_tests: 13
+  passed_tests: 12
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 19.23076923076923
+  files:
+  - path: dmr/utils/scraper.py
+    file_change_coverage: 19.23076923076923
+    covered_changed_lines: 1-2,9,11,16,23,26,28,35-36
+    uncovered_changed_lines: 12-15,25,29-33,37-41,43-45,47-70
+  test_diffs:
+  - test_id: tests/test_dmr_methods.py::test_invalid_license_plate
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: MaxRetryError
+    error_message: 'urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host=''motorregister.skat.dk'',
+      port=443): Max retries exceeded with url: https://motorregister.skat.dk/dmr-kerne/koeretoejdetaljer/visKoeretoej;jsessionid=eNBesCapuW_E2jqHxdyj5Q5FCssdIFICJKCTr3bVcsaBc3TylRHb!1563521517
+      (Caused by ResponseError(''too many redirects''))'
+  - test_id: tests/test_dmr_object.py::test_dmr_object_normal_car
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: MaxRetryError
+    error_message: 'urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host=''motorregister.skat.dk'',
+      port=443): Max retries exceeded with url: https://motorregister.skat.dk/dmr-kerne/koeretoejdetaljer/visKoeretoej;jsessionid=3uNesDZ4zg8n3a0XKLw-H1ECZH64yDZLjblpYPe_-joxyKWSZFhT!1563521517
+      (Caused by ResponseError(''too many redirects''))'
+  - test_id: tests/test_dmr_object.py::test_dmr_object_plugin_hybrid_car
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: MaxRetryError
+    error_message: 'urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host=''motorregister.skat.dk'',
+      port=443): Max retries exceeded with url: https://motorregister.skat.dk/dmr-kerne/koeretoejdetaljer/visKoeretoej;jsessionid=lHNesESPaaW6kWaUeVTHsNr8kSfhShN6bJCbGjuPHnHvQMQUX77x!-580653332?execution=e1s1
+      (Caused by ResponseError(''too many redirects''))'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []

@@ -1,0 +1,70 @@
+### Explanation of Changes:
+To migrate the code from using the `requests` library to `requests_futures`, the following changes were made:
+1. **Import Changes**: The `requests_futures` library provides an `AsyncSession` class for making asynchronous HTTP requests. The `get` and `post` methods from `requests_pkcs12` were replaced with asynchronous equivalents using `requests_futures`.
+2. **Session Management**: An `AsyncSession` object was introduced to handle requests. This session is used for all `get` and `post` requests.
+3. **Response Handling**: Since `requests_futures` returns a `Future` object, the `.result()` method is used to retrieve the actual `Response` object before processing it.
+4. **Code Adjustments**: The `raw_get` and `raw_post` methods were updated to use the `AsyncSession` for making requests. The `_handle_response` method remains unchanged, as it still processes a `Response` object.
+
+### Modified Code:
+```python
+from requests import Response
+from requests_futures.sessions import FuturesSession
+from requests_pkcs12 import Pkcs12Adapter
+
+from pynubank import NuRequestException
+
+
+class HttpClient:
+
+    def __init__(self):
+        self._cert = None
+        self._headers = {
+            'Content-Type': 'application/json',
+            'X-Correlation-Id': 'and-7-86-2-1000005524.9twu3pgr',
+            'User-Agent': 'pynubank Client - https://github.com/andreroggeri/pynubank',
+        }
+        self._session = FuturesSession()
+        self._session.mount('https://', Pkcs12Adapter())
+
+    def set_cert_data(self, cert_data: bytes):
+        self._cert = cert_data
+
+    def set_header(self, name: str, value: str):
+        self._headers[name] = value
+
+    def remove_header(self, name: str):
+        self._headers.pop(name)
+
+    def get_header(self, name: str):
+        return self._headers.get(name)
+
+    @property
+    def _cert_args(self):
+        return {'pkcs12_data': self._cert, 'pkcs12_password': ''} if self._cert else {}
+
+    def _handle_response(self, response: Response) -> dict:
+        if response.status_code != 200:
+            raise NuRequestException(response)
+
+        return response.json()
+
+    def raw_get(self, url: str) -> Response:
+        future = self._session.get(url, headers=self._headers, **self._cert_args)
+        return future.result()  # Wait for the request to complete and return the Response
+
+    def raw_post(self, url: str, json: dict) -> Response:
+        future = self._session.post(url, json=json, headers=self._headers, **self._cert_args)
+        return future.result()  # Wait for the request to complete and return the Response
+
+    def get(self, url: str) -> dict:
+        return self._handle_response(self.raw_get(url))
+
+    def post(self, url: str, json: dict) -> dict:
+        return self._handle_response(self.raw_post(url))
+```
+
+### Key Points:
+- The `FuturesSession` from `requests_futures` is used to make asynchronous requests.
+- The `Pkcs12Adapter` is mounted to the session to handle PKCS12 certificates.
+- The `.result()` method is called on the `Future` object returned by `FuturesSession` to get the `Response` object synchronously.
+- The rest of the code remains unchanged to ensure compatibility with the existing application.

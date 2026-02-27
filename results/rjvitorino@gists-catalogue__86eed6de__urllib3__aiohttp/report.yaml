@@ -1,0 +1,142 @@
+mig: rjvitorino@gists-catalogue__86eed6de__urllib3__aiohttp__86eed6de__urllib3__aiohttp
+repo: rjvitorino@gists-catalogue__86eed6de__urllib3__aiohttp
+commit: 86eed6de904ca155a6b4f600a9246e999d14dd9a
+source: urllib3
+target: aiohttp
+premig:
+  name: premig
+  status: finished
+  source_version: 2.2.2
+  target_version: 3.11.18
+  finished_at: '2025-04-22 14:57:37'
+  project_coverage: 91.17647058823529
+  total_tests: 7
+  passed_tests: 7
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 11.11111111111111
+  files:
+  - path: scripts/utils.py
+    file_change_coverage: 11.11111111111111
+    covered_changed_lines: 9,107,128
+    uncovered_changed_lines: 114-125,138-148,151
+  test_diffs:
+  - test_id: tests/test_utils.py::test_create_gist_index
+    before: passed
+    after: not found
+    failed_phase: collection
+    exception: ''
+    error_message: ''
+  - test_id: tests/test_utils.py::test_fetch_gist_content
+    before: passed
+    after: not found
+    failed_phase: collection
+    exception: ''
+    error_message: ''
+  - test_id: tests/test_utils.py::test_fetch_gists
+    before: passed
+    after: not found
+    failed_phase: collection
+    exception: ''
+    error_message: ''
+  - test_id: tests/test_utils.py::test_format_date
+    before: passed
+    after: not found
+    failed_phase: collection
+    exception: ''
+    error_message: ''
+  - test_id: tests/test_utils.py::test_generate_folder_name
+    before: passed
+    after: not found
+    failed_phase: collection
+    exception: ''
+    error_message: ''
+  - test_id: tests/test_utils.py::test_save_gist_files
+    before: passed
+    after: not found
+    failed_phase: collection
+    exception: ''
+    error_message: ''
+  - test_id: tests/test_utils.py::test_update_readme
+    before: passed
+    after: not found
+    failed_phase: collection
+    exception: ''
+    error_message: ''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 9.67741935483871
+  files:
+  - path: scripts/utils.py
+    file_change_coverage: 9.67741935483871
+    covered_changed_lines: 9,107,128
+    uncovered_changed_lines: 114-127,138-151
+  test_diffs:
+  - test_id: tests/test_utils.py::test_fetch_gist_content
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: assert <coroutine object fetch_gist_content at 0x000001FE2CA59F10>
+      == "print('Hello, world!')"
+  - test_id: tests/test_utils.py::test_fetch_gists
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: object of type ''coroutine'' has no len()'
+  - test_id: tests/test_utils.py::test_save_gist_files
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: expected call not found.\nExpected: write(\"print('Hello,\
+      \ world!')\")\n  Actual: write(<coroutine object AsyncMockMixin._execute_mock_call\
+      \ at 0x000001FE2CABC940>)"
+async_transform:
+  name: async_transform
+  base_round: merge_skipped
+  status: finished
+  project_change_coverage: 70.17543859649123
+  files:
+  - path: scripts/utils.py
+    file_change_coverage: 55.26315789473684
+    covered_changed_lines: 9,107,114-119,128,138-142,195,217,226,237,247,269,285
+    uncovered_changed_lines: 120-127,143-151
+  - path: tests/test_utils.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 32,35,37,41,46,48,52,63-65,69,72,74,79,81-82,89,91-92
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/test_utils.py::test_fetch_gist_content
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert 'from typing ...e\", \"John\"]\\n' == \"print('Hello, world!')\"\
+      \n  \n  - print('Hello, world!')\n  + from typing import List\n  + \n  + def\
+      \ count_vowels(name: str) -> int:\n  +     \"\"\"Helper function to count the\
+      \ number of vowels in a name.\"\"\"\n  +     vowels = \"aeiouAEIOU\"...\n  \n\
+      \  ...Full output truncated (38 lines hidden), use '-vv' to show"
+  - test_id: tests/test_utils.py::test_fetch_gists
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert 30 == 1\n +  where 30 = len([Gist(url='https://api.github.com/gists/f6d034793e748887f3e066468b04f3c0',\
+      \ forks_url='https://api.github.com/gists/f6d...s/rjvitorino/received_events',\
+      \ 'type': 'User', 'user_view_type': 'public', 'site_admin': False}, truncated=False),\
+      \ ...])"
+  - test_id: tests/test_utils.py::test_save_gist_files
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: expected call not found.\nExpected: write(\"print('Hello,\
+      \ world!')\")\n  Actual: write(<coroutine object AsyncMockMixin._execute_mock_call\
+      \ at 0x000001C29AFDA140>)"
+manual_edit: null

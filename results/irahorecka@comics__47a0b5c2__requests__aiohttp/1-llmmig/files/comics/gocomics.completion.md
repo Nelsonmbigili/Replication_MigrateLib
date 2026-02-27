@@ -1,0 +1,235 @@
+### Explanation of Changes
+To migrate the code from `requests` to `aiohttp`, the following changes were made:
+1. **Asynchronous Programming**: Since `aiohttp` is an asynchronous library, the `_get_response` method and any methods that call it (e.g., `stream`, `image_url`) were updated to use `async def` and `await`.
+2. **Session Management**: `aiohttp` requires an `aiohttp.ClientSession` for making requests. A session is created and reused for all requests.
+3. **Streaming**: The `aiohttp` equivalent of `requests.get(..., stream=True)` is handled using `aiohttp.ClientSession.get` with `response.content.iter_chunked` for streaming data.
+4. **Response Handling**: `aiohttp` responses are handled differently. For example, `response.content` is accessed using `await response.read()` or `await response.text()`.
+5. **Context Management**: `aiohttp.ClientSession` and responses are used as asynchronous context managers (`async with`).
+
+### Modified Code
+Below is the modified code using `aiohttp` version 3.11.16:
+
+```python
+"""
+comics/gocomics
+~~~~~~~~~~~~~~~
+"""
+
+import contextlib
+import os
+import shutil
+import urllib3
+from datetime import datetime
+from functools import lru_cache, wraps
+from inspect import unwrap
+from io import BytesIO
+
+import dateutil.parser
+import aiohttp
+from bs4 import BeautifulSoup
+from PIL import Image
+
+from comics.constants import directory
+from comics.exceptions import InvalidDateError
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+_BASE_URL = "https://www.gocomics.com"
+_BASE_RANDOM_URL = "https://www.gocomics.com/random"
+
+
+def bypass_comics_cache(func):
+    """Comics cache wrapper that checks and bypasses specific cached arguments."""
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        """Checks and bypasses specific cached arguments for: 1. URL that starts with
+        the base random URL pattern; 2. If the requested URL requires stream.
+
+        Returns:
+            aiohttp.ClientResponse: Queried or cached response.
+        """
+        url = args[0]
+        is_stream = kwargs.get("stream", False)
+        # 1. Query URL if URL starts with the default random URL pattern
+        # 2. Query URL if request requires stream
+        return (
+            unwrap(func)(*args, **kwargs)
+            if url.startswith(_BASE_RANDOM_URL) or is_stream
+            else func(*args, **kwargs)
+        )
+
+    return wrapper
+
+
+class search:
+    """Constructs user interface with GoComics."""
+
+    def __init__(self, endpoint):
+        self.endpoint = endpoint
+        self.start_date = directory.get_start_date(self.endpoint)
+        self.title = directory.get_title(self.endpoint)
+
+    def __repr__(self):
+        return f'search(endpoint="{self.endpoint}", title="{self.title}")'
+
+    def date(self, date):
+        """Constructs user interface with GoComics provided a comic strip date.
+
+        Args:
+            date (datetime.datetime | str): Comic strip date.
+
+        Raises:
+            InvalidDateError: If date is out of range for queried comic.
+
+        Returns:
+            ComicsAPI: `ComicsAPI` instance of comic strip published on the provided date.
+        """
+        if isinstance(date, str):
+            date = dateutil.parser.parse(date)
+        if date < datetime.strptime(self.start_date, "%Y-%m-%d"):
+            raise InvalidDateError(
+                f"Search for dates after {self.start_date}. Your input: {datetime.strftime(date, '%Y-%m-%d')}"
+            )
+        return ComicsAPI(self.endpoint, self.title, date)
+
+    def random_date(self):
+        """Constructs user interface with GoComics with a random comic strip date.
+
+        Returns:
+            ComicsAPI: `ComicsAPI` instance of comic strip published on a random date.
+        """
+        return ComicsAPI(self.endpoint, self.title)
+
+
+class ComicsAPI:
+    """User interface with GoComics."""
+
+    def __init__(self, endpoint, title, date=None):
+        self.endpoint = endpoint
+        self.title = title
+        # Select a random comic strip if date is not specified
+        if date is None:
+            r = self._get_response(self._random_url)
+            # Set date as date of random comic strip
+            self._date = dateutil.parser.parse("-".join(r.url.split("/")[-3:]))
+        else:
+            self._date = date
+
+    def __repr__(self):
+        return f'ComicsAPI(endpoint="{self.endpoint}", title="{self.title}", date="{self.date}")'
+
+    @property
+    def date(self):
+        """Returns string formatted comic strip date.
+
+        Returns:
+            str: String formatted comic strip date.
+        """
+        return datetime.strftime(self._date, "%Y-%m-%d")
+
+    async def download(self, path=None):
+        """Downloads comic strip. Downloads as a PNG file if no image endpoint is specified.
+
+        Args:
+            path (pathlib.Path | str, optional): Path to export file. If no path is specified,
+                the comic will be exported to the current working directory as '{endpoint}.png',
+                with `endpoint` being the comic strip endpoint (e.g., Calvin and Hobbes -->
+                calvinandhobbes). Defaults to None.
+        """
+        path = os.getcwd() if path is None else str(path)
+        if os.path.isdir(path):
+            path = os.path.join(path, f"{self.endpoint}.png")
+        # Stream outside of context - will corrupt image if exception raised in opened file
+        stream = await self.stream()
+        with open(path, "wb") as file:
+            async for chunk in stream.content.iter_chunked(1024):
+                file.write(chunk)
+
+    async def show(self):
+        """Shows comic strip in Jupyter notebook if available, otherwise opens in default image viewer."""
+        image = Image.open(BytesIO(await self.stream().read())).convert("RGB")
+        image.show()
+        with contextlib.suppress(ImportError, NameError):
+            # Attempt to import the display function from IPython.display
+            from IPython.display import display
+
+            get_ipython  # This function is only available in an IPython environment
+            # Conversion to RGB prevents conversion error if file is a static GIF
+            display(image)
+
+    async def stream(self):
+        """Streams comic strip response.
+
+        Returns:
+            aiohttp.ClientResponse: Streamed comic strip response.
+        """
+        # Must be called for every image request
+        return await self._get_response(self.image_url, stream=True)
+
+    @property
+    async def image_url(self):
+        """Gets comic strip image URL from GoComics.
+
+        Raises:
+            InvalidDateError: If date is invalid for queried comic.
+
+        Returns:
+            str: Comic strip URL.
+        """
+        r = await self._get_response(self.url)
+        comic_html = BeautifulSoup(await r.text(), "html.parser")
+        comic_img = comic_html.find("div", {"class": "comic__image"})
+        try:
+            return (
+                comic_img.find("picture", {"class": "item-comic-image"})
+                .find("img")["data-srcset"]
+                .split(" ")
+                .pop(0)
+            )
+        except AttributeError as e:
+            raise InvalidDateError(
+                f'"{self.date}" is not a valid date for comic "{self.title}"'
+            ) from e
+
+    @property
+    def url(self):
+        """Constructs GoComics URL with date.
+
+        Args:
+            date (datetime.datetime): Date to query.
+
+        Returns:
+            str: GoComics URL with date.
+        """
+        strf_datetime = datetime.strftime(self._date, "%Y/%m/%d")
+        return f"{_BASE_URL}/{self.endpoint}/{strf_datetime}"
+
+    @property
+    def _random_url(self):
+        """Constructs random GoComics URL.
+
+        Returns:
+            str: Random GoComics URL.
+        """
+        return f"{_BASE_RANDOM_URL}/{self.endpoint}"
+
+    @staticmethod
+    @bypass_comics_cache
+    @lru_cache(maxsize=128)
+    async def _get_response(*args, **kwargs):
+        """Gets response for queried URL.
+
+        Returns:
+            aiohttp.ClientResponse: Queried URL response.
+        """
+        async with aiohttp.ClientSession() as session:
+            async with session.get(*args, **kwargs, ssl=False) as response:
+                response.raise_for_status()
+                return response
+```
+
+### Key Notes:
+- The `download`, `show`, and `stream` methods are now asynchronous.
+- The `_get_response` method uses `aiohttp.ClientSession` to make requests.
+- The `image_url` property and other methods that depend on `_get_response` are updated to use `await`.
+- The `aiohttp.ClientSession` is used as an asynchronous context manager to ensure proper cleanup.

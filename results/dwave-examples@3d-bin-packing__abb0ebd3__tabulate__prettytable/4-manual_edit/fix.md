@@ -1,0 +1,2 @@
+- use prettytable.PLAIN_COLUMNS table format which closely matches tabulate (fixes 1 of 2 failures)
+- fix test to consider the change in table format

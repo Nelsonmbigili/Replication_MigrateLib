@@ -1,0 +1,58 @@
+mig: bheinzerling@bpemb__a75008c1__requests__treq__a75008c1__requests__treq
+repo: bheinzerling@bpemb__a75008c1__requests__treq
+commit: a75008c1e1850a4fedea5c2bd221d379afafc0ac
+source: requests
+target: treq
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 24.9.1
+  finished_at: '2025-04-22 08:24:31'
+  project_coverage: 83.81502890173411
+  total_tests: 20
+  passed_tests: 19
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 12.5
+  files:
+  - path: bpemb/util.py
+    file_change_coverage: 12.5
+    covered_changed_lines: 14,49
+    uncovered_changed_lines: 15,17,24,26-29,36-37,42,45,53,59-60
+  test_diffs:
+  - test_id: bpemb/tests/bpemb_test.py::BPEmbTest::test_pickle_custom_cache_dir
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: OSError
+    error_message: 'OSError: Not found: "<coroutine object http_get at 0x0000018DDD8C7B50>":
+      Invalid argument Error #22'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 70.0
+  files:
+  - path: bpemb/bpemb.py
+    file_change_coverage: 42.857142857142854
+    covered_changed_lines: 128,216,495
+    uncovered_changed_lines: 174,191,234,501
+  - path: bpemb/util.py
+    file_change_coverage: 12.5
+    covered_changed_lines: 14,49
+    uncovered_changed_lines: 15,17,24,26-29,36-37,42,45,53,59-60
+  - path: bpemb/tests/bpemb_test.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 3,21-22,27-28,32-33,37-38,42-43,47-48,52-53,57-58,63-64,72-73,78-79,84-85,101-102,118-119,138-139,144-145,150-151,155-156
+    uncovered_changed_lines: ''
+  test_diffs: []

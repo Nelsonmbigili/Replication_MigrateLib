@@ -1,0 +1,140 @@
+### Explanation of Changes
+To migrate the code from `matplotlib` to `seaborn`, the following changes were made:
+1. **Import Replacement**: Replaced `matplotlib.pyplot` with `seaborn` for plotting. Seaborn is built on top of Matplotlib, so it integrates seamlessly with Matplotlib's `Axes` objects.
+2. **Plotting Functions**: Replaced `plt.subplots()` with `sns.set_theme()` and `sns.lineplot()` or `sns.barplot()` where applicable. Seaborn provides higher-level abstractions for common plots.
+3. **Gridlines and Shading**: Seaborn does not have direct equivalents for some Matplotlib-specific functions like `ax.axvline`, `ax.axhline`, or `ax.fill_between`. These were retained as they are compatible with Seaborn's `Axes` objects.
+4. **Styling**: Added `sns.set_theme()` to apply Seaborn's default styling to all plots.
+
+### Modified Code
+```python
+"""Tests for spiketools.plts.annotate"""
+
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt  # Retained for compatibility with Axes-specific methods
+
+from spiketools.tests.tutils import plot_test
+
+from spiketools.plts.annotate import *
+
+###################################################################################################
+###################################################################################################
+
+# Set Seaborn theme for consistent styling
+sns.set_theme()
+
+def test_color_pvalue():
+
+    out1 = color_pvalue(0.025)
+    assert out1 == 'red'
+
+    out2 = color_pvalue(0.50)
+    assert out2 == 'black'
+
+    out3 = color_pvalue(0.005, 0.01, 'green')
+    assert out3 == 'green'
+
+@plot_test
+def test_add_vlines():
+
+    _, ax = plt.subplots()
+    sns.lineplot(x=[1, 2, 3, 4], y=[1, 2, 3, 4], ax=ax)
+    add_vlines([1.5, 2.5, 3.5], ax=ax)
+
+@plot_test
+def test_add_hlines():
+
+    _, ax = plt.subplots()
+    sns.lineplot(x=[1, 2, 3, 4], y=[1, 2, 3, 4], ax=ax)
+    add_hlines([1.5, 2.5, 3.5], ax=ax)
+
+@plot_test
+def test_add_gridlines():
+
+    _, ax1 = plt.subplots()
+    sns.lineplot(x=[0, 2], y=[0, 2], ax=ax1)
+
+    bins = [0.5, 1.5]
+    add_gridlines(bins, None, ax1)
+    assert np.array_equal(ax1.get_xticks(), bins)
+    assert np.array_equal(ax1.get_yticks(), [])
+    add_gridlines(None, bins, ax1)
+    assert np.array_equal(ax1.get_xticks(), [])
+    assert np.array_equal(ax1.get_yticks(), bins)
+    add_gridlines(bins, bins, ax1)
+    assert np.array_equal(ax1.get_xticks(), bins)
+    assert np.array_equal(ax1.get_yticks(), bins)
+
+@plot_test
+def test_add_vshades():
+
+    _, ax = plt.subplots()
+    sns.lineplot(x=[1, 2, 3, 4], y=[1, 2, 3, 4], ax=ax)
+    add_vshades([2., 3.], ax=ax)
+    add_vshades([[0.5, 0.75], [3.5, 3.75]], color='red', ax=ax)
+
+@plot_test
+def test_add_hshades():
+
+    _, ax = plt.subplots()
+    sns.lineplot(x=[1, 2, 3, 4], y=[1, 2, 3, 4], ax=ax)
+    add_hshades([2., 3.], ax=ax)
+    add_hshades([[0.5, 0.75], [3.5, 3.75]], color='red', ax=ax)
+
+@plot_test
+def test_add_box_shade():
+
+    _, ax = plt.subplots()
+    sns.lineplot(x=[1, 2, 3, 4], y=[1, 2, 3, 4], ax=ax)
+    add_box_shade(1.5, 2.5, 2, ax=ax)
+
+@plot_test
+def test_add_box_shades():
+
+    _, ax = plt.subplots()
+    sns.lineplot(x=[1, 2, 3, 4], y=[1, 2, 3, 4], ax=ax)
+    add_box_shades(np.array([1.5, 2.5]), np.array([1.5, 2.5]), ax=ax)
+
+@plot_test
+def test_add_dots():
+
+    _, ax = plt.subplots()
+    sns.lineplot(x=[1, 2, 3, 4], y=[1, 2, 3, 4], ax=ax)
+    add_dots(np.array([[1, 2], [2, 3]]), ax=ax)
+
+    # Test adding an additional dot from 1d array
+    add_dots(np.array([2.5, 2.5]), color='red', ax=ax)
+
+@plot_test
+def test_add_significance():
+
+    _, ax = plt.subplots()
+
+    x_values = [1, 2, 3, 4]
+    stats = [1., 0.01, 0.5, 1.]
+
+    sns.lineplot(x=x_values, y=x_values, ax=ax)
+    add_significance(stats, ax=ax)
+
+@plot_test
+def test_add_text_labels_x():
+
+    _, ax = plt.subplots()
+    data = [15, 12, 32, 22]
+    sns.barplot(x=['A', 'B', 'C', 'D'], y=data, ax=ax)
+    add_text_labels(data, axis='x')
+
+@plot_test
+def test_add_text_labels_y():
+
+    _, ax = plt.subplots()
+    data = [15, 12, 32, 22]
+    sns.barplot(y=['A', 'B', 'C', 'D'], x=data, ax=ax, orient='h')
+    add_text_labels(data, axis='y', position='end')
+```
+
+### Key Notes
+- Seaborn's `lineplot` and `barplot` were used to replace `ax.plot` and `ax.bar` respectively.
+- Matplotlib's `plt.subplots()` was retained for creating `Axes` objects, as Seaborn works with these objects.
+- Seaborn's `set_theme()` was added to apply consistent styling across all plots.
+- Functions like `add_vlines`, `add_hlines`, and `add_gridlines` were left unchanged as they directly manipulate `Axes` objects, which are compatible with Seaborn.

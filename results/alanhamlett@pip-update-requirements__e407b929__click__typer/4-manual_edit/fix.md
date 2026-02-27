@@ -1,0 +1,5 @@
+- correctly replace import for secho
+- add missing calls to format_list_arg
+- properly import typer app in test from other file
+- replace result.exception.code with result.exit_code
+- add app name for typer, click automatically gets it

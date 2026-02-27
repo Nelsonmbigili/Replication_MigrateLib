@@ -1,0 +1,2 @@
+- the schema structure is different between jsonschema and cerberus. Needed migration code to convert the schema. still 5 fails.
+- the target library raises different error messages. updated test expectations accordingly.

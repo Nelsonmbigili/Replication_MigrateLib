@@ -1,0 +1,57 @@
+mig: bheinzerling@bpemb__a75008c1__requests__aiohttp__a75008c1__requests__aiohttp
+repo: bheinzerling@bpemb__a75008c1__requests__aiohttp
+commit: a75008c1e1850a4fedea5c2bd221d379afafc0ac
+source: requests
+target: aiohttp
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 3.11.16
+  finished_at: '2025-04-22 08:19:11'
+  project_coverage: 83.81502890173411
+  total_tests: 20
+  passed_tests: 19
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 60.78431372549019
+  files:
+  - path: bpemb/util.py
+    file_change_coverage: 60.78431372549019
+    covered_changed_lines: 14-15,17-18,22,24-29,31-37,46,48-50,52,54-57,71-73,75
+    uncovered_changed_lines: 30,38-39,47,51,53,58-70,74
+  test_diffs:
+  - test_id: bpemb/tests/bpemb_test.py::BPEmbTest::test_pickle_custom_cache_dir
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: OSError
+    error_message: 'OSError: Not found: "None": No such file or directory Error #2'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 43.75
+  files:
+  - path: bpemb/util.py
+    file_change_coverage: 3.8461538461538463
+    covered_changed_lines: 14,43
+    uncovered_changed_lines: 15,17-18,22,24-39,46-75
+  - path: bpemb/tests/bpemb_test.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 3,21-22,27-28,32-33,37-38,42-43,47-48,52-53,57-58,63-64,72-73,78-79,84-85,101-102,118-119,138-139,144-145,150-151,155-156
+    uncovered_changed_lines: ''
+  - path: bpemb/bpemb.py
+    file_change_coverage: 42.857142857142854
+    covered_changed_lines: 128,216,495
+    uncovered_changed_lines: 174,191,234,501
+  test_diffs: []

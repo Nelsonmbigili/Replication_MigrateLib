@@ -1,0 +1,67 @@
+mig: sudiptob2@cf-stats__ce93670b__requests__treq__ce93670b__requests__treq
+repo: sudiptob2@cf-stats__ce93670b__requests__treq
+commit: ce93670b0f4f3147daf923725e01bd244dd5fa35
+source: requests
+target: treq
+premig:
+  name: premig
+  status: finished
+  source_version: 2.28.1
+  target_version: 24.9.1
+  finished_at: '2025-04-22 17:15:29'
+  project_coverage: 85.26315789473684
+  total_tests: 10
+  passed_tests: 10
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 33.333333333333336
+  files:
+  - path: app/services/cf_request_handler.py
+    file_change_coverage: 33.333333333333336
+    covered_changed_lines: 1-2,16,27,38,49
+    uncovered_changed_lines: 20-21,24,31-32,35,42-43,46,51-53
+  test_diffs:
+  - test_id: tests/test_utils/test_cf_request_handler.py::TestCFReqHandler::test_make_request
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert <class 'NoneType'> == dict\n +  where <class\
+      \ 'NoneType'> = type(None)\n +    where None = CFRequestHandler.user_info"
+  - test_id: tests/test_utils/test_cf_request_handler.py::TestCFReqHandler::test_make_request_invalid
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: Failed
+    error_message: 'Failed: DID NOT RAISE <class ''SystemExit''>'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 56.52173913043478
+  files:
+  - path: app/services/cf_request_handler.py
+    file_change_coverage: 44.44444444444444
+    covered_changed_lines: 1-2,16,20,27,38,49,51
+    uncovered_changed_lines: 21,24,31-32,35,42-43,46,52-53
+  - path: tests/test_utils/test_cf_request_handler.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 10-11,31-32,36
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/test_utils/test_cf_request_handler.py::TestCFReqHandler::test_make_request
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert <class 'NoneType'> == dict\n +  where <class\
+      \ 'NoneType'> = type(None)\n +    where None = CFRequestHandler.user_info"

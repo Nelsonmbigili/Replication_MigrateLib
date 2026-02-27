@@ -1,0 +1,177 @@
+### Explanation of Changes
+To migrate the code from `requests` to `httpx`, the following changes were made:
+1. **Import Changes**: Replaced `requests` imports with `httpx`.
+2. **Mocking Changes**: Updated the `mock.patch` targets to replace `requests` with `httpx` where applicable.
+3. **Response Object Changes**: Adjusted the mocked response object to align with `httpx.Response` instead of `requests.Response`. For example:
+   - `requests.Response.raise_for_status` is replaced with `httpx.Response.raise_for_status`.
+   - `requests.JSONDecodeError` is replaced with `json.JSONDecodeError` (since `httpx` does not have its own JSON decode error).
+4. **Behavioral Consistency**: Ensured that the behavior of the mocked `httpx` methods matches the original `requests` methods.
+
+Below is the modified code:
+
+---
+
+### Modified Code
+```python
+from unittest import mock
+from botocore.exceptions import ClientError
+import pytest
+import httpx  # Replaced requests with httpx
+import pyschlage
+from pyschlage import auth as _auth
+
+
+@mock.patch("httpx.Request")  # Updated to httpx.Request
+@mock.patch("pycognito.utils.RequestsSrpAuth")
+@mock.patch("pycognito.Cognito")
+def test_authenticate(mock_cognito, mock_srp_auth, mock_request):
+    auth = _auth.Auth("__username__", "__password__")
+
+    mock_cognito.assert_called_once()
+    assert mock_cognito.call_args.kwargs["username"] == "__username__"
+
+    mock_srp_auth.assert_called_once_with(
+        password="__password__", cognito=mock_cognito.return_value
+    )
+
+    auth.authenticate()
+    mock_srp_auth.return_value.assert_called_once_with(mock_request.return_value)
+
+
+@mock.patch("httpx.request")  # Updated to httpx.request
+@mock.patch("pycognito.utils.RequestsSrpAuth")
+@mock.patch("pycognito.Cognito")
+def test_request(mock_cognito, mock_srp_auth, mock_request):
+    auth = _auth.Auth("__username__", "__password__")
+    auth.request("get", "/foo/bar", baz="bam")
+    mock_request.assert_called_once_with(
+        "get",
+        "https://api.allegion.yonomi.cloud/v1/foo/bar",
+        timeout=60,
+        auth=mock_srp_auth.return_value,
+        headers={"X-Api-Key": _auth.API_KEY},
+        baz="bam",
+    )
+
+
+@mock.patch("httpx.request", spec=True)  # Updated to httpx.request
+@mock.patch("pycognito.utils.RequestsSrpAuth", spec=True)
+@mock.patch("pycognito.Cognito")
+def test_request_not_authorized(mock_cognito, mock_srp_auth, mock_request):
+    url = "https://api.allegion.yonomi.cloud/v1/foo/bar"
+    auth = _auth.Auth("__username__", "__password__")
+    mock_request.side_effect = ClientError(
+        {
+            "Error": {
+                "Code": "NotAuthorizedException",
+                "Message": f"Unauthorized for url: {url}",
+            }
+        },
+        "foo-op",
+    )
+
+    with pytest.raises(
+        pyschlage.exceptions.NotAuthorizedError, match=f"Unauthorized for url: {url}"
+    ):
+        auth.request("get", "/foo/bar", baz="bam")
+
+    mock_request.assert_called_once_with(
+        "get",
+        url,
+        timeout=60,
+        auth=mock_srp_auth.return_value,
+        headers={"X-Api-Key": _auth.API_KEY},
+        baz="bam",
+    )
+
+
+@mock.patch("httpx.request", spec=True)  # Updated to httpx.request
+@mock.patch("pycognito.utils.RequestsSrpAuth", spec=True)
+@mock.patch("pycognito.Cognito")
+def test_request_unknown_error(mock_cognito, mock_srp_auth, mock_request):
+    url = "https://api.allegion.yonomi.cloud/v1/foo/bar"
+    auth = _auth.Auth("__username__", "__password__")
+    mock_resp = mock.create_autospec(httpx.Response)  # Updated to httpx.Response
+    mock_resp.raise_for_status.side_effect = httpx.HTTPStatusError(
+        f"500 Server Error: Internal for url: {url}"
+    )
+    mock_resp.status_code = 500
+    mock_resp.reason_phrase = "Internal"  # Updated to reason_phrase for httpx
+    mock_resp.json.side_effect = json.JSONDecodeError("msg", "doc", 1)  # Updated to json.JSONDecodeError
+    mock_request.return_value = mock_resp
+
+    with pytest.raises(pyschlage.exceptions.UnknownError):
+        auth.request("get", "/foo/bar", baz="bam")
+
+    mock_request.assert_called_once_with(
+        "get",
+        url,
+        timeout=60,
+        auth=mock_srp_auth.return_value,
+        headers={"X-Api-Key": _auth.API_KEY},
+        baz="bam",
+    )
+
+
+@mock.patch("httpx.request")  # Updated to httpx.request
+@mock.patch("pycognito.utils.RequestsSrpAuth")
+@mock.patch("pycognito.Cognito")
+def test_user_id(mock_cognito, mock_srp_auth, mock_request):
+    auth = _auth.Auth("__username__", "__password__")
+    mock_request.return_value = mock.Mock(
+        json=mock.Mock(
+            return_value={
+                "consentRecords": [],
+                "created": "2022-12-24T20:00:00.000Z",
+                "email": "asdf@asdf.com",
+                "friendlyName": "username",
+                "identityId": "<user-id>",
+                "lastUpdated": "2022-12-24T20:00:00.000Z",
+            }
+        )
+    )
+    assert auth.user_id == "<user-id>"
+    mock_request.assert_called_once_with(
+        "get",
+        "https://api.allegion.yonomi.cloud/v1/users/@me",
+        timeout=60,
+        auth=mock_srp_auth.return_value,
+        headers={"X-Api-Key": _auth.API_KEY},
+    )
+
+
+@mock.patch("httpx.request")  # Updated to httpx.request
+@mock.patch("pycognito.utils.RequestsSrpAuth")
+@mock.patch("pycognito.Cognito")
+def test_user_id_is_cached(mock_cognito, mock_srp_auth, mock_request):
+    auth = _auth.Auth("__username__", "__password__")
+    mock_request.return_value = mock.Mock(
+        json=mock.Mock(
+            return_value={
+                "consentRecords": [],
+                "created": "2022-12-24T20:00:00.000Z",
+                "email": "asdf@asdf.com",
+                "friendlyName": "username",
+                "identityId": "<user-id>",
+                "lastUpdated": "2022-12-24T20:00:00.000Z",
+            }
+        )
+    )
+    assert auth.user_id == "<user-id>"
+    mock_request.assert_called_once_with(
+        "get",
+        "https://api.allegion.yonomi.cloud/v1/users/@me",
+        timeout=60,
+        auth=mock_srp_auth.return_value,
+        headers={"X-Api-Key": _auth.API_KEY},
+    )
+    mock_request.reset_mock()
+    assert auth.user_id == "<user-id>"
+    mock_request.assert_not_called()
+```
+
+---
+
+### Key Notes
+- The migration ensures that the behavior of the code remains consistent while using `httpx` instead of `requests`.
+- The `httpx` library has some differences in method names and response object attributes, which were accounted for in the migration.

@@ -1,0 +1,52 @@
+### Explanation of Changes
+To migrate the code from using the `requests` library to `httpx`, the following changes were made:
+1. **Import Changes**: Replaced `requests.exceptions.HTTPError` with `httpx.HTTPStatusError` since `httpx` provides its own exception classes.
+2. **Exception Handling**: Updated the exception raised in the `test_download_url_raise` test to use `httpx.HTTPStatusError` instead of `requests.exceptions.HTTPError`.
+3. **No Other Changes**: The rest of the code remains unchanged as it does not directly interact with the `requests` library.
+
+### Modified Code
+```python
+"""Tests for `snapchat_dl` package."""
+
+import os
+import shutil
+import unittest
+
+from httpx import HTTPStatusError  # Updated import for httpx
+
+from snapchat_dl.downloader import download_url
+
+
+def teardown_module(module):
+    shutil.rmtree(".test-data")
+
+
+class Test_downloader(unittest.TestCase):
+    """Tests for `snapchat_dl.downloader.download_url` package."""
+
+    def setUp(self):
+        """Set up test fixtures."""
+        self.test_url = (
+            "https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_1mb.mp4"
+        )
+        self.test_url404 = "https://google.com/error.html"
+
+    def test_download_url(self):
+        """Test snapchat_dl download_url."""
+        download_url(self.test_url, ".test-data/test_dl_23.mp4", sleep_interval=0)
+
+    def test_empty_download(self):
+        """Test snapchat_dl download_url."""
+        open(".test-data/test_dl_23.mp4", "w").close()
+        download_url(self.test_url, ".test-data/test_dl_23.mp4", sleep_interval=0)
+
+    def test_download_url_raise(self):
+        """Test snapchat_dl download_url with invalid url."""
+        with self.assertRaises(HTTPStatusError):  # Updated exception to httpx.HTTPStatusError
+            download_url(
+                self.test_url404, ".test-data/test_dl_23.mp4", sleep_interval=0
+            )
+```
+
+### Summary
+The migration involved replacing `requests.exceptions.HTTPError` with `httpx.HTTPStatusError` to align with the `httpx` library's exception handling. No other changes were made to the code.

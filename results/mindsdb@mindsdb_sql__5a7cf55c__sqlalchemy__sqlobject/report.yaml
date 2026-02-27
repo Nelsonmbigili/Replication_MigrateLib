@@ -1,0 +1,160 @@
+mig: mindsdb@mindsdb_sql__5a7cf55c__sqlalchemy__sqlobject__5a7cf55c__sqlalchemy__sqlobject
+repo: mindsdb@mindsdb_sql__5a7cf55c__sqlalchemy__sqlobject
+commit: 5a7cf55c823663f85c61c4a60d2cc0cf4d8062b8
+source: sqlalchemy
+target: sqlobject
+premig:
+  name: premig
+  status: finished
+  source_version: 2.0.40
+  target_version: 3.13.0
+  finished_at: '2025-04-24 12:05:02'
+  project_coverage: 92.61551504874947
+  total_tests: 689
+  passed_tests: 688
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 44.827586206896555
+  files:
+  - path: mindsdb_sql/parser/ast/create.py
+    file_change_coverage: 33.333333333333336
+    covered_changed_lines: 6,90
+    uncovered_changed_lines: 8,91,93,95
+  - path: mindsdb_sql/render/sqlalchemy_render.py
+    file_change_coverage: 0
+    covered_changed_lines: ''
+    uncovered_changed_lines: ''
+  - path: tests/test_render/test_sqlalchemyrender.py
+    file_change_coverage: 47.82608695652174
+    covered_changed_lines: 9-10,33,45,160-162,164,171,173,192
+    uncovered_changed_lines: 8,32,34,44,75,83,86,114,178-180,194
+  test_diffs:
+  - test_id: tests/test_render/test_sqlalchemyrender.py::TestFromParser::test_from_parser
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ParsingException
+    error_message: 'mindsdb_sql.exceptions.ParsingException: Syntax error, unknown
+      input:
+
+      >SELECT SELECT col1 FROM t1 WHERE col1 BETWEEN a AND b
+
+      --------^^^^^^
+
+      Expected symbol: "[identifier]"'
+  - test_id: tests/test_render/test_sqlalchemyrender.py::TestRender::test_create_table
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: type object ''sqlmeta'' has no attribute ''createSQL'''
+  - test_id: tests/test_render/test_sqlalchemyrender.py::TestRender::test_datetype
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert \"SELECT '2011...00:00.000000'\" == \"SELECT '2011...-01\
+      \ 00:00:00`\"\n  \n  - SELECT '2011-01-01 00:00:00' AS `2011-01-01 00:00:00`\n\
+      \  ?                            ^^^^^^^^^^^^^^^^^  -  -  ^\n  + SELECT '2011-01-01\
+      \ 00:00:00.000000'\n  ?                            ^      ^"
+  - test_id: tests/test_render/test_sqlalchemyrender.py::TestRender::test_exec_params
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: You may only give valueList *or* values'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 0
+  files:
+  - path: mindsdb_sql/render/sqlalchemy_render.py
+    file_change_coverage: 0
+    covered_changed_lines: ''
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/test_render/test_sqlalchemyrender.py::TestFromParser::test_from_parser
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ParsingException
+    error_message: 'mindsdb_sql.exceptions.ParsingException: Syntax error, unknown
+      input:
+
+      >SELECT SELECT col1 FROM t1 WHERE col1 BETWEEN a AND b
+
+      --------^^^^^^
+
+      Expected symbol: "[identifier]"'
+  - test_id: tests/test_render/test_sqlalchemyrender.py::TestRender::test_create_table
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: type object ''sqlmeta'' has no attribute ''createSQL'''
+  - test_id: tests/test_render/test_sqlalchemyrender.py::TestRender::test_datetype
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert \"SELECT '2011...00:00.000000'\" == \"SELECT '2011...-01\
+      \ 00:00:00`\"\n  \n  - SELECT '2011-01-01 00:00:00' AS `2011-01-01 00:00:00`\n\
+      \  ?                            ^^^^^^^^^^^^^^^^^  -  -  ^\n  + SELECT '2011-01-01\
+      \ 00:00:00.000000'\n  ?                            ^      ^"
+  - test_id: tests/test_render/test_sqlalchemyrender.py::TestRender::test_exec_params
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: You may only give valueList *or* values'
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit:
+  name: manual_edit
+  base_round: merge_skipped
+  status: finished
+  project_change_coverage: 0
+  files: []
+  test_diffs:
+  - test_id: tests/test_render/test_sqlalchemyrender.py::TestFromParser::test_from_parser
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ParsingException
+    error_message: 'mindsdb_sql.exceptions.ParsingException: Syntax error, unknown
+      input:
+
+      >SELECT SELECT col1 FROM t1 WHERE col1 BETWEEN a AND b
+
+      --------^^^^^^
+
+      Expected symbol: "[identifier]"'
+  - test_id: tests/test_render/test_sqlalchemyrender.py::TestRender::test_create_table
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: type object ''sqlmeta'' has no attribute ''createSQL'''
+  - test_id: tests/test_render/test_sqlalchemyrender.py::TestRender::test_datetype
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert \"SELECT '2011...00:00.000000'\" == \"SELECT '2011...-01\
+      \ 00:00:00`\"\n  \n  - SELECT '2011-01-01 00:00:00' AS `2011-01-01 00:00:00`\n\
+      \  ?                            ^^^^^^^^^^^^^^^^^  -  -  ^\n  + SELECT '2011-01-01\
+      \ 00:00:00.000000'\n  ?                            ^      ^"
+  - test_id: tests/test_render/test_sqlalchemyrender.py::TestRender::test_exec_params
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: You may only give valueList *or* values'
