@@ -1,0 +1,54 @@
+mig: irahorecka@comics__47a0b5c2__requests__httpx__47a0b5c2__requests__httpx
+repo: irahorecka@comics__47a0b5c2__requests__httpx
+commit: 47a0b5c2c2b0bdf1b7c3dc84727335c08159bedb
+source: requests
+target: httpx
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 0.28.1
+  finished_at: '2025-04-22 12:00:00'
+  project_coverage: 90.81632653061224
+  total_tests: 18
+  passed_tests: 9
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 40.0
+  files:
+  - path: comics/gocomics.py
+    file_change_coverage: 28.571428571428573
+    covered_changed_lines: 16,212
+    uncovered_changed_lines: 37,133,151,210-211
+  - path: tests/test_api.py
+    file_change_coverage: 66.66666666666667
+    covered_changed_lines: 9,38
+    uncovered_changed_lines: '53'
+  test_diffs:
+  - test_id: tests/test_exceptions.py::test_invalid_date
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: HTTPStatusError
+    error_message: 'httpx.HTTPStatusError: Redirect response ''307 Temporary Redirect''
+      for url ''https://www.gocomics.com/calvinandhobbes/2050/01/01''
+
+      Redirect location: ''/calvinandhobbes''
+
+      For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/307'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []

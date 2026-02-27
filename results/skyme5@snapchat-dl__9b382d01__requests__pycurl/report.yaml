@@ -1,0 +1,68 @@
+mig: skyme5@snapchat-dl__9b382d01__requests__pycurl__9b382d01__requests__pycurl
+repo: skyme5@snapchat-dl__9b382d01__requests__pycurl
+commit: 9b382d01f467a9d13b1bf7db67196321d2638c6d
+source: requests
+target: pycurl
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 7.45.6
+  finished_at: '2025-04-22 16:45:28'
+  project_coverage: 99.58333333333333
+  total_tests: 14
+  passed_tests: 14
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 62.745098039215684
+  files:
+  - path: snapchat_dl/downloader.py
+    file_change_coverage: 50.0
+    covered_changed_lines: 1,5,28-33,35-39,41,44
+    uncovered_changed_lines: 10,17,26,40,43,45-46,48-55
+  - path: snapchat_dl/snapchat_dl.py
+    file_change_coverage: 77.77777777777777
+    covered_changed_lines: 7-8,43,47-51,53-57,59
+    uncovered_changed_lines: 52,58,60-61
+  - path: tests/test_downlaoder.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 7-8,38
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/test_downlaoder.py::Test_downloader::test_download_url
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: error
+    error_message: 'pycurl.error: (28, ''Operation timed out after 10013 milliseconds
+      with 622592 out of 1053651 bytes received'')'
+  - test_id: tests/test_downlaoder.py::Test_downloader::test_empty_download
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: error
+    error_message: 'pycurl.error: (28, ''Operation timed out after 10004 milliseconds
+      with 491520 out of 1053651 bytes received'')'
+  - test_id: tests/test_snapchat_dl.py::TestSnapchat_dl::test_invalid_username
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: APIResponseError
+    error_message: 'snapchat_dl.utils.APIResponseError: HTTP request failed with status
+      code 308'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []

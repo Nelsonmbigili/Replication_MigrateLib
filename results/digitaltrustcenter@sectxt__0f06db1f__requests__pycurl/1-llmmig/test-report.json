@@ -1,0 +1,290 @@
+{
+  "exitcode": 1,
+  "summary": {
+    "failed": 5,
+    "total": 5,
+    "collected": 5
+  },
+  "collectors": [
+    {
+      "nodeid": "",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": ".",
+          "type": "Dir"
+        }
+      ]
+    },
+    {
+      "nodeid": "sectxt",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "sectxt.egg-info",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "test/test_sectxt.py::TestCase",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "test/test_sectxt.py::SecTxtTestCase",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "test/test_sectxt.py::SecTxtTestCase::test_byte_order_mark",
+          "type": "TestCaseFunction",
+          "lineno": 117
+        },
+        {
+          "nodeid": "test/test_sectxt.py::SecTxtTestCase::test_invalid_uri_scheme",
+          "type": "TestCaseFunction",
+          "lineno": 98
+        },
+        {
+          "nodeid": "test/test_sectxt.py::SecTxtTestCase::test_local_file",
+          "type": "TestCaseFunction",
+          "lineno": 137
+        },
+        {
+          "nodeid": "test/test_sectxt.py::SecTxtTestCase::test_not_correct_path",
+          "type": "TestCaseFunction",
+          "lineno": 81
+        },
+        {
+          "nodeid": "test/test_sectxt.py::SecTxtTestCase::test_valid_security_txt",
+          "type": "TestCaseFunction",
+          "lineno": 62
+        }
+      ]
+    },
+    {
+      "nodeid": "test/test_sectxt.py",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "test/test_sectxt.py::TestCase",
+          "type": "UnitTestCase"
+        },
+        {
+          "nodeid": "test/test_sectxt.py::SecTxtTestCase",
+          "type": "UnitTestCase"
+        }
+      ]
+    },
+    {
+      "nodeid": "test",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "test/test_sectxt.py",
+          "type": "Module"
+        }
+      ]
+    },
+    {
+      "nodeid": ".",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "sectxt",
+          "type": "Package"
+        },
+        {
+          "nodeid": "sectxt.egg-info",
+          "type": "Dir"
+        },
+        {
+          "nodeid": "test",
+          "type": "Package"
+        }
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "nodeid": "test/test_sectxt.py::SecTxtTestCase::test_byte_order_mark",
+      "lineno": 117,
+      "outcome": "failed",
+      "keywords": [
+        "test_byte_order_mark",
+        "SecTxtTestCase",
+        "test_sectxt.py",
+        "test",
+        "digitaltrustcenter@sectxt__0f06db1f__requests__pycurl",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\digitaltrustcenter@sectxt__0f06db1f__requests__pycurl\\test\\test_sectxt.py",
+          "lineno": 133,
+          "message": "TypeError: SecurityTXT.__init__() got an unexpected keyword argument 'http_get'"
+        },
+        "traceback": [
+          {
+            "path": "test\\test_sectxt.py",
+            "lineno": 133,
+            "message": "TypeError"
+          }
+        ],
+        "longrepr": "self = <test.test_sectxt.SecTxtTestCase testMethod=test_byte_order_mark>\n\n    def test_byte_order_mark(self):\n        expires = f\"Expires: {(date.today() + timedelta(days=10)).isoformat()}T18:37:07z\\n\"\n        byte_content_with_bom = b'\\xef\\xbb\\xbf\\xef\\xbb\\xbfContact: mailto:me@example.com\\n' \\\n                                + expires.encode()\n    \n        # Mocking the response for the test\n        def mock_http_get(url):\n            if url == \"https://example.com/.well-known/security.txt\":\n                return 200, byte_content_with_bom\n            else:\n                raise ConnectionError(\"Mocked connection error\")\n    \n        # Replace the _http_get method with the mock\n        self._http_get = mock_http_get\n    \n>       s = SecurityTXT(\"example.com\", http_get=self._http_get)\nE       TypeError: SecurityTXT.__init__() got an unexpected keyword argument 'http_get'\n\ntest\\test_sectxt.py:133: TypeError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "test/test_sectxt.py::SecTxtTestCase::test_invalid_uri_scheme",
+      "lineno": 98,
+      "outcome": "failed",
+      "keywords": [
+        "test_invalid_uri_scheme",
+        "SecTxtTestCase",
+        "test_sectxt.py",
+        "test",
+        "digitaltrustcenter@sectxt__0f06db1f__requests__pycurl",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\digitaltrustcenter@sectxt__0f06db1f__requests__pycurl\\test\\test_sectxt.py",
+          "lineno": 114,
+          "message": "TypeError: SecurityTXT.__init__() got an unexpected keyword argument 'http_get'"
+        },
+        "traceback": [
+          {
+            "path": "test\\test_sectxt.py",
+            "lineno": 114,
+            "message": "TypeError"
+          }
+        ],
+        "longrepr": "self = <test.test_sectxt.SecTxtTestCase testMethod=test_invalid_uri_scheme>\n\n    def test_invalid_uri_scheme(self):\n        # Mocking the response for the test\n        def mock_http_get(url):\n            if url == \"https://example.com/.well-known/security.txt\":\n                raise ConnectionError(\"Mocked connection timeout\")\n            elif url == \"https://example.com/security.txt\":\n                raise ConnectionError(\"Mocked connection timeout\")\n            elif url == \"http://example.com/.well-known/security.txt\":\n                return 200, _signed_example.encode()\n            else:\n                raise ConnectionError(\"Mocked connection error\")\n    \n        # Replace the _http_get method with the mock\n        self._http_get = mock_http_get\n    \n>       s = SecurityTXT(\"example.com\", http_get=self._http_get)\nE       TypeError: SecurityTXT.__init__() got an unexpected keyword argument 'http_get'\n\ntest\\test_sectxt.py:114: TypeError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "test/test_sectxt.py::SecTxtTestCase::test_local_file",
+      "lineno": 137,
+      "outcome": "failed",
+      "keywords": [
+        "test_local_file",
+        "SecTxtTestCase",
+        "test_sectxt.py",
+        "test",
+        "digitaltrustcenter@sectxt__0f06db1f__requests__pycurl",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\digitaltrustcenter@sectxt__0f06db1f__requests__pycurl\\sectxt\\__init__.py",
+          "lineno": 72,
+          "message": "TypeError: object.__init__() takes exactly one argument (the instance to initialize)"
+        },
+        "traceback": [
+          {
+            "path": "test\\test_sectxt.py",
+            "lineno": 146,
+            "message": ""
+          },
+          {
+            "path": "sectxt\\__init__.py",
+            "lineno": 72,
+            "message": "TypeError"
+          }
+        ],
+        "longrepr": "self = <test.test_sectxt.SecTxtTestCase testMethod=test_local_file>\n\n    def test_local_file(self):\n        # Create a text file to be used for the local test\n        test_file_name = \"test_security.txt\"\n        f = open(test_file_name, \"w\")\n        f.write(_signed_example)\n        f.close()\n        cwd = os.getcwd()\n        test_file_path = os.path.join(cwd, test_file_name)\n>       s = SecurityTXT(test_file_path, is_local=True)\n\ntest\\test_sectxt.py:146: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <sectxt.SecurityTXT object at 0x0000020D96B38B90>\nurl = 'D:\\\\repos\\\\digitaltrustcenter@sectxt__0f06db1f__requests__pycurl\\\\test_security.txt'\nrecommend_unknown_fields = True, is_local = True\n\n    def __init__(self, url: str, recommend_unknown_fields: bool = True, is_local: bool = False):\n        url_parts = urlsplit(url)\n        if url_parts.scheme and not is_local:\n            if not url_parts.netloc:\n                raise ValueError(\"Invalid URL\")\n            loc = url_parts.netloc\n        else:\n            loc = url\n        self._loc = loc\n        self._path: Optional[str] = None\n        self._url: Optional[str] = None\n>       super().__init__(b'', recommend_unknown_fields=recommend_unknown_fields, is_local=is_local)\nE       TypeError: object.__init__() takes exactly one argument (the instance to initialize)\n\nsectxt\\__init__.py:72: TypeError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "test/test_sectxt.py::SecTxtTestCase::test_not_correct_path",
+      "lineno": 81,
+      "outcome": "failed",
+      "keywords": [
+        "test_not_correct_path",
+        "SecTxtTestCase",
+        "test_sectxt.py",
+        "test",
+        "digitaltrustcenter@sectxt__0f06db1f__requests__pycurl",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\digitaltrustcenter@sectxt__0f06db1f__requests__pycurl\\test\\test_sectxt.py",
+          "lineno": 95,
+          "message": "TypeError: SecurityTXT.__init__() got an unexpected keyword argument 'http_get'"
+        },
+        "traceback": [
+          {
+            "path": "test\\test_sectxt.py",
+            "lineno": 95,
+            "message": "TypeError"
+          }
+        ],
+        "longrepr": "self = <test.test_sectxt.SecTxtTestCase testMethod=test_not_correct_path>\n\n    def test_not_correct_path(self):\n        # Mocking the response for the test\n        def mock_http_get(url):\n            if url == \"https://example.com/.well-known/security.txt\":\n                raise ConnectionError(\"Mocked connection timeout\")\n            elif url == \"https://example.com/security.txt\":\n                return 200, _signed_example.encode()\n            else:\n                raise ConnectionError(\"Mocked connection error\")\n    \n        # Replace the _http_get method with the mock\n        self._http_get = mock_http_get\n    \n>       s = SecurityTXT(\"example.com\", http_get=self._http_get)\nE       TypeError: SecurityTXT.__init__() got an unexpected keyword argument 'http_get'\n\ntest\\test_sectxt.py:95: TypeError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "test/test_sectxt.py::SecTxtTestCase::test_valid_security_txt",
+      "lineno": 62,
+      "outcome": "failed",
+      "keywords": [
+        "test_valid_security_txt",
+        "SecTxtTestCase",
+        "test_sectxt.py",
+        "test",
+        "digitaltrustcenter@sectxt__0f06db1f__requests__pycurl",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\digitaltrustcenter@sectxt__0f06db1f__requests__pycurl\\test\\test_sectxt.py",
+          "lineno": 79,
+          "message": "TypeError: SecurityTXT.__init__() got an unexpected keyword argument 'http_get'"
+        },
+        "traceback": [
+          {
+            "path": "test\\test_sectxt.py",
+            "lineno": 79,
+            "message": "TypeError"
+          }
+        ],
+        "longrepr": "self = <test.test_sectxt.SecTxtTestCase testMethod=test_valid_security_txt>\n\n    def test_valid_security_txt(self):\n        expires = f\"Expires: {(date.today() + timedelta(days=10)).isoformat()}T18:37:07z\\n\"\n        byte_content = b'Contact: mailto:me@example.com\\n' + bytes(expires, \"utf-8\")\n    \n        # Mocking the response for the test\n        def mock_http_get(url):\n            if url == \"https://example.com/.well-known/security.txt\":\n                return 200, byte_content\n            elif url == \"https://example.com/security.txt\":\n                return 200, _signed_example.encode()\n            else:\n                raise ConnectionError(\"Mocked connection error\")\n    \n        # Replace the _http_get method with the mock\n        self._http_get = mock_http_get\n    \n>       s = SecurityTXT(\"example.com\", http_get=self._http_get)\nE       TypeError: SecurityTXT.__init__() got an unexpected keyword argument 'http_get'\n\ntest\\test_sectxt.py:79: TypeError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    }
+  ]
+}

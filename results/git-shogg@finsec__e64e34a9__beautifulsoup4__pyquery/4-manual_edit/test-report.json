@@ -1,0 +1,458 @@
+{
+  "exitcode": 1,
+  "summary": {
+    "passed": 1,
+    "failed": 6,
+    "total": 7,
+    "collected": 7
+  },
+  "collectors": [
+    {
+      "nodeid": "",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": ".",
+          "type": "Dir"
+        }
+      ]
+    },
+    {
+      "nodeid": "assets",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "finsec",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "finsec.egg-info",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "tests/test_13f.py::Test",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "tests/test_13f.py::Test::test_cik",
+          "type": "Function",
+          "lineno": 13
+        },
+        {
+          "nodeid": "tests/test_13f.py::Test::test_latest_13f_filing",
+          "type": "Function",
+          "lineno": 16
+        },
+        {
+          "nodeid": "tests/test_13f.py::Test::test_latest_13f_filing_detailed",
+          "type": "Function",
+          "lineno": 21
+        },
+        {
+          "nodeid": "tests/test_13f.py::Test::test_latest_13f_filing_cover_page",
+          "type": "Function",
+          "lineno": 25
+        },
+        {
+          "nodeid": "tests/test_13f.py::Test::test_latest_13f_portfolio_value",
+          "type": "Function",
+          "lineno": 29
+        },
+        {
+          "nodeid": "tests/test_13f.py::Test::test_latest_13f_count_holdings",
+          "type": "Function",
+          "lineno": 33
+        },
+        {
+          "nodeid": "tests/test_13f.py::Test::test_get_a_13f_filing",
+          "type": "Function",
+          "lineno": 37
+        }
+      ]
+    },
+    {
+      "nodeid": "tests/test_13f.py",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "tests/test_13f.py::Test",
+          "type": "Class"
+        }
+      ]
+    },
+    {
+      "nodeid": "tests",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "tests/test_13f.py",
+          "type": "Module"
+        }
+      ]
+    },
+    {
+      "nodeid": ".",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "assets",
+          "type": "Dir"
+        },
+        {
+          "nodeid": "finsec",
+          "type": "Package"
+        },
+        {
+          "nodeid": "finsec.egg-info",
+          "type": "Dir"
+        },
+        {
+          "nodeid": "tests",
+          "type": "Package"
+        }
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "nodeid": "tests/test_13f.py::Test::test_cik",
+      "lineno": 13,
+      "outcome": "passed",
+      "keywords": [
+        "test_cik",
+        "Test",
+        "test_13f.py",
+        "tests",
+        "git-shogg@finsec__e64e34a9__beautifulsoup4__pyquery",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "passed"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/test_13f.py::Test::test_latest_13f_filing",
+      "lineno": 16,
+      "outcome": "failed",
+      "keywords": [
+        "test_latest_13f_filing",
+        "Test",
+        "test_13f.py",
+        "tests",
+        "git-shogg@finsec__e64e34a9__beautifulsoup4__pyquery",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "C:\\_work\\_MigTool\\repos\\git-shogg@finsec__e64e34a9__beautifulsoup4__pyquery\\finsec\\base.py",
+          "lineno": 136,
+          "message": "ValueError: invalid literal for int() with base 10: ''"
+        },
+        "traceback": [
+          {
+            "path": "tests\\test_13f.py",
+            "lineno": 18,
+            "message": ""
+          },
+          {
+            "path": "finsec\\filing.py",
+            "lineno": 15,
+            "message": "in latest_13f_filing"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 259,
+            "message": "in get_latest_13f_filing"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 136,
+            "message": "ValueError"
+          }
+        ],
+        "longrepr": "self = <tests.test_13f.Test object at 0x000001E604582CD0>\n\n    def test_latest_13f_filing(self):\n>       df = self.filing.latest_13f_filing()\n\ntests\\test_13f.py:18: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nfinsec\\filing.py:15: in latest_13f_filing\n    return self.get_latest_13f_filing(simplified, amend_filing)\nfinsec\\base.py:259: in get_latest_13f_filing\n    latest_13f_cover_page, latest_holdings_table, latest_simplified_holdings_table = self._parse_13f_url(url,\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <finsec.filing.Filing object at 0x000001E603E80950>\nurl = '/Archives/edgar/data/1067983/000095012325005701/0000950123-25-005701-index.htm'\ndate = '2025-05-15'\n\n    def _parse_13f_url(self, url: str, date: str):\n        response = requests.get(_BASE_URL_ + url, headers=_REQ_HEADERS_)\n        doc = pq(response.text)\n        import re\n        url_primary_html_document = doc('a[href*=\"xml\"]').eq(0).attr('href')  # Html primary doc is 1st in the list\n        url_primary_document = doc('a[href*=\"xml\"]').eq(1).attr('href')  # XML Primary doc is always 2nd in the list\n        url_list_document = doc('a[href*=\"xml\"]').eq(3).attr('href')  # xml list is always 4th in the list\n    \n        response = requests.get(_BASE_URL_ + url_primary_html_document, headers=_REQ_HEADERS_)\n        primary_html_doc = pq(response.text)\n    \n        response = requests.get(_BASE_URL_ + url_primary_document, headers=_REQ_HEADERS_)\n        primary_doc = pq(response.content)\n    \n        response = requests.get(_BASE_URL_ + url_list_document, headers=_REQ_HEADERS_)\n        list_doc = pq(response.content)\n    \n        # Check if the documentation is to the nearest dollar or thousand dollars\n        datetime_obj = datetime.strptime(date, '%Y-%m-%d')\n        if datetime_obj.year < 2023:\n            dollar_value_multiplier = 1000\n        elif datetime_obj.year > 2023:\n            dollar_value_multiplier = 1\n        else:\n            temp_list = primary_html_doc(':contains(\"nearest dollar\")')\n            if len(temp_list) > 0:\n                dollar_value_multiplier = 1\n            else:\n                dollar_value_multiplier = 1000\n    \n        # Get primary doc detail\n        filing_manager = self._get_bs4_text(primary_doc('filingManager name'))\n        business_address = self._get_bs4_text(primary_doc('street1')) + \", \" + self._get_bs4_text(\n            primary_doc('city')) + \", \" + self._get_bs4_text(primary_doc('stateOrCountry')) + \", \" + self._get_bs4_text(\n            primary_doc('zipCode'))\n        submission_type = self._get_bs4_text(primary_doc('submissionType'))\n        period_of_report = self._get_bs4_text(primary_doc('periodOfReport'))\n    \n        if self._get_bs4_text(primary_doc('amendmentInfo')) != 'N/A':  # Check if it is an amendment type filing\n            amendment_type = self._get_bs4_text(primary_doc('amendmentInfo amendmentType'))\n        else:\n            amendment_type = 'N/A'\n    \n        signature_name = self._get_bs4_text(primary_doc('signatureBlock name'))\n        signature_title = self._get_bs4_text(primary_doc('signatureBlock title'))\n        signature_phone = self._get_bs4_text(primary_doc('signatureBlock phone'))\n        signature_city = self._get_bs4_text(primary_doc('signatureBlock city'))\n        signature_state = self._get_bs4_text(primary_doc('signatureBlock stateOrCountry'))\n        signature_date = self._get_bs4_text(primary_doc('signatureBlock signatureDate'))\n    \n>       portfolio_value = int(self._get_bs4_text(primary_doc('summaryPage tableValueTotal'))) * dollar_value_multiplier\nE       ValueError: invalid literal for int() with base 10: ''\n\nfinsec\\base.py:136: ValueError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/test_13f.py::Test::test_latest_13f_filing_detailed",
+      "lineno": 21,
+      "outcome": "failed",
+      "keywords": [
+        "test_latest_13f_filing_detailed",
+        "Test",
+        "test_13f.py",
+        "tests",
+        "git-shogg@finsec__e64e34a9__beautifulsoup4__pyquery",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "C:\\_work\\_MigTool\\repos\\git-shogg@finsec__e64e34a9__beautifulsoup4__pyquery\\finsec\\base.py",
+          "lineno": 136,
+          "message": "ValueError: invalid literal for int() with base 10: ''"
+        },
+        "traceback": [
+          {
+            "path": "tests\\test_13f.py",
+            "lineno": 23,
+            "message": ""
+          },
+          {
+            "path": "finsec\\filing.py",
+            "lineno": 26,
+            "message": "in latest_13f_filing_detailed"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 259,
+            "message": "in get_latest_13f_filing"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 136,
+            "message": "ValueError"
+          }
+        ],
+        "longrepr": "self = <tests.test_13f.Test object at 0x000001E604583450>\n\n    def test_latest_13f_filing_detailed(self):\n>       df = self.filing.latest_13f_filing_detailed()\n\ntests\\test_13f.py:23: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nfinsec\\filing.py:26: in latest_13f_filing_detailed\n    return self.get_latest_13f_filing(simplified=False, amend_filing=True)\nfinsec\\base.py:259: in get_latest_13f_filing\n    latest_13f_cover_page, latest_holdings_table, latest_simplified_holdings_table = self._parse_13f_url(url,\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <finsec.filing.Filing object at 0x000001E603E80950>\nurl = '/Archives/edgar/data/1067983/000095012325005701/0000950123-25-005701-index.htm'\ndate = '2025-05-15'\n\n    def _parse_13f_url(self, url: str, date: str):\n        response = requests.get(_BASE_URL_ + url, headers=_REQ_HEADERS_)\n        doc = pq(response.text)\n        import re\n        url_primary_html_document = doc('a[href*=\"xml\"]').eq(0).attr('href')  # Html primary doc is 1st in the list\n        url_primary_document = doc('a[href*=\"xml\"]').eq(1).attr('href')  # XML Primary doc is always 2nd in the list\n        url_list_document = doc('a[href*=\"xml\"]').eq(3).attr('href')  # xml list is always 4th in the list\n    \n        response = requests.get(_BASE_URL_ + url_primary_html_document, headers=_REQ_HEADERS_)\n        primary_html_doc = pq(response.text)\n    \n        response = requests.get(_BASE_URL_ + url_primary_document, headers=_REQ_HEADERS_)\n        primary_doc = pq(response.content)\n    \n        response = requests.get(_BASE_URL_ + url_list_document, headers=_REQ_HEADERS_)\n        list_doc = pq(response.content)\n    \n        # Check if the documentation is to the nearest dollar or thousand dollars\n        datetime_obj = datetime.strptime(date, '%Y-%m-%d')\n        if datetime_obj.year < 2023:\n            dollar_value_multiplier = 1000\n        elif datetime_obj.year > 2023:\n            dollar_value_multiplier = 1\n        else:\n            temp_list = primary_html_doc(':contains(\"nearest dollar\")')\n            if len(temp_list) > 0:\n                dollar_value_multiplier = 1\n            else:\n                dollar_value_multiplier = 1000\n    \n        # Get primary doc detail\n        filing_manager = self._get_bs4_text(primary_doc('filingManager name'))\n        business_address = self._get_bs4_text(primary_doc('street1')) + \", \" + self._get_bs4_text(\n            primary_doc('city')) + \", \" + self._get_bs4_text(primary_doc('stateOrCountry')) + \", \" + self._get_bs4_text(\n            primary_doc('zipCode'))\n        submission_type = self._get_bs4_text(primary_doc('submissionType'))\n        period_of_report = self._get_bs4_text(primary_doc('periodOfReport'))\n    \n        if self._get_bs4_text(primary_doc('amendmentInfo')) != 'N/A':  # Check if it is an amendment type filing\n            amendment_type = self._get_bs4_text(primary_doc('amendmentInfo amendmentType'))\n        else:\n            amendment_type = 'N/A'\n    \n        signature_name = self._get_bs4_text(primary_doc('signatureBlock name'))\n        signature_title = self._get_bs4_text(primary_doc('signatureBlock title'))\n        signature_phone = self._get_bs4_text(primary_doc('signatureBlock phone'))\n        signature_city = self._get_bs4_text(primary_doc('signatureBlock city'))\n        signature_state = self._get_bs4_text(primary_doc('signatureBlock stateOrCountry'))\n        signature_date = self._get_bs4_text(primary_doc('signatureBlock signatureDate'))\n    \n>       portfolio_value = int(self._get_bs4_text(primary_doc('summaryPage tableValueTotal'))) * dollar_value_multiplier\nE       ValueError: invalid literal for int() with base 10: ''\n\nfinsec\\base.py:136: ValueError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/test_13f.py::Test::test_latest_13f_filing_cover_page",
+      "lineno": 25,
+      "outcome": "failed",
+      "keywords": [
+        "test_latest_13f_filing_cover_page",
+        "Test",
+        "test_13f.py",
+        "tests",
+        "git-shogg@finsec__e64e34a9__beautifulsoup4__pyquery",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "C:\\_work\\_MigTool\\repos\\git-shogg@finsec__e64e34a9__beautifulsoup4__pyquery\\finsec\\base.py",
+          "lineno": 136,
+          "message": "ValueError: invalid literal for int() with base 10: ''"
+        },
+        "traceback": [
+          {
+            "path": "tests\\test_13f.py",
+            "lineno": 27,
+            "message": ""
+          },
+          {
+            "path": "finsec\\filing.py",
+            "lineno": 30,
+            "message": "in latest_13f_filing_cover_page"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 291,
+            "message": "in get_latest_13f_filing_cover_page"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 259,
+            "message": "in get_latest_13f_filing"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 136,
+            "message": "ValueError"
+          }
+        ],
+        "longrepr": "self = <tests.test_13f.Test object at 0x000001E604583CD0>\n\n    def test_latest_13f_filing_cover_page(self):\n>       result = self.filing.latest_13f_filing_cover_page\n\ntests\\test_13f.py:27: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nfinsec\\filing.py:30: in latest_13f_filing_cover_page\n    return self.get_latest_13f_filing_cover_page()\nfinsec\\base.py:291: in get_latest_13f_filing_cover_page\n    self.get_latest_13f_filing()\nfinsec\\base.py:259: in get_latest_13f_filing\n    latest_13f_cover_page, latest_holdings_table, latest_simplified_holdings_table = self._parse_13f_url(url,\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <finsec.filing.Filing object at 0x000001E603E80950>\nurl = '/Archives/edgar/data/1067983/000095012325005701/0000950123-25-005701-index.htm'\ndate = '2025-05-15'\n\n    def _parse_13f_url(self, url: str, date: str):\n        response = requests.get(_BASE_URL_ + url, headers=_REQ_HEADERS_)\n        doc = pq(response.text)\n        import re\n        url_primary_html_document = doc('a[href*=\"xml\"]').eq(0).attr('href')  # Html primary doc is 1st in the list\n        url_primary_document = doc('a[href*=\"xml\"]').eq(1).attr('href')  # XML Primary doc is always 2nd in the list\n        url_list_document = doc('a[href*=\"xml\"]').eq(3).attr('href')  # xml list is always 4th in the list\n    \n        response = requests.get(_BASE_URL_ + url_primary_html_document, headers=_REQ_HEADERS_)\n        primary_html_doc = pq(response.text)\n    \n        response = requests.get(_BASE_URL_ + url_primary_document, headers=_REQ_HEADERS_)\n        primary_doc = pq(response.content)\n    \n        response = requests.get(_BASE_URL_ + url_list_document, headers=_REQ_HEADERS_)\n        list_doc = pq(response.content)\n    \n        # Check if the documentation is to the nearest dollar or thousand dollars\n        datetime_obj = datetime.strptime(date, '%Y-%m-%d')\n        if datetime_obj.year < 2023:\n            dollar_value_multiplier = 1000\n        elif datetime_obj.year > 2023:\n            dollar_value_multiplier = 1\n        else:\n            temp_list = primary_html_doc(':contains(\"nearest dollar\")')\n            if len(temp_list) > 0:\n                dollar_value_multiplier = 1\n            else:\n                dollar_value_multiplier = 1000\n    \n        # Get primary doc detail\n        filing_manager = self._get_bs4_text(primary_doc('filingManager name'))\n        business_address = self._get_bs4_text(primary_doc('street1')) + \", \" + self._get_bs4_text(\n            primary_doc('city')) + \", \" + self._get_bs4_text(primary_doc('stateOrCountry')) + \", \" + self._get_bs4_text(\n            primary_doc('zipCode'))\n        submission_type = self._get_bs4_text(primary_doc('submissionType'))\n        period_of_report = self._get_bs4_text(primary_doc('periodOfReport'))\n    \n        if self._get_bs4_text(primary_doc('amendmentInfo')) != 'N/A':  # Check if it is an amendment type filing\n            amendment_type = self._get_bs4_text(primary_doc('amendmentInfo amendmentType'))\n        else:\n            amendment_type = 'N/A'\n    \n        signature_name = self._get_bs4_text(primary_doc('signatureBlock name'))\n        signature_title = self._get_bs4_text(primary_doc('signatureBlock title'))\n        signature_phone = self._get_bs4_text(primary_doc('signatureBlock phone'))\n        signature_city = self._get_bs4_text(primary_doc('signatureBlock city'))\n        signature_state = self._get_bs4_text(primary_doc('signatureBlock stateOrCountry'))\n        signature_date = self._get_bs4_text(primary_doc('signatureBlock signatureDate'))\n    \n>       portfolio_value = int(self._get_bs4_text(primary_doc('summaryPage tableValueTotal'))) * dollar_value_multiplier\nE       ValueError: invalid literal for int() with base 10: ''\n\nfinsec\\base.py:136: ValueError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/test_13f.py::Test::test_latest_13f_portfolio_value",
+      "lineno": 29,
+      "outcome": "failed",
+      "keywords": [
+        "test_latest_13f_portfolio_value",
+        "Test",
+        "test_13f.py",
+        "tests",
+        "git-shogg@finsec__e64e34a9__beautifulsoup4__pyquery",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "C:\\_work\\_MigTool\\repos\\git-shogg@finsec__e64e34a9__beautifulsoup4__pyquery\\finsec\\base.py",
+          "lineno": 136,
+          "message": "ValueError: invalid literal for int() with base 10: ''"
+        },
+        "traceback": [
+          {
+            "path": "tests\\test_13f.py",
+            "lineno": 31,
+            "message": ""
+          },
+          {
+            "path": "finsec\\filing.py",
+            "lineno": 19,
+            "message": "in latest_13f_portfolio_value"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 301,
+            "message": "in get_latest_13f_value"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 259,
+            "message": "in get_latest_13f_filing"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 136,
+            "message": "ValueError"
+          }
+        ],
+        "longrepr": "self = <tests.test_13f.Test object at 0x000001E604470D90>\n\n    def test_latest_13f_portfolio_value(self):\n>       portfolio_value = self.filing.latest_13f_portfolio_value\n\ntests\\test_13f.py:31: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nfinsec\\filing.py:19: in latest_13f_portfolio_value\n    return self.get_latest_13f_value()\nfinsec\\base.py:301: in get_latest_13f_value\n    self.get_latest_13f_filing()\nfinsec\\base.py:259: in get_latest_13f_filing\n    latest_13f_cover_page, latest_holdings_table, latest_simplified_holdings_table = self._parse_13f_url(url,\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <finsec.filing.Filing object at 0x000001E603E80950>\nurl = '/Archives/edgar/data/1067983/000095012325005701/0000950123-25-005701-index.htm'\ndate = '2025-05-15'\n\n    def _parse_13f_url(self, url: str, date: str):\n        response = requests.get(_BASE_URL_ + url, headers=_REQ_HEADERS_)\n        doc = pq(response.text)\n        import re\n        url_primary_html_document = doc('a[href*=\"xml\"]').eq(0).attr('href')  # Html primary doc is 1st in the list\n        url_primary_document = doc('a[href*=\"xml\"]').eq(1).attr('href')  # XML Primary doc is always 2nd in the list\n        url_list_document = doc('a[href*=\"xml\"]').eq(3).attr('href')  # xml list is always 4th in the list\n    \n        response = requests.get(_BASE_URL_ + url_primary_html_document, headers=_REQ_HEADERS_)\n        primary_html_doc = pq(response.text)\n    \n        response = requests.get(_BASE_URL_ + url_primary_document, headers=_REQ_HEADERS_)\n        primary_doc = pq(response.content)\n    \n        response = requests.get(_BASE_URL_ + url_list_document, headers=_REQ_HEADERS_)\n        list_doc = pq(response.content)\n    \n        # Check if the documentation is to the nearest dollar or thousand dollars\n        datetime_obj = datetime.strptime(date, '%Y-%m-%d')\n        if datetime_obj.year < 2023:\n            dollar_value_multiplier = 1000\n        elif datetime_obj.year > 2023:\n            dollar_value_multiplier = 1\n        else:\n            temp_list = primary_html_doc(':contains(\"nearest dollar\")')\n            if len(temp_list) > 0:\n                dollar_value_multiplier = 1\n            else:\n                dollar_value_multiplier = 1000\n    \n        # Get primary doc detail\n        filing_manager = self._get_bs4_text(primary_doc('filingManager name'))\n        business_address = self._get_bs4_text(primary_doc('street1')) + \", \" + self._get_bs4_text(\n            primary_doc('city')) + \", \" + self._get_bs4_text(primary_doc('stateOrCountry')) + \", \" + self._get_bs4_text(\n            primary_doc('zipCode'))\n        submission_type = self._get_bs4_text(primary_doc('submissionType'))\n        period_of_report = self._get_bs4_text(primary_doc('periodOfReport'))\n    \n        if self._get_bs4_text(primary_doc('amendmentInfo')) != 'N/A':  # Check if it is an amendment type filing\n            amendment_type = self._get_bs4_text(primary_doc('amendmentInfo amendmentType'))\n        else:\n            amendment_type = 'N/A'\n    \n        signature_name = self._get_bs4_text(primary_doc('signatureBlock name'))\n        signature_title = self._get_bs4_text(primary_doc('signatureBlock title'))\n        signature_phone = self._get_bs4_text(primary_doc('signatureBlock phone'))\n        signature_city = self._get_bs4_text(primary_doc('signatureBlock city'))\n        signature_state = self._get_bs4_text(primary_doc('signatureBlock stateOrCountry'))\n        signature_date = self._get_bs4_text(primary_doc('signatureBlock signatureDate'))\n    \n>       portfolio_value = int(self._get_bs4_text(primary_doc('summaryPage tableValueTotal'))) * dollar_value_multiplier\nE       ValueError: invalid literal for int() with base 10: ''\n\nfinsec\\base.py:136: ValueError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/test_13f.py::Test::test_latest_13f_count_holdings",
+      "lineno": 33,
+      "outcome": "failed",
+      "keywords": [
+        "test_latest_13f_count_holdings",
+        "Test",
+        "test_13f.py",
+        "tests",
+        "git-shogg@finsec__e64e34a9__beautifulsoup4__pyquery",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "C:\\_work\\_MigTool\\repos\\git-shogg@finsec__e64e34a9__beautifulsoup4__pyquery\\finsec\\base.py",
+          "lineno": 136,
+          "message": "ValueError: invalid literal for int() with base 10: ''"
+        },
+        "traceback": [
+          {
+            "path": "tests\\test_13f.py",
+            "lineno": 35,
+            "message": ""
+          },
+          {
+            "path": "finsec\\filing.py",
+            "lineno": 23,
+            "message": "in latest_13f_count_holdings"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 311,
+            "message": "in get_latest_13f_num_holdings"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 259,
+            "message": "in get_latest_13f_filing"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 136,
+            "message": "ValueError"
+          }
+        ],
+        "longrepr": "self = <tests.test_13f.Test object at 0x000001E6045B0650>\n\n    def test_latest_13f_count_holdings(self):\n>       holdings_count = self.filing.latest_13f_count_holdings\n\ntests\\test_13f.py:35: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nfinsec\\filing.py:23: in latest_13f_count_holdings\n    return self.get_latest_13f_num_holdings()\nfinsec\\base.py:311: in get_latest_13f_num_holdings\n    self.get_latest_13f_filing()\nfinsec\\base.py:259: in get_latest_13f_filing\n    latest_13f_cover_page, latest_holdings_table, latest_simplified_holdings_table = self._parse_13f_url(url,\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <finsec.filing.Filing object at 0x000001E603E80950>\nurl = '/Archives/edgar/data/1067983/000095012325005701/0000950123-25-005701-index.htm'\ndate = '2025-05-15'\n\n    def _parse_13f_url(self, url: str, date: str):\n        response = requests.get(_BASE_URL_ + url, headers=_REQ_HEADERS_)\n        doc = pq(response.text)\n        import re\n        url_primary_html_document = doc('a[href*=\"xml\"]').eq(0).attr('href')  # Html primary doc is 1st in the list\n        url_primary_document = doc('a[href*=\"xml\"]').eq(1).attr('href')  # XML Primary doc is always 2nd in the list\n        url_list_document = doc('a[href*=\"xml\"]').eq(3).attr('href')  # xml list is always 4th in the list\n    \n        response = requests.get(_BASE_URL_ + url_primary_html_document, headers=_REQ_HEADERS_)\n        primary_html_doc = pq(response.text)\n    \n        response = requests.get(_BASE_URL_ + url_primary_document, headers=_REQ_HEADERS_)\n        primary_doc = pq(response.content)\n    \n        response = requests.get(_BASE_URL_ + url_list_document, headers=_REQ_HEADERS_)\n        list_doc = pq(response.content)\n    \n        # Check if the documentation is to the nearest dollar or thousand dollars\n        datetime_obj = datetime.strptime(date, '%Y-%m-%d')\n        if datetime_obj.year < 2023:\n            dollar_value_multiplier = 1000\n        elif datetime_obj.year > 2023:\n            dollar_value_multiplier = 1\n        else:\n            temp_list = primary_html_doc(':contains(\"nearest dollar\")')\n            if len(temp_list) > 0:\n                dollar_value_multiplier = 1\n            else:\n                dollar_value_multiplier = 1000\n    \n        # Get primary doc detail\n        filing_manager = self._get_bs4_text(primary_doc('filingManager name'))\n        business_address = self._get_bs4_text(primary_doc('street1')) + \", \" + self._get_bs4_text(\n            primary_doc('city')) + \", \" + self._get_bs4_text(primary_doc('stateOrCountry')) + \", \" + self._get_bs4_text(\n            primary_doc('zipCode'))\n        submission_type = self._get_bs4_text(primary_doc('submissionType'))\n        period_of_report = self._get_bs4_text(primary_doc('periodOfReport'))\n    \n        if self._get_bs4_text(primary_doc('amendmentInfo')) != 'N/A':  # Check if it is an amendment type filing\n            amendment_type = self._get_bs4_text(primary_doc('amendmentInfo amendmentType'))\n        else:\n            amendment_type = 'N/A'\n    \n        signature_name = self._get_bs4_text(primary_doc('signatureBlock name'))\n        signature_title = self._get_bs4_text(primary_doc('signatureBlock title'))\n        signature_phone = self._get_bs4_text(primary_doc('signatureBlock phone'))\n        signature_city = self._get_bs4_text(primary_doc('signatureBlock city'))\n        signature_state = self._get_bs4_text(primary_doc('signatureBlock stateOrCountry'))\n        signature_date = self._get_bs4_text(primary_doc('signatureBlock signatureDate'))\n    \n>       portfolio_value = int(self._get_bs4_text(primary_doc('summaryPage tableValueTotal'))) * dollar_value_multiplier\nE       ValueError: invalid literal for int() with base 10: ''\n\nfinsec\\base.py:136: ValueError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/test_13f.py::Test::test_get_a_13f_filing",
+      "lineno": 37,
+      "outcome": "failed",
+      "keywords": [
+        "test_get_a_13f_filing",
+        "Test",
+        "test_13f.py",
+        "tests",
+        "git-shogg@finsec__e64e34a9__beautifulsoup4__pyquery",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "C:\\_work\\_MigTool\\repos\\git-shogg@finsec__e64e34a9__beautifulsoup4__pyquery\\finsec\\base.py",
+          "lineno": 136,
+          "message": "ValueError: invalid literal for int() with base 10: ''"
+        },
+        "traceback": [
+          {
+            "path": "tests\\test_13f.py",
+            "lineno": 40,
+            "message": ""
+          },
+          {
+            "path": "finsec\\filing.py",
+            "lineno": 9,
+            "message": "in get_a_13f_filing"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 342,
+            "message": "in get_13f_filing"
+          },
+          {
+            "path": "finsec\\base.py",
+            "lineno": 136,
+            "message": "ValueError"
+          }
+        ],
+        "longrepr": "self = <tests.test_13f.Test object at 0x000001E6045B0C10>\n\n    def test_get_a_13f_filing(self):\n        cover_page, holdings_table, simplified_holdings_table = (\n>           self.filing.get_a_13f_filing(\"Q2-2022\")\n        )\n\ntests\\test_13f.py:40: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nfinsec\\filing.py:9: in get_a_13f_filing\n    return self.get_13f_filing(qtr_year, amend_filing)\nfinsec\\base.py:342: in get_13f_filing\n    cover_page, holdings_table, simplified_holdings_table = self._parse_13f_url(filing_url, filing_url_date)\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <finsec.filing.Filing object at 0x000001E603E80950>\nurl = '/Archives/edgar/data/1067983/000095012322009450/0000950123-22-009450-index.htm'\ndate = '2022-08-15'\n\n    def _parse_13f_url(self, url: str, date: str):\n        response = requests.get(_BASE_URL_ + url, headers=_REQ_HEADERS_)\n        doc = pq(response.text)\n        import re\n        url_primary_html_document = doc('a[href*=\"xml\"]').eq(0).attr('href')  # Html primary doc is 1st in the list\n        url_primary_document = doc('a[href*=\"xml\"]').eq(1).attr('href')  # XML Primary doc is always 2nd in the list\n        url_list_document = doc('a[href*=\"xml\"]').eq(3).attr('href')  # xml list is always 4th in the list\n    \n        response = requests.get(_BASE_URL_ + url_primary_html_document, headers=_REQ_HEADERS_)\n        primary_html_doc = pq(response.text)\n    \n        response = requests.get(_BASE_URL_ + url_primary_document, headers=_REQ_HEADERS_)\n        primary_doc = pq(response.content)\n    \n        response = requests.get(_BASE_URL_ + url_list_document, headers=_REQ_HEADERS_)\n        list_doc = pq(response.content)\n    \n        # Check if the documentation is to the nearest dollar or thousand dollars\n        datetime_obj = datetime.strptime(date, '%Y-%m-%d')\n        if datetime_obj.year < 2023:\n            dollar_value_multiplier = 1000\n        elif datetime_obj.year > 2023:\n            dollar_value_multiplier = 1\n        else:\n            temp_list = primary_html_doc(':contains(\"nearest dollar\")')\n            if len(temp_list) > 0:\n                dollar_value_multiplier = 1\n            else:\n                dollar_value_multiplier = 1000\n    \n        # Get primary doc detail\n        filing_manager = self._get_bs4_text(primary_doc('filingManager name'))\n        business_address = self._get_bs4_text(primary_doc('street1')) + \", \" + self._get_bs4_text(\n            primary_doc('city')) + \", \" + self._get_bs4_text(primary_doc('stateOrCountry')) + \", \" + self._get_bs4_text(\n            primary_doc('zipCode'))\n        submission_type = self._get_bs4_text(primary_doc('submissionType'))\n        period_of_report = self._get_bs4_text(primary_doc('periodOfReport'))\n    \n        if self._get_bs4_text(primary_doc('amendmentInfo')) != 'N/A':  # Check if it is an amendment type filing\n            amendment_type = self._get_bs4_text(primary_doc('amendmentInfo amendmentType'))\n        else:\n            amendment_type = 'N/A'\n    \n        signature_name = self._get_bs4_text(primary_doc('signatureBlock name'))\n        signature_title = self._get_bs4_text(primary_doc('signatureBlock title'))\n        signature_phone = self._get_bs4_text(primary_doc('signatureBlock phone'))\n        signature_city = self._get_bs4_text(primary_doc('signatureBlock city'))\n        signature_state = self._get_bs4_text(primary_doc('signatureBlock stateOrCountry'))\n        signature_date = self._get_bs4_text(primary_doc('signatureBlock signatureDate'))\n    \n>       portfolio_value = int(self._get_bs4_text(primary_doc('summaryPage tableValueTotal'))) * dollar_value_multiplier\nE       ValueError: invalid literal for int() with base 10: ''\n\nfinsec\\base.py:136: ValueError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    }
+  ]
+}

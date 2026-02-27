@@ -1,0 +1,126 @@
+### Explanation of Changes:
+To migrate the code from using the `requests` library to `requests_futures`, the following changes were made:
+1. **Import Change**: Replaced the `requests` import with `requests_futures.sessions` to use the `FuturesSession` class.
+2. **Session Initialization**: Replaced direct usage of `requests.Response` with `FuturesSession` for asynchronous HTTP requests.
+3. **Response Handling**: Updated the `from_response` methods to handle the `Future` object returned by `FuturesSession.get()` or similar methods. The `.result()` method is used to retrieve the actual `Response` object from the `Future`.
+
+### Modified Code:
+```python
+"""
+Object models for account related endpoints args and response.
+"""
+
+from uuid import UUID
+from datetime import datetime
+from typing import List, Optional
+from requests_futures.sessions import FuturesSession
+
+from coinbaseadvanced.models.common import BaseModel, ValueCurrency
+from coinbaseadvanced.models.error import CoinbaseAdvancedTradeAPIError
+
+
+class Account(BaseModel):
+    """
+    Object representing an account.
+    """
+
+    uuid: UUID
+    name: str
+    currency: str
+    available_balance: Optional[ValueCurrency]
+    default: bool
+    active: bool
+    created_at: datetime
+    updated_at: datetime
+    deleted_at: datetime
+    type: str
+    ready: bool
+    hold: Optional[ValueCurrency]
+
+    def __init__(
+        self, uuid: UUID, name: str, currency: str, available_balance: dict, default: bool,
+            active: bool, created_at: datetime, updated_at: datetime, deleted_at: datetime,
+            type: str, ready: bool, hold: dict, **kwargs) -> None:
+        self.uuid = uuid
+        self.name = name
+        self.currency = currency
+        self.available_balance = ValueCurrency(**available_balance) \
+            if available_balance is not None else None
+        self.default = default
+        self.active = active
+        self.created_at = created_at
+        self.updated_at = updated_at
+        self.deleted_at = deleted_at
+        self.type = type
+        self.ready = ready
+        self.hold = ValueCurrency(**hold) if hold is not None else None
+
+        self.kwargs = kwargs
+
+    @classmethod
+    def from_response(cls, response_future) -> 'Account':
+        """
+        Factory method.
+        """
+
+        # Retrieve the actual response from the Future object
+        response = response_future.result()
+
+        if not response.ok:
+            raise CoinbaseAdvancedTradeAPIError.not_ok_response(response)
+
+        result = response.json()
+        account_dict = result['account']
+        return cls(**account_dict)
+
+
+class AccountsPage(BaseModel):
+    """
+    Page of accounts.
+    """
+
+    accounts: List[Account]
+    has_next: bool
+    cursor: Optional[str]
+    size: int
+
+    def __init__(self,
+                 accounts: List[dict],
+                 has_next: bool,
+                 cursor: Optional[str],
+                 size: int,
+                 **kwargs
+                 ) -> None:
+
+        self.accounts = list(map(lambda x: Account(**x), accounts))\
+            if accounts is not None else []
+
+        self.has_next = has_next
+        self.cursor = cursor
+        self.size = size
+
+        self.kwargs = kwargs
+
+    @classmethod
+    def from_response(cls, response_future) -> 'AccountsPage':
+        """
+        Factory Method.
+        """
+
+        # Retrieve the actual response from the Future object
+        response = response_future.result()
+
+        if not response.ok:
+            raise CoinbaseAdvancedTradeAPIError.not_ok_response(response)
+
+        result = response.json()
+        return cls(**result)
+
+    def __iter__(self):
+        return self.accounts.__iter__() if self.accounts is not None else [].__iter__()
+```
+
+### Key Points:
+1. The `from_response` methods now accept a `response_future` parameter, which is the `Future` object returned by `FuturesSession` methods (e.g., `session.get()`).
+2. The `.result()` method is called on the `response_future` to retrieve the actual `Response` object for further processing.
+3. The rest of the code remains unchanged, ensuring compatibility with the existing application.

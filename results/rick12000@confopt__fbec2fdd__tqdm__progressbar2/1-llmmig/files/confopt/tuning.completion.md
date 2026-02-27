@@ -1,0 +1,569 @@
+### Explanation of Changes:
+To migrate the code from using the `tqdm` library to the `progressbar2` library, the following changes were made:
+1. **Import Replacement**: Removed the `tqdm` import and replaced it with `progressbar` from the `progressbar2` library.
+2. **Progress Bar Initialization**: Replaced `tqdm` progress bar initialization with `progressbar.ProgressBar`. The `desc` argument in `tqdm` was replaced with `progressbar.FormatLabel` to display a description.
+3. **Progress Bar Updates**: Replaced `tqdm`'s `update()` method with `progressbar.ProgressBar.update()` and adjusted the logic to work with `progressbar2`.
+4. **Closing the Progress Bar**: Removed the `close()` method from `tqdm` as it is not required in `progressbar2`.
+
+### Modified Code:
+Below is the entire code with the necessary changes to use `progressbar2` instead of `tqdm`.
+
+```python
+import logging
+import random
+from copy import deepcopy
+from typing import Optional, Dict, Any, Tuple, List
+
+import numpy as np
+from sklearn.metrics import mean_squared_error, accuracy_score, log_loss
+from sklearn.preprocessing import StandardScaler
+import progressbar
+
+from confopt.config import (
+    NON_NORMALIZING_ARCHITECTURES,
+    METRIC_PROPORTIONALITY_LOOKUP,
+    QUANTILE_ESTIMATOR_ARCHITECTURES,
+)
+from confopt.estimation import (
+    QuantileConformalRegression,
+    LocallyWeightedConformalRegression,
+)
+from confopt.optimization import derive_optimal_tuning_count, RuntimeTracker
+from confopt.preprocessing import train_val_split, remove_iqr_outliers
+from confopt.utils import get_tuning_configurations, tabularize_configurations
+
+from confopt.wrapping import TunableModel
+from sklearn.base import BaseEstimator
+
+logger = logging.getLogger(__name__)
+
+
+def update_model_parameters(
+    model_instance: Any, configuration: Dict, random_state: int = None
+):
+    updated_model_instance = deepcopy(model_instance)
+    for tuning_attr_name, tuning_attr in configuration.items():
+        setattr(updated_model_instance, tuning_attr_name, tuning_attr)
+    if hasattr(updated_model_instance, "random_state"):
+        setattr(updated_model_instance, "random_state", random_state)
+    return updated_model_instance
+
+
+def score_predictions(
+    y_obs: np.array, y_pred: np.array, scoring_function: str
+) -> float:
+    if scoring_function == "accuracy_score":
+        score = accuracy_score(y_true=y_obs, y_pred=y_pred)
+    elif scoring_function == "log_loss":
+        score = log_loss(y_true=y_obs, y_pred=y_pred)
+    elif scoring_function == "mean_squared_error":
+        score = mean_squared_error(y_true=y_obs, y_pred=y_pred)
+    else:
+        raise ValueError(f"{scoring_function} is not a recognized scoring function.")
+
+    return score
+
+
+def process_and_split_estimation_data(
+    searched_configurations: np.array,
+    searched_performances: np.array,
+    train_split: float,
+    filter_outliers: bool = False,
+    outlier_scope: str = "top_and_bottom",
+    random_state: Optional[int] = None,
+) -> Tuple[np.array, np.array, np.array, np.array]:
+    X = searched_configurations.copy()
+    y = searched_performances.copy()
+    logger.debug(f"Minimum performance in searcher data: {y.min()}")
+    logger.debug(f"Maximum performance in searcher data: {y.max()}")
+
+    if filter_outliers:
+        X, y = remove_iqr_outliers(X=X, y=y, scope=outlier_scope)
+
+    X_train, y_train, X_val, y_val = train_val_split(
+        X=X,
+        y=y,
+        train_split=train_split,
+        normalize=False,
+        ordinal=False,
+        random_state=random_state,
+    )
+
+    return X_train, y_train, X_val, y_val
+
+
+def normalize_estimation_data(
+    training_searched_configurations: np.array,
+    validation_searched_configurations: np.array,
+    searchable_configurations: np.array,
+):
+    scaler = StandardScaler()
+    scaler.fit(training_searched_configurations)
+    normalized_searchable_configurations = scaler.transform(searchable_configurations)
+    normalized_training_searched_configurations = scaler.transform(
+        training_searched_configurations
+    )
+    normalized_validation_searched_configurations = scaler.transform(
+        validation_searched_configurations
+    )
+
+    return (
+        normalized_training_searched_configurations,
+        normalized_validation_searched_configurations,
+        normalized_searchable_configurations,
+    )
+
+
+def get_best_configuration_idx(
+    configuration_performance_bounds: Tuple[np.array, np.array],
+    optimization_direction: str,
+) -> int:
+    (
+        performance_lower_bounds,
+        performance_higher_bounds,
+    ) = configuration_performance_bounds
+    if optimization_direction == "inverse":
+        best_idx = np.argmin(performance_lower_bounds)
+
+    elif optimization_direction == "direct":
+        best_idx = np.argmax(performance_higher_bounds)
+    else:
+        raise ValueError(
+            f"{optimization_direction} is not a valid loss direction instruction."
+        )
+
+    return best_idx
+
+
+def get_best_performance_idx(
+    custom_loss_function: str, searched_performances: List[float]
+) -> int:
+    if METRIC_PROPORTIONALITY_LOOKUP[custom_loss_function] == "direct":
+        best_performance_idx = searched_performances.index(max(searched_performances))
+    elif METRIC_PROPORTIONALITY_LOOKUP[custom_loss_function] == "inverse":
+        best_performance_idx = searched_performances.index(min(searched_performances))
+    else:
+        raise ValueError()
+
+    return best_performance_idx
+
+
+def update_adaptive_confidence_level(
+    true_confidence_level: float,
+    last_confidence_level: float,
+    breach: bool,
+    learning_rate: float,
+) -> float:
+    updated_confidence_level = 1 - (
+        (1 - last_confidence_level)
+        + learning_rate * ((1 - true_confidence_level) - breach)
+    )
+    updated_confidence_level = min(max(0.01, updated_confidence_level), 0.99)
+    logger.debug(
+        f"Updated confidence level of {last_confidence_level} to {updated_confidence_level}."
+    )
+
+    return updated_confidence_level
+
+
+class ConformalSearcher:
+    def __init__(
+        self,
+        model: BaseEstimator | TunableModel,
+        X_train: np.array,
+        y_train: np.array,
+        X_val: np.array,
+        y_val: np.array,
+        search_space: Dict,
+        prediction_type: str,
+        custom_loss_function: Optional[str] = None,
+    ):
+        if isinstance(model, BaseEstimator) or isinstance(model, TunableModel):
+            self.model = model
+        else:
+            raise ValueError(
+                "Model to tune must be a sklearn BaseEstimator model or wrapped as subclass of TunableModel abstract class."
+            )
+
+        self.X_train = X_train
+        self.y_train = y_train
+        self.X_val = X_val
+        self.y_val = y_val
+        self.search_space = search_space
+        self.prediction_type = prediction_type
+
+        self.custom_loss_function = (
+            self._set_default_evaluation_metric()
+            if custom_loss_function is None
+            else custom_loss_function
+        )
+        self.tuning_configurations = self._get_tuning_configurations()
+
+    def _set_default_evaluation_metric(self) -> str:
+        if self.prediction_type == "regression":
+            custom_loss_function = "mean_squared_error"
+        elif self.prediction_type == "classification":
+            custom_loss_function = "accuracy_score"
+        else:
+            raise ValueError(
+                f"Unable to auto-allocate evaluation metric for {self.prediction_type} prediction type."
+            )
+        return custom_loss_function
+
+    def _get_tuning_configurations(self):
+        logger.debug("Creating hyperparameter space...")
+        tuning_configurations = get_tuning_configurations(
+            parameter_grid=self.search_space, n_configurations=1000, random_state=1234
+        )
+        return tuning_configurations
+
+    def _evaluate_configuration_performance(
+        self, configuration: Dict, random_state: Optional[int] = None
+    ) -> float:
+        logger.debug(f"Evaluating model with configuration: {configuration}")
+
+        updated_model = update_model_parameters(
+            model_instance=self.model,
+            configuration=configuration,
+            random_state=random_state,
+        )
+        updated_model.fit(X=self.X_train, y=self.y_train)
+
+        if self.custom_loss_function in ["log_loss"]:
+            y_pred = updated_model.predict_proba(self.X_val)
+        else:
+            y_pred = updated_model.predict(self.X_val)
+
+        performance = score_predictions(
+            y_obs=self.y_val, y_pred=y_pred, scoring_function=self.custom_loss_function
+        )
+
+        return performance
+
+    def _random_search(
+        self,
+        n_searches: int,
+        max_runtime: int,
+        verbose: bool = True,
+        random_state: Optional[int] = None,
+    ) -> Tuple[List, List, float]:
+        random.seed(random_state)
+        np.random.seed(random_state)
+
+        searched_configurations = []
+        searched_performances = []
+
+        skipped_configuration_counter = 0
+        runtime_per_search = 0
+
+        shuffled_tuning_configurations = self.tuning_configurations.copy()
+        random.seed(random_state)
+        random.shuffle(shuffled_tuning_configurations)
+        randomly_sampled_configurations = shuffled_tuning_configurations[
+            : min(n_searches, len(self.tuning_configurations))
+        ]
+
+        model_training_timer = RuntimeTracker()
+        model_training_timer.pause_runtime()
+        if verbose:
+            progress = progressbar.ProgressBar(
+                max_value=len(randomly_sampled_configurations),
+                widgets=[
+                    progressbar.FormatLabel("Random search: "),
+                    progressbar.Percentage(),
+                    " ",
+                    progressbar.Bar(),
+                ],
+            )
+        for config_idx, hyperparameter_configuration in enumerate(
+            randomly_sampled_configurations
+        ):
+            if verbose:
+                progress.update(config_idx + 1)
+            model_training_timer.resume_runtime()
+            validation_performance = self._evaluate_configuration_performance(
+                configuration=hyperparameter_configuration, random_state=random_state
+            )
+            model_training_timer.pause_runtime()
+
+            if np.isnan(validation_performance):
+                skipped_configuration_counter += 1
+                logger.debug(
+                    "Obtained non-numerical performance, skipping configuration."
+                )
+                continue
+
+            searched_configurations.append(hyperparameter_configuration.copy())
+            searched_performances.append(validation_performance)
+
+            runtime_per_search = (
+                runtime_per_search + model_training_timer.return_runtime()
+            ) / (config_idx - skipped_configuration_counter + 1)
+
+            logger.debug(
+                f"Random search iter {config_idx} performance: {validation_performance}"
+            )
+
+            if self.search_timer.return_runtime() > max_runtime:
+                raise RuntimeError(
+                    "confopt preliminary random search exceeded total runtime budget. "
+                    "Retry with larger runtime budget or set iteration-capped budget instead."
+                )
+
+        return searched_configurations, searched_performances, runtime_per_search
+
+    @staticmethod
+    def _set_conformal_validation_split(X: np.array) -> float:
+        if len(X) <= 30:
+            validation_split = 5 / len(X)
+        else:
+            validation_split = 0.33
+        return validation_split
+
+    def search(
+        self,
+        runtime_budget: int,
+        confidence_level: float = 0.8,
+        conformal_search_estimator: str = "qgbm",
+        n_random_searches: int = 20,
+        conformal_retraining_frequency: int = 1,
+        enable_adaptive_intervals: bool = True,
+        conformal_learning_rate: float = 0.1,
+        verbose: bool = True,
+        random_state: Optional[int] = None,
+    ):
+        self.random_state = random_state
+        self.search_timer = RuntimeTracker()
+
+        (
+            self.searched_configurations,
+            self.searched_performances,
+            runtime_per_search,
+        ) = self._random_search(
+            n_searches=n_random_searches,
+            max_runtime=runtime_budget,
+            verbose=verbose,
+            random_state=random_state,
+        )
+
+        search_model_tuning_count = 0
+
+        search_idx_range = range(len(self.tuning_configurations) - n_random_searches)
+        if verbose:
+            progress = progressbar.ProgressBar(
+                max_value=runtime_budget,
+                widgets=[
+                    progressbar.FormatLabel("Conformal search: "),
+                    progressbar.Percentage(),
+                    " ",
+                    progressbar.Bar(),
+                ],
+            )
+        for config_idx in search_idx_range:
+            if verbose:
+                progress.update(int(self.search_timer.return_runtime()))
+            searchable_configurations = [
+                configuration
+                for configuration in self.tuning_configurations
+                if configuration not in self.searched_configurations
+            ]
+            tabularized_searchable_configurations = tabularize_configurations(
+                configurations=searchable_configurations
+            ).to_numpy()
+            tabularized_searched_configurations = tabularize_configurations(
+                configurations=self.searched_configurations.copy()
+            ).to_numpy()
+
+            validation_split = ConformalSearcher._set_conformal_validation_split(
+                tabularized_searched_configurations
+            )
+            remove_outliers = (
+                True
+                if self.custom_loss_function == "log_loss"
+                or self.prediction_type == "regression"
+                else False
+            )
+            outlier_scope = "top_only"
+            (
+                X_train_conformal,
+                y_train_conformal,
+                X_val_conformal,
+                y_val_conformal,
+            ) = process_and_split_estimation_data(
+                searched_configurations=tabularized_searched_configurations,
+                searched_performances=np.array(self.searched_performances),
+                train_split=(1 - validation_split),
+                filter_outliers=remove_outliers,
+                outlier_scope=outlier_scope,
+                random_state=random_state,
+            )
+
+            if conformal_search_estimator.lower() not in NON_NORMALIZING_ARCHITECTURES:
+                (
+                    X_train_conformal,
+                    X_val_conformal,
+                    tabularized_searchable_configurations,
+                ) = normalize_estimation_data(
+                    training_searched_configurations=X_train_conformal,
+                    validation_searched_configurations=X_val_conformal,
+                    searchable_configurations=tabularized_searchable_configurations,
+                )
+
+            hit_retraining_interval = config_idx % conformal_retraining_frequency == 0
+            if config_idx == 0 or hit_retraining_interval:
+                if config_idx == 0:
+                    latest_confidence_level = confidence_level
+
+                if conformal_search_estimator in QUANTILE_ESTIMATOR_ARCHITECTURES:
+                    conformal_regressor = QuantileConformalRegression(
+                        quantile_estimator_architecture=conformal_search_estimator
+                    )
+
+                    conformal_regressor.fit(
+                        X_train=X_train_conformal,
+                        y_train=y_train_conformal,
+                        X_val=X_val_conformal,
+                        y_val=y_val_conformal,
+                        confidence_level=latest_confidence_level,
+                        tuning_iterations=search_model_tuning_count,
+                        random_state=random_state,
+                    )
+
+                else:
+                    (
+                        HR_X_pe_fitting,
+                        HR_y_pe_fitting,
+                        HR_X_ve_fitting,
+                        HR_y_ve_fitting,
+                    ) = train_val_split(
+                        X_train_conformal,
+                        y_train_conformal,
+                        train_split=0.75,
+                        normalize=False,
+                        random_state=random_state,
+                    )
+                    logger.debug(
+                        f"Obtained sub training set of size {HR_X_pe_fitting.shape} "
+                        f"and sub validation set of size {HR_X_ve_fitting.shape}"
+                    )
+
+                    conformal_regressor = LocallyWeightedConformalRegression(
+                        point_estimator_architecture=conformal_search_estimator,
+                        demeaning_estimator_architecture=conformal_search_estimator,
+                        variance_estimator_architecture=conformal_search_estimator,
+                    )
+
+                    conformal_regressor.fit(
+                        X_pe=HR_X_pe_fitting,
+                        y_pe=HR_y_pe_fitting,
+                        X_ve=HR_X_ve_fitting,
+                        y_ve=HR_y_ve_fitting,
+                        X_val=X_val_conformal,
+                        y_val=y_val_conformal,
+                        tuning_iterations=search_model_tuning_count,
+                        random_state=random_state,
+                    )
+
+            hyperreg_model_runtime_per_iter = conformal_regressor.training_time
+            search_model_tuning_count = derive_optimal_tuning_count(
+                baseline_model_runtime=runtime_per_search,
+                search_model_runtime=hyperreg_model_runtime_per_iter,
+                search_model_retraining_freq=conformal_retraining_frequency,
+                search_to_baseline_runtime_ratio=0.3,
+            )
+
+            (
+                parameter_performance_lower_bounds,
+                parameter_performance_higher_bounds,
+            ) = conformal_regressor.predict(
+                X=tabularized_searchable_configurations,
+                confidence_level=latest_confidence_level,
+            )
+
+            maximal_idx = get_best_configuration_idx(
+                configuration_performance_bounds=(
+                    parameter_performance_lower_bounds,
+                    parameter_performance_higher_bounds,
+                ),
+                optimization_direction=METRIC_PROPORTIONALITY_LOOKUP[
+                    self.custom_loss_function
+                ],
+            )
+
+            maximal_parameter = searchable_configurations[maximal_idx].copy()
+            validation_performance = self._evaluate_configuration_performance(
+                configuration=maximal_parameter, random_state=random_state
+            )
+            logger.debug(
+                f"Conformal search iter {config_idx} performance: {validation_performance}"
+            )
+
+            if np.isnan(validation_performance):
+                continue
+
+            if (
+                validation_performance
+                > parameter_performance_higher_bounds[maximal_idx]
+            ) or (
+                validation_performance < parameter_performance_lower_bounds[maximal_idx]
+            ):
+                is_last_interval_breached = True
+            else:
+                is_last_interval_breached = False
+
+            if enable_adaptive_intervals:
+                latest_confidence_level = update_adaptive_confidence_level(
+                    true_confidence_level=confidence_level,
+                    last_confidence_level=latest_confidence_level,
+                    breach=is_last_interval_breached,
+                    learning_rate=conformal_learning_rate,
+                )
+
+            self.searched_configurations.append(maximal_parameter.copy())
+            self.searched_performances.append(validation_performance)
+
+            if self.search_timer.return_runtime() > runtime_budget:
+                if verbose:
+                    progress.update(runtime_budget)
+                break
+
+    def get_best_params(self) -> Dict:
+        best_performance_idx = get_best_performance_idx(
+            custom_loss_function=self.custom_loss_function,
+            searched_performances=self.searched_performances,
+        )
+        best_params = self.searched_configurations[best_performance_idx]
+
+        return best_params
+
+    def get_best_value(self) -> float:
+        best_performance_idx = get_best_performance_idx(
+            custom_loss_function=self.custom_loss_function,
+            searched_performances=self.searched_performances,
+        )
+        best_performance = self.searched_performances[best_performance_idx]
+
+        return best_performance
+
+    def configure_best_model(self):
+        best_model = update_model_parameters(
+            model_instance=self.model,
+            configuration=self.get_best_params(),
+            random_state=self.random_state,
+        )
+        return best_model
+
+    def fit_best_model(self):
+        best_fitted_model = self.configure_best_model()
+        X_full = np.vstack((self.X_train, self.X_val))
+        y_full = np.hstack((self.y_train, self.y_val))
+
+        best_fitted_model.fit(X=X_full, y=y_full)
+
+        return best_fitted_model
+```
+
+### Summary of Changes:
+- Replaced `tqdm` with `progressbar2` for progress bar functionality.
+- Adjusted progress bar initialization, updates, and descriptions to align with `progressbar2`'s API.
+- Ensured the behavior and functionality of the progress bars remain consistent with the original implementation.

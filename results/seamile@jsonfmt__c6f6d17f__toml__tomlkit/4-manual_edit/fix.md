@@ -1,0 +1,1 @@
+- there is a difference in how the two libraries handle new lines, causing test case to fail. In most case the migration would be correct though.

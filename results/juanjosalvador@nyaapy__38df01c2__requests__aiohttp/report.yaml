@@ -1,0 +1,72 @@
+mig: juanjosalvador@nyaapy__38df01c2__requests__aiohttp__38df01c2__requests__aiohttp
+repo: juanjosalvador@nyaapy__38df01c2__requests__aiohttp
+commit: 38df01c21f4a10f0338783cbcb23660249852ebc
+source: requests
+target: aiohttp
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 3.11.16
+  finished_at: '2025-04-22 12:30:37'
+  project_coverage: 87.14285714285714
+  total_tests: 4
+  passed_tests: 4
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 9.615384615384615
+  files:
+  - path: nyaapy/anime_site.py
+    file_change_coverage: 9.615384615384615
+    covered_changed_lines: 1,11,27,91,105
+    uncovered_changed_lines: 12-17,19-22,24,69-74,76,78-88,92-97,99-100,102,106-111,113-115
+  test_diffs:
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_get_from_user
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_get_single
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False == True\n +  where False = isinstance(<coroutine\
+      \ object AnimeTorrentSite.get at 0x000001239C396CE0>, Torrent)"
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_last_uploads
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_search
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 66.15384615384616
+  files:
+  - path: nyaapy/anime_site.py
+    file_change_coverage: 57.69230769230769
+    covered_changed_lines: 1,11-14,19-20,24,27,69-71,76,78,83,88,91-94,99-100,102,105-108,113-115
+    uncovered_changed_lines: 15-17,21-22,72-74,79-82,84-87,95-97,109-111
+  - path: tests/integration/test_nyaasi.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 3,6-8,15-17,23-25,30-32
+    uncovered_changed_lines: ''
+  test_diffs: []

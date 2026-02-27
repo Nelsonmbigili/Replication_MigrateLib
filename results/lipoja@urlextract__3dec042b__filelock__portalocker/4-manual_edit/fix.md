@@ -1,0 +1,1 @@
+- filelock creates the lock file if does not exist, which portalocker does not. created the lockfile if it does not exist.

@@ -1,0 +1,72 @@
+mig: cronitorio@cronitor-python__cdbae557__requests__urllib3__cdbae557__requests__urllib3
+repo: cronitorio@cronitor-python__cdbae557__requests__urllib3
+commit: cdbae5575578236a4146544063377297e57e8874
+source: requests
+target: urllib3
+premig:
+  name: premig
+  status: finished
+  source_version: 2.31.0
+  target_version: 2.3.0
+  finished_at: '2025-04-22 09:16:39'
+  project_coverage: 88.88888888888889
+  total_tests: 18
+  passed_tests: 18
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 37.254901960784316
+  files:
+  - path: cronitor/monitor.py
+    file_change_coverage: 37.254901960784316
+    covered_changed_lines: 6,8,14,21,131-133,135,137,139,149-153,175-177,179
+    uncovered_changed_lines: 13,37-45,96-101,103,105-109,134,136,163-166,178,180-181,183
+  test_diffs:
+  - test_id: cronitor/tests/test_monitor.py::MonitorTests::test_create_monitor_fails
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: <urllib3.poolmanager.PoolManager object at 0x00000265869D38C0>
+      does not have the attribute ''put'''
+  - test_id: cronitor/tests/test_monitor.py::MonitorTests::test_delete_no_id
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: APIError
+    error_message: 'cronitor.APIError: An unexpected error occured when deleting ''a-test_key'''
+  - test_id: cronitor/tests/test_monitor.py::MonitorTests::test_get_monitor_invalid_code
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: expected string or bytes-like object, got ''NoneType'''
+  - test_id: cronitor/tests/test_monitor.py::MonitorTests::test_update_monitor_fails_validation
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: <urllib3.poolmanager.PoolManager object at 0x00000265869D38C0>
+      does not have the attribute ''put'''
+  - test_id: cronitor/tests/test_pings.py::MonitorPingTests::test_with_all_params
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: <urllib3.poolmanager.PoolManager object at 0x00000265869D38C0>
+      does not have the attribute ''get'''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []

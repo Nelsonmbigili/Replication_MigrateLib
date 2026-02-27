@@ -1,0 +1,262 @@
+{
+  "exitcode": 1,
+  "summary": {
+    "failed": 4,
+    "total": 4,
+    "collected": 4
+  },
+  "collectors": [
+    {
+      "nodeid": "",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": ".",
+          "type": "Dir"
+        }
+      ]
+    },
+    {
+      "nodeid": "nyaapy/nyaasi",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "nyaapy",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "nyaapy/nyaasi",
+          "type": "Package"
+        }
+      ]
+    },
+    {
+      "nodeid": "tests/integration/test_nyaasi.py",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "tests/integration/test_nyaasi.py::test_nyaa_last_uploads",
+          "type": "Function",
+          "lineno": 4
+        },
+        {
+          "nodeid": "tests/integration/test_nyaasi.py::test_nyaa_search",
+          "type": "Function",
+          "lineno": 12
+        },
+        {
+          "nodeid": "tests/integration/test_nyaasi.py::test_nyaa_get_single",
+          "type": "Function",
+          "lineno": 19
+        },
+        {
+          "nodeid": "tests/integration/test_nyaasi.py::test_nyaa_get_from_user",
+          "type": "Function",
+          "lineno": 25
+        }
+      ]
+    },
+    {
+      "nodeid": "tests/integration",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "tests/integration/test_nyaasi.py",
+          "type": "Module"
+        }
+      ]
+    },
+    {
+      "nodeid": "tests",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "tests/integration",
+          "type": "Dir"
+        }
+      ]
+    },
+    {
+      "nodeid": ".",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "nyaapy",
+          "type": "Package"
+        },
+        {
+          "nodeid": "tests",
+          "type": "Dir"
+        }
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "nodeid": "tests/integration/test_nyaasi.py::test_nyaa_last_uploads",
+      "lineno": 4,
+      "outcome": "failed",
+      "keywords": [
+        "test_nyaa_last_uploads",
+        "test_nyaasi.py",
+        "integration",
+        "tests",
+        "juanjosalvador@nyaapy__38df01c2__requests__pycurl",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\juanjosalvador@nyaapy__38df01c2__requests__pycurl\\nyaapy\\anime_site.py",
+          "lineno": 35,
+          "message": "UnicodeDecodeError: 'utf-8' codec can't decode byte 0x8b in position 1: invalid start byte"
+        },
+        "traceback": [
+          {
+            "path": "tests\\integration\\test_nyaasi.py",
+            "lineno": 6,
+            "message": ""
+          },
+          {
+            "path": "nyaapy\\anime_site.py",
+            "lineno": 35,
+            "message": "UnicodeDecodeError"
+          }
+        ],
+        "longrepr": "def test_nyaa_last_uploads():\n>       request = Nyaa.last_uploads(number_of_results=10)\n\ntests\\integration\\test_nyaasi.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <class 'nyaapy.nyaasi.nyaa.Nyaa'>, number_of_results = 10\n\n    @classmethod\n    def last_uploads(self, number_of_results: int):\n        response_content = self._pycurl_get(self.URL)\n    \n        # Parse the response content\n        json_data = parse_nyaa(\n>           request_text=response_content.decode(\"utf-8\"),\n            limit=number_of_results,\n            site=self.SITE,\n        )\nE       UnicodeDecodeError: 'utf-8' codec can't decode byte 0x8b in position 1: invalid start byte\n\nnyaapy\\anime_site.py:35: UnicodeDecodeError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/integration/test_nyaasi.py::test_nyaa_search",
+      "lineno": 12,
+      "outcome": "failed",
+      "keywords": [
+        "test_nyaa_search",
+        "test_nyaasi.py",
+        "integration",
+        "tests",
+        "juanjosalvador@nyaapy__38df01c2__requests__pycurl",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\juanjosalvador@nyaapy__38df01c2__requests__pycurl\\nyaapy\\anime_site.py",
+          "lineno": 19,
+          "message": "pycurl.error: (3, 'URL rejected: Malformed input to a URL function')"
+        },
+        "traceback": [
+          {
+            "path": "tests\\integration\\test_nyaasi.py",
+            "lineno": 14,
+            "message": ""
+          },
+          {
+            "path": "nyaapy\\anime_site.py",
+            "lineno": 85,
+            "message": "in search"
+          },
+          {
+            "path": "nyaapy\\anime_site.py",
+            "lineno": 19,
+            "message": "error"
+          }
+        ],
+        "longrepr": "def test_nyaa_search():\n>       request = Nyaa.search(keyword=\"koe no katachi\")\n\ntests\\integration\\test_nyaasi.py:14: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nnyaapy\\anime_site.py:85: in search\n    response_content = self._pycurl_get(search_uri)\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nurl = 'https://nyaa.si/?f=0&c=0_0&q=koe no katachi&s=id&o=desc&page=rss'\n\n    @staticmethod\n    def _pycurl_get(url):\n        \"\"\"Helper method to perform a GET request using pycurl.\"\"\"\n        buffer = BytesIO()\n        curl = pycurl.Curl()\n        curl.setopt(pycurl.URL, url)\n        curl.setopt(pycurl.WRITEDATA, buffer)\n        curl.setopt(pycurl.FOLLOWLOCATION, True)  # Follow redirects\n>       curl.perform()\nE       pycurl.error: (3, 'URL rejected: Malformed input to a URL function')\n\nnyaapy\\anime_site.py:19: error"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/integration/test_nyaasi.py::test_nyaa_get_single",
+      "lineno": 19,
+      "outcome": "failed",
+      "keywords": [
+        "test_nyaa_get_single",
+        "test_nyaasi.py",
+        "integration",
+        "tests",
+        "juanjosalvador@nyaapy__38df01c2__requests__pycurl",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\juanjosalvador@nyaapy__38df01c2__requests__pycurl\\nyaapy\\anime_site.py",
+          "lineno": 108,
+          "message": "UnicodeDecodeError: 'utf-8' codec can't decode byte 0x8b in position 1: invalid start byte"
+        },
+        "traceback": [
+          {
+            "path": "tests\\integration\\test_nyaasi.py",
+            "lineno": 21,
+            "message": ""
+          },
+          {
+            "path": "nyaapy\\anime_site.py",
+            "lineno": 108,
+            "message": "UnicodeDecodeError"
+          }
+        ],
+        "longrepr": "def test_nyaa_get_single():\n>       request = Nyaa.get(view_id=\"1847113\")\n\ntests\\integration\\test_nyaasi.py:21: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <class 'nyaapy.nyaasi.nyaa.Nyaa'>, view_id = '1847113'\n\n    @classmethod\n    def get(self, view_id: int):\n        response_content = self._pycurl_get(f\"{self.URL}/view/{view_id}\")\n    \n        json_data = parse_single(\n>           request_text=response_content.decode(\"utf-8\"), site=self.SITE\n        )\nE       UnicodeDecodeError: 'utf-8' codec can't decode byte 0x8b in position 1: invalid start byte\n\nnyaapy\\anime_site.py:108: UnicodeDecodeError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/integration/test_nyaasi.py::test_nyaa_get_from_user",
+      "lineno": 25,
+      "outcome": "failed",
+      "keywords": [
+        "test_nyaa_get_from_user",
+        "test_nyaasi.py",
+        "integration",
+        "tests",
+        "juanjosalvador@nyaapy__38df01c2__requests__pycurl",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\juanjosalvador@nyaapy__38df01c2__requests__pycurl\\nyaapy\\anime_site.py",
+          "lineno": 118,
+          "message": "UnicodeDecodeError: 'utf-8' codec can't decode byte 0x8b in position 1: invalid start byte"
+        },
+        "traceback": [
+          {
+            "path": "tests\\integration\\test_nyaasi.py",
+            "lineno": 27,
+            "message": ""
+          },
+          {
+            "path": "nyaapy\\anime_site.py",
+            "lineno": 118,
+            "message": "UnicodeDecodeError"
+          }
+        ],
+        "longrepr": "def test_nyaa_get_from_user():\n>       request = Nyaa.get_from_user(username=\"Erai-raws\")\n\ntests\\integration\\test_nyaasi.py:27: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = <class 'nyaapy.nyaasi.nyaa.Nyaa'>, username = 'Erai-raws'\n\n    @classmethod\n    def get_from_user(self, username):\n        response_content = self._pycurl_get(f\"{self.URL}/user/{username}\")\n    \n        json_data = parse_nyaa(\n>           request_text=response_content.decode(\"utf-8\"), limit=None, site=self.SITE\n        )\nE       UnicodeDecodeError: 'utf-8' codec can't decode byte 0x8b in position 1: invalid start byte\n\nnyaapy\\anime_site.py:118: UnicodeDecodeError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    }
+  ]
+}

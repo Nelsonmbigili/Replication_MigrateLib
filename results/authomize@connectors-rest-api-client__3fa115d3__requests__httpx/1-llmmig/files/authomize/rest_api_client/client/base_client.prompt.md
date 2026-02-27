@@ -1,0 +1,97 @@
+The following Python code currently uses the library "requests" version 2.31.0.
+Migrate this code to use the library "httpx" version 0.28.1 instead.
+
+**Instructions:**
+1. **Explain the Changes**: Begin the output with a brief explanation of the specific changes you made to migrate from "requests" to "httpx".
+2. **Provide the Modified Code**: After the explanation, present the modified code. Provide the entire code after migration even if only a part of it is changed.
+
+**Important Guidelines**:
+- Only make changes directly related to migrating between "requests" and "httpx".
+- Do not refactor, reformat, optimize, or alter the original coding style.
+- The code given to you is part of a larger application. Do not change the names of classes, functions, or variables, because it can break the application.
+
+Original code:
+```python
+from typing import Optional
+
+import requests
+from requests import Response
+
+AUTHOMIZE_API_URL = 'https://api.authomize.com'
+
+
+class ClientError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+
+class BaseClient:
+    def __init__(self, auth_token: str, base_url: str = AUTHOMIZE_API_URL):
+        self.auth_token = auth_token
+        self.base_url = base_url
+        self.session = requests.Session()
+        self.session.headers.update({'Authorization': self.authorization_header})
+
+    @property
+    def authorization_header(self) -> str:
+        raise NotImplementedError()
+
+    @staticmethod
+    def _handle_response(response: Response):
+        if response.ok:
+            return BaseClient._handle_ok_response(response)
+        try:
+            response_json = response.json()
+            detail = response_json.get('detail')
+            if 400 <= response.status_code < 500:
+                response.reason = response.text
+        except Exception:
+            detail = None
+        if detail:
+            raise ClientError(str(detail))
+        response.raise_for_status()
+
+    @staticmethod
+    def _handle_ok_response(response: Response) -> dict:
+        if content_type := response.headers.get('content-type'):
+            if content_type.startswith('application/json'):
+                return response.json()
+
+        raise ClientError(
+            message={
+                'status_code': response.status_code,
+                'url': response.url,
+                'message': 'Unexpected response from API',
+                'raw': response.content,
+            },
+        )
+
+    def http_get(self, url, params=None):
+        url = self.base_url + url
+        response = self.session.get(url, params=params)
+        return self._handle_response(response)
+
+    def http_post(self, url: str, body: Optional[str] = None):
+        url = self.base_url + url
+        response = self.session.post(
+            url,
+            headers={'Content-Type': 'application/json'},
+            data=body,
+        )
+        return self._handle_response(response)
+
+    def http_patch(self, url: str, body: Optional[str] = None):
+        url = self.base_url + url
+        response = self.session.patch(
+            url,
+            headers={'Content-Type': 'application/json'},
+            data=body,
+        )
+        return self._handle_response(response)
+
+    def http_delete(self, url: str, params=None):
+        url = self.base_url + url
+        response = self.session.delete(url, params=params)
+        return self._handle_response(response)
+
+```

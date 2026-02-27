@@ -1,0 +1,2 @@
+- LLM renamed a public class EncryptedAlchemyBinaryField, causing import error
+- Changed the name back, all tests passed

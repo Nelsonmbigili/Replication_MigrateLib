@@ -1,0 +1,2 @@
+- fix use of async/await keywords
+- set httpx maximum connection limit, default limit does not allow the connections

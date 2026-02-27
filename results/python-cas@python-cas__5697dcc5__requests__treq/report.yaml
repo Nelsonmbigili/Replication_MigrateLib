@@ -1,0 +1,60 @@
+mig: python-cas@python-cas__5697dcc5__requests__treq__5697dcc5__requests__treq
+repo: python-cas@python-cas__5697dcc5__requests__treq
+commit: 5697dcc59d172180adbd26d5665b1f5472225f92
+source: requests
+target: treq
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 24.9.1
+  finished_at: '2025-04-23 14:39:21'
+  project_coverage: 81.89655172413794
+  total_tests: 21
+  passed_tests: 21
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 28.571428571428573
+  files:
+  - path: cas.py
+    file_change_coverage: 28.571428571428573
+    covered_changed_lines: 5,82,134,168,202,207,319,365
+    uncovered_changed_lines: 143-144,146-147,160,176,181-184,188,204,215,220,333,338,363-364,380,382
+  test_diffs:
+  - test_id: tests/test_cas.py::test_v3_custom_session
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: unknown
+    error_message: 'TypeError: cannot unpack non-iterable coroutine object'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 41.935483870967744
+  files:
+  - path: tests/test_cas.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 193,195,208
+    uncovered_changed_lines: ''
+  - path: cas.py
+    file_change_coverage: 35.714285714285715
+    covered_changed_lines: 5,82,134,168,202,204,207,215,319,365
+    uncovered_changed_lines: 143-144,146-147,160,176,181-184,188,220,333,338,363-364,380,382
+  test_diffs:
+  - test_id: tests/test_cas.py::test_v3_custom_session
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: unknown
+    error_message: 'TypeError: HTTPClient.request() got an unexpected keyword argument
+      ''verify'''

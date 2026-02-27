@@ -1,0 +1,96 @@
+mig: juanjosalvador@nyaapy__38df01c2__requests__treq__38df01c2__requests__treq
+repo: juanjosalvador@nyaapy__38df01c2__requests__treq
+commit: 38df01c21f4a10f0338783cbcb23660249852ebc
+source: requests
+target: treq
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 24.9.1
+  finished_at: '2025-04-22 12:32:23'
+  project_coverage: 87.14285714285714
+  total_tests: 4
+  passed_tests: 4
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 17.857142857142858
+  files:
+  - path: nyaapy/anime_site.py
+    file_change_coverage: 17.857142857142858
+    covered_changed_lines: 1,11,26,87,98
+    uncovered_changed_lines: 12,14-16,18,20,68-72,76,80,88-90,92-93,99-101,103-104
+  test_diffs:
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_get_from_user
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_get_single
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False == True\n +  where False = isinstance(<coroutine\
+      \ object AnimeTorrentSite.get at 0x0000021366A9BA60>, Torrent)"
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_last_uploads
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_search
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 53.65853658536585
+  files:
+  - path: nyaapy/anime_site.py
+    file_change_coverage: 32.142857142857146
+    covered_changed_lines: 1,11-12,26,68,87-88,98-99
+    uncovered_changed_lines: 14-16,18,20,69-72,76,80,89-90,92-93,100-101,103-104
+  - path: tests/integration/test_nyaasi.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 3,6-8,15-17,23-25,30-32
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_get_from_user
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: Task got bad yield: <Deferred at 0x2fa3c0fd910>'
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_get_single
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: Task got bad yield: <Deferred at 0x2fa3bf878f0>'
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_last_uploads
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: Task got bad yield: <Deferred at 0x2fa3becbe60>'
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_search
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: Task got bad yield: <Deferred at 0x2fa3bf85e50>'

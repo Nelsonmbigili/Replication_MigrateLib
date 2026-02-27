@@ -1,0 +1,265 @@
+### Explanation of Changes
+To migrate the code from the `requests` library to the `pycurl` library, the following changes were made:
+1. **Replaced `requests.get` with `pycurl` for HTTP GET requests**:
+   - Used `pycurl.Curl` to perform GET requests.
+   - Used `io.BytesIO` to capture the response body.
+   - Parsed the response body using `json.loads` to mimic the behavior of `requests.get().json()`.
+
+2. **Replaced `requests.post` with `pycurl` for HTTP POST requests**:
+   - Used `pycurl.Curl` to perform POST requests.
+   - Set the `POSTFIELDS` option for sending data.
+   - Used `io.BytesIO` to capture the response body.
+
+3. **Replaced `requests.put` with `pycurl` for HTTP PUT requests**:
+   - Used `pycurl.Curl` to perform PUT requests.
+   - Set the `UPLOAD` option and provided the data to upload.
+
+4. **Session Management**:
+   - Since `pycurl` does not have a session object like `requests.Session`, I replaced session-based calls with direct `pycurl` calls.
+
+5. **Error Handling**:
+   - Added basic error handling for `pycurl` using `pycurl.error`.
+
+6. **Dependencies**:
+   - Imported `pycurl` and `io` for handling HTTP requests and capturing responses.
+
+### Modified Code
+Below is the entire code after migrating from `requests` to `pycurl`:
+
+```python
+from __future__ import annotations
+
+import json
+import logging
+import re
+import io
+from typing import List, Dict, Optional, Any
+
+import backoff
+import pycurl
+
+from olclient.common import Entity, Book
+from olclient.helper_classes.results import Results
+from olclient.utils import merge_unique_lists, get_text_value, get_approval_from_cli
+
+logger = logging.getLogger('open_library_work')
+
+
+def get_work_helper_class(ol_context):
+    class Work(Entity):
+
+        OL = ol_context
+
+        def __init__(self, olid: str, identifiers=None, **kwargs):
+            super().__init__(identifiers)
+            self.olid = olid
+            self._editions: List = []
+            self.description = get_text_value(kwargs.pop('description', None))
+            self.notes = get_text_value(kwargs.pop('notes', None))
+            for kwarg in kwargs:
+                setattr(self, kwarg, kwargs[kwarg])
+
+        def json(self) -> dict:
+            """Returns a dict JSON representation of an OL Work suitable
+            for saving back to Open Library via its APIs.
+            """
+            exclude = ['_editions', 'olid']
+            data = {k: v for k, v in self.__dict__.items() if v and k not in exclude}
+            data['key'] = '/works/' + self.olid
+            data['type'] = {'key': '/type/work'}
+            if data.get('description'):
+                data['description'] = {
+                    'type': '/type/text',
+                    'value': data['description'],
+                }
+            if data.get('notes'):
+                data['notes'] = {'type': '/type/text', 'value': data['notes']}
+            return data
+
+        def validate(self) -> None:
+            """Validates a Work's json representation against the canonical
+            JSON Schema for Works using jsonschema.validate().
+            Raises:
+               jsonschema.exceptions.ValidationError if the Work is invalid.
+            """
+            return self.OL.validate(self, 'work.schema.json')
+
+        @property
+        def editions(self):
+            """Returns a list of editions of related to a particular work
+            Returns
+                (List) of common.Edition books
+            Usage:
+                >>> from olclient import OpenLibrary
+                >>> ol = OpenLibrary()
+                >>> ol.Work(olid).editions
+            """
+            url = f'{self.OL.base_url}/works/{self.olid}/editions.json'
+            r_json: Dict[Any, Any] = self._get_request(url)
+            editions: List[Any] = r_json.get('entries', [])
+
+            while True:
+                next_page_link: Optional[str] = r_json.get('links', {}).get('next')
+                if next_page_link is not None:
+                    r_json: Dict[Any, Any] = self._get_request(self.OL.base_url + next_page_link)
+                    editions.extend(r_json.get('entries', []))
+                else:
+                    break
+
+            self._editions = [
+                self.OL.Edition(**self.OL.Edition.ol_edition_json_to_book_args(ed))
+                for ed in editions
+            ]
+            return self._editions
+
+        @classmethod
+        def create(cls, book: Book, debug=False) -> Work:
+            """Creates a new work along with a new edition"""
+            year_matches_in_date: list[Any] = re.findall(r'[\d]{4}', book.publish_date)
+            book.publish_date = year_matches_in_date[0] if len(year_matches_in_date) > 0 else ''
+            ed = cls.OL.create_book(book, debug=debug)
+            ed.add_bookcover(book.cover)
+            work = ed.work
+            work.add_bookcover(book.cover)
+            return ed
+
+        def add_author(self, author):
+            author_role = {
+                'type': {'key': '/type/author_role'},
+                'author': {'key': '/authors/' + author.olid},
+            }
+            self.authors.append(author_role)
+            return author_role
+
+        def add_bookcover(self, url):
+            return self._post_request(
+                f'{self.OL.base_url}/works/{self.olid}/-/add-cover',
+                {'file': '', 'url': url, 'upload': 'submit'},
+            )
+
+        def add_subject(self, subject, comment=''):
+            return self.add_subjects([subject], comment)
+
+        def add_subjects(self, subjects, comment=''):
+            url = self.OL.base_url + "/works/" + self.olid + ".json"
+            data = self._get_request(url)
+            original_subjects = data.get('subjects', [])
+            changed_subjects = merge_unique_lists([original_subjects, subjects])
+            data['_comment'] = comment or (
+                f"adding {', '.join(subjects)} to subjects"
+            )
+            data['subjects'] = changed_subjects
+            return self._put_request(url, json.dumps(data))
+
+        def rm_subjects(self, subjects, comment=''):
+            url = self.OL.base_url + "/works/" + self.olid + ".json"
+            data = self._get_request(url)
+            data['_comment'] = comment or (f"rm subjects: {', '.join(subjects)}")
+            data['subjects'] = list(set(data['subjects']) - set(subjects))
+            return self._put_request(url, json.dumps(data))
+
+        def delete(self, comment: str, confirm: bool = True) -> Optional[Response]:
+            should_delete = confirm is False or get_approval_from_cli(
+                f'Delete https://openlibrary.org/works/{self.olid} and its editions? (y/n)'
+            )
+            if should_delete is False:
+                return None
+            return self._post_request(f'{self.OL.base_url}/works/{self.olid}/-/delete.json', {'comment': comment})
+
+        def save(self, comment):
+            """Saves this work back to Open Library using the JSON API."""
+            body = self.json()
+            body['_comment'] = comment
+            url = self.OL.base_url + f'/works/{self.olid}.json'
+            return self._put_request(url, json.dumps(body))
+
+        @classmethod
+        def get(cls, olid: str) -> Work:
+            path = f'/works/{olid}.json'
+            r = cls.OL.get_ol_response(path)
+            return cls(olid, **r.json())
+
+        @classmethod
+        def search(cls, title: Optional[str] = None, author: Optional[str] = None) -> Optional[Book]:
+            """Get the *closest* matching result in OpenLibrary based on a title
+            and author.
+            """
+            if not (title or author):
+                raise ValueError("Author or title required for metadata search")
+
+            url = f'{cls.OL.base_url}/search.json?title={title}'
+            if author:
+                url += f'&author={author}'
+
+            @backoff.on_exception(
+                on_giveup=lambda error: logger.exception(
+                    "Error retrieving metadata for book: %s", error
+                ),
+                **cls.OL.BACKOFF_KWARGS,
+            )
+            def _get_book_by_metadata(ol_url):
+                return self._get_request(ol_url)
+
+            response = _get_book_by_metadata(url)
+            results = Results(**response)
+
+            if results.num_found:
+                return results.first.to_book()
+
+            return None
+
+        def _get_request(self, url: str) -> dict:
+            """Helper method to perform a GET request using pycurl."""
+            buffer = io.BytesIO()
+            c = pycurl.Curl()
+            c.setopt(c.URL, url)
+            c.setopt(c.WRITEDATA, buffer)
+            try:
+                c.perform()
+                c.close()
+                return json.loads(buffer.getvalue().decode('utf-8'))
+            except pycurl.error as e:
+                logger.error(f"GET request failed: {e}")
+                raise
+
+        def _post_request(self, url: str, data: dict) -> dict:
+            """Helper method to perform a POST request using pycurl."""
+            buffer = io.BytesIO()
+            c = pycurl.Curl()
+            c.setopt(c.URL, url)
+            c.setopt(c.POST, 1)
+            c.setopt(c.POSTFIELDS, json.dumps(data))
+            c.setopt(c.WRITEDATA, buffer)
+            c.setopt(c.HTTPHEADER, ['Content-Type: application/json'])
+            try:
+                c.perform()
+                c.close()
+                return json.loads(buffer.getvalue().decode('utf-8'))
+            except pycurl.error as e:
+                logger.error(f"POST request failed: {e}")
+                raise
+
+        def _put_request(self, url: str, data: str) -> dict:
+            """Helper method to perform a PUT request using pycurl."""
+            buffer = io.BytesIO()
+            c = pycurl.Curl()
+            c.setopt(c.URL, url)
+            c.setopt(c.CUSTOMREQUEST, 'PUT')
+            c.setopt(c.POSTFIELDS, data)
+            c.setopt(c.WRITEDATA, buffer)
+            c.setopt(c.HTTPHEADER, ['Content-Type: application/json'])
+            try:
+                c.perform()
+                c.close()
+                return json.loads(buffer.getvalue().decode('utf-8'))
+            except pycurl.error as e:
+                logger.error(f"PUT request failed: {e}")
+                raise
+
+    return Work
+```
+
+### Key Notes:
+- The `_get_request`, `_post_request`, and `_put_request` methods encapsulate the `pycurl` logic for GET, POST, and PUT requests, respectively.
+- The `io.BytesIO` object is used to capture the response body, which is then decoded and parsed as JSON.
+- Error handling is added to log and raise exceptions in case of `pycurl` errors.

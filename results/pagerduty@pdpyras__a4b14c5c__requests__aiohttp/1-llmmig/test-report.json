@@ -1,0 +1,343 @@
+{
+  "exitcode": 1,
+  "summary": {
+    "failed": 3,
+    "passed": 2,
+    "total": 5,
+    "collected": 5
+  },
+  "collectors": [
+    {
+      "nodeid": "",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": ".",
+          "type": "Dir"
+        }
+      ]
+    },
+    {
+      "nodeid": "docs/_static",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "docs",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "docs/_static",
+          "type": "Dir"
+        }
+      ]
+    },
+    {
+      "nodeid": "pdpyras.egg-info",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "scripts/get_path_list",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "scripts",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "scripts/get_path_list",
+          "type": "Dir"
+        }
+      ]
+    },
+    {
+      "nodeid": "sphinx/source/_static",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "sphinx/source",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "sphinx/source/_static",
+          "type": "Dir"
+        }
+      ]
+    },
+    {
+      "nodeid": "sphinx",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "sphinx/source",
+          "type": "Dir"
+        }
+      ]
+    },
+    {
+      "nodeid": "test_pdpyras.py::SessionTest",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "test_pdpyras.py::URLHandlingTest",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "test_pdpyras.py::URLHandlingTest::test_canonical_path",
+          "type": "TestCaseFunction",
+          "lineno": 64
+        },
+        {
+          "nodeid": "test_pdpyras.py::URLHandlingTest::test_is_path_param",
+          "type": "TestCaseFunction",
+          "lineno": 91
+        },
+        {
+          "nodeid": "test_pdpyras.py::URLHandlingTest::test_normalize_url",
+          "type": "TestCaseFunction",
+          "lineno": 95
+        }
+      ]
+    },
+    {
+      "nodeid": "test_pdpyras.py::EntityWrappingTest",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "test_pdpyras.py::EntityWrappingTest::test_entity_wrappers",
+          "type": "TestCaseFunction",
+          "lineno": 133
+        },
+        {
+          "nodeid": "test_pdpyras.py::EntityWrappingTest::test_infer_entity_wrapper",
+          "type": "TestCaseFunction",
+          "lineno": 164
+        }
+      ]
+    },
+    {
+      "nodeid": "test_pdpyras.py",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "test_pdpyras.py::SessionTest",
+          "type": "UnitTestCase"
+        },
+        {
+          "nodeid": "test_pdpyras.py::URLHandlingTest",
+          "type": "UnitTestCase"
+        },
+        {
+          "nodeid": "test_pdpyras.py::EntityWrappingTest",
+          "type": "UnitTestCase"
+        }
+      ]
+    },
+    {
+      "nodeid": ".",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "docs",
+          "type": "Dir"
+        },
+        {
+          "nodeid": "pdpyras.egg-info",
+          "type": "Dir"
+        },
+        {
+          "nodeid": "scripts",
+          "type": "Dir"
+        },
+        {
+          "nodeid": "sphinx",
+          "type": "Dir"
+        },
+        {
+          "nodeid": "test_pdpyras.py",
+          "type": "Module"
+        }
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "nodeid": "test_pdpyras.py::URLHandlingTest::test_canonical_path",
+      "lineno": 64,
+      "outcome": "failed",
+      "keywords": [
+        "test_canonical_path",
+        "URLHandlingTest",
+        "test_pdpyras.py",
+        "pagerduty@pdpyras__a4b14c5c__requests__aiohttp",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\pagerduty@pdpyras__a4b14c5c__requests__aiohttp\\test_pdpyras.py",
+          "lineno": 90,
+          "message": "AttributeError: module 'pdpyras' has no attribute 'canonical_path'"
+        },
+        "traceback": [
+          {
+            "path": "test_pdpyras.py",
+            "lineno": 90,
+            "message": "AttributeError"
+          }
+        ],
+        "longrepr": "self = <test_pdpyras.URLHandlingTest testMethod=test_canonical_path>\n\n    def test_canonical_path(self):\n        identified_urls = [\n            (\n                '/services/{id}',\n                '/services/POOPBUG',\n            ),\n            (\n                '/automation_actions/actions/{id}/teams/{team_id}',\n                '/automation_actions/actions/PABC123/teams/PDEF456',\n            ),\n            (\n                '/status_dashboards/url_slugs/{url_slug}/service_impacts',\n                '/status_dashboards/url_slugs/my-awesome-dashboard/service_impacts',\n            ),\n            (\n                '/{entity_type}/{id}/change_tags',\n                '/services/POOPBUG/change_tags',\n            ),\n            ( # for https://github.com/PagerDuty/pdpyras/pull/109\n                '/users/me',\n                '/users/me',\n            ),\n        ]\n        for (pattern, url) in identified_urls:\n            base_url = 'https://api.pagerduty.com'\n>           self.assertEqual(pattern, pdpyras.canonical_path(base_url, url))\nE           AttributeError: module 'pdpyras' has no attribute 'canonical_path'\n\ntest_pdpyras.py:90: AttributeError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "test_pdpyras.py::URLHandlingTest::test_is_path_param",
+      "lineno": 91,
+      "outcome": "failed",
+      "keywords": [
+        "test_is_path_param",
+        "URLHandlingTest",
+        "test_pdpyras.py",
+        "pagerduty@pdpyras__a4b14c5c__requests__aiohttp",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\pagerduty@pdpyras__a4b14c5c__requests__aiohttp\\test_pdpyras.py",
+          "lineno": 93,
+          "message": "AttributeError: module 'pdpyras' has no attribute 'is_path_param'"
+        },
+        "traceback": [
+          {
+            "path": "test_pdpyras.py",
+            "lineno": 93,
+            "message": "AttributeError"
+          }
+        ],
+        "longrepr": "self = <test_pdpyras.URLHandlingTest testMethod=test_is_path_param>\n\n    def test_is_path_param(self):\n>       self.assertTrue(pdpyras.is_path_param('{id}'))\nE       AttributeError: module 'pdpyras' has no attribute 'is_path_param'\n\ntest_pdpyras.py:93: AttributeError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "test_pdpyras.py::URLHandlingTest::test_normalize_url",
+      "lineno": 95,
+      "outcome": "failed",
+      "keywords": [
+        "test_normalize_url",
+        "URLHandlingTest",
+        "test_pdpyras.py",
+        "pagerduty@pdpyras__a4b14c5c__requests__aiohttp",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "D:\\repos\\pagerduty@pdpyras__a4b14c5c__requests__aiohttp\\test_pdpyras.py",
+          "lineno": 117,
+          "message": "AttributeError: module 'pdpyras' has no attribute 'normalize_url'"
+        },
+        "traceback": [
+          {
+            "path": "test_pdpyras.py",
+            "lineno": 117,
+            "message": "AttributeError"
+          }
+        ],
+        "longrepr": "self = <test_pdpyras.URLHandlingTest testMethod=test_normalize_url>\n\n    def test_normalize_url(self):\n        urls_expected = [\n            (\n                ('https://api.pagerduty.com/', 'users'),\n                'https://api.pagerduty.com/users',\n            ),\n            (\n                ('https://api.pagerduty.com', '/users'),\n                'https://api.pagerduty.com/users',\n            ),\n            (\n                (\n                    'https://api.pagerduty.com',\n                    'https://api.pagerduty.com/users',\n                ),\n                'https://api.pagerduty.com/users',\n            )\n        ]\n        for (base_url_url, expected_url) in urls_expected:\n            self.assertEqual(\n                expected_url,\n>               pdpyras.normalize_url(*base_url_url)\n            )\nE           AttributeError: module 'pdpyras' has no attribute 'normalize_url'\n\ntest_pdpyras.py:117: AttributeError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "test_pdpyras.py::EntityWrappingTest::test_entity_wrappers",
+      "lineno": 133,
+      "outcome": "passed",
+      "keywords": [
+        "test_entity_wrappers",
+        "EntityWrappingTest",
+        "test_pdpyras.py",
+        "pagerduty@pdpyras__a4b14c5c__requests__aiohttp",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "passed"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "test_pdpyras.py::EntityWrappingTest::test_infer_entity_wrapper",
+      "lineno": 164,
+      "outcome": "passed",
+      "keywords": [
+        "test_infer_entity_wrapper",
+        "EntityWrappingTest",
+        "test_pdpyras.py",
+        "pagerduty@pdpyras__a4b14c5c__requests__aiohttp",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "passed"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "message": "coroutine 'EntityWrappingTest.test_entity_wrappers' was never awaited",
+      "category": "RuntimeWarning",
+      "when": "runtest",
+      "filename": "C:\\Users\\Mohay\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\case.py",
+      "lineno": 589
+    },
+    {
+      "message": "It is deprecated to return a value that is not None from a test case (<bound method EntityWrappingTest.test_entity_wrappers of <test_pdpyras.EntityWrappingTest testMethod=test_entity_wrappers>>)",
+      "category": "DeprecationWarning",
+      "when": "runtest",
+      "filename": "C:\\Users\\Mohay\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\case.py",
+      "lineno": 690
+    },
+    {
+      "message": "coroutine 'EntityWrappingTest.test_infer_entity_wrapper' was never awaited",
+      "category": "RuntimeWarning",
+      "when": "runtest",
+      "filename": "C:\\Users\\Mohay\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\case.py",
+      "lineno": 589
+    },
+    {
+      "message": "It is deprecated to return a value that is not None from a test case (<bound method EntityWrappingTest.test_infer_entity_wrapper of <test_pdpyras.EntityWrappingTest testMethod=test_infer_entity_wrapper>>)",
+      "category": "DeprecationWarning",
+      "when": "runtest",
+      "filename": "C:\\Users\\Mohay\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\unittest\\case.py",
+      "lineno": 690
+    }
+  ]
+}

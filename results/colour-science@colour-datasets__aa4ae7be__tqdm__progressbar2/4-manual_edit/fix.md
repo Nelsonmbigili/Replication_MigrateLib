@@ -1,0 +1,3 @@
+- revert unnecessary changes made by LLM
+- replace context manager with regular initialization
+- tqdm allows progressing beyond max value, progressbar2 does not. update max value dynamically if progress is more than max value.

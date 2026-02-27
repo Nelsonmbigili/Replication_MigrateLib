@@ -1,0 +1,166 @@
+### Explanation of Changes
+To migrate the code from `click` to `typer`, the following changes were made:
+1. **Replaced `click.testing.CliRunner` with `typer.testing.CliRunner`**: Typer provides its own `CliRunner` for testing CLI applications.
+2. **Updated `_fix_click` to `_fix_typer`**: The `_fix_click` method was updated to work with Typer's CLI application structure. Typer uses `typer.Typer` as the main entry point for CLI applications, so the method was adjusted accordingly.
+3. **Replaced `click`-specific imports and references**: All references to `click` were replaced with their `typer` equivalents.
+4. **Ensured compatibility with `typer`'s `main` function**: Typer's `main` function is invoked differently compared to Click, so adjustments were made to ensure the CLI application runs correctly.
+
+Below is the modified code:
+
+---
+
+### Modified Code
+```python
+from contextlib import suppress
+from io import StringIO
+from textwrap import dedent
+import sys
+
+from filesystems import Path
+from filesystems.exceptions import FileExists, FileNotFound
+import typer.testing
+import filesystems.memory
+
+from venvs import _cli, _config
+from venvs.common import _EX_OK, Locator, VirtualEnv
+
+
+class CLIMixin:
+    def setUp(self):
+        super().setUp()
+
+        self.stdin = StringIO()
+        self.stdout = StringIO()
+        self.stderr = StringIO()
+
+        self.filesystem = filesystems.memory.FS()
+
+        self.root_dir = Path("virtualenvs")
+        self.filesystem.create_directory(self.root_dir)
+
+        self.link_dir = Path("bin")
+        self.filesystem.create_directory(self.link_dir)
+
+        self.locator = Locator(
+            root=self.root_dir,
+            make_virtualenv=lambda **kwargs: VirtualEnv(
+                create=self._fake_create,
+                install=self._fake_install,
+                **kwargs,
+            ),
+        )
+
+    def assertConfigEqual(self, expected):
+        actual = _config.Config.from_locator(
+            filesystem=self.filesystem,
+            locator=self.locator,
+        )
+        self.assertEqual(actual, _config.Config.from_string(expected))
+
+    @property
+    def linked(self):
+        return {
+            link.basename(): self.filesystem.readlink(link)
+            for link in self.filesystem.children(self.link_dir)
+            if self.filesystem.is_link(link)
+        }
+
+    def installed(self, virtualenv):
+        base = virtualenv.path
+        try:
+            with self.filesystem.open(base / "packages") as f:
+                packages = {line.strip() for line in f}
+        except FileNotFound:
+            packages = set()
+
+        try:
+            with self.filesystem.open(base / "reqs") as f:
+                reqs = {line.strip() for line in f}
+        except FileNotFound:
+            reqs = set()
+
+        return packages, reqs
+
+    def _fake_create(self, virtualenv, **kwargs):
+        # FIXME: ...
+        if virtualenv.path.basename() == "magicexplodingvirtualenvoncreate":
+            raise ZeroDivisionError("Hey you told me to blow up on create!")
+
+        with suppress(FileExists):
+            self.filesystem.create_directory(path=virtualenv.path.parent())
+
+        with suppress(FileExists):
+            self.filesystem.create_directory(path=virtualenv.path)
+
+    def _fake_install(self, virtualenv, packages, requirements, **kwargs):
+        # FIXME: ...
+        if virtualenv.path.basename() == "magicexplodingvirtualenvoninstall":
+            raise ZeroDivisionError("Hey you told me to blow up on install!")
+
+        base = virtualenv.path
+        with self.filesystem.open(base / "packages", "at") as f:
+            f.writelines(package + "\n" for package in packages)
+        with self.filesystem.open(base / "reqs", "at") as f:
+            f.writelines(req + "\n" for req in requirements)
+
+    def run_cli(self, argv=(), exit_status=_EX_OK):
+        runner = typer.testing.CliRunner()
+        default_map = dict(
+            link_dir=str(self.link_dir),
+            locator=self.locator,
+            filesystem=self.filesystem,
+        )
+        result = runner.invoke(
+            self._fix_typer(_cli.main),
+            args=argv,
+            default_map=dict(
+                converge=default_map,
+                create=default_map,
+                find=default_map,
+                remove=default_map,
+                temporary=default_map,
+            ),
+            catch_exceptions=False,
+        )
+
+        self.assertEqual(
+            result.exit_code,
+            exit_status,
+            msg=dedent(
+                f"""
+                Different exit code, {result.exit_code} != {exit_status}
+
+                stderr:
+
+                    {self.stderr.getvalue()!r}
+                """,
+            ),
+        )
+        return self.stdout.getvalue(), self.stderr.getvalue()
+
+    def _fix_typer(self, real_main):
+        """
+        Typer is less intrusive than Click, but we still need to redirect
+        sys.stdout and sys.stderr for testing purposes.
+        """
+
+        class Fixed:
+            def __getattr__(self, attr):
+                return getattr(real_main, attr)
+
+            def main(this, *args, **kwargs):
+                stdout, sys.stdout = sys.stdout, self.stdout
+                stderr, sys.stderr = sys.stderr, self.stderr
+                real_main(*args, **kwargs)
+                sys.stdout = stdout
+                sys.stderr = stderr
+
+        return Fixed()
+```
+
+---
+
+### Key Notes
+- The migration was straightforward because Typer is built on top of Click and shares many similarities.
+- The `typer.testing.CliRunner` is almost identical to `click.testing.CliRunner`, so minimal changes were required in the `run_cli` method.
+- The `_fix_typer` method was adapted to work with Typer's `main` function, which is similar to Click's but requires slight adjustments for testing.

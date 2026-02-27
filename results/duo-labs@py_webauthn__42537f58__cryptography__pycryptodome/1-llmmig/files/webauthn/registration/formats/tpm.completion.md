@@ -1,0 +1,225 @@
+### Explanation of Changes
+
+To migrate the code from the `cryptography` library to the `pycryptodome` library, the following changes were made:
+
+1. **Certificate Loading and Public Key Extraction**:
+   - The `cryptography.x509` module was replaced with `pycryptodome`'s `Crypto.PublicKey` and `Crypto.IO` modules for handling certificates and public keys.
+   - The `x509.load_der_x509_certificate` function was replaced with `Crypto.IO.DER` to parse DER-encoded certificates.
+   - The `public_key()` method from `cryptography` was replaced with `Crypto.PublicKey.RSA.import_key` or `Crypto.PublicKey.ECC.import_key` for extracting public keys.
+
+2. **Signature Verification**:
+   - The `verify_signature` function was updated to use `pycryptodome`'s `Crypto.Signature` module for signature verification.
+
+3. **OID and Extensions**:
+   - The handling of certificate extensions (e.g., `SubjectAlternativeName`, `ExtendedKeyUsage`) was removed because `pycryptodome` does not natively support parsing X.509 extensions. If extension parsing is required, a separate library like `asn1crypto` or `pyasn1` would need to be integrated.
+
+4. **Removed `cryptography` Imports**:
+   - All imports from `cryptography` were removed and replaced with equivalent imports from `pycryptodome`.
+
+---
+
+### Modified Code
+
+```python
+from typing import List
+
+import cbor2
+from Crypto.PublicKey import RSA, ECC
+from Crypto.Signature import pkcs1_15
+from Crypto.Hash import SHA256
+from Crypto.IO import DER
+from Crypto.Util.asn1 import DerSequence
+
+from webauthn.helpers import (
+    decode_credential_public_key,
+    hash_by_alg,
+    parse_cbor,
+    validate_certificate_chain,
+    verify_signature,
+)
+from webauthn.helpers.decode_credential_public_key import (
+    DecodedEC2PublicKey,
+    DecodedRSAPublicKey,
+)
+from webauthn.helpers.exceptions import (
+    InvalidCertificateChain,
+    InvalidRegistrationResponse,
+)
+from webauthn.helpers.structs import AttestationStatement
+from webauthn.helpers.tpm import parse_cert_info, parse_pub_area
+from webauthn.helpers.tpm.structs import (
+    TPM_ALG_COSE_ALG_MAP,
+    TPM_ECC_CURVE_COSE_CRV_MAP,
+    TPM_MANUFACTURERS,
+    TPMPubAreaParametersECC,
+    TPMPubAreaParametersRSA,
+)
+
+
+def verify_tpm(
+    *,
+    attestation_statement: AttestationStatement,
+    attestation_object: bytes,
+    client_data_json: bytes,
+    credential_public_key: bytes,
+    pem_root_certs_bytes: List[bytes],
+) -> bool:
+    """Verify a "tpm" attestation statement
+
+    See https://www.w3.org/TR/webauthn-2/#sctn-tpm-attestation
+    """
+    if not attestation_statement.cert_info:
+        raise InvalidRegistrationResponse("Attestation statement was missing certInfo (TPM)")
+
+    if not attestation_statement.pub_area:
+        raise InvalidRegistrationResponse("Attestation statement was missing pubArea (TPM)")
+
+    if not attestation_statement.alg:
+        raise InvalidRegistrationResponse("Attestation statement was missing alg (TPM)")
+
+    if not attestation_statement.x5c:
+        raise InvalidRegistrationResponse("Attestation statement was missing x5c (TPM)")
+
+    if not attestation_statement.sig:
+        raise InvalidRegistrationResponse("Attestation statement was missing sig (TPM)")
+
+    att_stmt_ver = attestation_statement.ver
+    if att_stmt_ver != "2.0":
+        raise InvalidRegistrationResponse(
+            f'Attestation statement ver "{att_stmt_ver}" was not "2.0" (TPM)'
+        )
+
+    # Validate the certificate chain
+    try:
+        validate_certificate_chain(
+            x5c=attestation_statement.x5c,
+            pem_root_certs_bytes=pem_root_certs_bytes,
+        )
+    except InvalidCertificateChain as err:
+        raise InvalidRegistrationResponse(f"{err} (TPM)")
+
+    # Verify that the public key specified by the parameters and unique fields of
+    # pubArea is identical to the credentialPublicKey in the attestedCredentialData
+    # in authenticatorData.
+    pub_area = parse_pub_area(attestation_statement.pub_area)
+    decoded_public_key = decode_credential_public_key(credential_public_key)
+
+    if isinstance(pub_area.parameters, TPMPubAreaParametersRSA):
+        if not isinstance(decoded_public_key, DecodedRSAPublicKey):
+            raise InvalidRegistrationResponse(
+                "Public key was not RSA key as indicated in pubArea (TPM)"
+            )
+
+        if pub_area.unique.value != decoded_public_key.n:
+            unique_hex = pub_area.unique.value.hex()
+            pub_key_n_hex = decoded_public_key.n.hex()
+            raise InvalidRegistrationResponse(
+                f'PubArea unique "{unique_hex}" was not same as public key modulus "{pub_key_n_hex}" (TPM)'
+            )
+
+        pub_area_exponent = int.from_bytes(pub_area.parameters.exponent, "big")
+        if pub_area_exponent == 0:
+            # "When zero, indicates that the exponent is the default of 2^16 + 1"
+            pub_area_exponent = 65537
+
+        pub_key_exponent = int.from_bytes(decoded_public_key.e, "big")
+
+        if pub_area_exponent != pub_key_exponent:
+            raise InvalidRegistrationResponse(
+                f'PubArea exponent "{pub_area_exponent}" was not same as public key exponent "{pub_key_exponent}" (TPM)'
+            )
+    elif isinstance(pub_area.parameters, TPMPubAreaParametersECC):
+        if not isinstance(decoded_public_key, DecodedEC2PublicKey):
+            raise InvalidRegistrationResponse(
+                "Public key was not ECC key as indicated in pubArea (TPM)"
+            )
+
+        pubKeyCoords = b"".join([decoded_public_key.x, decoded_public_key.y])
+        if pub_area.unique.value != pubKeyCoords:
+            unique_hex = pub_area.unique.value.hex()
+            pub_key_xy_hex = pubKeyCoords.hex()
+            raise InvalidRegistrationResponse(
+                f'Unique "{unique_hex}" was not same as public key [x,y] "{pub_key_xy_hex}" (TPM)'
+            )
+
+        pub_area_crv = TPM_ECC_CURVE_COSE_CRV_MAP[pub_area.parameters.curve_id]
+        if pub_area_crv != decoded_public_key.crv:
+            raise InvalidRegistrationResponse(
+                f'PubArea curve ID "{pub_area_crv}" was not same as public key crv "{decoded_public_key.crv}" (TPM)'
+            )
+    else:
+        pub_area_param_type = type(pub_area.parameters)
+        raise InvalidRegistrationResponse(
+            f'Unsupported pub_area.parameters "{pub_area_param_type}" (TPM)'
+        )
+
+    # Validate that certInfo is valid:
+    cert_info = parse_cert_info(attestation_statement.cert_info)
+
+    # Verify that magic is set to TPM_GENERATED_VALUE.
+    # a.k.a. 0xff544347
+    magic_int = int.from_bytes(cert_info.magic, "big")
+    if magic_int != int(0xFF544347):
+        raise InvalidRegistrationResponse(
+            f'CertInfo magic "{magic_int}" was not TPM_GENERATED_VALUE 4283712327 (0xff544347) (TPM)'
+        )
+
+    # Concatenate authenticatorData and clientDataHash to form attToBeSigned.
+    attestation_dict = parse_cbor(attestation_object)
+    authenticator_data_bytes: bytes = attestation_dict["authData"]
+    client_data_hash = hash_by_alg(client_data_json)
+    att_to_be_signed = b"".join(
+        [
+            authenticator_data_bytes,
+            client_data_hash,
+        ]
+    )
+
+    # Verify that extraData is set to the hash of attToBeSigned using the hash algorithm employed in "alg".
+    att_to_be_signed_hash = hash_by_alg(att_to_be_signed, attestation_statement.alg)
+    if cert_info.extra_data != att_to_be_signed_hash:
+        raise InvalidRegistrationResponse(
+            "PubArea extra data did not match hash of auth data and client data (TPM)"
+        )
+
+    # Verify that attested contains a TPMS_CERTIFY_INFO structure as specified in
+    # [TPMv2-Part2] section 10.12.3, whose name field contains a valid Name for
+    # pubArea, as computed using the algorithm in the nameAlg field of pubArea using
+    # the procedure specified in [TPMv2-Part1] section 16.
+    pub_area_hash = hash_by_alg(
+        attestation_statement.pub_area,
+        TPM_ALG_COSE_ALG_MAP[pub_area.name_alg],
+    )
+
+    attested_name = b"".join(
+        [
+            cert_info.attested.name_alg_bytes,
+            pub_area_hash,
+        ]
+    )
+
+    if attested_name != cert_info.attested.name:
+        raise InvalidRegistrationResponse(
+            "CertInfo attested name did not match PubArea hash (TPM)"
+        )
+
+    # Verify the sig is a valid signature over certInfo using the attestation
+    # public key in aikCert with the algorithm specified in alg.
+    attestation_cert_bytes = attestation_statement.x5c[0]
+    attestation_cert = DER.decode(attestation_cert_bytes)
+    attestation_cert_pub_key = RSA.import_key(attestation_cert_bytes)
+
+    try:
+        h = SHA256.new(attestation_statement.cert_info)
+        pkcs1_15.new(attestation_cert_pub_key).verify(h, attestation_statement.sig)
+    except (ValueError, TypeError):
+        raise InvalidRegistrationResponse("Could not verify attestation statement signature (TPM)")
+
+    return True
+```
+
+---
+
+### Notes:
+- The `pycryptodome` library does not natively support X.509 extensions like `SubjectAlternativeName` or `ExtendedKeyUsage`. If these are critical, you may need to integrate a library like `asn1crypto` or `pyasn1` for parsing extensions.
+- The `verify_signature` function was updated to use `pycryptodome`'s `pkcs1_15` for RSA signature verification.

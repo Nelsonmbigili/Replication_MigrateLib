@@ -1,0 +1,73 @@
+### Explanation of Changes:
+To migrate the code from using the `requests` library to `requests_futures`, the following changes were made:
+1. **Import Changes**: The `requests` library was replaced with `requests_futures`. Specifically, `Session` is now imported from `requests_futures.sessions` instead of `requests.sessions`.
+2. **Session Object**: The `Session` object now comes from `requests_futures.sessions.FuturesSession`, which supports asynchronous requests.
+3. **Mocking**: The `unittest.mock.patch` decorator was updated to mock `requests_futures.sessions.FuturesSession.request` instead of `requests.Session.request`.
+
+These changes ensure that the code uses `requests_futures` while maintaining the original functionality.
+
+---
+
+### Modified Code:
+```python
+# -*- coding: utf-8 -*-
+
+import unittest.mock
+
+from requests_futures.sessions import FuturesSession
+from requests.auth import HTTPBasicAuth
+
+
+def test_camundarequest_keeps_query_params(engine_url, MyRequest):
+
+    assert MyRequest(url=engine_url, query_param='aStr').query_parameters()['param'] == 'aStr'
+    assert MyRequest(url=engine_url, query_param=1).query_parameters()['param'] == 1
+
+
+def test_camundarequest_keeps_body_params(engine_url, MyRequest):
+
+    assert MyRequest(url=engine_url, body_param='aStr').body_parameters()['param'] == 'aStr'
+    assert MyRequest(url=engine_url, body_param=1).body_parameters()['param'] == 1
+    assert MyRequest(url=engine_url, body_param=True).body_parameters()['param'] is True
+    assert MyRequest(url=engine_url, body_param=False).body_parameters()['param'] is False
+
+
+def test_camundarequest_converts_bool_query_params(engine_url, MyRequest):
+
+    assert MyRequest(url=engine_url, query_param=True).query_parameters()['param'] == 'true'
+    assert MyRequest(url=engine_url, query_param=False).query_parameters()['param'] == 'false'
+
+
+def test_camundarequest_converts_datetime_params(
+    engine_url, MyRequest, date, date_tz, date_str, date_tz_str
+):
+
+    assert MyRequest(url=engine_url, query_param=date).query_parameters()['param'] == date_str
+    assert MyRequest(url=engine_url, query_param=date_tz).query_parameters()['param'] == date_tz_str
+
+    assert MyRequest(url=engine_url, body_param=date).body_parameters()['param'] == date_str
+    assert MyRequest(url=engine_url, body_param=date_tz).body_parameters()['param'] == date_tz_str
+
+
+@unittest.mock.patch('requests_futures.sessions.FuturesSession.request')
+def test_camundarequest_session(mock, engine_url, MyRequest):
+    request = MyRequest(url=engine_url)
+    auth = HTTPBasicAuth(username='Jane', password='password')
+
+    session = FuturesSession()
+    session.auth = auth
+    request.session = session
+
+    request()
+
+    assert mock.called
+    assert request.session.auth.username == 'Jane'
+    assert request.session.auth.password == 'password'
+```
+
+---
+
+### Summary of Changes:
+- Replaced `requests.sessions.Session` with `requests_futures.sessions.FuturesSession`.
+- Updated the `unittest.mock.patch` decorator to mock `requests_futures.sessions.FuturesSession.request`.
+- No other changes were made to the code to ensure compatibility with the rest of the application.

@@ -1,0 +1,53 @@
+The following Python code currently uses the library "requests" version 2.32.3.
+Migrate this code to use the library "pycurl" version 7.45.6 instead.
+
+**Instructions:**
+1. **Explain the Changes**: Begin the output with a brief explanation of the specific changes you made to migrate from "requests" to "pycurl".
+2. **Provide the Modified Code**: After the explanation, present the modified code. Provide the entire code after migration even if only a part of it is changed.
+
+**Important Guidelines**:
+- Only make changes directly related to migrating between "requests" and "pycurl".
+- Do not refactor, reformat, optimize, or alter the original coding style.
+- The code given to you is part of a larger application. Do not change the names of classes, functions, or variables, because it can break the application.
+
+Original code:
+```python
+#!/usr/bin/env python
+
+"""
+Tests show_stories()
+
+@author avinash sajjanshetty
+@email hi@avi.im
+"""
+
+import unittest
+
+from hackernews import HackerNews
+from hackernews import Item
+
+
+class TestShowStories(unittest.TestCase):
+
+    def setUp(self):
+        self.hn = HackerNews()
+
+    def test_show_stories(self):
+        show_stories = self.hn.show_stories(limit=10)
+        self.assertIsInstance(show_stories, list)
+        self.assertIsInstance(show_stories[0], Item)
+        self.assertIsNotNone(show_stories)
+
+    def test_show_stories_raw(self):
+        show_stories = self.hn.show_stories(raw=True)
+        self.assertIsInstance(show_stories, list)
+        self.assertIsInstance(show_stories[0], str)
+        self.assertIsNotNone(show_stories)
+
+    def tearDown(self):
+        self.hn.session.close()
+
+if __name__ == '__main__':
+    unittest.main()
+
+```

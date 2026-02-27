@@ -1,0 +1,81 @@
+mig: cronitorio@cronitor-python__cdbae557__requests__httpx__cdbae557__requests__httpx
+repo: cronitorio@cronitor-python__cdbae557__requests__httpx
+commit: cdbae5575578236a4146544063377297e57e8874
+source: requests
+target: httpx
+premig:
+  name: premig
+  status: finished
+  source_version: 2.31.0
+  target_version: 0.28.1
+  finished_at: '2025-04-22 09:14:34'
+  project_coverage: 88.88888888888889
+  total_tests: 18
+  passed_tests: 18
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 38.095238095238095
+  files:
+  - path: cronitor/monitor.py
+    file_change_coverage: 38.095238095238095
+    covered_changed_lines: 6,15-16,26,36,137,155,174
+    uncovered_changed_lines: 14,17-25,43,101,165
+  test_diffs:
+  - test_id: cronitor/tests/test_monitor.py::MonitorTests::test_create_monitor_fails
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: <function retry_session.<locals>.request_with_retries
+      at 0x000001FA81301800> does not have the attribute ''put'''
+  - test_id: cronitor/tests/test_monitor.py::MonitorTests::test_delete_no_id
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: retry_session.<locals>.request_with_retries() takes
+      3 positional arguments but 4 were given'
+  - test_id: cronitor/tests/test_monitor.py::MonitorTests::test_get_monitor_invalid_code
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: retry_session.<locals>.request_with_retries() takes
+      3 positional arguments but 4 were given'
+  - test_id: cronitor/tests/test_monitor.py::MonitorTests::test_update_monitor_fails_validation
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: <function retry_session.<locals>.request_with_retries
+      at 0x000001FA81301800> does not have the attribute ''put'''
+  - test_id: cronitor/tests/test_pings.py::MonitorPingTests::test_endpoints
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: retry_session.<locals>.request_with_retries() got multiple
+      values for argument ''url'''
+  - test_id: cronitor/tests/test_pings.py::MonitorPingTests::test_with_all_params
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: <function retry_session.<locals>.request_with_retries
+      at 0x000001FA81301800> does not have the attribute ''get'''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []

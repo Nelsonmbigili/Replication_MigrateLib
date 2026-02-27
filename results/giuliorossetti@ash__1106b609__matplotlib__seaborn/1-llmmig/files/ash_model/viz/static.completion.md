@@ -1,0 +1,178 @@
+### Explanation of Changes
+To migrate the code from `matplotlib` to `seaborn`, the following changes were made:
+1. **Importing Seaborn**: Added the `import seaborn as sns` statement.
+2. **Replacing `ax.plot` with `sns.lineplot`**: Seaborn's `lineplot` is used for line plots instead of `matplotlib`'s `plot`.
+3. **Replacing `ax.bar` with `sns.barplot`**: Seaborn's `barplot` is used for bar plots instead of `matplotlib`'s `bar`.
+4. **Handling Log-Log Scaling**: Seaborn does not have a direct `loglog` method. Instead, the axes are set to log scale using `ax.set(xscale="log", yscale="log")`.
+5. **Legend Handling**: Seaborn automatically handles legends, so explicit calls to `ax.legend()` were removed.
+6. **Passing Axes to Seaborn**: Seaborn functions accept an `ax` parameter to specify the axes, so the existing `ax` object is passed to Seaborn functions.
+
+### Modified Code
+```python
+import seaborn as sns
+import numpy as np
+from ash_model.measures import *
+
+
+def plot_s_degrees(h: ASH, smax: int, loglog: bool = True, **kwargs: object) -> object:
+    """
+    The plot_s_degrees function plots the s-degree distribution of a hypergraph.
+    A line for each s will be plotted, from 1 to :smax: inclusive.
+    Seaborn plotting parameters (e.g., color) can be passed as **kwargs.
+
+    :param h: ASH instance
+    :param smax: Set the maximum value of s
+    :param loglog: Specify whether the plot should be loglog or not
+    :param kwargs: Pass seaborn keyword arguments to the function
+    :return: The axes object
+    """
+
+    if "ax" not in kwargs:
+        ax = sns.mpl.pyplot.gca()
+    else:
+        ax = kwargs["ax"]
+
+    nodes = h.get_node_set()
+    ss = np.arange(1, smax + 1, 1)
+    degs = {s: {n: 0 for n in nodes} for s in ss}
+    for n in nodes:
+        for s in ss:
+            degs[s][n] = h.get_s_degree(n, s)
+    for s in ss:
+        deg = dict(sorted(degs[s].items(), key=lambda item: item[1], reverse=True))
+
+        y = np.bincount(list(deg.values()))
+
+        sns.lineplot(
+            x=range(0, len(y)),
+            y=y,
+            marker="o",
+            label="s_" + str(s),
+            alpha=0.8,
+            ax=ax,
+            **{k: v for k, v in kwargs.items() if k != "ax"}
+        )
+        if loglog:
+            ax.set(xscale="log", yscale="log")
+
+    return ax
+
+
+def plot_hyperedge_size_distribution(
+    h: ASH, max_size: int = None, min_size: int = None, **kwargs: object
+) -> object:
+    """
+    The plot_hyperedge_size_distribution function plots the distribution of hyperedge sizes in a hypergraph.
+    :min_size: and :max_size: can be used to filter out hyperedges.
+    Seaborn plotting parameters (e.g., color) can be passed as **kwargs.
+
+    :param h: ASH instance
+    :param max_size: Specify the maximum size of hyperedges to be plotted
+    :param min_size: Specify the minimum size of hyperedges to be plotted
+    :param kwargs: Pass seaborn keyword arguments to the function
+    :return: The axes object
+    """
+
+    if "ax" not in kwargs:
+        ax = sns.mpl.pyplot.gca()
+    else:
+        ax = kwargs["ax"]
+
+    size_dist = dict(h.hyperedge_size_distribution())
+    if max_size:
+        size_dist = {k: v for k, v in size_dist.items() if k <= max_size}
+    if min_size:
+        size_dist = {k: v for k, v in size_dist.items() if k >= min_size}
+    x, y = zip(*size_dist.items())
+
+    sns.barplot(
+        x=np.array(x),
+        y=y,
+        alpha=0.4,
+        ax=ax,
+        **{k: v for k, v in kwargs.items() if k != "ax"}
+    )
+    return ax
+
+
+def plot_degree_distribution(h: ASH, loglog: bool = True, **kwargs: object) -> object:
+    """
+    The plot_degree_distribution function plots the degree distribution of an ASH.
+    The default is to draw a log-log plot.
+    Seaborn plotting parameters (e.g., color) can be passed as **kwargs.
+
+    :param h: ASH instance
+    :param loglog: Whether to plot the degree distribution in log-log scale
+    :param kwargs: Pass seaborn keyword arguments to the function
+    :return: The axes object
+    """
+
+    if "ax" not in kwargs:
+        ax = sns.mpl.pyplot.gca()
+    else:
+        ax = kwargs["ax"]
+    nodes = h.get_node_set()
+    degs = {n: 0 for n in nodes}
+    for n in nodes:
+        degs[n] = h.get_degree(n)
+
+    deg = dict(sorted(degs.items(), key=lambda item: item[1], reverse=True))
+    y = list(deg.values())
+    y = np.bincount(y)
+    x = range(0, len(y))
+    sns.lineplot(
+        x=x,
+        y=y,
+        marker="o",
+        alpha=0.4,
+        ax=ax,
+        **{k: v for k, v in kwargs.items() if k != "ax"}
+    )
+    if loglog:
+        ax.set(xscale="log", yscale="log")
+    return ax
+
+
+def plot_s_ranks(h: ASH, smax: int, loglog: bool = True, **kwargs: object) -> object:
+    """
+    The plot_s_ranks function plots the s-degree distribution of a hypergraph.
+    A line for each s will be plotted, from 1 to :smax: inclusive.
+    Seaborn plotting parameters (e.g., color) can be passed as **kwargs.
+
+    :param h: ASH instance
+    :param smax: Set the maximum value of s
+    :param loglog: Specify whether the plot should be loglog or not
+    :param kwargs: Pass seaborn keyword arguments to the function
+    :return: The axes object
+    """
+    if "ax" not in kwargs:
+        ax = sns.mpl.pyplot.gca()
+    else:
+        ax = kwargs["ax"]
+
+    nodes = h.get_node_set()
+    ss = np.arange(1, smax + 1, 1)
+    degs = {s: {n: 0 for n in nodes} for s in ss}
+    for n in nodes:
+        for s in ss:
+            degs[s][n] = h.get_s_degree(n, s)
+
+    for s in ss:
+        deg = dict(sorted(degs[s].items(), key=lambda item: item[1], reverse=True))
+
+        y = list(deg.values())
+
+        sns.lineplot(
+            x=range(len(y)),
+            y=y,
+            marker="o",
+            label="s_" + str(s),
+            alpha=0.4,
+            ax=ax,
+            **{k: v for k, v in kwargs.items() if k != "ax"}
+        )
+
+        if loglog:
+            ax.set(xscale="log", yscale="log")
+    return ax
+```

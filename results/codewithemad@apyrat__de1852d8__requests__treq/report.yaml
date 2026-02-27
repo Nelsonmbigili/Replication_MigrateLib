@@ -1,0 +1,118 @@
+mig: codewithemad@apyrat__de1852d8__requests__treq__de1852d8__requests__treq
+repo: codewithemad@apyrat__de1852d8__requests__treq
+commit: de1852d8dbc46292e9f74b2112d8e51ac7b26fdc
+source: requests
+target: treq
+premig:
+  name: premig
+  status: finished
+  source_version: 2.31.0
+  target_version: 24.9.1
+  finished_at: '2025-04-22 09:08:43'
+  project_coverage: 83.66336633663366
+  total_tests: 8
+  passed_tests: 7
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 33.333333333333336
+  files:
+  - path: apyrat/apyrat.py
+    file_change_coverage: 33.333333333333336
+    covered_changed_lines: 6,9,40-41,60,87,104,112,141,146
+    uncovered_changed_lines: 62,66-67,69-70,74,77-83,89,92-93,111,113-114,144
+  test_diffs:
+  - test_id: tests/cli_test.py::test_main_download_video_with_quality
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert 1 == 0\n +  where 1 = <Result TypeError(\"argument of type\
+      \ 'NoneType' is not iterable\")>.exit_code"
+  - test_id: tests/test_apyrat.py::test_download_when_file_exists
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: Expected ''download'' to have been called once.
+      Called 0 times.'
+  - test_id: tests/test_apyrat.py::test_get_available_videos_single_video
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: object of type ''NoneType'' has no len()'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 46.2962962962963
+  files:
+  - path: tests/cli_test.py
+    file_change_coverage: 70.0
+    covered_changed_lines: 5,36-37,44-45,52-53
+    uncovered_changed_lines: 41,49,57
+  - path: apyrat/cli.py
+    file_change_coverage: 40.0
+    covered_changed_lines: 58,84
+    uncovered_changed_lines: 75,81,92
+  - path: apyrat/apyrat.py
+    file_change_coverage: 29.032258064516128
+    covered_changed_lines: 6,9,35,60,87,104,112,141,146
+    uncovered_changed_lines: 40-41,62,66-67,69-70,74,77-83,89,92-93,111,113-114,144
+  - path: tests/test_apyrat.py
+    file_change_coverage: 87.5
+    covered_changed_lines: 3,6,8,26-27,33,36
+    uncovered_changed_lines: '48'
+  test_diffs:
+  - test_id: tests/cli_test.py::test_get_quality_available
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: __init__() should return None, not ''coroutine'''
+  - test_id: tests/cli_test.py::test_get_quality_not_available
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: __init__() should return None, not ''coroutine'''
+  - test_id: tests/cli_test.py::test_get_quality_not_available_no_confirm
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: __init__() should return None, not ''coroutine'''
+  - test_id: tests/cli_test.py::test_main_download_video_with_quality
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: Expected ''_get_available_qualities'' to have
+      been called once. Called 0 times.'
+  - test_id: tests/test_apyrat.py::test_default_quality
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: __init__() should return None, not ''coroutine'''
+  - test_id: tests/test_apyrat.py::test_download_when_file_exists
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: __init__() should return None, not ''coroutine'''
+  - test_id: tests/test_apyrat.py::test_get_available_videos_single_video
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: __init__() should return None, not ''coroutine'''

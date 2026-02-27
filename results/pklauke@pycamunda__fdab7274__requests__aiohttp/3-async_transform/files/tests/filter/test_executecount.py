@@ -1,0 +1,53 @@
+# -*- coding: utf-8 -*-
+
+import unittest.mock
+
+import pytest
+
+import pycamunda.filter
+from tests.mock import raise_requests_exception_mock, not_ok_response_mock, count_response_mock
+
+
+def test_executecount_params(engine_url):
+    get_filter_count = pycamunda.filter.ExecuteCount(url=engine_url, id_='anId')
+
+    assert get_filter_count.url == engine_url + '/filter/anId/count'
+    assert get_filter_count.query_parameters() == {}
+    assert get_filter_count.body_parameters() == {}
+
+
+@pytest.mark.asyncio
+@unittest.mock.patch('requests.Session.request')
+async def test_executecount_calls_requests(mock, engine_url):
+    get_filter_count = pycamunda.filter.ExecuteCount(url=engine_url, id_='anId')
+    get_filter_count()
+
+    assert mock.called
+    assert mock.call_args[1]['method'].upper() == 'GET'
+
+
+@pytest.mark.asyncio
+@unittest.mock.patch('requests.Session.request', raise_requests_exception_mock)
+async def test_executecount_raises_pycamunda_exception(engine_url):
+    get_filter_count = pycamunda.filter.ExecuteCount(url=engine_url, id_='anId')
+    with pytest.raises(pycamunda.PyCamundaException):
+        get_filter_count()
+
+
+@pytest.mark.asyncio
+@unittest.mock.patch('requests.Session.request', not_ok_response_mock)
+@unittest.mock.patch('pycamunda.base._raise_for_status')
+async def test_executecount_raises_for_status(mock, engine_url):
+    get_filter_count = pycamunda.filter.ExecuteCount(url=engine_url, id_='anId')
+    get_filter_count()
+
+    assert mock.called
+
+
+@pytest.mark.asyncio
+@unittest.mock.patch('requests.Session.request', count_response_mock)
+async def test_executecount_returns_int(engine_url):
+    get_filter_count = pycamunda.filter.ExecuteCount(url=engine_url, id_='anId')
+    filter_ = get_filter_count()
+
+    assert isinstance(filter_, int)

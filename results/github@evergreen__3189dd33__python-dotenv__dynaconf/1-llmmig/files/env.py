@@ -1,0 +1,357 @@
+"""
+Sets up the environment variables for the action.
+"""
+
+import re
+from dynaconf import Dynaconf
+
+MAX_TITLE_LENGTH = 70
+MAX_BODY_LENGTH = 65536
+MAX_COMMIT_MESSAGE_LENGTH = 65536
+
+# Initialize Dynaconf settings
+settings = Dynaconf(
+    envvar_prefix="",
+    settings_files=[".env"],  # Automatically loads environment variables from .env
+)
+
+
+def get_bool_env_var(env_var_name: str, default: bool = False) -> bool:
+    """Get a boolean environment variable.
+
+    Args:
+        env_var_name: The name of the environment variable to retrieve.
+        default: The default value to return if the environment variable is not set.
+
+    Returns:
+        The value of the environment variable as a boolean.
+    """
+    ev = settings.get(env_var_name, "")
+    if ev == "" and default:
+        return default
+    return ev.strip().lower() == "true"
+
+
+def get_int_env_var(env_var_name: str) -> int | None:
+    """Get an integer environment variable.
+
+    Args:
+        env_var_name: The name of the environment variable to retrieve.
+
+    Returns:
+        The value of the environment variable as an integer or None.
+    """
+    env_var = settings.get(env_var_name)
+    if env_var is None or not str(env_var).strip():
+        return None
+    try:
+        return int(env_var)
+    except ValueError:
+        return None
+
+
+def parse_repo_specific_exemptions(repo_specific_exemptions_str: str) -> dict:
+    """Parse the REPO_SPECIFIC_EXEMPTIONS environment variable into a dictionary.
+
+    Args:
+        repo_specific_exemptions_str: The REPO_SPECIFIC_EXEMPTIONS environment variable as a string.
+
+    Returns:
+        A dictionary where keys are repository names and values are lists of exempt ecosystems.
+    """
+    exemptions_dict = {}
+    if repo_specific_exemptions_str:
+        # if repo_specific_exemptions_str doesn't have a ; and : character, it's not valid
+        separators = [";", ":"]
+        if not all(sep in repo_specific_exemptions_str for sep in separators):
+            raise ValueError(
+                "REPO_SPECIFIC_EXEMPTIONS environment variable not formatted correctly"
+            )
+        exemptions_list = repo_specific_exemptions_str.split(";")
+        for exemption in exemptions_list:
+            if (
+                exemption == ""
+            ):  # Account for final ; in the repo_specific_exemptions_str
+                continue
+            repo, ecosystems = exemption.split(":")
+            for ecosystem in ecosystems.split(","):
+                if ecosystem not in [
+                    "bundler",
+                    "cargo",
+                    "composer",
+                    "docker",
+                    "github-actions",
+                    "gomod",
+                    "mix",
+                    "npm",
+                    "nuget",
+                    "pip",
+                    "terraform",
+                ]:
+                    raise ValueError(
+                        "REPO_SPECIFIC_EXEMPTIONS environment variable not formatted correctly. Unrecognized package-ecosystem."
+                    )
+            exemptions_dict[repo.strip()] = [
+                ecosystem.strip() for ecosystem in ecosystems.split(",")
+            ]
+    return exemptions_dict
+
+
+def get_env_vars(
+    test: bool = False,
+) -> tuple[
+    str | None,
+    list[str],
+    int | None,
+    int | None,
+    bytes,
+    bool,
+    str,
+    str,
+    list[str],
+    str,
+    str,
+    str,
+    str,
+    bool,
+    str,
+    str | None,
+    bool | None,
+    list[str] | None,
+    int | None,
+    bool | None,
+    list[str],
+    bool | None,
+    dict,
+    str,
+    str,
+    str | None,
+    list[str],
+    str | None,
+]:
+    """
+    Get the environment variables for use in the action.
+
+    Args:
+        None
+
+    Returns:
+        See docstring in original code.
+    """
+
+    if not test:
+        # Dynaconf automatically loads from .env if it exists
+        pass
+
+    organization = settings.get("ORGANIZATION")
+    repositories_str = settings.get("REPOSITORY")
+    team_name = settings.get("TEAM_NAME")
+    # Either organization or repository must be set
+    if not organization and not repositories_str:
+        raise ValueError(
+            "ORGANIZATION and REPOSITORY environment variables were not set. Please set one"
+        )
+    # Team name and repository are mutually exclusive
+    if repositories_str and team_name:
+        raise ValueError(
+            "TEAM_NAME environment variable cannot be used with REPOSITORY"
+        )
+
+    # Separate repositories_str into a list based on the comma separator
+    repositories_list = []
+    if repositories_str:
+        repositories_list = [
+            repository.strip() for repository in repositories_str.split(",")
+        ]
+
+    gh_app_id = get_int_env_var("GH_APP_ID")
+    gh_app_private_key_bytes = settings.get("GH_APP_PRIVATE_KEY", "").encode("utf8")
+    gh_app_installation_id = get_int_env_var("GH_APP_INSTALLATION_ID")
+    gh_app_enterprise_only = get_bool_env_var("GITHUB_APP_ENTERPRISE_ONLY")
+
+    if gh_app_id and (not gh_app_private_key_bytes or not gh_app_installation_id):
+        raise ValueError(
+            "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set"
+        )
+
+    token = settings.get("GH_TOKEN", "")
+    if (
+        not gh_app_id
+        and not gh_app_private_key_bytes
+        and not gh_app_installation_id
+        and not token
+    ):
+        raise ValueError("GH_TOKEN environment variable not set")
+
+    ghe = settings.get("GH_ENTERPRISE_URL", "").strip()
+
+    exempt_repos = settings.get("EXEMPT_REPOS")
+    exempt_repositories_list = []
+    if exempt_repos:
+        exempt_repositories_list = [
+            repository.strip() for repository in exempt_repos.split(",")
+        ]
+
+    follow_up_type = settings.get("TYPE")
+    # make sure that follow_up_type is either "issue" or "pull"
+    if follow_up_type:
+        if follow_up_type not in ("issue", "pull"):
+            raise ValueError("TYPE environment variable not 'issue' or 'pull'")
+    else:
+        follow_up_type = "pull"
+
+    title = settings.get("TITLE")
+    # make sure that title is a string with less than MAX_TITLE_LENGTH characters
+    if title:
+        if len(title) > MAX_TITLE_LENGTH:
+            raise ValueError("TITLE environment variable is too long")
+    else:
+        title = "Enable Dependabot"
+
+    body = settings.get("BODY")
+    if body and len(body) > MAX_BODY_LENGTH:
+        raise ValueError("BODY environment variable is too long")
+
+    if not body:
+        default_bodies = {
+            "pull": "Dependabot could be enabled for this repository. \
+Please enable it by merging this pull request so that we can keep our dependencies up to date and secure.",
+            "issue": (
+                "Please update the repository to include a Dependabot configuration file.\n"
+                "This will ensure our dependencies remain updated and secure.\n"
+                "Follow the guidelines in [creating Dependabot configuration files]"
+                "(https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file) "
+                "to set it up properly.\n\n"
+                "Here's an example of the code:"
+            ),
+        }
+        body = body = default_bodies[follow_up_type]
+
+    commit_message = settings.get("COMMIT_MESSAGE")
+    if commit_message:
+        if len(commit_message) > MAX_COMMIT_MESSAGE_LENGTH:
+            raise ValueError("COMMIT_MESSAGE environment variable is too long")
+    else:
+        commit_message = "Create/Update dependabot.yaml"
+
+    created_after_date = settings.get("CREATED_AFTER_DATE", "")
+    is_match = re.match(r"\d{4}-\d{2}-\d{2}", created_after_date)
+    if created_after_date and not is_match:
+        raise ValueError(
+            f"CREATED_AFTER_DATE '{created_after_date}' environment variable not in YYYY-MM-DD"
+        )
+
+    group_dependencies_bool = get_bool_env_var("GROUP_DEPENDENCIES")
+    enable_security_updates_bool = get_bool_env_var(
+        "ENABLE_SECURITY_UPDATES", default=True
+    )
+    dry_run_bool = get_bool_env_var("DRY_RUN")
+
+    batch_size_str = settings.get("BATCH_SIZE")
+    batch_size = int(batch_size_str) if batch_size_str else None
+    if batch_size and batch_size <= 0:
+        raise ValueError("BATCH_SIZE environment variable is 0 or lower")
+
+    filter_visibility = settings.get("FILTER_VISIBILITY")
+    filter_visibility_list = []
+    if filter_visibility:
+        filter_visibility_set = set()
+        for visibility in filter_visibility.split(","):
+            if visibility.strip().lower() not in ["public", "private", "internal"]:
+                raise ValueError(
+                    "FILTER_VISIBILITY environment variable not 'public', 'private', or 'internal'"
+                )
+            filter_visibility_set.add(visibility.strip().lower())
+        filter_visibility_list = sorted(list(filter_visibility_set))
+    else:
+        filter_visibility_list = sorted(["public", "private", "internal"])  # all
+
+    exempt_ecosystems = settings.get("EXEMPT_ECOSYSTEMS")
+    exempt_ecosystems_list = []
+    if exempt_ecosystems:
+        exempt_ecosystems_list = [
+            ecosystem.lower().strip() for ecosystem in exempt_ecosystems.split(",")
+        ]
+
+    project_id = settings.get("PROJECT_ID")
+    if project_id and not str(project_id).isnumeric():
+        raise ValueError("PROJECT_ID environment variable is not numeric")
+
+    update_existing = get_bool_env_var("UPDATE_EXISTING")
+
+    repo_specific_exemptions_str = settings.get("REPO_SPECIFIC_EXEMPTIONS", "")
+    repo_specific_exemptions = parse_repo_specific_exemptions(
+        repo_specific_exemptions_str
+    )
+
+    schedule = settings.get("SCHEDULE", "").strip().lower()
+    if schedule and schedule not in ["daily", "weekly", "monthly"]:
+        raise ValueError(
+            "SCHEDULE environment variable not 'daily', 'weekly', or 'monthly'"
+        )
+    if not schedule:
+        schedule = "weekly"
+    schedule_day = settings.get("SCHEDULE_DAY", "").strip().lower()
+    if schedule != "weekly" and schedule_day:
+        raise ValueError(
+            "SCHEDULE_DAY environment variable not needed when SCHEDULE is not 'weekly'"
+        )
+    if (
+        schedule == "weekly"
+        and schedule_day
+        and schedule_day
+        not in [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+        ]
+    ):
+        raise ValueError(
+            "SCHEDULE_DAY environment variable not 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', or 'sunday'"
+        )
+
+    labels_str = settings.get("LABELS")
+    labels_list = []
+    if labels_str:
+        labels_list = [label.lower().strip() for label in labels_str.split(",")]
+
+    dependabot_config_file = settings.get("DEPENDABOT_CONFIG_FILE")
+    if dependabot_config_file and not os.path.exists(dependabot_config_file):
+        raise ValueError(
+            f"No dependabot extra configuration found. Please create one in {dependabot_config_file}"
+        )
+
+    return (
+        organization,
+        repositories_list,
+        gh_app_id,
+        gh_app_installation_id,
+        gh_app_private_key_bytes,
+        gh_app_enterprise_only,
+        token,
+        ghe,
+        exempt_repositories_list,
+        follow_up_type,
+        title,
+        body,
+        created_after_date,
+        dry_run_bool,
+        commit_message,
+        project_id,
+        group_dependencies_bool,
+        filter_visibility_list,
+        batch_size,
+        enable_security_updates_bool,
+        exempt_ecosystems_list,
+        update_existing,
+        repo_specific_exemptions,
+        schedule,
+        schedule_day,
+        team_name,
+        labels_list,
+        dependabot_config_file,
+    )
