@@ -10,7 +10,7 @@ def install_project_venv(project: Project):
         # some scripts are missing. venv needs to be created
         log.log_event(f"creating venv at {venv.venv_dir.as_posix()}")
         venv.venv_dir.mkdir(parents=True, exist_ok=True)
-        venv.venv_dir.joinpath(".gitignore").write_text("*\n")
+        #venv.venv_dir.joinpath(".gitignore").write_text("*\n")
         venv.create()
 
     log.log_event(f"installing dependencies")

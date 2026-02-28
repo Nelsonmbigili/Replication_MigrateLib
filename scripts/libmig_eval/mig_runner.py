@@ -98,15 +98,16 @@ def mask_file_paths():
 
 def main():
     mask_file_paths()
-    process_que_db = MetaDb(paths.project_group_root / "manual_edit_queue")
-    # process_que_db = MetaDb(paths.project_group_root / "mig_queue")
+    # process_que_db = MetaDb(paths.project_group_root / "manual_edit_queue")
+    process_que_db = MetaDb(paths.project_group_root / "mig_queue")
 
-    # build_process_queue(process_que_db)
+
+    build_process_queue(process_que_db)
     rounds = [
-        # "premig",
-        # "llmmig",
-        # "merge_skipped",
-        # "async_transform",
+        "premig",
+        "llmmig",
+        "merge_skipped",
+        "async_transform",
         "manual_edit",
     ]
     runner = MigRunner(process_que_db, rounds=set(rounds), dry_run=False, use_cache=True, smart_skip_tests=False,
@@ -117,19 +118,28 @@ def main():
 def build_process_queue(queue: MetaDb):
     mig_db = MigDb(paths.mig_db_root)
     migs = mig_db.all_migs()
+
+
     # migs = find_migs(migs, mig_id="alanhamlett@pip-update-requirements__e407b929__click__typer")
     # migs = list(premig_not_done(migs))
     # migs = list(migs_round_done(migs, "manual_edit"))
     # migs = migs[50:]
     # migs = find_migs(migs, src="requests", tgt="aiohttp")
-    # lps = {mig.lib_pair for mig in migs}
-    # print(f"Found {len(migs)} migs with {len(lps)} unique library pairs")
+
+    migs = migs_from_ids("""
+       abinthomasonline@repopack-py__dc2b9243__colorama__rich
+              """)
+
+
+
+    lps = {mig.lib_pair for mig in migs}
+    print(f"Found {len(migs)} migs with {len(lps)} unique library pairs")
     #
-    # # migs = list(migs_round_done(migs, 1))
+    #migs = list(migs_round_done(migs, 1))
 
     # migs = migs_from_ids("""
-    #   abinthomasonline@repopack-py__dc2b9243__colorama__rich
-    #          """)
+    #    abinthomasonline@repopack-py__dc2b9243__colorama__rich
+    #           """)
 
     queue_migs(queue, migs)
 

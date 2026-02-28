@@ -35,7 +35,7 @@ def create_project(mig: Mig, rounds: set[str], dry_run: bool = False, use_cache=
     code_path = p.mig_repo_path(mig)
     req_files = [code_path / "requirements.txt"]
     custom_req_file = p.custom_req_file(mig)
-    python_version = "3.11"
+    python_version = "3.14"
     if custom_req_file:
         req_files.append(custom_req_file)
         req_lines = custom_req_file.read_text(encoding="utf-8").splitlines()

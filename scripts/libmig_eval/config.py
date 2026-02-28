@@ -1,2 +1,2 @@
-MODEL_NAME = "gpt-4o-2024-11-20"
-MODEL_CODE = '4o'
+MODEL_NAME = "gpt-4o-mini"
+MODEL_CODE = '4o-mini'
