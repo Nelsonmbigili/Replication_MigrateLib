@@ -58,7 +58,7 @@ class Paths:
 
     @property
     def results_root(self):
-        return self.project_group_root / "libmig-eval-results"
+        return self.project_group_root / "replicationResults"
 
     @property
     def repo_db_root(self):
