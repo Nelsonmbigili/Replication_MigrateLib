@@ -1,4 +1,6 @@
 import os
+import sys
+import subprocess
 from abc import ABC, abstractmethod
 from pathlib import Path
 
@@ -109,8 +111,9 @@ class UnixVenv(Venv):
         return self.venv_dir / "bin" / script_name
 
     def create(self):
-        print("\n \n \n \nhi hi", self.venv_dir) #debug
-        os.system(f"python -m venv .venv")
+        subprocess.run([sys.executable, "-m", "venv", self.venv_dir], check = True)
+        # print("\n \n \n \nhi hi", self.venv_dir) #debug
+        # os.system(f"python -m venv .venv")
 
     def lib_path(self, import_name: str):
         py_version = self.run_script("python", "--version", read_output=True).split()[1]
