@@ -132,10 +132,10 @@ def main():
         "llmmig",
         "merge_skipped",
         "async_transform",
-        "manual_edit",
+        # "manual_edit",
     ]
     runner = MigRunner(process_que_db, rounds=set(rounds), dry_run=False, use_cache=True, smart_skip_tests=False,
-                       remove_repo_after_done=False)
+                       remove_repo_after_done=True)
     runner.run_all()
 
 def build_process_queue(queue: MetaDb):
@@ -148,10 +148,10 @@ def build_process_queue(queue: MetaDb):
     # migs = list(migs_round_done(migs, "manual_edit"))
     # migs = migs[50:]
     # migs = find_migs(migs, src="requests", tgt="aiohttp")
-
-    migs = migs_from_ids("""
-       abinthomasonline@repopack-py__dc2b9243__colorama__rich
-              """)
+    
+    # migs = migs_from_ids("""
+    #    abinthomasonline@repopack-py__dc2b9243__colorama__rich
+    #           """)
 
 
 
