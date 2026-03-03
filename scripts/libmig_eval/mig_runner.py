@@ -66,17 +66,42 @@ class MigRunner:
 
     def run_one(self, mig: Mig):
         if not self.queue.move("queued", "running", mig.id):
-            print(f"Skipping {mig.id} as it is already running or done.")
             return
 
-        print(f"\nMigrating {mig.id}")
+        project_path = paths.repo_path(mig.id)
+        url = f"https://github.com/{mig.repo}"
+        
+        try:
+            # Clone repo
+            if not project_path.exists():
+                print(f"  Manual Cloning {url}...")
+                import subprocess
+                subprocess.run(["git", "clone", url, str(project_path)], check=True)
+                
+                print(f"  Checking out commit {mig.commit}...")
+                subprocess.run(["git", "checkout", mig.commit], cwd=str(project_path), check=True)
 
-        project = create_project(mig, rounds=self.rounds, dry_run=self.dry_run,
-                                 use_cache=self.use_cache, smart_skip_tests=self.smart_skip_tests)
-        runner = LibMigRunner(project)
-        runner.run()
+            print(f"\nMigrating {mig.id}")
+            project = create_project(mig, rounds=self.rounds, dry_run=self.dry_run,
+                                     use_cache=self.use_cache, smart_skip_tests=self.smart_skip_tests)
+            
+            # Run migration
+            runner = LibMigRunner(project)
+            runner.run()
 
-        self.queue.move("running", "done", mig.id)
+            self.queue.move("running", "done", mig.id)
+
+        except Exception as e:
+            print(f"  Error during processing {mig.id}: {e}")
+            import traceback
+            traceback.print_exc() 
+            self.queue.move("running", "error", mig.id)
+            
+        finally:
+            
+            if self.remove_repo_after_done and project_path.exists():
+                print(f"  Cleaning up {mig.id}...")
+                cleanup_mig_repo(mig)
 
 
 def mask_file_paths():
@@ -101,7 +126,6 @@ def main():
     # process_que_db = MetaDb(paths.project_group_root / "manual_edit_queue")
     process_que_db = MetaDb(paths.project_group_root / "mig_queue")
 
-
     build_process_queue(process_que_db)
     rounds = [
         "premig",
@@ -113,7 +137,6 @@ def main():
     runner = MigRunner(process_que_db, rounds=set(rounds), dry_run=False, use_cache=True, smart_skip_tests=False,
                        remove_repo_after_done=False)
     runner.run_all()
-
 
 def build_process_queue(queue: MetaDb):
     mig_db = MigDb(paths.mig_db_root)
