@@ -70,4 +70,4 @@ def process_all_yamls():
 
 if __name__ == "__main__":
     process_all_yamls()
-    print("\nDone! Check the './results.rq1.1' folder.")
+    print(f"\nDone! Check the {OUTPUT_BASE_DIR} folder.")
