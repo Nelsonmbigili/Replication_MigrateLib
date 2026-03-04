@@ -144,7 +144,7 @@ def build_process_queue(queue: MetaDb):
 
 
     # migs = find_migs(migs, mig_id="alanhamlett@pip-update-requirements__e407b929__click__typer")
-    # migs = list(premig_not_done(migs))
+    migs = list(premig_not_done(migs))
     # migs = list(migs_round_done(migs, "manual_edit"))
     # migs = migs[50:]
     # migs = find_migs(migs, src="requests", tgt="aiohttp")
@@ -168,4 +168,5 @@ def build_process_queue(queue: MetaDb):
 
 
 if __name__ == '__main__':
+
     main()
