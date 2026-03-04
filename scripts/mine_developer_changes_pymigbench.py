@@ -3,8 +3,8 @@ import yaml
 import requests
 import glob
 
-SOURCE_DIR = "../datasets"
-OUTPUT_BASE_DIR = "../replicationResults/RQ1.1"
+SOURCE_DIR = "../datasets/utils/selected"
+OUTPUT_BASE_DIR = "../replicationResults/RQ1.1/selectedDeveloperChanges"
 
 def download_file(url):
     try:
