@@ -1,0 +1,1388 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="21" skipped="0" tests="60" time="14.081" timestamp="2026-03-03T21:12:33.234862+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.api.test_error_handle.TestNaverTalkApi" name="test_callback_error" time="0.001" /><testcase classname="tests.api.test_error_handle.TestNaverTalkApi" name="test_connection_error_handle" time="0.766"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_id]&gt;">self = &lt;tests.api.test_error_handle.TestNaverTalkApi testMethod=test_connection_error_handle&gt;
+
+    @responses.activate
+    def test_connection_error_handle(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "message": "Internal Server Error"
+            },
+            status=500
+        )
+    
+        try:
+&gt;           self.tested.send('test_id', 'test message')
+
+tests/api/test_error_handle.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:157: in send
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121b602d0&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_id]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_error_handle.TestNaverTalkApi" name="test_error_handle_get_user_profile" time="0.492"><failure message="AssertionError: '99' != '02'&#10;- 99&#10;+ 02">self = &lt;tests.api.test_error_handle.TestNaverTalkApi testMethod=test_error_handle_get_user_profile&gt;
+
+    @responses.activate
+    def test_error_handle_get_user_profile(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                'success': False,
+                'resultCode': "02",
+                'resultMessage': "request json 문자열 파싱 에러"
+            },
+            status=200
+        )
+    
+        try:
+&gt;           self.tested.request_profile('test_id', 'nickname')
+
+tests/api/test_error_handle.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:204: in request_profile
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121b607d0&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_id]&gt;
+
+nta/api.py:405: NaverTalkApiError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.api.test_error_handle.TestNaverTalkApi testMethod=test_error_handle_get_user_profile&gt;
+
+    @responses.activate
+    def test_error_handle_get_user_profile(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                'success': False,
+                'resultCode': "02",
+                'resultMessage': "request json 문자열 파싱 에러"
+            },
+            status=200
+        )
+    
+        try:
+            self.tested.request_profile('test_id', 'nickname')
+        except NaverTalkApiError as e:
+            self.assertEqual(e.status_code, 200)
+&gt;           self.assertEqual(e.result_code, "02")
+E           AssertionError: '99' != '02'
+E           - 99
+E           + 02
+
+tests/api/test_error_handle.py:78: AssertionError</failure></testcase><testcase classname="tests.api.test_error_handle.TestNaverTalkApi" name="test_error_handle_upload_image_url" time="0.480"><failure message="AssertionError: '02' != 'IMG-99'&#10;- 02&#10;+ IMG-99">self = &lt;tests.api.test_error_handle.TestNaverTalkApi testMethod=test_error_handle_upload_image_url&gt;
+
+    @responses.activate
+    def test_error_handle_upload_image_url(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                'success': False,
+                'resultCode': "IMG-99",
+                'resultMessage': "이미지 업로드 중 에러"
+            },
+            status=200
+        )
+    
+        try:
+&gt;           self.tested.upload_image('https://example.com/test.jpg')
+
+tests/api/test_error_handle.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:219: in upload_image
+    self._send(payload, callback=callback, response_form=NaverTalkImageResponse)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121bb0b00&gt;
+response = {"imageId": null, "resultCode": "02", "resultMessage": "user \ub204\ub77d \uc624\ub958", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [user 누락 오류]&gt;
+
+nta/api.py:405: NaverTalkApiError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.api.test_error_handle.TestNaverTalkApi testMethod=test_error_handle_upload_image_url&gt;
+
+    @responses.activate
+    def test_error_handle_upload_image_url(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                'success': False,
+                'resultCode': "IMG-99",
+                'resultMessage': "이미지 업로드 중 에러"
+            },
+            status=200
+        )
+    
+        try:
+            self.tested.upload_image('https://example.com/test.jpg')
+        except NaverTalkApiError as e:
+            self.assertEqual(e.status_code, 200)
+&gt;           self.assertEqual(e.result_code, "IMG-99")
+E           AssertionError: '02' != 'IMG-99'
+E           - 02
+E           + IMG-99
+
+tests/api/test_error_handle.py:99: AssertionError</failure></testcase><testcase classname="tests.api.test_error_handle.TestNaverTalkApi" name="test_error_with_detail_handle" time="0.504"><failure message="AssertionError: '99' != '02'&#10;- 99&#10;+ 02">self = &lt;tests.api.test_error_handle.TestNaverTalkApi testMethod=test_error_with_detail_handle&gt;
+
+    @responses.activate
+    def test_error_with_detail_handle(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                'success': False,
+                'resultCode': "02",
+                'resultMessage': "request json 문자열 파싱 에러"
+            },
+            status=200
+        )
+    
+        try:
+&gt;           self.tested.send('test_id', 'test message')
+
+tests/api/test_error_handle.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:157: in send
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121bb1480&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_id]&gt;
+
+nta/api.py:405: NaverTalkApiError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.api.test_error_handle.TestNaverTalkApi testMethod=test_error_with_detail_handle&gt;
+
+    @responses.activate
+    def test_error_with_detail_handle(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                'success': False,
+                'resultCode': "02",
+                'resultMessage': "request json 문자열 파싱 에러"
+            },
+            status=200
+        )
+    
+        try:
+            self.tested.send('test_id', 'test message')
+        except NaverTalkApiError as e:
+            self.assertEqual(e.status_code, 200)
+&gt;           self.assertEqual(e.result_code, "02")
+E           AssertionError: '99' != '02'
+E           - 99
+E           + 02
+
+tests/api/test_error_handle.py:58: AssertionError</failure></testcase><testcase classname="tests.api.test_error_handle.TestNaverTalkApi" name="test_naver_pay" time="0.001" /><testcase classname="tests.api.test_message_product.TestNaverTalkAPI" name="test_send_text" time="0.496"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;">self = &lt;tests.api.test_message_product.TestNaverTalkAPI testMethod=test_send_text&gt;
+
+    @responses.activate
+    def test_send_text(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+    
+        def test_callback(res, payload):
+            self.assertEqual(res.result_code, "00")
+            self.assertEqual(res.success, True)
+            self.assertEqual(
+                payload,
+                {
+                    "event": "product",
+                    "options": {
+                        "ids": [
+                            1002324883,
+                            1002793763,
+                            2265658394,
+                            2299323502
+                        ],
+                        "displayType": "list"
+                    },
+                    "user": "test_user_id"
+                }
+            )
+            counter()
+    
+&gt;       self.tested.product_message(
+            'test_user_id',
+            ids=[
+                1002324883,
+                1002793763,
+                2265658394,
+                2299323502
+            ],
+            display_type='list',
+            callback=test_callback
+        )
+
+tests/api/test_message_product.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:306: in product_message
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x1067ab680&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_user_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_persistent_menu.TestNaverTalkAPI" name="test_persistent_menu" time="0.596"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [만료되었거나 잘못된 Authorization]&gt;">self = &lt;tests.api.test_persistent_menu.TestNaverTalkAPI testMethod=test_persistent_menu&gt;
+
+    @responses.activate
+    def test_persistent_menu(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+        def test_callback(res, payload):
+            self.assertEqual(
+                payload,
+                {
+                    "event": "persistentMenu",
+                    "menuContent": [{
+                        "menus":
+                            [{
+                                "type": "TEXT",
+                                "data": {
+                                    "title": "챗봇 안내",
+                                    "code": "CHATBOT_GUIDE"
+                                }
+                            }, {
+                                "type": "LINK",
+                                "data": {
+                                    "title": "이벤트 페이지",
+                                    "url": "http://your-pc-url.com/event",
+                                    "mobileUrl": "http://your-mobile-url.com/event"
+                                }
+                            }, {
+                                "type": "LINK",
+                                "data": {
+                                    "title": "전화하기",
+                                    "url": "tel:021234567",
+                                    "mobileUrl": None
+                                }
+                            }, {
+                                "type": "NESTED",
+                                "data": {
+                                    "title": "공지사항",
+                                    "menus":
+                                        [{
+                                            "type": "LINK",
+                                            "data": {
+                                                "title": "교환/환불 안내",
+                                                "url": "http://your-pc-url.com/guide",
+                                                "mobileUrl": "http://your-mobile-url.com/guide"
+                                            }
+                                        }]
+                                }
+                            }]
+                    }]
+                }
+            )
+            counter()
+    
+&gt;       self.tested.persistent_menu(
+            menus=[
+                Button.ButtonText(title='챗봇 안내', code='CHATBOT_GUIDE'),
+                Button.ButtonLink(
+                    title='이벤트 페이지',
+                    url='http://your-pc-url.com/event',
+                    mobile_url='http://your-mobile-url.com/event'
+                ),
+                Button.ButtonLink(
+                    title='전화하기',
+                    url='tel:021234567'
+                ),
+                Button.ButtonNested(
+                    title='공지사항',
+                    menus=[
+                        Button.ButtonLink(
+                            title="교환/환불 안내",
+                            url="http://your-pc-url.com/guide",
+                            mobile_url="http://your-mobile-url.com/guide"
+                        )
+                    ]
+                )
+            ],
+            callback=test_callback
+        )
+
+tests/api/test_persistent_menu.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:290: in persistent_menu
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121bfc050&gt;
+response = {"resultCode": "01", "resultMessage": "\ub9cc\ub8cc\ub418\uc5c8\uac70\ub098 \uc798\ubabb\ub41c Authorization", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [만료되었거나 잘못된 Authorization]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_persistent_menu.TestNaverTalkAPI" name="test_persistent_menu_with_None" time="0.479"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [만료되었거나 잘못된 Authorization]&gt;">self = &lt;tests.api.test_persistent_menu.TestNaverTalkAPI testMethod=test_persistent_menu_with_None&gt;
+
+    @responses.activate
+    def test_persistent_menu_with_None(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+        def test_callback(res, payload):
+            self.assertEqual(
+                payload,
+                {
+                    "event": "persistentMenu",
+                    "menuContent": []
+                }
+            )
+            counter()
+    
+&gt;       self.tested.persistent_menu(callback=test_callback)
+
+tests/api/test_persistent_menu.py:133: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:290: in persistent_menu
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121bade50&gt;
+response = {"resultCode": "01", "resultMessage": "\ub9cc\ub8cc\ub418\uc5c8\uac70\ub098 \uc798\ubabb\ub41c Authorization", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [만료되었거나 잘못된 Authorization]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_request_profile.TestNaverTalkAPI" name="test_request_profile" time="0.526"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_id]&gt;">self = &lt;tests.api.test_request_profile.TestNaverTalkAPI testMethod=test_request_profile&gt;
+
+    @responses.activate
+    def test_request_profile(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+        def test_callback(res, payload):
+            self.assertEqual(res.result_code, "00")
+            self.assertEqual(res.success, True)
+            self.assertEqual(
+                payload.options,
+                {
+                    "field": "nickname",
+                    "agreements": ["cellphone", "address"]
+                }
+            )
+            counter()
+    
+&gt;       self.tested.request_profile(
+            'test_id',
+            'nickname',
+            agreements=['cellphone', 'address'],
+            callback=test_callback
+        )
+
+tests/api/test_request_profile.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:204: in request_profile
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121baec50&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_id]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_send_composite.TestNaverTalkAPI" name="test_composite_with_calendar" time="0.507"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;">self = &lt;tests.api.test_send_composite.TestNaverTalkAPI testMethod=test_composite_with_calendar&gt;
+
+    @responses.activate
+    def test_composite_with_calendar(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+    
+        def test_callback(res, payload):
+            target = {
+                "event": "send",
+                "user": "test_user_id",
+                "compositeContent": {
+                    "compositeList": [
+                        {
+                            "title": "톡톡 레스토랑",
+                            "description": "파스타가 맛있는집",
+                            'elementList': None,
+                            "buttonList": [
+                                {
+                                    "type": "CALENDAR",
+                                    "data": {
+                                        "title": "방문 날짜 선택하기",
+                                        "code": "code_for_your_bot",
+                                        "options": {
+                                            "calendar": {
+                                                "placeholder": "방문 날짜를 선택해주세요.",
+                                                "start": "20180301",
+                                                "end": "20180430",
+                                                "disables": "1,20180309,20180315-20180316"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                'options': {
+                    'notification': False,
+                    'readBySend': False
+    
+                }
+            }
+            self.assertEqual(target, payload.as_json_dict())
+            counter()
+    
+&gt;       self.tested.send(
+            "test_user_id",
+            message=CompositeContent(
+                composite_list=[
+                    Composite(
+                        title= "톡톡 레스토랑",
+                        description="파스타가 맛있는집",
+                        button_list=[
+                            ButtonCalendar(
+                                title="방문 날짜 선택하기",
+                                code="code_for_your_bot",
+                                placeholder="방문 날짜를 선택해주세요.",
+                                start="20180301",
+                                end="20180430",
+                                disables="1,20180309,20180315-20180316"
+                            )
+                        ]
+                    )
+    
+                ]
+            ),
+            callback=test_callback
+        )
+
+tests/api/test_send_composite.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:157: in send
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121be2030&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_user_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_send_composite.TestNaverTalkAPI" name="test_send_composite" time="0.496"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;">self = &lt;tests.api.test_send_composite.TestNaverTalkAPI testMethod=test_send_composite&gt;
+
+    @responses.activate
+    def test_send_composite(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+        def test_callback(res, payload):
+            self.assertEqual(res.result_code, "00")
+            self.assertEqual(res.success, True)
+            self.assertEqual(
+                payload.as_json_dict(),
+                {
+                    'event': 'send',
+                    'user': 'test_user_id',
+                    'compositeContent': {
+                        'compositeList': [
+                            {
+                                'title': 'test_title',
+                                'description': 'test_descript',
+                                'image': {
+                                    'imageUrl': 'test_image'
+                                },
+                                'elementList':{
+                                    'type': 'LIST',
+                                    'data': [
+                                        {
+                                            'title': 'test_ed_title',
+                                            'description': 'test_ed_descript',
+                                            'subDescription': 'test_ed_subdescript',
+                                            'image': {
+                                                'imageUrl': 'test_ed_image'
+                                            },
+                                            'button':{
+                                                'type': 'TEXT',
+                                                'data': {
+                                                    'title': 'test'
+                                                }
+                                            }
+                                        }
+                                    ]
+    
+                                },
+                                'buttonList': None
+                            }
+                        ]
+                    },
+                    'options': {
+                        'notification': False,
+                        'readBySend': False
+                    }
+                }
+            )
+            counter()
+    
+    
+&gt;       self.tested.send(
+            'test_user_id',
+            message=CompositeContent(
+                composite_list=[
+                    Composite(
+                        title='test_title',
+                        description='test_descript',
+                        image='test_image',
+                        element_list=ElementList([
+                            ElementData(
+                                title='test_ed_title',
+                                description='test_ed_descript',
+                                sub_description='test_ed_subdescript',
+                                image='test_ed_image',
+                                button=ButtonText('test')
+                            )
+                        ])
+                    )
+                ]
+            ),
+            callback=test_callback
+        )
+
+tests/api/test_send_composite.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:157: in send
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121be3020&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_user_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_send_composite.TestNaverTalkAPI" name="test_send_composite_with_quick_reply" time="0.501"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [compositeContent.quickReply.buttonList[1].data.url =&gt; 올바른 URL 형식이 아닙니다.]&gt;">self = &lt;tests.api.test_send_composite.TestNaverTalkAPI testMethod=test_send_composite_with_quick_reply&gt;
+
+    @responses.activate
+    def test_send_composite_with_quick_reply(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+    
+        def test_callback(res, payload):
+            self.assertEqual(res.result_code, "00")
+            self.assertEqual(res.success, True)
+            self.assertEqual(
+                payload.as_json_dict(),
+                {
+                    'event': 'send',
+                    'user': 'test_user_id',
+                    'compositeContent': {
+                        'compositeList': [
+                            {
+                                'title': 'test_title',
+                                'description': None,
+                                'elementList': None,
+                                'buttonList': None
+                            }
+                        ],
+                        'quickReply': {
+                            'buttonList': [{
+                                'data': {
+                                    'code': 'PAYLOAD',
+                                    'title': 'text'},
+                                'type': 'TEXT'},
+                                {
+                                    'data': {
+                                        'mobileUrl': None,
+                                        'title': 'text',
+                                        'url': 'PAYLOAD'},
+                                    'type': 'LINK'}]}
+    
+                    },
+                    'options': {
+                        'notification': False,
+                        'readBySend': False
+                    }
+                }
+            )
+            counter()
+    
+&gt;       self.tested.send(
+            'test_user_id',
+            message=CompositeContent(
+                composite_list=[
+                    Composite(
+                        title='test_title'
+                    )
+                ]
+            ),
+            quick_reply=QuickReply(
+                [
+                    {'type': 'TEXT', 'title': 'text', 'value': 'PAYLOAD'},
+                    {'type': 'LINK', 'title': 'text', 'value': 'PAYLOAD'}
+                ]
+            ),
+            callback=test_callback
+        )
+
+tests/api/test_send_composite.py:163: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:157: in send
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121b5d470&gt;
+response = {"resultCode": "02", "resultMessage": "compositeContent.quickReply.buttonList[1].data.url =&gt; \uc62c\ubc14\ub978 URL \ud615\uc2dd\uc774 \uc544\ub2d9\ub2c8\ub2e4.", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [compositeContent.quickReply.buttonList[1].data.url =&gt; 올바른 URL 형식이 아닙니다.]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_send_image.TestNaverTalkAPI" name="test_send_image" time="0.485"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;">self = &lt;tests.api.test_send_image.TestNaverTalkAPI testMethod=test_send_image&gt;
+
+    @responses.activate
+    def test_send_image(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+    
+        def test_callback(res, payload):
+            self.assertEqual(res.result_code, "00")
+            self.assertEqual(res.success, True)
+            self.assertEqual(
+                payload,
+                {
+                    'event': 'send',
+                    'user': 'test_user_id',
+                    'imageContent': {
+                        'imageUrl': 'test.jpg',
+                    },
+                    'options': {
+                        'notification': False,
+                        'readBySend': False
+                    }
+                }
+            )
+            counter()
+    
+&gt;       self.tested.send(
+            'test_user_id',
+            ImageContent('test.jpg'),
+            callback=test_callback
+        )
+
+tests/api/test_send_image.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:157: in send
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121b5da90&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_user_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_send_image.TestNaverTalkAPI" name="test_send_image_with_quick_reply" time="0.496"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [imageContent.quickReply.buttonList[1].data.url =&gt; 올바른 URL 형식이 아닙니다.]&gt;">self = &lt;tests.api.test_send_image.TestNaverTalkAPI testMethod=test_send_image_with_quick_reply&gt;
+
+    @responses.activate
+    def test_send_image_with_quick_reply(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+    
+        def test_callback(res, payload):
+            self.assertEqual(res.result_code, "00")
+            self.assertEqual(res.success, True)
+            self.assertEqual(
+                payload,
+                {
+                    'event': 'send',
+                    'user': 'test_user_id',
+                    'imageContent': {
+                        'imageUrl': 'test.jpg',
+                        'quickReply': {
+                            'buttonList': [{
+                                'data': {
+                                    'code': 'PAYLOAD',
+                                    'title': 'text'},
+                                'type': 'TEXT'},
+                                {
+                                    'data': {
+                                        'mobileUrl': None,
+                                        'title': 'text',
+                                        'url': 'PAYLOAD'},
+                                    'type': 'LINK'}]}
+                    },
+                    'options': {
+                        'notification': False,
+                        'readBySend': False
+                    }
+                }
+            )
+            counter()
+    
+&gt;       self.tested.send(
+            'test_user_id',
+            ImageContent('test.jpg'),
+            quick_reply=QuickReply(
+                [
+                    {'type': 'TEXT', 'title': 'text', 'value': 'PAYLOAD'},
+                    {'type': 'LINK', 'title': 'text', 'value': 'PAYLOAD'}
+                ]
+            ),
+            callback=test_callback
+        )
+
+tests/api/test_send_image.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:157: in send
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121bf4940&gt;
+response = {"resultCode": "02", "resultMessage": "imageContent.quickReply.buttonList[1].data.url =&gt; \uc62c\ubc14\ub978 URL \ud615\uc2dd\uc774 \uc544\ub2d9\ub2c8\ub2e4.", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [imageContent.quickReply.buttonList[1].data.url =&gt; 올바른 URL 형식이 아닙니다.]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_send_text.TestNaverTalkAPI" name="test_send_text" time="0.496"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;">self = &lt;tests.api.test_send_text.TestNaverTalkAPI testMethod=test_send_text&gt;
+
+    @responses.activate
+    def test_send_text(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+        def test_callback(res, payload):
+            self.assertEqual(res.result_code, "00")
+            self.assertEqual(res.success, True)
+            self.assertEqual(
+                payload,
+                {
+                    'event': 'send',
+                    'user': 'test_user_id',
+                    'textContent': {
+                        'text': 'test_str_message',
+                        'code': None,
+                        'inputType': None
+                    },
+                    'options': {
+                        'notification': False,
+                        'readBySend': False
+                    }
+                }
+            )
+            counter()
+    
+&gt;       self.tested.send(
+            'test_user_id',
+            'test_str_message',
+            callback=test_callback
+        )
+
+tests/api/test_send_text.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:157: in send
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x10672f650&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_user_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_send_text.TestNaverTalkAPI" name="test_send_with_quick_reply" time="0.480"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [textContent.quickReply.buttonList[1].data.url =&gt; 올바른 URL 형식이 아닙니다.]&gt;">self = &lt;tests.api.test_send_text.TestNaverTalkAPI testMethod=test_send_with_quick_reply&gt;
+
+    @responses.activate
+    def test_send_with_quick_reply(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+    
+        def test_callback(res, payload):
+            self.assertEqual(res.result_code, "00")
+            self.assertEqual(res.success, True)
+            self.assertEqual(
+                payload,
+                {
+                    "event": "send",
+                    "user": "test_user_id",
+                    "options": {
+                        "notification": False,
+                        "readBySend": False
+                    },
+                    "textContent": {
+                        "code": None,
+                        "inputType": None,
+                        "quickReply": {
+                            "buttonList": [{
+                                              "data": {
+                                                  "code": "PAYLOAD",
+                                                  "title": "text"},
+                                              "type": "TEXT"},
+                                          {
+                                              "data": {
+                                                  "mobileUrl": None,
+                                                  "title": "text",
+                                                  "url": "PAYLOAD"},
+                                              "type": "LINK"}]},
+                                      "text": "test_str_message"}
+                }
+            )
+    
+            counter()
+    
+&gt;       self.tested.send(
+            'test_user_id',
+            'test_str_message',
+            quick_reply=QuickReply(
+                [
+                    {'type': 'TEXT', 'title': 'text', 'value': 'PAYLOAD'},
+                    {'type': 'LINK', 'title': 'text', 'value': 'PAYLOAD'}
+                ]
+            ),
+            callback=test_callback
+        )
+
+tests/api/test_send_text.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:157: in send
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121c10410&gt;
+response = {"resultCode": "02", "resultMessage": "textContent.quickReply.buttonList[1].data.url =&gt; \uc62c\ubc14\ub978 URL \ud615\uc2dd\uc774 \uc544\ub2d9\ub2c8\ub2e4.", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [textContent.quickReply.buttonList[1].data.url =&gt; 올바른 URL 형식이 아닙니다.]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_thread.TestNaverTalkAPI" name="test_thread_passing" time="0.477"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;">self = &lt;tests.api.test_thread.TestNaverTalkAPI testMethod=test_thread_passing&gt;
+
+    @responses.activate
+    def test_thread_passing(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+    
+        def test_callback(res, payload):
+            self.assertEqual(res.result_code, "00")
+            self.assertEqual(res.success, True)
+            self.assertEqual(
+                payload,
+                {
+                    'event': 'handover',
+                    'user': 'test_user_id',
+                    'options': {
+                        "control": "passThread",
+                        "targetId": 1
+                    }
+                }
+            )
+            counter()
+    
+&gt;       self.tested.pass_thread(
+            user_id='test_user_id',
+            callback=test_callback
+        )
+
+tests/api/test_thread.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:249: in pass_thread
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121c4a200&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_user_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_thread.TestNaverTalkAPI" name="test_thread_taking" time="0.496"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;">self = &lt;tests.api.test_thread.TestNaverTalkAPI testMethod=test_thread_taking&gt;
+
+    @responses.activate
+    def test_thread_taking(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+        def test_callback(res, payload):
+            self.assertEqual(res.result_code, "00")
+            self.assertEqual(res.success, True)
+            self.assertEqual(
+                payload,
+                {
+                    'event': 'handover',
+                    'user': 'test_user_id',
+                    'options': {
+                        "control": "takeThread",
+                        "metadata": ""
+                    }
+                }
+            )
+            counter()
+    
+&gt;       self.tested.take_thread(
+            user_id='test_user_id',
+            callback=test_callback
+        )
+
+tests/api/test_thread.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:234: in take_thread
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121c4ac50&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_user_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_typing_action.TestNaverTalkActionEvent" name="test_typing_off" time="0.500"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;">self = &lt;tests.api.test_typing_action.TestNaverTalkActionEvent testMethod=test_typing_off&gt;
+
+    @responses.activate
+    def test_typing_off(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00",
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+        def test_callback(res, payload):
+            self.assertEqual(res.result_code, "00")
+            self.assertEqual(res.success, True)
+            self.assertEqual(payload.user, 'test_user_id')
+            self.assertEqual(payload.event, 'action')
+            self.assertEqual(payload.options, {"action": "typingOff"})
+            counter()
+    
+&gt;       self.tested.typing_off('test_user_id', callback=test_callback)
+
+tests/api/test_typing_action.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:279: in typing_off
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121bd2530&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_user_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_typing_action.TestNaverTalkActionEvent" name="test_typing_on" time="0.487"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;">self = &lt;tests.api.test_typing_action.TestNaverTalkActionEvent testMethod=test_typing_on&gt;
+
+    @responses.activate
+    def test_typing_on(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00",
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+        def test_callback(res, payload):
+            self.assertEqual(res.result_code, "00")
+            self.assertEqual(res.success, True)
+            self.assertEqual(payload.user, 'test_user_id')
+            self.assertEqual(payload.event, 'action')
+            self.assertEqual(payload.options, {"action": "typingOn"})
+            counter()
+    
+&gt;       self.tested.typing_on('test_user_id', callback=test_callback)
+
+tests/api/test_typing_action.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:264: in typing_on
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121bd2850&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_user_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_upload_image.TestNaverTalkAPI" name="test_upload_image" time="0.492"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [user 누락 오류]&gt;">self = &lt;tests.api.test_upload_image.TestNaverTalkAPI testMethod=test_upload_image&gt;
+
+    @responses.activate
+    def test_upload_image(self):
+        responses.add(
+            responses.POST,
+            NaverTalkApi.DEFAULT_API_ENDPOINT,
+            json={
+                "success": True,
+                "resultCode": "00",
+                "imageId": "test-1234-image-id"
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+        def test_callback(res, payload):
+            self.assertEqual(res.result_code, "00")
+            self.assertEqual(res.success, True)
+            self.assertEqual(res.image_id, "test-1234-image-id")
+            counter()
+    
+&gt;       self.tested.upload_image(
+            'test_image_url.jpg',
+            callback=test_callback
+        )
+
+tests/api/test_upload_image.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:219: in upload_image
+    self._send(payload, callback=callback, response_form=NaverTalkImageResponse)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x10677d400&gt;
+response = {"imageId": null, "resultCode": "02", "resultMessage": "user \ub204\ub77d \uc624\ub958", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [user 누락 오류]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_after_send" time="0.486"><failure message="nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;">self = &lt;tests.api.test_webhook_handler.TestNaverTalkApi testMethod=test_after_send&gt;
+
+    @responses.activate
+    def test_after_send(self):
+        responses.add(
+            responses.POST,
+            self.tested.DEFAULT_API_ENDPOINT,
+            json={
+                'success': True,
+                'resultCode': '00'
+            },
+            status=200
+        )
+    
+        counter = mock.MagicMock()
+        @self.tested.after_send
+        def after_send_handler(res, payload):
+            self.assertTrue(isinstance(res, NaverTalkResponse))
+            self.assertTrue(isinstance(payload, GenericPayload))
+            counter()
+    
+&gt;       self.tested.send('test_user_id', 'test_text')
+
+tests/api/test_webhook_handler.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nta/api.py:157: in send
+    self._send(payload, callback=callback)
+nta/api.py:181: in _send
+    self.__error_check(res)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;nta.api.NaverTalkApi object at 0x121ce25d0&gt;
+response = {"resultCode": "99", "resultMessage": "\uc798\ubabb\ub41c user \uac12 : test_user_id", "success": false}
+
+    def __error_check(self, response):
+        """
+        check error from navertalk.
+        When recieved success: false, raise NaverTalkApiError.
+        """
+        if not response.success:
+&gt;           raise NaverTalkApiError(response)
+E           nta.exceptions.NaverTalkApiError: &lt;NaverTalkApiError [잘못된 user 값 : test_user_id]&gt;
+
+nta/api.py:405: NaverTalkApiError</failure></testcase><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_before_proccess" time="0.001" /><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_callback" time="0.001" /><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_echo_event" time="0.001" /><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_friend_event" time="0.000" /><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_handover_event" time="0.001" /><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_leave_event" time="0.000" /><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_open_event" time="0.000" /><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_pay_complete_event" time="0.000" /><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_pay_confirm_event" time="0.000" /><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_profile_event" time="0.001" /><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_send_event_image" time="0.000" /><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_send_event_text" time="0.000" /><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_standby_true" time="0.001" /><testcase classname="tests.api.test_webhook_handler.TestNaverTalkApi" name="test_unknown_event" time="0.000" /><testcase classname="tests.models.test_base.TestBaseTemplate" name="test_convert_to_camel_case" time="0.001" /><testcase classname="tests.models.test_base.TestBaseTemplate" name="test_dict_to_snake_case" time="0.000" /><testcase classname="tests.models.test_base.TestBaseTemplate" name="test_new_from_json_dict" time="0.000" /><testcase classname="tests.models.test_base.TestBaseTemplate" name="test_others" time="0.000" /><testcase classname="tests.models.test_buttons.TestNaverTalkApi" name="test_button_convert_test" time="0.000" /><testcase classname="tests.models.test_buttons.TestNaverTalkApi" name="test_button_nested" time="0.000" /><testcase classname="tests.models.test_buttons.TestNaverTalkApi" name="test_calendar_button" time="0.000" /><testcase classname="tests.models.test_buttons.TestNaverTalkApi" name="test_link_button" time="0.000" /><testcase classname="tests.models.test_buttons.TestNaverTalkApi" name="test_option_button" time="0.000" /><testcase classname="tests.models.test_buttons.TestNaverTalkApi" name="test_pay_button" time="0.000" /><testcase classname="tests.models.test_buttons.TestNaverTalkApi" name="test_text_button" time="0.000" /><testcase classname="tests.models.test_buttons.TestNaverTalkApi" name="test_time_button" time="0.000" /><testcase classname="tests.models.test_buttons.TestNaverTalkApi" name="test_time_interval" time="0.000" /><testcase classname="tests.models.test_events.TestNaverTalkEvent" name="test_peresistent_menu_event" time="0.000" /><testcase classname="tests.models.test_model_error_handle.TestNaverTalkApi" name="test_button_invalid_type_error" time="0.000" /><testcase classname="tests.models.test_model_error_handle.TestNaverTalkApi" name="test_image_content_error" time="0.000" /><testcase classname="tests.models.test_model_error_handle.TestNaverTalkApi" name="test_payload_error" time="0.000" /><testcase classname="tests.models.test_payload.TestNaverTalkPayload" name="test_persistent_menu" time="0.000" /><testcase classname="tests.models.test_payload.TestNaverTalkPayload" name="test_persistent_menu_with_None" time="0.000" /><testcase classname="tests.models.test_payload.TestNaverTalkPayload" name="test_product_message" time="0.000" /><testcase classname="tests.test_utils.TestUtils" name="test__byteify" time="0.000" /><testcase classname="tests.test_utils.TestUtils" name="test_to_camel_case" time="0.000" /><testcase classname="tests.test_utils.TestUtils" name="test_to_snake_case" time="0.000" /></testsuite></testsuites>

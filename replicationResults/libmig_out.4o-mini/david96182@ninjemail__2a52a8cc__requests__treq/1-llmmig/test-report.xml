@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="52" time="4979.920" timestamp="2026-03-04T15:42:05.975947+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="ninjemail.tests.test_email_gmail" name="test_create_account_firefox_and_getsmscode" time="0.089" /><testcase classname="ninjemail.tests.test_email_gmail" name="test_create_account_chrome_and_smspool" time="0.007" /><testcase classname="ninjemail.tests.test_email_gmail" name="test_create_account_chrome_and_fivesim" time="0.015" /><testcase classname="ninjemail.tests.test_email_gmail" name="test_create_account_phone_fail" time="0.004" /><testcase classname="ninjemail.tests.test_email_gmail" name="test_create_account_code_fail" time="0.004" /><testcase classname="ninjemail.tests.test_email_outlook" name="test_create_account_firefox" time="0.005" /><testcase classname="ninjemail.tests.test_email_outlook" name="test_create_account_chrome" time="0.004" /><testcase classname="ninjemail.tests.test_email_outlook" name="test_create_hotmail_account" time="0.004" /><testcase classname="ninjemail.tests.test_email_yahoo" name="test_create_account_firefox_and_getsmscode" time="0.004" /><testcase classname="ninjemail.tests.test_email_yahoo" name="test_create_account_chrome_and_smspool" time="0.003" /><testcase classname="ninjemail.tests.test_email_yahoo" name="test_create_account_firefox_and_fivesim" time="0.004" /><testcase classname="ninjemail.tests.test_email_yahoo" name="test_create_myyahoo_account" time="0.004" /><testcase classname="ninjemail.tests.test_manager" name="test_init_valid_browser" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_init_valid_browser_undetected_chrome" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_init_invalid_browser" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_get_proxy_with_provided_proxy" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_get_proxy_with_auto_proxy_success" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_get_proxy_with_auto_proxy_failure" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_get_captcha_key_valid_provider" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_get_captcha_key_invalid_provider" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_get_captcha_key_no_key_for_provider" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_get_sms_key_with_keys" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_get_sms_key_no_keys" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_create_outlook_account" time="0.002" /><testcase classname="ninjemail.tests.test_manager" name="test_create_outlook_account_no_info" time="0.004" /><testcase classname="ninjemail.tests.test_manager" name="test_create_outlook_account_with_proxy" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_create_outlook_account_no_captcha_key" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_create_gmail_account" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_create_gmail_account_no_info" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_create_gmail_account_with_proxy" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_create_gmail_account_no_sms_key" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_create_yahoo_account" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_create_yahoo_account_no_info" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_create_yahoo_account_with_proxy" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_create_yahoo_account_no_captcha_key" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_create_yahoo_account_no_sms_key" time="0.001" /><testcase classname="ninjemail.tests.test_sms_5sim" name="test_request_success" time="0.001" /><testcase classname="ninjemail.tests.test_sms_5sim" name="test_request_failure" time="0.000" /><testcase classname="ninjemail.tests.test_sms_5sim" name="test_get_phone" time="0.001" /><testcase classname="ninjemail.tests.test_sms_5sim" name="test_get_code" time="0.001" /><testcase classname="ninjemail.tests.test_sms_5sim" name="test_get_phone_with_prefix" time="0.001" /><testcase classname="ninjemail.tests.test_sms_5sim" name="test_request_error_response" time="0.000" /><testcase classname="ninjemail.tests.test_sms_5sim" name="test_get_phone_error_response" time="0.000" /><testcase classname="ninjemail.tests.test_sms_5sim" name="test_request_error_no_free_phones" time="0.001"><failure message="AssertionError: assert 'HTTP Error: 400' == '5Sim has no free phones'&#10;  &#10;  - 5Sim has no free phones&#10;  + HTTP Error: 400">mock_requests_get = &lt;MagicMock name='get' id='4688087088'&gt;
+fivesim = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x116627f00&gt;
+
+    def test_request_error_no_free_phones(mock_requests_get, fivesim):
+        mock_response = mock_requests_get.return_value
+        mock_response.status_code = 400
+        mock_response.text = "no free phones"
+    
+        with pytest.raises(APIError) as exc_info:
+            fivesim.request('no_phone')
+&gt;       assert str(exc_info.value) == '5Sim has no free phones'
+E       AssertionError: assert 'HTTP Error: 400' == '5Sim has no free phones'
+E         
+E         - 5Sim has no free phones
+E         + HTTP Error: 400
+
+ninjemail/tests/test_sms_5sim.py:82: AssertionError</failure></testcase><testcase classname="ninjemail.tests.test_sms_5sim" name="test_request_error_not_enough_balance" time="0.001"><failure message="AssertionError: assert 'HTTP Error: 400' == 'Not enough balance'&#10;  &#10;  - Not enough balance&#10;  + HTTP Error: 400">mock_requests_get = &lt;MagicMock name='get' id='4688090112'&gt;
+fivesim = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x117651a50&gt;
+
+    def test_request_error_not_enough_balance(mock_requests_get, fivesim):
+        mock_response = mock_requests_get.return_value
+        mock_response.status_code = 400
+        mock_response.text = "not enough user balance"
+    
+        with pytest.raises(APIError) as exc_info:
+            fivesim.request('no_balance')
+&gt;       assert str(exc_info.value) == 'Not enough balance'
+E       AssertionError: assert 'HTTP Error: 400' == 'Not enough balance'
+E         
+E         - Not enough balance
+E         + HTTP Error: 400
+
+ninjemail/tests/test_sms_5sim.py:91: AssertionError</failure></testcase><testcase classname="ninjemail.tests.test_sms_5sim" name="test_get_code_error_response" time="0.001" /><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_initialization" time="0.000" /><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_generate_generic" time="0.000" /><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_get_endpoint" time="0.000" /><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_request" time="0.001"><failure message="ninjemail.sms_services.getsmscode.APIError: Error: &lt;MagicMock name='post().status_code' id='4688094816'&gt; - &lt;MagicMock name='post().content.decode()' id='4688096496'&gt;">mock_post = &lt;MagicMock name='post' id='4688094144'&gt;
+gs = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x1165b2c40&gt;
+
+    @patch("treq.post")
+    def test_request(mock_post, gs):
+        mock_post.return_value.raise_for_status.return_value = None
+        mock_post.return_value.text = "Success"
+&gt;       response = gs.request(action="getmobile")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_getsmscode.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x1165b2c40&gt;
+kwargs = {'action': 'getmobile'}
+res = &lt;MagicMock name='post()' id='4688093808'&gt;
+
+    def request(self, **kwargs):
+        """
+        Sends a POST request to the GetsmsCode API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        if self.country not in {"us", "cn"}:
+            kwargs["cocode"] = self.country
+    
+        res = treq.post(
+                self.API_URL,
+                data=dict(
+                    username=self.user,
+                    token=self.token,
+                    pid=self.project,
+                    **kwargs,
+                    )
+                )
+    
+        if res.status_code != 200:
+&gt;           raise APIError(f"Error: {res.status_code} - {res.content.decode('utf-8')}")
+E           ninjemail.sms_services.getsmscode.APIError: Error: &lt;MagicMock name='post().status_code' id='4688094816'&gt; - &lt;MagicMock name='post().content.decode()' id='4688096496'&gt;
+
+ninjemail/sms_services/getsmscode.py:113: APIError</failure></testcase><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_get_phone" time="0.001"><failure message="ninjemail.sms_services.getsmscode.APIError: Error: &lt;MagicMock name='post().status_code' id='4688098176'&gt; - &lt;MagicMock name='post().content.decode()' id='4688099856'&gt;">mock_post = &lt;MagicMock name='post' id='4688097504'&gt;
+gs = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x1165b3230&gt;
+
+    @patch("treq.post")
+    def test_get_phone(mock_post, gs):
+        mock_post.return_value.raise_for_status.return_value = None
+        mock_post.return_value.text = "234567"
+&gt;       phone = gs.get_phone()
+                ^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_getsmscode.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/getsmscode.py:140: in get_phone
+    data = self.request(**data)
+           ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x1165b3230&gt;
+kwargs = {'action': 'getmobile'}
+res = &lt;MagicMock name='post()' id='4688097168'&gt;
+
+    def request(self, **kwargs):
+        """
+        Sends a POST request to the GetsmsCode API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        if self.country not in {"us", "cn"}:
+            kwargs["cocode"] = self.country
+    
+        res = treq.post(
+                self.API_URL,
+                data=dict(
+                    username=self.user,
+                    token=self.token,
+                    pid=self.project,
+                    **kwargs,
+                    )
+                )
+    
+        if res.status_code != 200:
+&gt;           raise APIError(f"Error: {res.status_code} - {res.content.decode('utf-8')}")
+E           ninjemail.sms_services.getsmscode.APIError: Error: &lt;MagicMock name='post().status_code' id='4688098176'&gt; - &lt;MagicMock name='post().content.decode()' id='4688099856'&gt;
+
+ninjemail/sms_services/getsmscode.py:113: APIError</failure></testcase><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_get_phone_with_prefix" time="0.001"><failure message="ninjemail.sms_services.getsmscode.APIError: Error: &lt;MagicMock name='post().status_code' id='4688871840'&gt; - &lt;MagicMock name='post().content.decode()' id='4688873520'&gt;">mock_post = &lt;MagicMock name='post' id='4688100864'&gt;
+gs = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x117764170&gt;
+
+    @patch("treq.post")
+    def test_get_phone_with_prefix(mock_post, gs):
+        mock_post.return_value.raise_for_status.return_value = None
+        mock_post.return_value.text = "1234567"
+&gt;       phone = gs.get_phone(send_prefix=True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_getsmscode.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/getsmscode.py:140: in get_phone
+    data = self.request(**data)
+           ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x117764170&gt;
+kwargs = {'action': 'getmobile'}
+res = &lt;MagicMock name='post()' id='4688100528'&gt;
+
+    def request(self, **kwargs):
+        """
+        Sends a POST request to the GetsmsCode API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        if self.country not in {"us", "cn"}:
+            kwargs["cocode"] = self.country
+    
+        res = treq.post(
+                self.API_URL,
+                data=dict(
+                    username=self.user,
+                    token=self.token,
+                    pid=self.project,
+                    **kwargs,
+                    )
+                )
+    
+        if res.status_code != 200:
+&gt;           raise APIError(f"Error: {res.status_code} - {res.content.decode('utf-8')}")
+E           ninjemail.sms_services.getsmscode.APIError: Error: &lt;MagicMock name='post().status_code' id='4688871840'&gt; - &lt;MagicMock name='post().content.decode()' id='4688873520'&gt;
+
+ninjemail/sms_services/getsmscode.py:113: APIError</failure></testcase><testcase time="0.000" /></testsuite></testsuites>

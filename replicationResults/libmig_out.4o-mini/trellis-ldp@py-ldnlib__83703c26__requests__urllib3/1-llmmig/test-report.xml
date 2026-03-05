@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="13" time="1.450" timestamp="2026-03-04T14:58:33.008356+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_base.TestBase" name="test_content_type" time="0.001" /><testcase classname="tests.test_base.TestBase" name="test_discover_get" time="0.075"><failure message="AttributeError: 'PoolManager' object has no attribute 'head'">self = &lt;test_base.TestBase testMethod=test_discover_get&gt;
+mock_head = &lt;MagicMock name='head' id='4365714496'&gt;
+mock_get = &lt;MagicMock name='get' id='4365715504'&gt;
+
+    @patch('requests.get')
+    @patch('requests.head')
+    def test_discover_get(self, mock_head, mock_get):
+        inbox = "http://example.org/inbox"
+        links = {"type": {"url": "http://www.w3.org/ns/ldp#Container"}}
+        headers = {"content-type": "application/n-triples"}
+    
+        mock_res1 = Mock()
+        mock_res1.links = links
+        mock_res1.headers = headers
+        mock_head.return_value = mock_res1
+    
+        mock_res2 = Mock()
+        mock_res2.links = links
+        mock_res2.headers = headers
+        mock_res2.text = "&lt;http://example.org/resource&gt; " + \
+                         "&lt;http://www.w3.org/ns/ldp#inbox&gt; " + \
+                         "&lt;http://example.org/inbox&gt; .\n"
+        mock_get.return_value = mock_res2
+    
+        ldn = BaseLDN()
+&gt;       self.assertEqual(ldn.discover("http://example.org/resource"), inbox)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_base.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/base.py:53: in discover
+    inbox = self.__discover_head(target, headers=headers,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.base.BaseLDN object at 0x1042b65d0&gt;
+target = 'http://example.org/resource'
+kwargs = {'headers': {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}}
+
+    def __discover_head(self, target, **kwargs):
+&gt;       r = self.http.head(target, **kwargs)
+            ^^^^^^^^^^^^^^
+E       AttributeError: 'PoolManager' object has no attribute 'head'
+
+ldnlib/base.py:19: AttributeError</failure></testcase><testcase classname="tests.test_base.TestBase" name="test_discover_head" time="0.000"><failure message="AttributeError: 'PoolManager' object has no attribute 'head'">self = &lt;test_base.TestBase testMethod=test_discover_head&gt;
+mock_head = &lt;MagicMock name='head' id='4365717184'&gt;
+
+    @patch('requests.head')
+    def test_discover_head(self, mock_head):
+        inbox = "http://example.org/inbox"
+        mock_res = Mock()
+        mock_res.links = {"http://www.w3.org/ns/ldp#inbox": {"url": inbox}}
+    
+        mock_head.return_value = mock_res
+    
+        ldn = BaseLDN()
+&gt;       self.assertEqual(ldn.discover("http://example.org/resource"), inbox)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_base.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/base.py:53: in discover
+    inbox = self.__discover_head(target, headers=headers,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.base.BaseLDN object at 0x1042b7250&gt;
+target = 'http://example.org/resource'
+kwargs = {'headers': {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}}
+
+    def __discover_head(self, target, **kwargs):
+&gt;       r = self.http.head(target, **kwargs)
+            ^^^^^^^^^^^^^^
+E       AttributeError: 'PoolManager' object has no attribute 'head'
+
+ldnlib/base.py:19: AttributeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notification_jsonld" time="0.242"><failure message="AttributeError: 'HTTPResponse' object has no attribute 'raise_for_status'">self = &lt;test_consumer.TestConsumer testMethod=test_notification_jsonld&gt;
+mock_get = &lt;MagicMock name='get' id='4364111552'&gt;
+
+    @patch('requests.get')
+    def test_notification_jsonld(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/notification1.json", "r") as f:
+            attrs = {'json.return_value': json.loads("[" + f.read() + "]")}
+            mock_res.configure_mock(**attrs)
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notification = Consumer().notification("http://example.org/inbox/1")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x104379940&gt;
+iri = 'http://example.org/inbox/1', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+response = &lt;urllib3.response.HTTPResponse object at 0x10438c910&gt;
+
+    def notification(self, iri, **kwargs):
+        """
+        Retrieve a single LDN notification and decode into a Python object.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        response = self.http.request('GET', iri, headers=headers, **kwargs)
+&gt;       response.raise_for_status()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'HTTPResponse' object has no attribute 'raise_for_status'
+
+ldnlib/consumer.py:36: AttributeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notification_turtle" time="0.119"><failure message="AttributeError: 'HTTPResponse' object has no attribute 'raise_for_status'">self = &lt;test_consumer.TestConsumer testMethod=test_notification_turtle&gt;
+mock_get = &lt;MagicMock name='get' id='4365717184'&gt;
+
+    @patch('requests.get')
+    def test_notification_turtle(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "text/turtle; charset=utf-8"}
+        with open("tests/notification.ttl", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notification = Consumer().notification("http://example.org/inbox/1")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x1042b7390&gt;
+iri = 'http://example.org/inbox/1', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+response = &lt;urllib3.response.HTTPResponse object at 0x10438c970&gt;
+
+    def notification(self, iri, **kwargs):
+        """
+        Retrieve a single LDN notification and decode into a Python object.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        response = self.http.request('GET', iri, headers=headers, **kwargs)
+&gt;       response.raise_for_status()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'HTTPResponse' object has no attribute 'raise_for_status'
+
+ldnlib/consumer.py:36: AttributeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_jsonld_compacted" time="0.094"><failure message="AttributeError: 'HTTPResponse' object has no attribute 'raise_for_status'">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_jsonld_compacted&gt;
+mock_get = &lt;MagicMock name='get' id='4365722560'&gt;
+
+    @patch('requests.get')
+    def test_notifications_jsonld_compacted(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/inbox.jsonld", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x1043ec550&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+response = &lt;urllib3.response.HTTPResponse object at 0x10438d270&gt;
+
+    def notifications(self, inbox, **kwargs):
+        """
+        Retrieve all of the notification IRIs from an ldp:inbox as a list.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        response = self.http.request('GET', inbox, headers=headers, **kwargs)
+&gt;       response.raise_for_status()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'HTTPResponse' object has no attribute 'raise_for_status'
+
+ldnlib/consumer.py:22: AttributeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_jsonld_expanded" time="0.112"><failure message="AttributeError: 'HTTPResponse' object has no attribute 'raise_for_status'">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_jsonld_expanded&gt;
+mock_get = &lt;MagicMock name='get' id='4365723232'&gt;
+
+    @patch('requests.get')
+    def test_notifications_jsonld_expanded(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/inbox_expanded.jsonld", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x10435ad70&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+response = &lt;urllib3.response.HTTPResponse object at 0x10438d540&gt;
+
+    def notifications(self, inbox, **kwargs):
+        """
+        Retrieve all of the notification IRIs from an ldp:inbox as a list.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        response = self.http.request('GET', inbox, headers=headers, **kwargs)
+&gt;       response.raise_for_status()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'HTTPResponse' object has no attribute 'raise_for_status'
+
+ldnlib/consumer.py:22: AttributeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_ntriples" time="0.072"><failure message="AttributeError: 'HTTPResponse' object has no attribute 'raise_for_status'">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_ntriples&gt;
+mock_get = &lt;MagicMock name='get' id='4365723904'&gt;
+
+    @patch('requests.get')
+    def test_notifications_ntriples(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/n-triples"}
+        with open("tests/inbox.nt", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x10435b950&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+response = &lt;urllib3.response.HTTPResponse object at 0x10438e140&gt;
+
+    def notifications(self, inbox, **kwargs):
+        """
+        Retrieve all of the notification IRIs from an ldp:inbox as a list.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        response = self.http.request('GET', inbox, headers=headers, **kwargs)
+&gt;       response.raise_for_status()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'HTTPResponse' object has no attribute 'raise_for_status'
+
+ldnlib/consumer.py:22: AttributeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_turtle" time="0.065"><failure message="AttributeError: 'HTTPResponse' object has no attribute 'raise_for_status'">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_turtle&gt;
+mock_get = &lt;MagicMock name='get' id='4365724576'&gt;
+
+    @patch('requests.get')
+    def test_notifications_turtle(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "text/turtle; charset=utf-8"}
+        with open("tests/inbox.ttl", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x1043f27b0&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+response = &lt;urllib3.response.HTTPResponse object at 0x10438e530&gt;
+
+    def notifications(self, inbox, **kwargs):
+        """
+        Retrieve all of the notification IRIs from an ldp:inbox as a list.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        response = self.http.request('GET', inbox, headers=headers, **kwargs)
+&gt;       response.raise_for_status()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'HTTPResponse' object has no attribute 'raise_for_status'
+
+ldnlib/consumer.py:22: AttributeError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_dict" time="0.063"><failure message="ValueError: Request failed with status: 405">self = &lt;test_sender.TestSender testMethod=test_send_dict&gt;
+mock_post = &lt;MagicMock name='post' id='4365725248'&gt;
+
+    @patch('requests.post')
+    def test_send_dict(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = json.loads(f.read())
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:43: in send
+    self.__post_message(inbox, json.dumps(data), self.JSON_LD,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.sender.Sender object at 0x10437af90&gt;
+inbox = 'http://example.org/inbox'
+data = '{"@context": {"schema": "http://schema.org/", "creator": {"@id": "schema:creator", "@type": "@id"}}, "creator": "http://example.org/user"}'
+content_type = 'application/ld+json', kwargs = {}
+headers = {'content-type': 'application/ld+json'}
+r = &lt;urllib3.response.HTTPResponse object at 0x10438ec80&gt;
+
+    def __post_message(self, inbox, data, content_type, **kwargs):
+        if self.allow_localhost or not self.__is_localhost(inbox):
+            headers = kwargs.pop("headers", dict())
+            headers['content-type'] = content_type
+            r = self.http.request('POST', inbox, body=data, headers=headers, **kwargs)
+            if r.status &lt; 200 or r.status &gt;= 300:
+&gt;               raise ValueError(f"Request failed with status: {r.status}")
+E               ValueError: Request failed with status: 405
+
+ldnlib/sender.py:36: ValueError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_graph" time="0.141"><failure message="ValueError: Request failed with status: 405">self = &lt;test_sender.TestSender testMethod=test_send_graph&gt;
+mock_post = &lt;MagicMock name='post' id='4365725920'&gt;
+
+    @patch('requests.post')
+    def test_send_graph(self, mock_post):
+        data = Graph().parse("tests/notification.nt", format="ntriples")
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:49: in send
+    self.__post_message(inbox, data.serialize(format=ct), ct,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.sender.Sender object at 0x1043ed6d0&gt;
+inbox = 'http://example.org/inbox'
+data = '[\n  {\n    "@id": "ex:notification",\n    "http://schema.org/creator": [\n      {\n        "@id": "http://example.org/user"\n      }\n    ]\n  }\n]'
+content_type = 'application/ld+json', kwargs = {}
+headers = {'content-type': 'application/ld+json'}
+r = &lt;urllib3.response.HTTPResponse object at 0x10469b7f0&gt;
+
+    def __post_message(self, inbox, data, content_type, **kwargs):
+        if self.allow_localhost or not self.__is_localhost(inbox):
+            headers = kwargs.pop("headers", dict())
+            headers['content-type'] = content_type
+            r = self.http.request('POST', inbox, body=data, headers=headers, **kwargs)
+            if r.status &lt; 200 or r.status &gt;= 300:
+&gt;               raise ValueError(f"Request failed with status: {r.status}")
+E               ValueError: Request failed with status: 405
+
+ldnlib/sender.py:36: ValueError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_list" time="0.081"><failure message="ValueError: Request failed with status: 405">self = &lt;test_sender.TestSender testMethod=test_send_list&gt;
+mock_post = &lt;MagicMock name='post' id='4369025408'&gt;
+
+    @patch('requests.post')
+    def test_send_list(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = json.loads("[" + f.read() + "]")
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:43: in send
+    self.__post_message(inbox, json.dumps(data), self.JSON_LD,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.sender.Sender object at 0x1043ee210&gt;
+inbox = 'http://example.org/inbox'
+data = '[{"@context": {"schema": "http://schema.org/", "creator": {"@id": "schema:creator", "@type": "@id"}}, "creator": "http://example.org/user"}]'
+content_type = 'application/ld+json', kwargs = {}
+headers = {'content-type': 'application/ld+json'}
+r = &lt;urllib3.response.HTTPResponse object at 0x1046e8040&gt;
+
+    def __post_message(self, inbox, data, content_type, **kwargs):
+        if self.allow_localhost or not self.__is_localhost(inbox):
+            headers = kwargs.pop("headers", dict())
+            headers['content-type'] = content_type
+            r = self.http.request('POST', inbox, body=data, headers=headers, **kwargs)
+            if r.status &lt; 200 or r.status &gt;= 300:
+&gt;               raise ValueError(f"Request failed with status: {r.status}")
+E               ValueError: Request failed with status: 405
+
+ldnlib/sender.py:36: ValueError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_string" time="0.091"><failure message="ValueError: Request failed with status: 405">self = &lt;test_sender.TestSender testMethod=test_send_string&gt;
+mock_post = &lt;MagicMock name='post' id='4369025744'&gt;
+
+    @patch('requests.post')
+    def test_send_string(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = f.read()
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:46: in send
+    self.__post_message(inbox, data, self.JSON_LD, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.sender.Sender object at 0x104631ba0&gt;
+inbox = 'http://example.org/inbox'
+data = '{\n    "@context" : {\n        "schema" : "http://schema.org/",\n        "creator" : { "@id" : "schema:creator", "@type" : "@id" }\n    },\n    "creator" : "http://example.org/user"\n}\n'
+content_type = 'application/ld+json', kwargs = {}
+headers = {'content-type': 'application/ld+json'}
+r = &lt;urllib3.response.HTTPResponse object at 0x1046e8580&gt;
+
+    def __post_message(self, inbox, data, content_type, **kwargs):
+        if self.allow_localhost or not self.__is_localhost(inbox):
+            headers = kwargs.pop("headers", dict())
+            headers['content-type'] = content_type
+            r = self.http.request('POST', inbox, body=data, headers=headers, **kwargs)
+            if r.status &lt; 200 or r.status &gt;= 300:
+&gt;               raise ValueError(f"Request failed with status: {r.status}")
+E               ValueError: Request failed with status: 405
+
+ldnlib/sender.py:36: ValueError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,61 @@
+mig: skyme5@snapchat-dl__9b382d01__requests__urllib3__9b382d01__requests__urllib3
+repo: skyme5@snapchat-dl__9b382d01__requests__urllib3
+commit: 9b382d01f467a9d13b1bf7db67196321d2638c6d
+source: requests
+target: urllib3
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.5
+  target_version: 2.6.3
+  finished_at: '2026-03-04 14:16:26'
+  project_coverage: 95.83333333333333
+  total_tests: 14
+  passed_tests: 12
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 59.09090909090909
+  files:
+  - path: snapchat_dl/downloader.py
+    file_change_coverage: 60.0
+    covered_changed_lines: 5,8,28-29,32-33
+    uncovered_changed_lines: 30,35,43,46
+  - path: snapchat_dl/snapchat_dl.py
+    file_change_coverage: 54.54545454545455
+    covered_changed_lines: 8,41,44,48,55-56
+    uncovered_changed_lines: 42-43,49,54,57
+  - path: tests/test_downlaoder.py
+    file_change_coverage: 100.0
+    covered_changed_lines: '7'
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/test_downlaoder.py::Test_downloader::test_download_url_raise
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: Exception
+    error_message: 'Exception: HTTP Error: 404'
+  - test_id: tests/test_snapchat_dl.py::TestSnapchat_dl::test_invalid_username
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: APIResponseError
+    error_message: 'snapchat_dl.utils.APIResponseError: Failed to fetch data from
+      API'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

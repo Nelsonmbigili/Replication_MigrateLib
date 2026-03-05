@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="11" time="2.884" timestamp="2026-03-05T03:10:03.067199+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_cleanup" time="0.017" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_get_chall_pref" time="0.001" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_more_info" time="0.001" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_parser_arguments" time="0.001" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_perform" time="1.012" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_add_txt_record" time="0.012"><failure message="pycurl.error: (1, 'Protocol &quot;mock&quot; not supported')">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record&gt;
+
+    def test_add_txt_record(self):
+        """add_txt_record with normal params should succeed"""
+&gt;       self._register_response(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            data=[
+                {
+                    "id": 654321,
+                    "account_id": 1234,
+                    "service_id": 14,
+                    "service_name": "domain",
+                    "customer_name": DOMAIN,
+                }
+            ],
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+certbot_dns_infomaniak/dns_infomaniak_test.py:103: in _register_response
+    self._mock_request(url, resp, method)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record&gt;
+url = '/1/product?service_name=domain&amp;customer_name=example.com'
+response = {'data': [{'account_id': 1234, 'customer_name': 'example.com', 'id': 654321, 'service_id': 14, ...}], 'result': 'success'}
+method = 'GET'
+
+    def _mock_request(self, url, response, method):
+        """Mock the request using pycurl"""
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, self.client.baseUrl + url)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.setopt(c.HTTPHEADER, ['Authorization: Bearer ' + FAKE_TOKEN])
+    
+        if method == 'POST':
+            c.setopt(c.POSTFIELDS, response)
+            c.setopt(c.CUSTOMREQUEST, 'POST')
+        elif method == 'DELETE':
+            c.setopt(c.CUSTOMREQUEST, 'DELETE')
+    
+&gt;       c.perform()
+E       pycurl.error: (1, 'Protocol "mock" not supported')
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:129: error</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_add_txt_record_fail_to_authenticate" time="0.001"><failure message="pycurl.error: (1, 'Protocol &quot;mock&quot; not supported')">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record_fail_to_authenticate&gt;
+
+    def test_add_txt_record_fail_to_authenticate(self):
+        """add_txt_record with wrong token should fail"""
+&gt;       self._register_error(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            "not_authorized",
+            "Authorization required",
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:168: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+certbot_dns_infomaniak/dns_infomaniak_test.py:113: in _register_error
+    self._mock_request(url, resp, 'GET')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record_fail_to_authenticate&gt;
+url = '/1/product?service_name=domain&amp;customer_name=example.com'
+response = {'error': {'code': 'not_authorized', 'description': 'Authorization required'}, 'result': 'error'}
+method = 'GET'
+
+    def _mock_request(self, url, response, method):
+        """Mock the request using pycurl"""
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, self.client.baseUrl + url)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.setopt(c.HTTPHEADER, ['Authorization: Bearer ' + FAKE_TOKEN])
+    
+        if method == 'POST':
+            c.setopt(c.POSTFIELDS, response)
+            c.setopt(c.CUSTOMREQUEST, 'POST')
+        elif method == 'DELETE':
+            c.setopt(c.CUSTOMREQUEST, 'DELETE')
+    
+&gt;       c.perform()
+E       pycurl.error: (1, 'Protocol "mock" not supported')
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:129: error</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_add_txt_record_fail_to_find_domain" time="0.000"><failure message="pycurl.error: (1, 'Protocol &quot;mock&quot; not supported')">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record_fail_to_find_domain&gt;
+
+    def test_add_txt_record_fail_to_find_domain(self):
+        """add_txt_record with non existing domain should fail"""
+&gt;       self._register_response(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            data=[],
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+certbot_dns_infomaniak/dns_infomaniak_test.py:103: in _register_response
+    self._mock_request(url, resp, method)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record_fail_to_find_domain&gt;
+url = '/1/product?service_name=domain&amp;customer_name=example.com'
+response = {'data': [], 'result': 'success'}, method = 'GET'
+
+    def _mock_request(self, url, response, method):
+        """Mock the request using pycurl"""
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, self.client.baseUrl + url)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.setopt(c.HTTPHEADER, ['Authorization: Bearer ' + FAKE_TOKEN])
+    
+        if method == 'POST':
+            c.setopt(c.POSTFIELDS, response)
+            c.setopt(c.CUSTOMREQUEST, 'POST')
+        elif method == 'DELETE':
+            c.setopt(c.CUSTOMREQUEST, 'DELETE')
+    
+&gt;       c.perform()
+E       pycurl.error: (1, 'Protocol "mock" not supported')
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:129: error</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_del_txt_record" time="0.000"><failure message="pycurl.error: (1, 'Protocol &quot;mock&quot; not supported')">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record&gt;
+
+    def test_del_txt_record(self):
+        """del_txt_record with normal params should succeed"""
+&gt;       self._register_response(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            data=[
+                {
+                    "id": "654321",
+                    "account_id": "1234",
+                    "service_id": "14",
+                    "service_name": "domain",
+                    "customer_name": DOMAIN,
+                }
+            ],
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:180: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+certbot_dns_infomaniak/dns_infomaniak_test.py:103: in _register_response
+    self._mock_request(url, resp, method)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record&gt;
+url = '/1/product?service_name=domain&amp;customer_name=example.com'
+response = {'data': [{'account_id': '1234', 'customer_name': 'example.com', 'id': '654321', 'service_id': '14', ...}], 'result': 'success'}
+method = 'GET'
+
+    def _mock_request(self, url, response, method):
+        """Mock the request using pycurl"""
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, self.client.baseUrl + url)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.setopt(c.HTTPHEADER, ['Authorization: Bearer ' + FAKE_TOKEN])
+    
+        if method == 'POST':
+            c.setopt(c.POSTFIELDS, response)
+            c.setopt(c.CUSTOMREQUEST, 'POST')
+        elif method == 'DELETE':
+            c.setopt(c.CUSTOMREQUEST, 'DELETE')
+    
+&gt;       c.perform()
+E       pycurl.error: (1, 'Protocol "mock" not supported')
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:129: error</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_del_txt_record_fail_to_authenticate" time="0.000"><failure message="pycurl.error: (1, 'Protocol &quot;mock&quot; not supported')">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record_fail_to_authenticate&gt;
+
+    def test_del_txt_record_fail_to_authenticate(self):
+        """del_txt_recod with wrong token should fail"""
+&gt;       self._register_error(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            "not_authorized",
+            "Authorization required",
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:236: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+certbot_dns_infomaniak/dns_infomaniak_test.py:113: in _register_error
+    self._mock_request(url, resp, 'GET')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record_fail_to_authenticate&gt;
+url = '/1/product?service_name=domain&amp;customer_name=example.com'
+response = {'error': {'code': 'not_authorized', 'description': 'Authorization required'}, 'result': 'error'}
+method = 'GET'
+
+    def _mock_request(self, url, response, method):
+        """Mock the request using pycurl"""
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, self.client.baseUrl + url)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.setopt(c.HTTPHEADER, ['Authorization: Bearer ' + FAKE_TOKEN])
+    
+        if method == 'POST':
+            c.setopt(c.POSTFIELDS, response)
+            c.setopt(c.CUSTOMREQUEST, 'POST')
+        elif method == 'DELETE':
+            c.setopt(c.CUSTOMREQUEST, 'DELETE')
+    
+&gt;       c.perform()
+E       pycurl.error: (1, 'Protocol "mock" not supported')
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:129: error</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_del_txt_record_fail_to_find_domain" time="0.000"><failure message="pycurl.error: (1, 'Protocol &quot;mock&quot; not supported')">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record_fail_to_find_domain&gt;
+
+    def test_del_txt_record_fail_to_find_domain(self):
+        """del_txt_record with non existing domain should fail"""
+&gt;       self._register_response(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            data=[],
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+certbot_dns_infomaniak/dns_infomaniak_test.py:103: in _register_response
+    self._mock_request(url, resp, method)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record_fail_to_find_domain&gt;
+url = '/1/product?service_name=domain&amp;customer_name=example.com'
+response = {'data': [], 'result': 'success'}, method = 'GET'
+
+    def _mock_request(self, url, response, method):
+        """Mock the request using pycurl"""
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, self.client.baseUrl + url)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.setopt(c.HTTPHEADER, ['Authorization: Bearer ' + FAKE_TOKEN])
+    
+        if method == 'POST':
+            c.setopt(c.POSTFIELDS, response)
+            c.setopt(c.CUSTOMREQUEST, 'POST')
+        elif method == 'DELETE':
+            c.setopt(c.CUSTOMREQUEST, 'DELETE')
+    
+&gt;       c.perform()
+E       pycurl.error: (1, 'Protocol "mock" not supported')
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:129: error</failure></testcase></testsuite></testsuites>

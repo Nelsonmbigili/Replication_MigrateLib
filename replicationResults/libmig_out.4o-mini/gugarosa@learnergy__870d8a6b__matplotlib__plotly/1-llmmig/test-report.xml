@@ -1,0 +1,1157 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="13" skipped="0" tests="169" time="904.872" timestamp="2026-03-04T01:29:23.058060+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.learnergy.core.test_dataset" name="test_dataset" time="0.001" /><testcase classname="tests.learnergy.core.test_model" name="test_model" time="0.005" /><testcase classname="tests.learnergy.math.test_metrics" name="test_calculate_ssim" time="0.005" /><testcase classname="tests.learnergy.math.test_scale" name="test_unitary_scale" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_visible_shape" time="0.007" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_visible_shape_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_filter_shape" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_filter_shape_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_hidden_shape" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_hidden_shape_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_n_filters" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_n_filters_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_n_channels" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_n_channels_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_steps" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_steps_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_lr" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_lr_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_momentum" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_momentum_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_decay" time="0.002" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_decay_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_W" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_W_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_a" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_a_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_b" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_b_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_optimizer" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_optimizer_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_hidden_sampling" time="0.008" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_visible_sampling" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_energy" time="0.004" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_fit" time="75.027"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_conv_rbm_fit():
+&gt;       train = torchvision.datasets.KMNIST(
+            root="./data",
+            train=True,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_conv_rbm.py:300: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x14b4f96a0&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_reconstruct" time="75.013"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_conv_rbm_reconstruct():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_conv_rbm.py:325: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x14b59de50&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_forward" time="0.034" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_n_classes" time="0.011" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_n_classes_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_U" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_U_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_c" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_c_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_loss" time="0.002" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_loss_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_labels_sampling" time="0.011" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_fit" time="75.008"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_discriminative_rbm_fit():
+&gt;       train = torchvision.datasets.KMNIST(
+            root="./data",
+            train=True,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_discriminative_rbm.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x14b2bf110&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_predict" time="75.006"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_discriminative_rbm_predict():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_discriminative_rbm.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x14b2ed5b0&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_hybrid_discriminative_rbm_alpha" time="0.006" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_hybrid_discriminative_rbm_alpha_setter" time="0.002" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_hybrid_discriminative_rbm_hidden_sampling" time="0.007" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_hybrid_discriminative_rbm_class_sampling" time="0.009" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_hybrid_discriminative_rbm_fit" time="75.006"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_hybrid_discriminative_rbm_fit():
+&gt;       train = torchvision.datasets.KMNIST(
+            root="./data",
+            train=True,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_discriminative_rbm.py:196: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x14aeae650&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_dropout_rbm" name="test_dropout_rbm_p" time="0.005" /><testcase classname="tests.learnergy.models.bernoulli.test_dropout_rbm" name="test_dropout_rbm_p_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_dropout_rbm" name="test_dropout_rbm_hidden_sampling" time="0.005" /><testcase classname="tests.learnergy.models.bernoulli.test_dropout_rbm" name="test_dropout_rbm_reconstruct" time="75.004"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_dropout_rbm_reconstruct():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_dropout_rbm.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x14b7a9010&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_dropout_rbm" name="test_dropconnect_rbm_hidden_sampling" time="0.003" /><testcase classname="tests.learnergy.models.bernoulli.test_dropout_rbm" name="test_dropconnect_rbm_reconstruct" time="75.009"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_dropconnect_rbm_reconstruct():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_dropout_rbm.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x14b7fc5a0&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_M" time="0.010" /><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_M_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_hidden_sampling" time="0.002" /><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_total_energy" time="0.009" /><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_energy_dropout" time="0.006" /><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_fit" time="75.005"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_e_dropout_rbm_fit():
+&gt;       train = torchvision.datasets.KMNIST(
+            root="./data",
+            train=True,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_e_dropout_rbm.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x14b7fd370&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_reconstruct" time="75.004"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_e_dropout_rbm_reconstruct():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_e_dropout_rbm.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x14b7e9350&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_n_visible" time="0.005" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_n_visible_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_n_hidden" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_n_hidden_setter" time="0.002" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_steps" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_steps_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_lr" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_lr_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_momentum" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_momentum_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_decay" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_decay_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_T" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_T_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_W" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_W_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_a" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_a_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_b" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_b_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_optimizer" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_optimizer_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_hidden_sampling" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_visible_sampling" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_energy" time="0.010" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_pseudo_likelihood" time="0.012" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_fit" time="75.007"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_rbm_fit():
+&gt;       train = torchvision.datasets.KMNIST(
+            root="./data",
+            train=True,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_rbm.py:285: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x14b7ea350&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_reconstruct" time="75.011"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_rbm_reconstruct():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_rbm.py:310: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x14b1ea120&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_forward" time="0.004" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_visible_shape" time="0.005" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_visible_shape_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_filter_shape" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_filter_shape_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_n_filters" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_n_filters_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_n_channels" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_n_channels_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_n_layers" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_n_layers_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_steps" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_steps_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_lr" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_lr_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_momentum" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_momentum_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_decay" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_decay_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_models" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_models_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_n_visible" time="0.007" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_n_visible_setter" time="0.002" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_n_hidden" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_n_hidden_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_n_layers" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_n_layers_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_steps" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_steps_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_lr" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_lr_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_momentum" time="0.002" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_momentum_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_decay" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_decay_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_T" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_T_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_models" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_models_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_reconstruct" time="75.004"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_dbn_reconstruct():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/deep/test_dbn.py:221: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x14b1eb4d0&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.deep.test_residual_dbn" name="test_residual_dbn_zetta1" time="0.006" /><testcase classname="tests.learnergy.models.deep.test_residual_dbn" name="test_residual_dbn_zetta1_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_residual_dbn" name="test_residual_dbn_zetta2" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_residual_dbn" name="test_residual_dbn_zetta2_setter" time="0.003" /><testcase classname="tests.learnergy.models.deep.test_residual_dbn" name="test_residual_dbn_calculate_residual" time="0.008" /><testcase classname="tests.learnergy.models.deep.test_residual_dbn" name="test_residual_dbn_forward" time="0.004" /><testcase classname="tests.learnergy.models.extra.test_sigmoid_rbm" name="test_sigmoid_rbm_hidden_sampling" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_conv_rbm" name="test_gaussian_conv_rbm_hidden_sampling" time="0.005" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_conv_rbm" name="test_gaussian_conv_rbm_visible_sampling" time="0.002" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_rbm_normalize_setter" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_rbm_normalize" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_rbm_input_normalize_setter" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_rbm_input_normalize" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_rbm_visible_sampling" time="0.002" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_relu_rbm_hidden_sampling" time="0.002" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_selu_rbm_hidden_sampling" time="0.002" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_variance_gaussian_rbm_sigma" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_variance_gaussian_rbm_sigma_setter" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_variance_gaussian_rbm_hidden_sampling" time="0.003" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_variance_gaussian_rbm_visible_sampling" time="0.006" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_variance_gaussian_rbm_energy" time="0.002" /><testcase classname="tests.learnergy.utils.test_constants" name="test_constants" time="0.000" /><testcase classname="tests.learnergy.utils.test_exception" name="test_error" time="0.000" /><testcase classname="tests.learnergy.utils.test_exception" name="test_argument_error" time="0.000" /><testcase classname="tests.learnergy.utils.test_exception" name="test_build_error" time="0.000" /><testcase classname="tests.learnergy.utils.test_exception" name="test_size_error" time="0.000" /><testcase classname="tests.learnergy.utils.test_exception" name="test_type_error" time="0.000" /><testcase classname="tests.learnergy.utils.test_exception" name="test_value_error" time="0.000" /><testcase classname="tests.learnergy.utils.test_logging" name="test_get_console_handler" time="0.000" /><testcase classname="tests.learnergy.utils.test_logging" name="test_get_timed_file_handler" time="0.000" /><testcase classname="tests.learnergy.utils.test_logging" name="test_get_logger" time="0.002" /><testcase classname="tests.learnergy.visual.test_convergence" name="test_convergence_plot" time="0.227"><failure message="ValueError: Invalid property specified for object of type plotly.graph_objs.Layout: 'titlefont'&#10;&#10;Did you mean &quot;title&quot;?&#10;&#10;    Valid properties:&#10;        activeselection&#10;            :class:`plotly.graph_objects.layout.Activeselection`&#10;            instance or dict with compatible properties&#10;        activeshape&#10;            :class:`plotly.graph_objects.layout.Activeshape`&#10;            instance or dict with compatible properties&#10;        annotations&#10;            A tuple of&#10;            :class:`plotly.graph_objects.layout.Annotation`&#10;            instances or dicts with compatible properties&#10;        annotationdefaults&#10;            When used in a template (as&#10;            layout.template.layout.annotationdefaults), sets the&#10;            default property values to use for elements of&#10;            layout.annotations&#10;        autosize&#10;            Determines whether or not a layout width or height that&#10;            has been left undefined by the user is initialized on&#10;            each relayout. Note that, regardless of this attribute,&#10;            an undefined layout width or height is always&#10;            initialized on the first call to plot.&#10;        autotypenumbers&#10;            Using &quot;strict&quot; a numeric string in trace data is not&#10;            converted to a number. Using *convert types* a numeric&#10;            string in trace data may be treated as a number during&#10;            automatic axis `type` detection. This is the default&#10;            value; however it could be overridden for individual&#10;            axes.&#10;        barcornerradius&#10;            Sets the rounding of bar corners. May be an integer&#10;            number of pixels, or a percentage of bar width (as a&#10;            string ending in %).&#10;        bargap&#10;            Sets the gap (in plot fraction) between bars of&#10;            adjacent location coordinates.&#10;        bargroupgap&#10;            Sets the gap (in plot fraction) between bars of the&#10;            same location coordinate.&#10;        barmode&#10;            Determines how bars at the same location coordinate are&#10;            displayed on the graph. With &quot;stack&quot;, the bars are&#10;            stacked on top of one another With &quot;relative&quot;, the bars&#10;            are stacked on top of one another, with negative values&#10;            below the axis, positive values above With &quot;group&quot;, the&#10;            bars are plotted next to one another centered around&#10;            the shared location. With &quot;overlay&quot;, the bars are&#10;            plotted over one another, you might need to reduce&#10;            &quot;opacity&quot; to see multiple bars.&#10;        barnorm&#10;            Sets the normalization for bar traces on the graph.&#10;            With &quot;fraction&quot;, the value of each bar is divided by&#10;            the sum of all values at that location coordinate.&#10;            &quot;percent&quot; is the same but multiplied by 100 to show&#10;            percentages.&#10;        boxgap&#10;            Sets the gap (in plot fraction) between boxes of&#10;            adjacent location coordinates. Has no effect on traces&#10;            that have &quot;width&quot; set.&#10;        boxgroupgap&#10;            Sets the gap (in plot fraction) between boxes of the&#10;            same location coordinate. Has no effect on traces that&#10;            have &quot;width&quot; set.&#10;        boxmode&#10;            Determines how boxes at the same location coordinate&#10;            are displayed on the graph. If &quot;group&quot;, the boxes are&#10;            plotted next to one another centered around the shared&#10;            location. If &quot;overlay&quot;, the boxes are plotted over one&#10;            another, you might need to set &quot;opacity&quot; to see them&#10;            multiple boxes. Has no effect on traces that have&#10;            &quot;width&quot; set.&#10;        calendar&#10;            Sets the default calendar system to use for&#10;            interpreting and displaying dates throughout the plot.&#10;        clickmode&#10;            Determines the mode of single click interactions.&#10;            &quot;event&quot; is the default value and emits the&#10;            `plotly_click` event. In addition this mode emits the&#10;            `plotly_selected` event in drag modes &quot;lasso&quot; and&#10;            &quot;select&quot;, but with no event data attached (kept for&#10;            compatibility reasons). The &quot;select&quot; flag enables&#10;            selecting single data points via click. This mode also&#10;            supports persistent selections, meaning that pressing&#10;            Shift while clicking, adds to / subtracts from an&#10;            existing selection. &quot;select&quot; with `hovermode`: &quot;x&quot; can&#10;            be confusing, consider explicitly setting `hovermode`:&#10;            &quot;closest&quot; when using this feature. Selection events are&#10;            sent accordingly as long as &quot;event&quot; flag is set as&#10;            well. When the &quot;event&quot; flag is missing, `plotly_click`&#10;            and `plotly_selected` events are not fired.&#10;        coloraxis&#10;            :class:`plotly.graph_objects.layout.Coloraxis` instance&#10;            or dict with compatible properties&#10;        colorscale&#10;            :class:`plotly.graph_objects.layout.Colorscale`&#10;            instance or dict with compatible properties&#10;        colorway&#10;            Sets the default trace colors.&#10;        computed&#10;            Placeholder for exporting automargin-impacting values&#10;            namely `margin.t`, `margin.b`, `margin.l` and&#10;            `margin.r` in &quot;full-json&quot; mode.&#10;        datarevision&#10;            If provided, a changed value tells `Plotly.react` that&#10;            one or more data arrays has changed. This way you can&#10;            modify arrays in-place rather than making a complete&#10;            new copy for an incremental change. If NOT provided,&#10;            `Plotly.react` assumes that data arrays are being&#10;            treated as immutable, thus any data array with a&#10;            different identity from its predecessor contains new&#10;            data.&#10;        dragmode&#10;            Determines the mode of drag interactions. &quot;select&quot; and&#10;            &quot;lasso&quot; apply only to scatter traces with markers or&#10;            text. &quot;orbit&quot; and &quot;turntable&quot; apply only to 3D scenes.&#10;        editrevision&#10;            Controls persistence of user-driven changes in&#10;            `editable: true` configuration, other than trace names&#10;            and axis titles. Defaults to `layout.uirevision`.&#10;        extendfunnelareacolors&#10;            If `true`, the funnelarea slice colors (whether given&#10;            by `funnelareacolorway` or inherited from `colorway`)&#10;            will be extended to three times its original length by&#10;            first repeating every color 20% lighter then each color&#10;            20% darker. This is intended to reduce the likelihood&#10;            of reusing the same color when you have many slices,&#10;            but you can set `false` to disable. Colors provided in&#10;            the trace, using `marker.colors`, are never extended.&#10;        extendiciclecolors&#10;            If `true`, the icicle slice colors (whether given by&#10;            `iciclecolorway` or inherited from `colorway`) will be&#10;            extended to three times its original length by first&#10;            repeating every color 20% lighter then each color 20%&#10;            darker. This is intended to reduce the likelihood of&#10;            reusing the same color when you have many slices, but&#10;            you can set `false` to disable. Colors provided in the&#10;            trace, using `marker.colors`, are never extended.&#10;        extendpiecolors&#10;            If `true`, the pie slice colors (whether given by&#10;            `piecolorway` or inherited from `colorway`) will be&#10;            extended to three times its original length by first&#10;            repeating every color 20% lighter then each color 20%&#10;            darker. This is intended to reduce the likelihood of&#10;            reusing the same color when you have many slices, but&#10;            you can set `false` to disable. Colors provided in the&#10;            trace, using `marker.colors`, are never extended.&#10;        extendsunburstcolors&#10;            If `true`, the sunburst slice colors (whether given by&#10;            `sunburstcolorway` or inherited from `colorway`) will&#10;            be extended to three times its original length by first&#10;            repeating every color 20% lighter then each color 20%&#10;            darker. This is intended to reduce the likelihood of&#10;            reusing the same color when you have many slices, but&#10;            you can set `false` to disable. Colors provided in the&#10;            trace, using `marker.colors`, are never extended.&#10;        extendtreemapcolors&#10;            If `true`, the treemap slice colors (whether given by&#10;            `treemapcolorway` or inherited from `colorway`) will be&#10;            extended to three times its original length by first&#10;            repeating every color 20% lighter then each color 20%&#10;            darker. This is intended to reduce the likelihood of&#10;            reusing the same color when you have many slices, but&#10;            you can set `false` to disable. Colors provided in the&#10;            trace, using `marker.colors`, are never extended.&#10;        font&#10;            Sets the global font. Note that fonts used in traces&#10;            and other layout components inherit from the global&#10;            font.&#10;        funnelareacolorway&#10;            Sets the default funnelarea slice colors. Defaults to&#10;            the main `colorway` used for trace colors. If you&#10;            specify a new list here it can still be extended with&#10;            lighter and darker colors, see&#10;            `extendfunnelareacolors`.&#10;        funnelgap&#10;            Sets the gap (in plot fraction) between bars of&#10;            adjacent location coordinates.&#10;        funnelgroupgap&#10;            Sets the gap (in plot fraction) between bars of the&#10;            same location coordinate.&#10;        funnelmode&#10;            Determines how bars at the same location coordinate are&#10;            displayed on the graph. With &quot;stack&quot;, the bars are&#10;            stacked on top of one another With &quot;group&quot;, the bars&#10;            are plotted next to one another centered around the&#10;            shared location. With &quot;overlay&quot;, the bars are plotted&#10;            over one another, you might need to reduce &quot;opacity&quot; to&#10;            see multiple bars.&#10;        geo&#10;            :class:`plotly.graph_objects.layout.Geo` instance or&#10;            dict with compatible properties&#10;        grid&#10;            :class:`plotly.graph_objects.layout.Grid` instance or&#10;            dict with compatible properties&#10;        height&#10;            Sets the plot's height (in px).&#10;        hiddenlabels&#10;            hiddenlabels is the funnelarea &amp; pie chart analog of&#10;            visible:'legendonly' but it can contain many labels,&#10;            and can simultaneously hide slices from several&#10;            pies/funnelarea charts&#10;        hiddenlabelssrc&#10;            Sets the source reference on Chart Studio Cloud for&#10;            `hiddenlabels`.&#10;        hidesources&#10;            Determines whether or not a text link citing the data&#10;            source is placed at the bottom-right cored of the&#10;            figure. Has only an effect only on graphs that have&#10;            been generated via forked graphs from the Chart Studio&#10;            Cloud (at https://chart-studio.plotly.com or on-&#10;            premise).&#10;        hoverdistance&#10;            Sets the default distance (in pixels) to look for data&#10;            to add hover labels (-1 means no cutoff, 0 means no&#10;            looking for data). This is only a real distance for&#10;            hovering on point-like objects, like scatter points.&#10;            For area-like objects (bars, scatter fills, etc)&#10;            hovering is on inside the area and off outside, but&#10;            these objects will not supersede hover on point-like&#10;            objects in case of conflict.&#10;        hoverlabel&#10;            :class:`plotly.graph_objects.layout.Hoverlabel`&#10;            instance or dict with compatible properties&#10;        hovermode&#10;            Determines the mode of hover interactions. If&#10;            &quot;closest&quot;, a single hoverlabel will appear for the&#10;            &quot;closest&quot; point within the `hoverdistance`. If &quot;x&quot; (or&#10;            &quot;y&quot;), multiple hoverlabels will appear for multiple&#10;            points at the &quot;closest&quot; x- (or y-) coordinate within&#10;            the `hoverdistance`, with the caveat that no more than&#10;            one hoverlabel will appear per trace. If *x unified*&#10;            (or *y unified*), a single hoverlabel will appear&#10;            multiple points at the closest x- (or y-) coordinate&#10;            within the `hoverdistance` with the caveat that no more&#10;            than one hoverlabel will appear per trace. In this&#10;            mode, spikelines are enabled by default perpendicular&#10;            to the specified axis. If false, hover interactions are&#10;            disabled.&#10;        hoversubplots&#10;            Determines expansion of hover effects to other subplots&#10;            If &quot;single&quot; just the axis pair of the primary point is&#10;            included without overlaying subplots. If &quot;overlaying&quot;&#10;            all subplots using the main axis and occupying the same&#10;            space are included. If &quot;axis&quot;, also include stacked&#10;            subplots using the same axis when `hovermode` is set to&#10;            &quot;x&quot;, *x unified*, &quot;y&quot; or *y unified*.&#10;        iciclecolorway&#10;            Sets the default icicle slice colors. Defaults to the&#10;            main `colorway` used for trace colors. If you specify a&#10;            new list here it can still be extended with lighter and&#10;            darker colors, see `extendiciclecolors`.&#10;        images&#10;            A tuple of :class:`plotly.graph_objects.layout.Image`&#10;            instances or dicts with compatible properties&#10;        imagedefaults&#10;            When used in a template (as&#10;            layout.template.layout.imagedefaults), sets the default&#10;            property values to use for elements of layout.images&#10;        legend&#10;            :class:`plotly.graph_objects.layout.Legend` instance or&#10;            dict with compatible properties&#10;        map&#10;            :class:`plotly.graph_objects.layout.Map` instance or&#10;            dict with compatible properties&#10;        mapbox&#10;            :class:`plotly.graph_objects.layout.Mapbox` instance or&#10;            dict with compatible properties&#10;        margin&#10;            :class:`plotly.graph_objects.layout.Margin` instance or&#10;            dict with compatible properties&#10;        meta&#10;            Assigns extra meta information that can be used in&#10;            various `text` attributes. Attributes such as the&#10;            graph, axis and colorbar `title.text`, annotation&#10;            `text` `trace.name` in legend items, `rangeselector`,&#10;            `updatemenus` and `sliders` `label` text all support&#10;            `meta`. One can access `meta` fields using template&#10;            strings: `%{meta[i]}` where `i` is the index of the&#10;            `meta` item in question. `meta` can also be an object&#10;            for example `{key: value}` which can be accessed&#10;            %{meta[key]}.&#10;        metasrc&#10;            Sets the source reference on Chart Studio Cloud for&#10;            `meta`.&#10;        minreducedheight&#10;            Minimum height of the plot with margin.automargin&#10;            applied (in px)&#10;        minreducedwidth&#10;            Minimum width of the plot with margin.automargin&#10;            applied (in px)&#10;        modebar&#10;            :class:`plotly.graph_objects.layout.Modebar` instance&#10;            or dict with compatible properties&#10;        newselection&#10;            :class:`plotly.graph_objects.layout.Newselection`&#10;            instance or dict with compatible properties&#10;        newshape&#10;            :class:`plotly.graph_objects.layout.Newshape` instance&#10;            or dict with compatible properties&#10;        paper_bgcolor&#10;            Sets the background color of the paper where the graph&#10;            is drawn.&#10;        piecolorway&#10;            Sets the default pie slice colors. Defaults to the main&#10;            `colorway` used for trace colors. If you specify a new&#10;            list here it can still be extended with lighter and&#10;            darker colors, see `extendpiecolors`.&#10;        plot_bgcolor&#10;            Sets the background color of the plotting area in-&#10;            between x and y axes.&#10;        polar&#10;            :class:`plotly.graph_objects.layout.Polar` instance or&#10;            dict with compatible properties&#10;        scattergap&#10;            Sets the gap (in plot fraction) between scatter points&#10;            of adjacent location coordinates. Defaults to `bargap`.&#10;        scattermode&#10;            Determines how scatter points at the same location&#10;            coordinate are displayed on the graph. With &quot;group&quot;,&#10;            the scatter points are plotted next to one another&#10;            centered around the shared location. With &quot;overlay&quot;,&#10;            the scatter points are plotted over one another, you&#10;            might need to reduce &quot;opacity&quot; to see multiple scatter&#10;            points.&#10;        scene&#10;            :class:`plotly.graph_objects.layout.Scene` instance or&#10;            dict with compatible properties&#10;        selectdirection&#10;            When `dragmode` is set to &quot;select&quot;, this limits the&#10;            selection of the drag to horizontal, vertical or&#10;            diagonal. &quot;h&quot; only allows horizontal selection, &quot;v&quot;&#10;            only vertical, &quot;d&quot; only diagonal and &quot;any&quot; sets no&#10;            limit.&#10;        selectionrevision&#10;            Controls persistence of user-driven changes in selected&#10;            points from all traces.&#10;        selections&#10;            A tuple of&#10;            :class:`plotly.graph_objects.layout.Selection`&#10;            instances or dicts with compatible properties&#10;        selectiondefaults&#10;            When used in a template (as&#10;            layout.template.layout.selectiondefaults), sets the&#10;            default property values to use for elements of&#10;            layout.selections&#10;        separators&#10;            Sets the decimal and thousand separators. For example,&#10;            *. * puts a '.' before decimals and a space between&#10;            thousands. In English locales, dflt is &quot;.,&quot; but other&#10;            locales may alter this default.&#10;        shapes&#10;            A tuple of :class:`plotly.graph_objects.layout.Shape`&#10;            instances or dicts with compatible properties&#10;        shapedefaults&#10;            When used in a template (as&#10;            layout.template.layout.shapedefaults), sets the default&#10;            property values to use for elements of layout.shapes&#10;        showlegend&#10;            Determines whether or not a legend is drawn. Default is&#10;            `true` if there is a trace to show and any of these: a)&#10;            Two or more traces would by default be shown in the&#10;            legend. b) One pie trace is shown in the legend. c) One&#10;            trace is explicitly given with `showlegend: true`.&#10;        sliders&#10;            A tuple of :class:`plotly.graph_objects.layout.Slider`&#10;            instances or dicts with compatible properties&#10;        sliderdefaults&#10;            When used in a template (as&#10;            layout.template.layout.sliderdefaults), sets the&#10;            default property values to use for elements of&#10;            layout.sliders&#10;        smith&#10;            :class:`plotly.graph_objects.layout.Smith` instance or&#10;            dict with compatible properties&#10;        spikedistance&#10;            Sets the default distance (in pixels) to look for data&#10;            to draw spikelines to (-1 means no cutoff, 0 means no&#10;            looking for data). As with hoverdistance, distance does&#10;            not apply to area-like objects. In addition, some&#10;            objects can be hovered on but will not generate&#10;            spikelines, such as scatter fills.&#10;        sunburstcolorway&#10;            Sets the default sunburst slice colors. Defaults to the&#10;            main `colorway` used for trace colors. If you specify a&#10;            new list here it can still be extended with lighter and&#10;            darker colors, see `extendsunburstcolors`.&#10;        template&#10;            Default attributes to be applied to the plot. This&#10;            should be a dict with format: `{'layout':&#10;            layoutTemplate, 'data': {trace_type: [traceTemplate,&#10;            ...], ...}}` where `layoutTemplate` is a dict matching&#10;            the structure of `figure.layout` and `traceTemplate` is&#10;            a dict matching the structure of the trace with type&#10;            `trace_type` (e.g. 'scatter'). Alternatively, this may&#10;            be specified as an instance of&#10;            plotly.graph_objs.layout.Template.  Trace templates are&#10;            applied cyclically to traces of each type. Container&#10;            arrays (eg `annotations`) have special handling: An&#10;            object ending in `defaults` (eg `annotationdefaults`)&#10;            is applied to each array item. But if an item has a&#10;            `templateitemname` key we look in the template array&#10;            for an item with matching `name` and apply that&#10;            instead. If no matching `name` is found we mark the&#10;            item invisible. Any named template item not referenced&#10;            is appended to the end of the array, so this can be&#10;            used to add a watermark annotation or a logo image, for&#10;            example. To omit one of these items on the plot, make&#10;            an item with matching `templateitemname` and `visible:&#10;            false`.&#10;        ternary&#10;            :class:`plotly.graph_objects.layout.Ternary` instance&#10;            or dict with compatible properties&#10;        title&#10;            :class:`plotly.graph_objects.layout.Title` instance or&#10;            dict with compatible properties&#10;        transition&#10;            Sets transition options used during Plotly.react&#10;            updates.&#10;        treemapcolorway&#10;            Sets the default treemap slice colors. Defaults to the&#10;            main `colorway` used for trace colors. If you specify a&#10;            new list here it can still be extended with lighter and&#10;            darker colors, see `extendtreemapcolors`.&#10;        uirevision&#10;            Used to allow user interactions with the plot to&#10;            persist after `Plotly.react` calls that are unaware of&#10;            these interactions. If `uirevision` is omitted, or if&#10;            it is given and it changed from the previous&#10;            `Plotly.react` call, the exact new figure is used. If&#10;            `uirevision` is truthy and did NOT change, any&#10;            attribute that has been affected by user interactions&#10;            and did not receive a different value in the new figure&#10;            will keep the interaction value. `layout.uirevision`&#10;            attribute serves as the default for `uirevision`&#10;            attributes in various sub-containers. For finer control&#10;            you can set these sub-attributes directly. For example,&#10;            if your app separately controls the data on the x and y&#10;            axes you might set `xaxis.uirevision=*time*` and&#10;            `yaxis.uirevision=*cost*`. Then if only the y data is&#10;            changed, you can update `yaxis.uirevision=*quantity*`&#10;            and the y axis range will reset but the x axis range&#10;            will retain any user-driven zoom.&#10;        uniformtext&#10;            :class:`plotly.graph_objects.layout.Uniformtext`&#10;            instance or dict with compatible properties&#10;        updatemenus&#10;            A tuple of&#10;            :class:`plotly.graph_objects.layout.Updatemenu`&#10;            instances or dicts with compatible properties&#10;        updatemenudefaults&#10;            When used in a template (as&#10;            layout.template.layout.updatemenudefaults), sets the&#10;            default property values to use for elements of&#10;            layout.updatemenus&#10;        violingap&#10;            Sets the gap (in plot fraction) between violins of&#10;            adjacent location coordinates. Has no effect on traces&#10;            that have &quot;width&quot; set.&#10;        violingroupgap&#10;            Sets the gap (in plot fraction) between violins of the&#10;            same location coordinate. Has no effect on traces that&#10;            have &quot;width&quot; set.&#10;        violinmode&#10;            Determines how violins at the same location coordinate&#10;            are displayed on the graph. If &quot;group&quot;, the violins are&#10;            plotted next to one another centered around the shared&#10;            location. If &quot;overlay&quot;, the violins are plotted over&#10;            one another, you might need to set &quot;opacity&quot; to see&#10;            them multiple violins. Has no effect on traces that&#10;            have &quot;width&quot; set.&#10;        waterfallgap&#10;            Sets the gap (in plot fraction) between bars of&#10;            adjacent location coordinates.&#10;        waterfallgroupgap&#10;            Sets the gap (in plot fraction) between bars of the&#10;            same location coordinate.&#10;        waterfallmode&#10;            Determines how bars at the same location coordinate are&#10;            displayed on the graph. With &quot;group&quot;, the bars are&#10;            plotted next to one another centered around the shared&#10;            location. With &quot;overlay&quot;, the bars are plotted over one&#10;            another, you might need to reduce &quot;opacity&quot; to see&#10;            multiple bars.&#10;        width&#10;            Sets the plot's width (in px).&#10;        xaxis&#10;            :class:`plotly.graph_objects.layout.XAxis` instance or&#10;            dict with compatible properties&#10;        yaxis&#10;            :class:`plotly.graph_objects.layout.YAxis` instance or&#10;            dict with compatible properties&#10;        &#10;Did you mean &quot;title&quot;?&#10;&#10;Bad property path:&#10;titlefont&#10;^^^^^^^^^">def test_convergence_plot():
+        new_model = {"mse": [1, 2, 3], "pl": [1.5, 2, 2.5], "time": [0.1, 0.2, 0.3]}
+    
+        try:
+&gt;           convergence.plot(new_model["mse"], new_model["pl"], new_model["time"], labels=1)
+
+tests/learnergy/visual/test_convergence.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+labels = 1, title = '', subtitle = '', xlabel = 'epoch'
+
+    def plot(
+        *args,
+        labels: Optional[List[str]] = None,
+        title: str = "",
+        subtitle: str = "",
+        xlabel: str = "epoch",
+        ylabel: str = "value",
+        grid: bool = True,
+        legend: bool = True,
+    ) -&gt; None:
+        """Plots the convergence graph of desired variables.
+    
+        Essentially, each variable is a list or numpy array
+        with size equals to (epochs x 1).
+    
+        Args:
+            labels: Labels to be applied for each plot in legend.
+            title: The title of the plot.
+            subtitle: The subtitle of the plot.
+            xlabel: The `x` axis label.
+            ylabel: The `y` axis label.
+            grid: If grid should be used or not.
+            legend: If legend should be displayed or not.
+    
+        """
+    
+        ticks = np.arange(1, len(args[0]) + 1)
+    
+        fig = go.Figure()
+    
+        if labels:
+&gt;           if len(labels) != len(args):
+               ^^^^^^^^^^^
+E           TypeError: object of type 'int' has no len()
+
+learnergy/visual/convergence.py:43: TypeError
+
+During handling of the above exception, another exception occurred:
+
+    def test_convergence_plot():
+        new_model = {"mse": [1, 2, 3], "pl": [1.5, 2, 2.5], "time": [0.1, 0.2, 0.3]}
+    
+        try:
+            convergence.plot(new_model["mse"], new_model["pl"], new_model["time"], labels=1)
+        except:
+&gt;           convergence.plot(
+                new_model["mse"],
+                new_model["pl"],
+                new_model["time"],
+                labels=["MSE", "log-PL", "time (s)"],
+            )
+
+tests/learnergy/visual/test_convergence.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+learnergy/visual/convergence.py:51: in plot
+    fig.update_layout(
+.venv/lib/python3.14/site-packages/plotly/graph_objs/_figure.py:218: in update_layout
+    return super().update_layout(dict1, overwrite, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/plotly/basedatatypes.py:1415: in update_layout
+    self.layout.update(dict1, overwrite=overwrite, **kwargs)
+.venv/lib/python3.14/site-packages/plotly/basedatatypes.py:5195: in update
+    BaseFigure._perform_update(self, kwargs, overwrite=overwrite)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+plotly_obj = Layout({
+    'template': '...'
+})
+update_obj = {'showlegend': True, 'title': {'font': {'size': 14}, 'text': '', 'x': 0, 'xanchor': 'left'}, 'titlefont': {'color': 'grey', 'size': 8}, 'xaxis': {'range': [1, np.int64(3)], 'tickvals': array([1, 2, 3])}, ...}
+overwrite = False
+
+    @staticmethod
+    def _perform_update(plotly_obj, update_obj, overwrite=False):
+        """
+        Helper to support the update() methods on :class:`BaseFigure` and
+        :class:`BasePlotlyType`
+    
+        Parameters
+        ----------
+        plotly_obj : BasePlotlyType|tuple[BasePlotlyType]
+            Object to up updated
+        update_obj : dict|list[dict]|tuple[dict]
+            When ``plotly_obj`` is an instance of :class:`BaseFigure`,
+            ``update_obj`` should be a dict
+    
+            When ``plotly_obj`` is a tuple of instances of
+            :class:`BasePlotlyType`, ``update_obj`` should be a tuple or list
+            of dicts
+        """
+        from _plotly_utils.basevalidators import (
+            CompoundValidator,
+            CompoundArrayValidator,
+        )
+    
+        if update_obj is None:
+            # Nothing to do
+            return
+        elif isinstance(plotly_obj, BasePlotlyType):
+            # Handle initializing subplot ids
+            # -------------------------------
+            # This should be valid even if xaxis2 hasn't been initialized:
+            # &gt;&gt;&gt; layout.update(xaxis2={'title': 'xaxis 2'})
+            for key in update_obj:
+                # special handling for missing keys that match _subplot_re_match
+                if key not in plotly_obj and isinstance(plotly_obj, BaseLayoutType):
+                    # try _subplot_re_match
+                    match = plotly_obj._subplot_re_match(key)
+                    if match:
+                        # We need to create a subplotid object
+                        plotly_obj[key] = {}
+                        continue
+    
+                err = _check_path_in_prop_tree(plotly_obj, key, error_cast=ValueError)
+                if err is not None:
+&gt;                   raise err
+E                   ValueError: Invalid property specified for object of type plotly.graph_objs.Layout: 'titlefont'
+E                   
+E                   Did you mean "title"?
+E                   
+E                       Valid properties:
+E                           activeselection
+E                               :class:`plotly.graph_objects.layout.Activeselection`
+E                               instance or dict with compatible properties
+E                           activeshape
+E                               :class:`plotly.graph_objects.layout.Activeshape`
+E                               instance or dict with compatible properties
+E                           annotations
+E                               A tuple of
+E                               :class:`plotly.graph_objects.layout.Annotation`
+E                               instances or dicts with compatible properties
+E                           annotationdefaults
+E                               When used in a template (as
+E                               layout.template.layout.annotationdefaults), sets the
+E                               default property values to use for elements of
+E                               layout.annotations
+E                           autosize
+E                               Determines whether or not a layout width or height that
+E                               has been left undefined by the user is initialized on
+E                               each relayout. Note that, regardless of this attribute,
+E                               an undefined layout width or height is always
+E                               initialized on the first call to plot.
+E                           autotypenumbers
+E                               Using "strict" a numeric string in trace data is not
+E                               converted to a number. Using *convert types* a numeric
+E                               string in trace data may be treated as a number during
+E                               automatic axis `type` detection. This is the default
+E                               value; however it could be overridden for individual
+E                               axes.
+E                           barcornerradius
+E                               Sets the rounding of bar corners. May be an integer
+E                               number of pixels, or a percentage of bar width (as a
+E                               string ending in %).
+E                           bargap
+E                               Sets the gap (in plot fraction) between bars of
+E                               adjacent location coordinates.
+E                           bargroupgap
+E                               Sets the gap (in plot fraction) between bars of the
+E                               same location coordinate.
+E                           barmode
+E                               Determines how bars at the same location coordinate are
+E                               displayed on the graph. With "stack", the bars are
+E                               stacked on top of one another With "relative", the bars
+E                               are stacked on top of one another, with negative values
+E                               below the axis, positive values above With "group", the
+E                               bars are plotted next to one another centered around
+E                               the shared location. With "overlay", the bars are
+E                               plotted over one another, you might need to reduce
+E                               "opacity" to see multiple bars.
+E                           barnorm
+E                               Sets the normalization for bar traces on the graph.
+E                               With "fraction", the value of each bar is divided by
+E                               the sum of all values at that location coordinate.
+E                               "percent" is the same but multiplied by 100 to show
+E                               percentages.
+E                           boxgap
+E                               Sets the gap (in plot fraction) between boxes of
+E                               adjacent location coordinates. Has no effect on traces
+E                               that have "width" set.
+E                           boxgroupgap
+E                               Sets the gap (in plot fraction) between boxes of the
+E                               same location coordinate. Has no effect on traces that
+E                               have "width" set.
+E                           boxmode
+E                               Determines how boxes at the same location coordinate
+E                               are displayed on the graph. If "group", the boxes are
+E                               plotted next to one another centered around the shared
+E                               location. If "overlay", the boxes are plotted over one
+E                               another, you might need to set "opacity" to see them
+E                               multiple boxes. Has no effect on traces that have
+E                               "width" set.
+E                           calendar
+E                               Sets the default calendar system to use for
+E                               interpreting and displaying dates throughout the plot.
+E                           clickmode
+E                               Determines the mode of single click interactions.
+E                               "event" is the default value and emits the
+E                               `plotly_click` event. In addition this mode emits the
+E                               `plotly_selected` event in drag modes "lasso" and
+E                               "select", but with no event data attached (kept for
+E                               compatibility reasons). The "select" flag enables
+E                               selecting single data points via click. This mode also
+E                               supports persistent selections, meaning that pressing
+E                               Shift while clicking, adds to / subtracts from an
+E                               existing selection. "select" with `hovermode`: "x" can
+E                               be confusing, consider explicitly setting `hovermode`:
+E                               "closest" when using this feature. Selection events are
+E                               sent accordingly as long as "event" flag is set as
+E                               well. When the "event" flag is missing, `plotly_click`
+E                               and `plotly_selected` events are not fired.
+E                           coloraxis
+E                               :class:`plotly.graph_objects.layout.Coloraxis` instance
+E                               or dict with compatible properties
+E                           colorscale
+E                               :class:`plotly.graph_objects.layout.Colorscale`
+E                               instance or dict with compatible properties
+E                           colorway
+E                               Sets the default trace colors.
+E                           computed
+E                               Placeholder for exporting automargin-impacting values
+E                               namely `margin.t`, `margin.b`, `margin.l` and
+E                               `margin.r` in "full-json" mode.
+E                           datarevision
+E                               If provided, a changed value tells `Plotly.react` that
+E                               one or more data arrays has changed. This way you can
+E                               modify arrays in-place rather than making a complete
+E                               new copy for an incremental change. If NOT provided,
+E                               `Plotly.react` assumes that data arrays are being
+E                               treated as immutable, thus any data array with a
+E                               different identity from its predecessor contains new
+E                               data.
+E                           dragmode
+E                               Determines the mode of drag interactions. "select" and
+E                               "lasso" apply only to scatter traces with markers or
+E                               text. "orbit" and "turntable" apply only to 3D scenes.
+E                           editrevision
+E                               Controls persistence of user-driven changes in
+E                               `editable: true` configuration, other than trace names
+E                               and axis titles. Defaults to `layout.uirevision`.
+E                           extendfunnelareacolors
+E                               If `true`, the funnelarea slice colors (whether given
+E                               by `funnelareacolorway` or inherited from `colorway`)
+E                               will be extended to three times its original length by
+E                               first repeating every color 20% lighter then each color
+E                               20% darker. This is intended to reduce the likelihood
+E                               of reusing the same color when you have many slices,
+E                               but you can set `false` to disable. Colors provided in
+E                               the trace, using `marker.colors`, are never extended.
+E                           extendiciclecolors
+E                               If `true`, the icicle slice colors (whether given by
+E                               `iciclecolorway` or inherited from `colorway`) will be
+E                               extended to three times its original length by first
+E                               repeating every color 20% lighter then each color 20%
+E                               darker. This is intended to reduce the likelihood of
+E                               reusing the same color when you have many slices, but
+E                               you can set `false` to disable. Colors provided in the
+E                               trace, using `marker.colors`, are never extended.
+E                           extendpiecolors
+E                               If `true`, the pie slice colors (whether given by
+E                               `piecolorway` or inherited from `colorway`) will be
+E                               extended to three times its original length by first
+E                               repeating every color 20% lighter then each color 20%
+E                               darker. This is intended to reduce the likelihood of
+E                               reusing the same color when you have many slices, but
+E                               you can set `false` to disable. Colors provided in the
+E                               trace, using `marker.colors`, are never extended.
+E                           extendsunburstcolors
+E                               If `true`, the sunburst slice colors (whether given by
+E                               `sunburstcolorway` or inherited from `colorway`) will
+E                               be extended to three times its original length by first
+E                               repeating every color 20% lighter then each color 20%
+E                               darker. This is intended to reduce the likelihood of
+E                               reusing the same color when you have many slices, but
+E                               you can set `false` to disable. Colors provided in the
+E                               trace, using `marker.colors`, are never extended.
+E                           extendtreemapcolors
+E                               If `true`, the treemap slice colors (whether given by
+E                               `treemapcolorway` or inherited from `colorway`) will be
+E                               extended to three times its original length by first
+E                               repeating every color 20% lighter then each color 20%
+E                               darker. This is intended to reduce the likelihood of
+E                               reusing the same color when you have many slices, but
+E                               you can set `false` to disable. Colors provided in the
+E                               trace, using `marker.colors`, are never extended.
+E                           font
+E                               Sets the global font. Note that fonts used in traces
+E                               and other layout components inherit from the global
+E                               font.
+E                           funnelareacolorway
+E                               Sets the default funnelarea slice colors. Defaults to
+E                               the main `colorway` used for trace colors. If you
+E                               specify a new list here it can still be extended with
+E                               lighter and darker colors, see
+E                               `extendfunnelareacolors`.
+E                           funnelgap
+E                               Sets the gap (in plot fraction) between bars of
+E                               adjacent location coordinates.
+E                           funnelgroupgap
+E                               Sets the gap (in plot fraction) between bars of the
+E                               same location coordinate.
+E                           funnelmode
+E                               Determines how bars at the same location coordinate are
+E                               displayed on the graph. With "stack", the bars are
+E                               stacked on top of one another With "group", the bars
+E                               are plotted next to one another centered around the
+E                               shared location. With "overlay", the bars are plotted
+E                               over one another, you might need to reduce "opacity" to
+E                               see multiple bars.
+E                           geo
+E                               :class:`plotly.graph_objects.layout.Geo` instance or
+E                               dict with compatible properties
+E                           grid
+E                               :class:`plotly.graph_objects.layout.Grid` instance or
+E                               dict with compatible properties
+E                           height
+E                               Sets the plot's height (in px).
+E                           hiddenlabels
+E                               hiddenlabels is the funnelarea &amp; pie chart analog of
+E                               visible:'legendonly' but it can contain many labels,
+E                               and can simultaneously hide slices from several
+E                               pies/funnelarea charts
+E                           hiddenlabelssrc
+E                               Sets the source reference on Chart Studio Cloud for
+E                               `hiddenlabels`.
+E                           hidesources
+E                               Determines whether or not a text link citing the data
+E                               source is placed at the bottom-right cored of the
+E                               figure. Has only an effect only on graphs that have
+E                               been generated via forked graphs from the Chart Studio
+E                               Cloud (at https://chart-studio.plotly.com or on-
+E                               premise).
+E                           hoverdistance
+E                               Sets the default distance (in pixels) to look for data
+E                               to add hover labels (-1 means no cutoff, 0 means no
+E                               looking for data). This is only a real distance for
+E                               hovering on point-like objects, like scatter points.
+E                               For area-like objects (bars, scatter fills, etc)
+E                               hovering is on inside the area and off outside, but
+E                               these objects will not supersede hover on point-like
+E                               objects in case of conflict.
+E                           hoverlabel
+E                               :class:`plotly.graph_objects.layout.Hoverlabel`
+E                               instance or dict with compatible properties
+E                           hovermode
+E                               Determines the mode of hover interactions. If
+E                               "closest", a single hoverlabel will appear for the
+E                               "closest" point within the `hoverdistance`. If "x" (or
+E                               "y"), multiple hoverlabels will appear for multiple
+E                               points at the "closest" x- (or y-) coordinate within
+E                               the `hoverdistance`, with the caveat that no more than
+E                               one hoverlabel will appear per trace. If *x unified*
+E                               (or *y unified*), a single hoverlabel will appear
+E                               multiple points at the closest x- (or y-) coordinate
+E                               within the `hoverdistance` with the caveat that no more
+E                               than one hoverlabel will appear per trace. In this
+E                               mode, spikelines are enabled by default perpendicular
+E                               to the specified axis. If false, hover interactions are
+E                               disabled.
+E                           hoversubplots
+E                               Determines expansion of hover effects to other subplots
+E                               If "single" just the axis pair of the primary point is
+E                               included without overlaying subplots. If "overlaying"
+E                               all subplots using the main axis and occupying the same
+E                               space are included. If "axis", also include stacked
+E                               subplots using the same axis when `hovermode` is set to
+E                               "x", *x unified*, "y" or *y unified*.
+E                           iciclecolorway
+E                               Sets the default icicle slice colors. Defaults to the
+E                               main `colorway` used for trace colors. If you specify a
+E                               new list here it can still be extended with lighter and
+E                               darker colors, see `extendiciclecolors`.
+E                           images
+E                               A tuple of :class:`plotly.graph_objects.layout.Image`
+E                               instances or dicts with compatible properties
+E                           imagedefaults
+E                               When used in a template (as
+E                               layout.template.layout.imagedefaults), sets the default
+E                               property values to use for elements of layout.images
+E                           legend
+E                               :class:`plotly.graph_objects.layout.Legend` instance or
+E                               dict with compatible properties
+E                           map
+E                               :class:`plotly.graph_objects.layout.Map` instance or
+E                               dict with compatible properties
+E                           mapbox
+E                               :class:`plotly.graph_objects.layout.Mapbox` instance or
+E                               dict with compatible properties
+E                           margin
+E                               :class:`plotly.graph_objects.layout.Margin` instance or
+E                               dict with compatible properties
+E                           meta
+E                               Assigns extra meta information that can be used in
+E                               various `text` attributes. Attributes such as the
+E                               graph, axis and colorbar `title.text`, annotation
+E                               `text` `trace.name` in legend items, `rangeselector`,
+E                               `updatemenus` and `sliders` `label` text all support
+E                               `meta`. One can access `meta` fields using template
+E                               strings: `%{meta[i]}` where `i` is the index of the
+E                               `meta` item in question. `meta` can also be an object
+E                               for example `{key: value}` which can be accessed
+E                               %{meta[key]}.
+E                           metasrc
+E                               Sets the source reference on Chart Studio Cloud for
+E                               `meta`.
+E                           minreducedheight
+E                               Minimum height of the plot with margin.automargin
+E                               applied (in px)
+E                           minreducedwidth
+E                               Minimum width of the plot with margin.automargin
+E                               applied (in px)
+E                           modebar
+E                               :class:`plotly.graph_objects.layout.Modebar` instance
+E                               or dict with compatible properties
+E                           newselection
+E                               :class:`plotly.graph_objects.layout.Newselection`
+E                               instance or dict with compatible properties
+E                           newshape
+E                               :class:`plotly.graph_objects.layout.Newshape` instance
+E                               or dict with compatible properties
+E                           paper_bgcolor
+E                               Sets the background color of the paper where the graph
+E                               is drawn.
+E                           piecolorway
+E                               Sets the default pie slice colors. Defaults to the main
+E                               `colorway` used for trace colors. If you specify a new
+E                               list here it can still be extended with lighter and
+E                               darker colors, see `extendpiecolors`.
+E                           plot_bgcolor
+E                               Sets the background color of the plotting area in-
+E                               between x and y axes.
+E                           polar
+E                               :class:`plotly.graph_objects.layout.Polar` instance or
+E                               dict with compatible properties
+E                           scattergap
+E                               Sets the gap (in plot fraction) between scatter points
+E                               of adjacent location coordinates. Defaults to `bargap`.
+E                           scattermode
+E                               Determines how scatter points at the same location
+E                               coordinate are displayed on the graph. With "group",
+E                               the scatter points are plotted next to one another
+E                               centered around the shared location. With "overlay",
+E                               the scatter points are plotted over one another, you
+E                               might need to reduce "opacity" to see multiple scatter
+E                               points.
+E                           scene
+E                               :class:`plotly.graph_objects.layout.Scene` instance or
+E                               dict with compatible properties
+E                           selectdirection
+E                               When `dragmode` is set to "select", this limits the
+E                               selection of the drag to horizontal, vertical or
+E                               diagonal. "h" only allows horizontal selection, "v"
+E                               only vertical, "d" only diagonal and "any" sets no
+E                               limit.
+E                           selectionrevision
+E                               Controls persistence of user-driven changes in selected
+E                               points from all traces.
+E                           selections
+E                               A tuple of
+E                               :class:`plotly.graph_objects.layout.Selection`
+E                               instances or dicts with compatible properties
+E                           selectiondefaults
+E                               When used in a template (as
+E                               layout.template.layout.selectiondefaults), sets the
+E                               default property values to use for elements of
+E                               layout.selections
+E                           separators
+E                               Sets the decimal and thousand separators. For example,
+E                               *. * puts a '.' before decimals and a space between
+E                               thousands. In English locales, dflt is ".," but other
+E                               locales may alter this default.
+E                           shapes
+E                               A tuple of :class:`plotly.graph_objects.layout.Shape`
+E                               instances or dicts with compatible properties
+E                           shapedefaults
+E                               When used in a template (as
+E                               layout.template.layout.shapedefaults), sets the default
+E                               property values to use for elements of layout.shapes
+E                           showlegend
+E                               Determines whether or not a legend is drawn. Default is
+E                               `true` if there is a trace to show and any of these: a)
+E                               Two or more traces would by default be shown in the
+E                               legend. b) One pie trace is shown in the legend. c) One
+E                               trace is explicitly given with `showlegend: true`.
+E                           sliders
+E                               A tuple of :class:`plotly.graph_objects.layout.Slider`
+E                               instances or dicts with compatible properties
+E                           sliderdefaults
+E                               When used in a template (as
+E                               layout.template.layout.sliderdefaults), sets the
+E                               default property values to use for elements of
+E                               layout.sliders
+E                           smith
+E                               :class:`plotly.graph_objects.layout.Smith` instance or
+E                               dict with compatible properties
+E                           spikedistance
+E                               Sets the default distance (in pixels) to look for data
+E                               to draw spikelines to (-1 means no cutoff, 0 means no
+E                               looking for data). As with hoverdistance, distance does
+E                               not apply to area-like objects. In addition, some
+E                               objects can be hovered on but will not generate
+E                               spikelines, such as scatter fills.
+E                           sunburstcolorway
+E                               Sets the default sunburst slice colors. Defaults to the
+E                               main `colorway` used for trace colors. If you specify a
+E                               new list here it can still be extended with lighter and
+E                               darker colors, see `extendsunburstcolors`.
+E                           template
+E                               Default attributes to be applied to the plot. This
+E                               should be a dict with format: `{'layout':
+E                               layoutTemplate, 'data': {trace_type: [traceTemplate,
+E                               ...], ...}}` where `layoutTemplate` is a dict matching
+E                               the structure of `figure.layout` and `traceTemplate` is
+E                               a dict matching the structure of the trace with type
+E                               `trace_type` (e.g. 'scatter'). Alternatively, this may
+E                               be specified as an instance of
+E                               plotly.graph_objs.layout.Template.  Trace templates are
+E                               applied cyclically to traces of each type. Container
+E                               arrays (eg `annotations`) have special handling: An
+E                               object ending in `defaults` (eg `annotationdefaults`)
+E                               is applied to each array item. But if an item has a
+E                               `templateitemname` key we look in the template array
+E                               for an item with matching `name` and apply that
+E                               instead. If no matching `name` is found we mark the
+E                               item invisible. Any named template item not referenced
+E                               is appended to the end of the array, so this can be
+E                               used to add a watermark annotation or a logo image, for
+E                               example. To omit one of these items on the plot, make
+E                               an item with matching `templateitemname` and `visible:
+E                               false`.
+E                           ternary
+E                               :class:`plotly.graph_objects.layout.Ternary` instance
+E                               or dict with compatible properties
+E                           title
+E                               :class:`plotly.graph_objects.layout.Title` instance or
+E                               dict with compatible properties
+E                           transition
+E                               Sets transition options used during Plotly.react
+E                               updates.
+E                           treemapcolorway
+E                               Sets the default treemap slice colors. Defaults to the
+E                               main `colorway` used for trace colors. If you specify a
+E                               new list here it can still be extended with lighter and
+E                               darker colors, see `extendtreemapcolors`.
+E                           uirevision
+E                               Used to allow user interactions with the plot to
+E                               persist after `Plotly.react` calls that are unaware of
+E                               these interactions. If `uirevision` is omitted, or if
+E                               it is given and it changed from the previous
+E                               `Plotly.react` call, the exact new figure is used. If
+E                               `uirevision` is truthy and did NOT change, any
+E                               attribute that has been affected by user interactions
+E                               and did not receive a different value in the new figure
+E                               will keep the interaction value. `layout.uirevision`
+E                               attribute serves as the default for `uirevision`
+E                               attributes in various sub-containers. For finer control
+E                               you can set these sub-attributes directly. For example,
+E                               if your app separately controls the data on the x and y
+E                               axes you might set `xaxis.uirevision=*time*` and
+E                               `yaxis.uirevision=*cost*`. Then if only the y data is
+E                               changed, you can update `yaxis.uirevision=*quantity*`
+E                               and the y axis range will reset but the x axis range
+E                               will retain any user-driven zoom.
+E                           uniformtext
+E                               :class:`plotly.graph_objects.layout.Uniformtext`
+E                               instance or dict with compatible properties
+E                           updatemenus
+E                               A tuple of
+E                               :class:`plotly.graph_objects.layout.Updatemenu`
+E                               instances or dicts with compatible properties
+E                           updatemenudefaults
+E                               When used in a template (as
+E                               layout.template.layout.updatemenudefaults), sets the
+E                               default property values to use for elements of
+E                               layout.updatemenus
+E                           violingap
+E                               Sets the gap (in plot fraction) between violins of
+E                               adjacent location coordinates. Has no effect on traces
+E                               that have "width" set.
+E                           violingroupgap
+E                               Sets the gap (in plot fraction) between violins of the
+E                               same location coordinate. Has no effect on traces that
+E                               have "width" set.
+E                           violinmode
+E                               Determines how violins at the same location coordinate
+E                               are displayed on the graph. If "group", the violins are
+E                               plotted next to one another centered around the shared
+E                               location. If "overlay", the violins are plotted over
+E                               one another, you might need to set "opacity" to see
+E                               them multiple violins. Has no effect on traces that
+E                               have "width" set.
+E                           waterfallgap
+E                               Sets the gap (in plot fraction) between bars of
+E                               adjacent location coordinates.
+E                           waterfallgroupgap
+E                               Sets the gap (in plot fraction) between bars of the
+E                               same location coordinate.
+E                           waterfallmode
+E                               Determines how bars at the same location coordinate are
+E                               displayed on the graph. With "group", the bars are
+E                               plotted next to one another centered around the shared
+E                               location. With "overlay", the bars are plotted over one
+E                               another, you might need to reduce "opacity" to see
+E                               multiple bars.
+E                           width
+E                               Sets the plot's width (in px).
+E                           xaxis
+E                               :class:`plotly.graph_objects.layout.XAxis` instance or
+E                               dict with compatible properties
+E                           yaxis
+E                               :class:`plotly.graph_objects.layout.YAxis` instance or
+E                               dict with compatible properties
+E                           
+E                   Did you mean "title"?
+E                   
+E                   Bad property path:
+E                   titlefont
+E                   ^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/plotly/basedatatypes.py:3949: ValueError</failure></testcase><testcase classname="tests.learnergy.visual.test_image" name="test_rasterize" time="0.003" /><testcase classname="tests.learnergy.visual.test_image" name="test_create_mosaic" time="0.236" /><testcase classname="tests.learnergy.visual.test_image" name="test_create_rgb_mosaic" time="0.480" /><testcase classname="tests.learnergy.visual.test_tensor" name="test_show_tensor" time="0.214" /></testsuite></testsuites>

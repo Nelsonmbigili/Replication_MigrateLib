@@ -1,0 +1,916 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="18" skipped="0" tests="96" time="0.479" timestamp="2026-03-05T00:48:28.750485+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.argument_test.DifferentArgumentTypes" name="test_keyword_arguments" time="0.001" /><testcase classname="tests.argument_test.DifferentArgumentTypes" name="test_keyword_only_arguments" time="0.000" /><testcase classname="tests.argument_test.DifferentArgumentTypes" name="test_multiple_arguments" time="0.000" /><testcase classname="tests.argument_test.DifferentArgumentTypes" name="test_positional_only_arguments" time="0.000" /><testcase classname="tests.argument_test.DifferentArgumentTypes" name="test_star_args" time="0.000" /><testcase classname="tests.argument_test.DifferentArgumentTypes" name="test_starstar_kwargs" time="0.000" /><testcase classname="tests.argument_test.DefaultArguments" name="test_complex_expression_default" time="0.000" /><testcase classname="tests.argument_test.DefaultArguments" name="test_default_arguments" time="0.000" /><testcase classname="tests.argument_test.DefaultArguments" name="test_inherits_proper_parent" time="0.000" /><testcase classname="tests.argument_test.DefaultArguments" name="test_type" time="0.000" /><testcase classname="tests.argument_test.DefaultArguments" name="test_typing" time="0.000" /><testcase classname="tests.assignment_test.EqualityAssignmentTests" name="test_aug_assignment" time="0.000" /><testcase classname="tests.assignment_test.EqualityAssignmentTests" name="test_basic_assignment" time="0.000" /><testcase classname="tests.assignment_test.EqualityAssignmentTests" name="test_element_assignment" time="0.000" /><testcase classname="tests.assignment_test.EqualityAssignmentTests" name="test_multi_assignment" time="0.000" /><testcase classname="tests.assignment_test.EqualityAssignmentTests" name="test_special_assigment" time="0.000" /><testcase classname="tests.assignment_test.EqualityAssignmentTests" name="test_underscore" time="0.000" /><testcase classname="tests.assignment_test.LoopAssignmentTests" name="test_basic_for_loop" time="0.000" /><testcase classname="tests.assignment_test.LoopAssignmentTests" name="test_itemizer_loop" time="0.000" /><testcase classname="tests.assignment_test.LoopAssignmentTests" name="test_multi_for_loop" time="0.000" /><testcase classname="tests.assignment_test.ImportAssignmentTests" name="test_aliases" time="0.000" /><testcase classname="tests.assignment_test.ImportAssignmentTests" name="test_global_import" time="0.000" /><testcase classname="tests.assignment_test.ImportAssignmentTests" name="test_local_import" time="0.000" /><testcase classname="tests.assignment_test.ImportAssignmentTests" name="test_star_import" time="0.000" /><testcase classname="tests.assignment_test.ImportAssignmentTests" name="test_sub_import" time="0.000" /><testcase classname="tests.basic_scope_test.GlobalFrameTest" name="test_function" time="0.000" /><testcase classname="tests.basic_scope_test.GlobalFrameTest" name="test_global_augassign" time="0.000" /><testcase classname="tests.basic_scope_test.GlobalFrameTest" name="test_global_var" time="0.000" /><testcase classname="tests.basic_scope_test.GlobalFrameTest" name="test_lookups" time="0.000" /><testcase classname="tests.basic_scope_test.GlobalFrameTest" name="test_multiline_global" time="0.000" /><testcase classname="tests.class_test.TestClassDefault" name="test_assigment_is_local" time="0.001"><failure message="AssertionError">self = &lt;tests.class_test.TestClassDefault testMethod=test_assigment_is_local&gt;
+
+    def test_assigment_is_local(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}class X:
+                {-X@1:0}x = 2
+            """
+        )
+
+tests/class_test.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x110f6a990&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[Assign(targets=[Name(id='x', ctx=Store(...))], value=Constant(value=2, kind=None), type_comment=None)], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.TestClassDefault" name="test_class" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.TestClassDefault testMethod=test_class&gt;
+
+    def test_class(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}class X: pass
+            """
+        )
+
+tests/class_test.py:5: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110581d0&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[Pass()], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.TestClassDefault" name="test_functions_defined_locally" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.TestClassDefault testMethod=test_functions_defined_locally&gt;
+
+    def test_functions_defined_locally(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}class X:
+                {-X@1:0}def f(): pass
+            """
+        )
+
+tests/class_test.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110d9df0&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[FunctionDef(name='f', args=arguments(posonlyargs=[], args=[], vararg=N...body=[Pass()], decorator_list=[], returns=None, type_comment=None, type_params=[])], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.TestClassDefault" name="test_lookup_in_parent" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.TestClassDefault testMethod=test_lookup_in_parent&gt;
+
+    def test_lookup_in_parent(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}def f():
+                {~f@1:0}x = 2
+                {~f@1:0}class X:
+                    {~f@1:0}x, {g}y
+            {g}y = 3
+            """
+        )
+
+tests/class_test.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+ast_scope/group_similar_constructs.py:9: in visit_FunctionDef
+    return self.visit_function_def(func_node, is_async=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotator.py:196: in visit_function_def
+    visit_all(subscope, func_node.body, func_node.returns)
+ast_scope/annotator.py:251: in visit_all
+    visit_all(visitor, *node)
+ast_scope/annotator.py:253: in visit_all
+    visitor.visit(node)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110d9850&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[Expr(value=Tuple(elts=[Name(...), Name(...)], ctx=Load(...)))], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.TestClassDefault" name="test_lookup_is_not_in_class_frame" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.TestClassDefault testMethod=test_lookup_is_not_in_class_frame&gt;
+
+    def test_lookup_is_not_in_class_frame(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}class X:
+                {g}x
+            """
+        )
+
+tests/class_test.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110db590&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[Expr(value=Name(id='x', ctx=Load(...)))], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.TestClassDefault" name="test_lookup_is_not_in_class_frame_even_if_assign" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.TestClassDefault testMethod=test_lookup_is_not_in_class_frame_even_if_assign&gt;
+
+    def test_lookup_is_not_in_class_frame_even_if_assign(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}class X:
+                {-X@1:0}x = 3
+                {g}x
+            """
+        )
+
+tests/class_test.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110d9130&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[Assign(targets=[Name(id='x', ctx=Store(...))], value=Constant(value=3, kind=None), type_comment=None), Expr(value=Name(id='x', ctx=Load(...)))], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.ClassTestsClassBindsNear" name="test_class" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.ClassTestsClassBindsNear testMethod=test_class&gt;
+
+    def test_class(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}class X: pass
+            """
+        )
+
+tests/class_test.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/class_test.py:53: in assertAnnotationWorks
+    super().assertAnnotationWorks(*args, **kwargs)
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110dab10&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[Pass()], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.ClassTestsClassBindsNear" name="test_default_method_argument" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.ClassTestsClassBindsNear testMethod=test_default_method_argument&gt;
+
+    def test_default_method_argument(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}def f({~f@1:0}x):
+                {~f@1:0}class X:
+                    {-X@2:4}x = 2
+                    {-X@2:4}def f({~f@4:8}x={-X@2:4}x):
+                        pass
+            """
+        )
+
+tests/class_test.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/class_test.py:53: in assertAnnotationWorks
+    super().assertAnnotationWorks(*args, **kwargs)
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+ast_scope/group_similar_constructs.py:9: in visit_FunctionDef
+    return self.visit_function_def(func_node, is_async=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotator.py:196: in visit_function_def
+    visit_all(subscope, func_node.body, func_node.returns)
+ast_scope/annotator.py:251: in visit_all
+    visit_all(visitor, *node)
+ast_scope/annotator.py:253: in visit_all
+    visitor.visit(node)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110e12b0&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[Assign(targets=[Name(id='x', ctx=Store(...))], value=Constant(value=2,...body=[Pass()], decorator_list=[], returns=None, type_comment=None, type_params=[])], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.ClassTestsClassBindsNear" name="test_function" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.ClassTestsClassBindsNear testMethod=test_function&gt;
+
+    def test_function(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}class X:
+                {-X@1:0}def f(): pass
+            """
+        )
+
+tests/class_test.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/class_test.py:53: in assertAnnotationWorks
+    super().assertAnnotationWorks(*args, **kwargs)
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110dae10&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[FunctionDef(name='f', args=arguments(posonlyargs=[], args=[], vararg=N...body=[Pass()], decorator_list=[], returns=None, type_comment=None, type_params=[])], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.ClassTestsClassBindsNear" name="test_listcomp_value" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.ClassTestsClassBindsNear testMethod=test_listcomp_value&gt;
+
+    def test_listcomp_value(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}class X:
+                {-X@1:0}x = 2
+                [{g}x for {~@3:11}t in {-X@1:0}x]
+            """
+        )
+
+tests/class_test.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/class_test.py:53: in assertAnnotationWorks
+    super().assertAnnotationWorks(*args, **kwargs)
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x110f6a450&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[Assign(targets=[Name(id='x', ctx=Store(...))], value=Constant(value=2,...omment=None), Expr(value=ListComp(elt=Name(...), generators=[comprehension(...)]))], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.ClassTestsClassBindsNear" name="test_nested_class_frames" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.ClassTestsClassBindsNear testMethod=test_nested_class_frames&gt;
+
+    def test_nested_class_frames(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}class Y:
+                {-Y@1:0}class X:
+                    {-X@2:4}x = 2
+                    {-X@2:4}def f():
+                        return {g}x
+            """
+        )
+
+tests/class_test.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/class_test.py:53: in assertAnnotationWorks
+    super().assertAnnotationWorks(*args, **kwargs)
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x110f6b1d0&gt;
+class_node = ClassDef(name='Y', bases=[], keywords=[], body=[ClassDef(name='X', bases=[], keywords=[], body=[Assign(targets=[Name(....urns=None, type_comment=None, type_params=[])], decorator_list=[], type_params=[])], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.ClassTestsClassBindsNear" name="test_nonlocal_class_frames" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.ClassTestsClassBindsNear testMethod=test_nonlocal_class_frames&gt;
+
+    def test_nonlocal_class_frames(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}def f({~f@1:0}x):
+                {~f@1:0}class X:
+                    {-X@2:4}x = 2
+                    {-X@2:4}def f():
+                        nonlocal x
+                        {~f@1:0}x = 2
+                        return {~f@1:0}x
+            """
+        )
+
+tests/class_test.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/class_test.py:53: in assertAnnotationWorks
+    super().assertAnnotationWorks(*args, **kwargs)
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+ast_scope/group_similar_constructs.py:9: in visit_FunctionDef
+    return self.visit_function_def(func_node, is_async=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotator.py:196: in visit_function_def
+    visit_all(subscope, func_node.body, func_node.returns)
+ast_scope/annotator.py:251: in visit_all
+    visit_all(visitor, *node)
+ast_scope/annotator.py:253: in visit_all
+    visitor.visit(node)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110e0170&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[Assign(targets=[Name(id='x', ctx=Store(...))], value=Constant(value=2,...e=Name(...))], decorator_list=[], returns=None, type_comment=None, type_params=[])], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.ClassTestsClassBindsNear" name="test_parent_is_global" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.ClassTestsClassBindsNear testMethod=test_parent_is_global&gt;
+
+    def test_parent_is_global(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}class X:
+                {-X@1:0}x = 2
+                {-X@1:0}def f():
+                    return {g}x
+            """
+        )
+
+tests/class_test.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/class_test.py:53: in assertAnnotationWorks
+    super().assertAnnotationWorks(*args, **kwargs)
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110e03b0&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[Assign(targets=[Name(id='x', ctx=Store(...))], value=Constant(value=2,...e=Name(...))], decorator_list=[], returns=None, type_comment=None, type_params=[])], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.ClassTestsClassBindsNear" name="test_parent_is_local" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.ClassTestsClassBindsNear testMethod=test_parent_is_local&gt;
+
+    def test_parent_is_local(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}def f({~f@1:0}x):
+                {~f@1:0}class X:
+                    {-X@2:4}x = 2
+                    {-X@2:4}def f():
+                        return {~f@1:0}x
+            """
+        )
+
+tests/class_test.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/class_test.py:53: in assertAnnotationWorks
+    super().assertAnnotationWorks(*args, **kwargs)
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+ast_scope/group_similar_constructs.py:9: in visit_FunctionDef
+    return self.visit_function_def(func_node, is_async=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotator.py:196: in visit_function_def
+    visit_all(subscope, func_node.body, func_node.returns)
+ast_scope/annotator.py:251: in visit_all
+    visit_all(visitor, *node)
+ast_scope/annotator.py:253: in visit_all
+    visitor.visit(node)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110e1f10&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[Assign(targets=[Name(id='x', ctx=Store(...))], value=Constant(value=2,...e=Name(...))], decorator_list=[], returns=None, type_comment=None, type_params=[])], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.ClassTestsClassBindsNear" name="test_subclass" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.ClassTestsClassBindsNear testMethod=test_subclass&gt;
+
+    def test_subclass(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}class X:
+                {-X@1:0}x = 2
+            {g}class Y({g}X):
+                pass
+            """
+        )
+
+tests/class_test.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/class_test.py:53: in assertAnnotationWorks
+    super().assertAnnotationWorks(*args, **kwargs)
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110e0290&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[Assign(targets=[Name(id='x', ctx=Store(...))], value=Constant(value=2, kind=None), type_comment=None)], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.class_test.ClassTestsClassBindsNear" name="test_variables_in_frame" time="0.000"><failure message="AssertionError">self = &lt;tests.class_test.ClassTestsClassBindsNear testMethod=test_variables_in_frame&gt;
+
+    def test_variables_in_frame(self):
+&gt;       self.assertAnnotationWorks(
+            """
+            {g}class X:
+                {-X@1:0}x = 2
+                {-X@1:0}y
+                {-X@1:0}y = {-X@1:0}x
+            """
+        )
+
+tests/class_test.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/class_test.py:53: in assertAnnotationWorks
+    super().assertAnnotationWorks(*args, **kwargs)
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110e2ab0&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[Assign(targets=[Name(id='x', ctx=Store(...))], value=Constant(value=2,...me(id='y', ctx=Store(...))], value=Name(id='x', ctx=Load(...)), type_comment=None)], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.comprehension_test.FunctionFrameTest" name="test_complex_target" time="0.001" /><testcase classname="tests.comprehension_test.FunctionFrameTest" name="test_dict_comprehension" time="0.000" /><testcase classname="tests.comprehension_test.FunctionFrameTest" name="test_gen_comprehension" time="0.000" /><testcase classname="tests.comprehension_test.FunctionFrameTest" name="test_inherits_parent" time="0.000" /><testcase classname="tests.comprehension_test.FunctionFrameTest" name="test_listcomp" time="0.000" /><testcase classname="tests.comprehension_test.FunctionFrameTest" name="test_listcomp_with_if" time="0.000" /><testcase classname="tests.comprehension_test.FunctionFrameTest" name="test_multi_if" time="0.000" /><testcase classname="tests.comprehension_test.FunctionFrameTest" name="test_nested_listcomp" time="0.000" /><testcase classname="tests.comprehension_test.FunctionFrameTest" name="test_serial_listcomp" time="0.001" /><testcase classname="tests.comprehension_test.FunctionFrameTest" name="test_serial_listcomp_with_if" time="0.000" /><testcase classname="tests.comprehension_test.FunctionFrameTest" name="test_set_comprehension" time="0.000" /><testcase classname="tests.dependency_graph_test.TestClassDefault" name="testEmptyGraph" time="0.000" /><testcase classname="tests.dependency_graph_test.TestClassDefault" name="testFunctionWithNoGlobals" time="0.000" /><testcase classname="tests.dependency_graph_test.TestClassDefault" name="testGraphDirection" time="0.000" /><testcase classname="tests.dependency_graph_test.TestClassDefault" name="testJustVariables" time="0.000" /><testcase classname="tests.dependency_graph_test.TestClassDefault" name="testLocalFunctionsDontGetNodes" time="0.000" /><testcase classname="tests.dependency_graph_test.TestClassDefault" name="testRecursiveFunction" time="0.000" /><testcase classname="tests.dependency_graph_test.TestClassDefault" name="testReferenceToImport" time="0.000" /><testcase classname="tests.dependency_graph_test.TestClassDefault" name="testReferencesToClasses" time="0.000"><failure message="AssertionError">self = &lt;tests.dependency_graph_test.TestClassDefault testMethod=testReferencesToClasses&gt;
+
+    def testReferencesToClasses(self):
+&gt;       self.assertGraphWorks(
+            """
+            class X:
+                def f(x):
+                    return h(x)
+            def g(x):
+                return X.f(3)
+            def h(x):
+                return 2
+            """,
+            vertices=["X", "g", "h"],
+            edges=[("X", "h"), ("g", "X")]
+        )
+
+tests/dependency_graph_test.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/utils.py:130: in assertGraphWorks
+    graph = annotate(ast.parse(trim(code))).static_dependency_graph
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x110fe5910&gt;
+class_node = ClassDef(name='X', bases=[], keywords=[], body=[FunctionDef(name='f', args=arguments(posonlyargs=[], args=[arg(...)], ...e=Call(...))], decorator_list=[], returns=None, type_comment=None, type_params=[])], decorator_list=[], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase><testcase classname="tests.dependency_graph_test.TestClassDefault" name="testRefersToImportStatements" time="0.000" /><testcase classname="tests.dependency_graph_test.TestClassDefault" name="testRefersToVariables" time="0.000" /><testcase classname="tests.exception_test.ExceptionTests" name="test_multiple_arguments" time="0.000" /><testcase classname="tests.function_frame_test.FunctionFrameTest" name="test_async_parameters_new" time="0.000" /><testcase classname="tests.function_frame_test.FunctionFrameTest" name="test_async_parameters_old" time="0.000" /><testcase classname="tests.function_frame_test.FunctionFrameTest" name="test_decorator_top_level_new" time="0.000" /><testcase classname="tests.function_frame_test.FunctionFrameTest" name="test_decorator_top_level_old" time="0.000" /><testcase classname="tests.function_frame_test.FunctionFrameTest" name="test_def_is_assign" time="0.000" /><testcase classname="tests.function_frame_test.FunctionFrameTest" name="test_global_statement" time="0.000" /><testcase classname="tests.function_frame_test.FunctionFrameTest" name="test_inherits" time="0.000" /><testcase classname="tests.function_frame_test.FunctionFrameTest" name="test_nested_function" time="0.000" /><testcase classname="tests.function_frame_test.FunctionFrameTest" name="test_no_parameter_function" time="0.000" /><testcase classname="tests.function_frame_test.FunctionFrameTest" name="test_not_found_to_be_global" time="0.000" /><testcase classname="tests.function_frame_test.FunctionFrameTest" name="test_parameters" time="0.000" /><testcase classname="tests.function_frame_test.FunctionFrameTest" name="test_self_reference" time="0.000" /><testcase classname="tests.function_frame_test.FunctionFrameTest" name="test_set_after_get" time="0.000" /><testcase classname="tests.lambda_test.FunctionFrameTest" name="test_basic_lambda" time="0.000" /><testcase classname="tests.lambda_test.FunctionFrameTest" name="test_default_params_in_parent" time="0.000" /><testcase classname="tests.lambda_test.FunctionFrameTest" name="test_multiarg_lambda" time="0.000" /><testcase classname="tests.lambda_test.FunctionFrameTest" name="test_nested_lambdas" time="0.000" /><testcase classname="tests.lambda_test.FunctionFrameTest" name="test_noarg_lambda" time="0.000" /><testcase classname="tests.nonlocal_test.NonlocalTest" name="test_basic_nonlocal" time="0.000" /><testcase classname="tests.nonlocal_test.NonlocalTest" name="test_global_escapes_scope" time="0.000" /><testcase classname="tests.nonlocal_test.NonlocalTest" name="test_global_escapes_scope_even_without_declaration" time="0.000" /><testcase classname="tests.nonlocal_test.NonlocalTest" name="test_no_nonlocal" time="0.000" /><testcase classname="tests.nonlocal_test.NonlocalTest" name="test_nonlocal_found_in_most_recent_parent" time="0.000" /><testcase classname="tests.nonlocal_test.NonlocalTest" name="test_nonlocal_found_in_parent_of_parent" time="0.000" /><testcase classname="tests.nonlocal_test.NonlocalTest" name="test_nonlocal_not_found" time="0.000" /><testcase classname="tests.nonlocal_test.NonlocalTest" name="test_symbol_in_different_frame_from_parent" time="0.000" /><testcase classname="tests.special_symbols_test.SpecialSymbolsTest" name="test_booleans" time="0.000" /><testcase classname="tests.types_test.TypeAnnotationTest" name="test_basic_assignment" time="0.000"><failure message="AssertionError">self = &lt;tests.types_test.TypeAnnotationTest testMethod=test_basic_assignment&gt;
+
+    def test_basic_assignment(self):
+        annotated_code = """
+        {&lt;3.8!g}@{g}f
+        {&gt;=3.8!g}class A:
+            pass
+    
+        {g}class B({g}A, x={g}A):
+            pass
+    
+        {g}C = {g}B
+        {g}CONSTANT: {g}C = {g}C()
+        {g}CONST: {g}C
+        """
+&gt;       self.assertAnnotationWorks(annotated_code)
+
+tests/types_test.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/utils.py:120: in assertAnnotationWorks
+    scope_info = annotate(ast.parse(code), class_binds_near)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ast_scope/annotate.py:69: in annotate
+    annotator.visit(tree)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:514: in generic_visit
+    self.visit(item)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/ast.py:506: in visit
+    return visitor(node)
+           ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ast_scope.annotator.AnnotateScope object at 0x1110c53d0&gt;
+class_node = ClassDef(name='A', bases=[], keywords=[], body=[Pass()], decorator_list=[Name(id='f', ctx=Load())], type_params=[])
+
+    def visit_ClassDef(self, class_node):
+        self.annotate_intermediate_scope(class_node, class_node.name, True)
+        self.scope.modify(class_node.name)
+        subscope = self.create_subannotator(
+            IntermediateClassScope(class_node, self.scope, self.class_binds_near)
+        )
+&gt;       assert class_node._fields == (
+            "name",
+            "bases",
+            "keywords",
+            "body",
+            "decorator_list",
+        )
+E       AssertionError
+
+ast_scope/annotator.py:225: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="7" time="2.847" timestamp="2026-03-04T12:00:19.611809+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_connection_error" time="0.553"><failure message="AssertionError: 'Failed to get ip address for type=A' != 'Failed to get ip address for type=AAAA'&#10;- Failed to get ip address for type=A&#10;+ Failed to get ip address for type=AAAA&#10;?                                    +++">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_connection_error&gt;
+mock = &lt;MagicMock name='get' id='4699226192'&gt;
+
+    @patch('httpx.get')
+    def test_connection_error(self, mock):
+        mock.side_effect = [ConnectError('this is a test')]
+        zone = Zone('example.com.', [])
+    
+        with self.assertRaises(Exception) as ctx:
+            DdnsSource('dynamic').populate(zone)
+&gt;       self.assertEqual(
+            'Failed to get ip address for type=A', str(ctx.exception)
+        )
+E       AssertionError: 'Failed to get ip address for type=A' != 'Failed to get ip address for type=AAAA'
+E       - Failed to get ip address for type=A
+E       + Failed to get ip address for type=AAAA
+E       ?                                    +++
+
+tests/test_octodns_source_ddns.py:61: AssertionError</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_defaults" time="0.477"><failure message="Exception: Failed to get ip address for type=AAAA">@contextlib.contextmanager
+    def map_httpcore_exceptions() -&gt; typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+&gt;           yield
+
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:250: in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection_pool.py:256: in handle_request
+    raise exc from None
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection_pool.py:236: in handle_request
+    response = connection.handle_request(
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:101: in handle_request
+    raise exc
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:78: in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:124: in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_backends/sync.py:207: in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:162: in __exit__
+    self.gen.throw(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+map = {&lt;class 'TimeoutError'&gt;: &lt;class 'httpcore.ConnectTimeout'&gt;, &lt;class 'OSError'&gt;: &lt;class 'httpcore.ConnectError'&gt;}
+
+    @contextlib.contextmanager
+    def map_exceptions(map: ExceptionMapping) -&gt; typing.Iterator[None]:
+        try:
+            yield
+        except Exception as exc:  # noqa: PIE786
+            for from_exc, to_exc in map.items():
+                if isinstance(exc, from_exc):
+&gt;                   raise to_exc(exc) from exc
+E                   httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+.venv/lib/python3.14/site-packages/httpcore/_exceptions.py:14: ConnectError
+
+The above exception was the direct cause of the following exception:
+
+self = DdnsSource, _type = 'AAAA'
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+&gt;           resp = self._sess.get(self.urls[_type])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+octodns_ddns/__init__.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+.venv/lib/python3.14/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+.venv/lib/python3.14/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv/lib/python3.14/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:249: in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:162: in __exit__
+    self.gen.throw(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @contextlib.contextmanager
+    def map_httpcore_exceptions() -&gt; typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+            yield
+        except Exception as exc:
+            mapped_exc = None
+    
+            for from_exc, to_exc in HTTPCORE_EXC_MAP.items():
+                if not isinstance(exc, from_exc):
+                    continue
+                # We want to map to the most specific exception we can find.
+                # Eg if `exc` is an `httpcore.ReadTimeout`, we want to map to
+                # `httpx.ReadTimeout`, not just `httpx.TimeoutException`.
+                if mapped_exc is None or issubclass(to_exc, mapped_exc):
+                    mapped_exc = to_exc
+    
+            if mapped_exc is None:  # pragma: no cover
+                raise
+    
+            message = str(exc)
+&gt;           raise mapped_exc(message) from exc
+E           httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:118: ConnectError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_defaults&gt;
+mock = &lt;MagicMock name='get' id='4700549680'&gt;
+
+    @patch('httpx.get')
+    def test_defaults(self, mock):
+        a_value = '1.2.3.4'
+        aaaa_value = '2001:db8:85a3::8a2e:370:7334'
+        mock.side_effect = [MockResponse(a_value), MockResponse(aaaa_value)]
+    
+        zone = Zone('example.com.', [])
+&gt;       DdnsSource('dynamic').populate(zone)
+
+tests/test_octodns_source_ddns.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+octodns_ddns/__init__.py:69: in populate
+    addr = self._get_addr(_type)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = DdnsSource, _type = 'AAAA'
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+            resp = self._sess.get(self.urls[_type])
+        except RequestError:
+&gt;           raise Exception(
+                'Failed to get ip address for type={}'.format(_type)
+            )
+E           Exception: Failed to get ip address for type=AAAA
+
+octodns_ddns/__init__.py:56: Exception</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_empty_response" time="0.440"><failure message="Exception: Failed to get ip address for type=AAAA">@contextlib.contextmanager
+    def map_httpcore_exceptions() -&gt; typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+&gt;           yield
+
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:250: in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection_pool.py:256: in handle_request
+    raise exc from None
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection_pool.py:236: in handle_request
+    response = connection.handle_request(
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:101: in handle_request
+    raise exc
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:78: in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:124: in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_backends/sync.py:207: in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:162: in __exit__
+    self.gen.throw(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+map = {&lt;class 'TimeoutError'&gt;: &lt;class 'httpcore.ConnectTimeout'&gt;, &lt;class 'OSError'&gt;: &lt;class 'httpcore.ConnectError'&gt;}
+
+    @contextlib.contextmanager
+    def map_exceptions(map: ExceptionMapping) -&gt; typing.Iterator[None]:
+        try:
+            yield
+        except Exception as exc:  # noqa: PIE786
+            for from_exc, to_exc in map.items():
+                if isinstance(exc, from_exc):
+&gt;                   raise to_exc(exc) from exc
+E                   httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+.venv/lib/python3.14/site-packages/httpcore/_exceptions.py:14: ConnectError
+
+The above exception was the direct cause of the following exception:
+
+self = DdnsSource, _type = 'AAAA'
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+&gt;           resp = self._sess.get(self.urls[_type])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+octodns_ddns/__init__.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+.venv/lib/python3.14/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+.venv/lib/python3.14/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv/lib/python3.14/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:249: in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:162: in __exit__
+    self.gen.throw(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @contextlib.contextmanager
+    def map_httpcore_exceptions() -&gt; typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+            yield
+        except Exception as exc:
+            mapped_exc = None
+    
+            for from_exc, to_exc in HTTPCORE_EXC_MAP.items():
+                if not isinstance(exc, from_exc):
+                    continue
+                # We want to map to the most specific exception we can find.
+                # Eg if `exc` is an `httpcore.ReadTimeout`, we want to map to
+                # `httpx.ReadTimeout`, not just `httpx.TimeoutException`.
+                if mapped_exc is None or issubclass(to_exc, mapped_exc):
+                    mapped_exc = to_exc
+    
+            if mapped_exc is None:  # pragma: no cover
+                raise
+    
+            message = str(exc)
+&gt;           raise mapped_exc(message) from exc
+E           httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:118: ConnectError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_empty_response&gt;
+mock = &lt;MagicMock name='get' id='4703142976'&gt;
+
+    @patch('httpx.get')
+    def test_empty_response(self, mock):
+        mock.side_effect = [MockResponse(content=''), MockResponse(content='')]
+        zone = Zone('example.com.', [])
+    
+&gt;       DdnsSource('dynamic').populate(zone)
+
+tests/test_octodns_source_ddns.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+octodns_ddns/__init__.py:69: in populate
+    addr = self._get_addr(_type)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = DdnsSource, _type = 'AAAA'
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+            resp = self._sess.get(self.urls[_type])
+        except RequestError:
+&gt;           raise Exception(
+                'Failed to get ip address for type={}'.format(_type)
+            )
+E           Exception: Failed to get ip address for type=AAAA
+
+octodns_ddns/__init__.py:56: Exception</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_error" time="0.429"><failure message="AssertionError: 'boom' != 'Failed to get ip address for type=AAAA'&#10;- boom&#10;+ Failed to get ip address for type=AAAA">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_error&gt;
+mock = &lt;MagicMock name='get' id='4703144656'&gt;
+
+    @patch('httpx.get')
+    def test_error(self, mock):
+        mock.side_effect = [MockResponse(raise_for_status='boom')]
+        zone = Zone('example.com.', [])
+    
+        with self.assertRaises(Exception) as ctx:
+            DdnsSource('dynamic').populate(zone)
+&gt;       self.assertEqual('boom', str(ctx.exception))
+E       AssertionError: 'boom' != 'Failed to get ip address for type=AAAA'
+E       - boom
+E       + Failed to get ip address for type=AAAA
+
+tests/test_octodns_source_ddns.py:52: AssertionError</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_types_a" time="0.426"><failure message="AssertionError: Calls not found.&#10;Expected: [call('https://v4.ident.me/')]&#10;  Actual: []">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_types_a&gt;
+mock = &lt;MagicMock name='get' id='4703146000'&gt;
+
+    @patch('httpx.get')
+    def test_types_a(self, mock):
+        a_value = '1.2.3.4'
+        mock.side_effect = [MockResponse(a_value)]
+    
+        zone = Zone('example.com.', [])
+        DdnsSource('dynamic', types=('A',)).populate(zone)
+        self.assertEqual(1, len(zone.records))
+    
+&gt;       mock.assert_has_calls([call('https://v4.ident.me/')])
+
+tests/test_octodns_source_ddns.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='get' id='4703146000'&gt;
+calls = [call('https://v4.ident.me/')], any_order = False
+
+    def assert_has_calls(self, calls, any_order=False):
+        """assert the mock has been called with the specified calls.
+        The `mock_calls` list is checked for the calls.
+    
+        If `any_order` is False (the default) then the calls must be
+        sequential. There can be extra calls before or after the
+        specified calls.
+    
+        If `any_order` is True then the calls can be in any order, but
+        they must all appear in `mock_calls`."""
+        expected = [self._call_matcher(c) for c in calls]
+        cause = next((e for e in expected if isinstance(e, Exception)), None)
+        all_calls = _CallList(self._call_matcher(c) for c in self.mock_calls)
+        if not any_order:
+            if expected not in all_calls:
+                if cause is None:
+                    problem = 'Calls not found.'
+                else:
+                    problem = ('Error processing expected calls.\n'
+                               'Errors: {}').format(
+                                   [e if isinstance(e, Exception) else None
+                                    for e in expected])
+&gt;               raise AssertionError(
+                    f'{problem}\n'
+                    f'Expected: {_CallList(calls)}\n'
+                    f'  Actual: {safe_repr(self.mock_calls)}'
+                ) from cause
+E               AssertionError: Calls not found.
+E               Expected: [call('https://v4.ident.me/')]
+E                 Actual: []
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1022: AssertionError</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_types_aaaa" time="0.010"><failure message="Exception: Failed to get ip address for type=AAAA">@contextlib.contextmanager
+    def map_httpcore_exceptions() -&gt; typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+&gt;           yield
+
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:250: in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection_pool.py:256: in handle_request
+    raise exc from None
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection_pool.py:236: in handle_request
+    response = connection.handle_request(
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:101: in handle_request
+    raise exc
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:78: in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:124: in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_backends/sync.py:207: in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:162: in __exit__
+    self.gen.throw(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+map = {&lt;class 'TimeoutError'&gt;: &lt;class 'httpcore.ConnectTimeout'&gt;, &lt;class 'OSError'&gt;: &lt;class 'httpcore.ConnectError'&gt;}
+
+    @contextlib.contextmanager
+    def map_exceptions(map: ExceptionMapping) -&gt; typing.Iterator[None]:
+        try:
+            yield
+        except Exception as exc:  # noqa: PIE786
+            for from_exc, to_exc in map.items():
+                if isinstance(exc, from_exc):
+&gt;                   raise to_exc(exc) from exc
+E                   httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+.venv/lib/python3.14/site-packages/httpcore/_exceptions.py:14: ConnectError
+
+The above exception was the direct cause of the following exception:
+
+self = DdnsSource, _type = 'AAAA'
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+&gt;           resp = self._sess.get(self.urls[_type])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+octodns_ddns/__init__.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+.venv/lib/python3.14/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+.venv/lib/python3.14/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv/lib/python3.14/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:249: in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:162: in __exit__
+    self.gen.throw(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @contextlib.contextmanager
+    def map_httpcore_exceptions() -&gt; typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+            yield
+        except Exception as exc:
+            mapped_exc = None
+    
+            for from_exc, to_exc in HTTPCORE_EXC_MAP.items():
+                if not isinstance(exc, from_exc):
+                    continue
+                # We want to map to the most specific exception we can find.
+                # Eg if `exc` is an `httpcore.ReadTimeout`, we want to map to
+                # `httpx.ReadTimeout`, not just `httpx.TimeoutException`.
+                if mapped_exc is None or issubclass(to_exc, mapped_exc):
+                    mapped_exc = to_exc
+    
+            if mapped_exc is None:  # pragma: no cover
+                raise
+    
+            message = str(exc)
+&gt;           raise mapped_exc(message) from exc
+E           httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:118: ConnectError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_types_aaaa&gt;
+mock = &lt;MagicMock name='get' id='4703146672'&gt;
+
+    @patch('httpx.get')
+    def test_types_aaaa(self, mock):
+        aaaa_value = '2001:db8:85a3::8a2e:370:7334'
+        mock.side_effect = [MockResponse(aaaa_value)]
+    
+        zone = Zone('example.com.', [])
+&gt;       DdnsSource('dynamic', types=('AAAA',)).populate(zone)
+
+tests/test_octodns_source_ddns.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+octodns_ddns/__init__.py:69: in populate
+    addr = self._get_addr(_type)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = DdnsSource, _type = 'AAAA'
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+            resp = self._sess.get(self.urls[_type])
+        except RequestError:
+&gt;           raise Exception(
+                'Failed to get ip address for type={}'.format(_type)
+            )
+E           Exception: Failed to get ip address for type=AAAA
+
+octodns_ddns/__init__.py:56: Exception</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_urls" time="0.043"><failure message="Exception: Failed to get ip address for type=A">@contextlib.contextmanager
+    def map_httpcore_exceptions() -&gt; typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+&gt;           yield
+
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:250: in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection_pool.py:256: in handle_request
+    raise exc from None
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection_pool.py:236: in handle_request
+    response = connection.handle_request(
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:101: in handle_request
+    raise exc
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:78: in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:124: in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_backends/sync.py:207: in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:162: in __exit__
+    self.gen.throw(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+map = {&lt;class 'TimeoutError'&gt;: &lt;class 'httpcore.ConnectTimeout'&gt;, &lt;class 'OSError'&gt;: &lt;class 'httpcore.ConnectError'&gt;}
+
+    @contextlib.contextmanager
+    def map_exceptions(map: ExceptionMapping) -&gt; typing.Iterator[None]:
+        try:
+            yield
+        except Exception as exc:  # noqa: PIE786
+            for from_exc, to_exc in map.items():
+                if isinstance(exc, from_exc):
+&gt;                   raise to_exc(exc) from exc
+E                   httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+.venv/lib/python3.14/site-packages/httpcore/_exceptions.py:14: ConnectError
+
+The above exception was the direct cause of the following exception:
+
+self = DdnsSource, _type = 'A'
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+&gt;           resp = self._sess.get(self.urls[_type])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+octodns_ddns/__init__.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+.venv/lib/python3.14/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+.venv/lib/python3.14/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv/lib/python3.14/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:249: in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:162: in __exit__
+    self.gen.throw(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @contextlib.contextmanager
+    def map_httpcore_exceptions() -&gt; typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+            yield
+        except Exception as exc:
+            mapped_exc = None
+    
+            for from_exc, to_exc in HTTPCORE_EXC_MAP.items():
+                if not isinstance(exc, from_exc):
+                    continue
+                # We want to map to the most specific exception we can find.
+                # Eg if `exc` is an `httpcore.ReadTimeout`, we want to map to
+                # `httpx.ReadTimeout`, not just `httpx.TimeoutException`.
+                if mapped_exc is None or issubclass(to_exc, mapped_exc):
+                    mapped_exc = to_exc
+    
+            if mapped_exc is None:  # pragma: no cover
+                raise
+    
+            message = str(exc)
+&gt;           raise mapped_exc(message) from exc
+E           httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:118: ConnectError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_urls&gt;
+mock = &lt;MagicMock name='get' id='4703148688'&gt;
+
+    @patch('httpx.get')
+    def test_urls(self, mock):
+        a_value = '1.2.3.4'
+        aaaa_value = '2001:db8:85a3::8a2e:370:7334'
+        mock.side_effect = [MockResponse(a_value), MockResponse(aaaa_value)]
+    
+        zone = Zone('example.com.', [])
+        DdnsSource(
+            'dynamic',
+            urls={'A': 'https://foo.bar/v4', 'AAAA': 'https://foo.bar/v6'},
+&gt;       ).populate(zone)
+          ^^^^^^^^^^^^^^
+
+tests/test_octodns_source_ddns.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+octodns_ddns/__init__.py:69: in populate
+    addr = self._get_addr(_type)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = DdnsSource, _type = 'A'
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+            resp = self._sess.get(self.urls[_type])
+        except RequestError:
+&gt;           raise Exception(
+                'Failed to get ip address for type={}'.format(_type)
+            )
+E           Exception: Failed to get ip address for type=A
+
+octodns_ddns/__init__.py:56: Exception</failure></testcase></testsuite></testsuites>

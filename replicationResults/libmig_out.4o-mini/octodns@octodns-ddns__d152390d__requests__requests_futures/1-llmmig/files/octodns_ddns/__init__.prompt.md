@@ -1,0 +1,97 @@
+The following Python code currently uses the library "requests" version 2.32.3.
+Migrate this code to use the library "requests_futures" version 1.0.2 instead.
+
+**Instructions:**
+1. **Explain the Changes**: Begin the output with a brief explanation of the specific changes you made to migrate from "requests" to "requests_futures".
+2. **Provide the Modified Code**: After the explanation, present the modified code. Provide the entire code after migration even if only a part of it is changed.
+
+**Important Guidelines**:
+- Only make changes directly related to migrating between "requests" and "requests_futures".
+- Do not refactor, reformat, optimize, or alter the original coding style.
+- The code given to you is part of a larger application. Do not change the names of classes, functions, or variables, because it can break the application.
+
+Original code:
+```python
+'''
+A simple Dynamic DNS source for octoDNS.
+
+Supports both IPv4 and IPv6 addresses. Generally useful when you have a zone
+with staticly configured records but would also like to include a dynamic
+record, e.g. for your office or home on a non-fixed IP address.
+'''
+
+from __future__ import (
+    absolute_import,
+    division,
+    print_function,
+    unicode_literals,
+)
+
+from logging import getLogger
+
+from requests import Session
+from requests.exceptions import ConnectionError
+
+from octodns import __VERSION__ as octodns_version
+from octodns.record import Record
+from octodns.source.base import BaseSource
+
+# TODO: remove __VERSION__ with the next major version release
+__version__ = __VERSION__ = '0.2.1'
+
+
+class DdnsSource(BaseSource):
+    SUPPORTS_GEO = False
+    SUPPORTS = ('A', 'AAAA')
+
+    def __init__(self, id, types=('A', 'AAAA'), urls={}, ttl=60):
+        self.log = getLogger('DdnsSource[{}]'.format(id))
+        self.log.debug('__init__: id=%s, types=%s, ttl=%d', id, types, ttl)
+        super().__init__(id)
+        self.types = types
+        self.ttl = ttl
+        self.urls = {
+            'A': urls.get('A', 'https://v4.ident.me/'),
+            'AAAA': urls.get('AAAA', 'https://v6.ident.me/'),
+        }
+
+        self._sess = Session()
+        self._sess.headers.update(
+            {
+                'User-Agent': f'octodns/{octodns_version} octodns-ddns/{__VERSION__}'
+            }
+        )
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+            resp = self._sess.get(self.urls[_type])
+        except ConnectionError:
+            raise Exception(
+                'Failed to get ip address for type={}'.format(_type)
+            )
+        resp.raise_for_status()
+        addr = resp.content.decode('utf-8')
+        self.log.info('_get_addr: type=%s is %s', _type, addr)
+        return addr
+
+    def populate(self, zone, target=False, lenient=False):
+        self.log.debug('populate: zone=%s', zone.name)
+        before = len(zone.records)
+
+        for _type in self.types:
+            addr = self._get_addr(_type)
+            if addr:
+                record = Record.new(
+                    zone,
+                    self.id,
+                    {'ttl': self.ttl, 'type': _type, 'value': addr},
+                    source=self,
+                )
+                zone.add_record(record)
+
+        self.log.info(
+            'populate:   found %s records', len(zone.records) - before
+        )
+
+```

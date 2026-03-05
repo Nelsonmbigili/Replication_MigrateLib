@@ -1,0 +1,2227 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="19" failures="2" skipped="0" tests="21" time="4.997" timestamp="2026-03-05T01:02:18.832173+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_kling" name="test_base_gen_init" time="0.001"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_base_gen_init' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c729a60&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1068: in execute
+    fixturedef = request._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_base_gen_init&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_base_gen_init' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_image_gen_init" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_image_gen_init' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c729900&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1068: in execute
+    fixturedef = request._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_image_gen_init&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_image_gen_init' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_video_gen_init" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_video_gen_init' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11d3ebcc0&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1068: in execute
+    fixturedef = request._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_video_gen_init&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_video_gen_init' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_parse_cookie_string" time="0.000"><failure message="NameError: name 'cookiejar_from_dict' is not defined">def test_parse_cookie_string():
+        cookie_string = "key1=value1; key2=value2; kuaishou_key=value3"
+&gt;       cookiejar, is_cn = BaseGen.parse_cookie_string(cookie_string)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie_string = 'key1=value1; key2=value2; kuaishou_key=value3'
+
+    @staticmethod
+    def parse_cookie_string(cookie_string):
+        cookie = SimpleCookie()
+        cookie.load(cookie_string)
+        cookies_dict = {}
+        cookiejar = None
+        is_cn = False
+        for key, morsel in cookie.items():
+            if key.startswith("kuaishou"):
+                is_cn = True
+            cookies_dict[key] = morsel.value
+&gt;           cookiejar = cookiejar_from_dict(
+                        ^^^^^^^^^^^^^^^^^^^
+                cookies_dict, cookiejar=None, overwrite=True
+            )
+E           NameError: name 'cookiejar_from_dict' is not defined
+
+kling/kling.py:84: NameError</failure></testcase><testcase classname="tests.test_kling" name="test_get_account_point[ImageGen]" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_get_account_point[ImageGen]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11d3e3b60&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_get_account_point[ImageGen]&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_get_account_point[ImageGen]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_get_account_point[VideoGen]" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_get_account_point[VideoGen]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11d3ebab0&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_get_account_point[VideoGen]&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_get_account_point[VideoGen]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_image_uploader" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_image_uploader' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c51c670&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1068: in execute
+    fixturedef = request._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_image_uploader&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_image_uploader' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_fetch_metadata" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_fetch_metadata' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c51c0f0&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1068: in execute
+    fixturedef = request._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_fetch_metadata&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_fetch_metadata' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_get_content[ImageGen-get_images]" time="0.001"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_get_content[ImageGen-get_images]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c51c250&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_get_content[ImageGen-get_images]&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_get_content[ImageGen-get_images]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_get_content[VideoGen-get_video]" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_get_content[VideoGen-get_video]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c51eda0&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_get_content[VideoGen-get_video]&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_get_content[VideoGen-get_video]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_save_content[ImageGen-save_images]" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_save_content[ImageGen-save_images]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c51f270&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_save_content[ImageGen-save_images]&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_save_content[ImageGen-save_images]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_save_content[VideoGen-save_video]" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_save_content[VideoGen-save_video]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10734bab0&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_save_content[VideoGen-save_video]&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_save_content[VideoGen-save_video]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_call_for_daily_check" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_kling" name="test_video_gen_get_video" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_video_gen_get_video' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c509850&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1068: in execute
+    fixturedef = request._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_video_gen_get_video&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_video_gen_get_video' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_video_gen_save_video" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_video_gen_save_video' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c5089e0&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1068: in execute
+    fixturedef = request._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_video_gen_save_video&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_video_gen_save_video' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_image_gen_get_images" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_image_gen_get_images' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c50b530&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1068: in execute
+    fixturedef = request._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_image_gen_get_images&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_image_gen_get_images' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_image_gen_save_images" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_image_gen_save_images' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c508460&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1068: in execute
+    fixturedef = request._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_image_gen_save_images&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_image_gen_save_images' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_extend_video_completed" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_extend_video_completed' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c50b060&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1068: in execute
+    fixturedef = request._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_extend_video_completed&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_extend_video_completed' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_extend_video_pending" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_extend_video_pending' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c508a90&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1068: in execute
+    fixturedef = request._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_extend_video_pending&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_extend_video_pending' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_extend_video_failed" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_extend_video_failed' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11d3e3320&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1068: in execute
+    fixturedef = request._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_extend_video_failed&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_extend_video_failed' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_extend_video_no_works" time="0.001"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_extend_video_no_works' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x11c50af00&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1068: in execute
+    fixturedef = request._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_extend_video_no_works&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_extend_video_no_works' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase></testsuite></testsuites>

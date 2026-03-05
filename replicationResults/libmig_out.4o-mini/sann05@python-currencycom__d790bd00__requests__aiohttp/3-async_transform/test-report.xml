@@ -1,0 +1,2851 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="46" failures="0" skipped="1" tests="47" time="0.978" timestamp="2026-03-04T15:36:41.142619+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="integration_tests.rest.test_account.TestAccount" name="test_base" time="0.001"><error message="failed on setup with &quot;OSError: Missing required environmental variables: API_KEY, API_SECRET&quot;">fixturedef = &lt;FixtureDef argname='check_env_variables' scope='session' baseid='integration_tests/rest'&gt;
+request = &lt;SubRequest 'check_env_variables' for &lt;Function test_base&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @pytest.fixture(scope="session", autouse=True)
+    def check_env_variables():
+        required_vars = [API_KEY_VAR, API_SECRET_VAR]
+        missing_vars = []
+        for var in required_vars:
+            if var not in os.environ:
+                missing_vars.append(var)
+    
+        if len(missing_vars) &gt; 0:
+&gt;           raise EnvironmentError("Missing required environmental variables: "
+                                   f"{', '.join(missing_vars)}")
+E           OSError: Missing required environmental variables: API_KEY, API_SECRET
+
+integration_tests/rest/conftest.py:20: OSError</error></testcase><testcase classname="integration_tests.rest.test_account.TestAccount" name="test_show_balances_without_0" time="0.000"><error message="failed on setup with &quot;OSError: Missing required environmental variables: API_KEY, API_SECRET&quot;">@pytest.fixture(scope="session", autouse=True)
+    def check_env_variables():
+        required_vars = [API_KEY_VAR, API_SECRET_VAR]
+        missing_vars = []
+        for var in required_vars:
+            if var not in os.environ:
+                missing_vars.append(var)
+    
+        if len(missing_vars) &gt; 0:
+&gt;           raise EnvironmentError("Missing required environmental variables: "
+                                   f"{', '.join(missing_vars)}")
+E           OSError: Missing required environmental variables: API_KEY, API_SECRET
+
+integration_tests/rest/conftest.py:20: OSError</error></testcase><testcase classname="integration_tests.rest.test_account.TestAccount" name="test_show_balances_with_0" time="0.000"><error message="failed on setup with &quot;OSError: Missing required environmental variables: API_KEY, API_SECRET&quot;">@pytest.fixture(scope="session", autouse=True)
+    def check_env_variables():
+        required_vars = [API_KEY_VAR, API_SECRET_VAR]
+        missing_vars = []
+        for var in required_vars:
+            if var not in os.environ:
+                missing_vars.append(var)
+    
+        if len(missing_vars) &gt; 0:
+&gt;           raise EnvironmentError("Missing required environmental variables: "
+                                   f"{', '.join(missing_vars)}")
+E           OSError: Missing required environmental variables: API_KEY, API_SECRET
+
+integration_tests/rest/conftest.py:20: OSError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_not_called" time="0.047"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x10763b890&gt;
+mock_requests = &lt;MagicMock id='4698874144'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f0d70&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_server_time" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x10763bb10&gt;
+mock_requests = &lt;MagicMock id='4702802272'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f1010&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_exchange_info" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x10766b950&gt;
+mock_requests = &lt;MagicMock id='4702803616'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f1550&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_order_book_default" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x10766ba80&gt;
+mock_requests = &lt;MagicMock id='4702804624'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f1940&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_order_book_with_limit" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x107696b10&gt;
+mock_requests = &lt;MagicMock id='4698873136'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x118132120&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_default" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x11813ce20&gt;
+mock_requests = &lt;MagicMock id='4698872800'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x118132270&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_limit_set" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x11813cf30&gt;
+mock_requests = &lt;MagicMock id='4698874144'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x118131d30&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_max_limit" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118102a50&gt;
+mock_requests = &lt;MagicMock id='4698868432'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x118130c20&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_exceed_limit" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118102b50&gt;
+mock_requests = &lt;MagicMock id='4702802944'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f1be0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_only_start_time_set" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1076c6300&gt;
+mock_requests = &lt;MagicMock id='4702801600'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f1550&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_only_end_time_set" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1076c63f0&gt;
+mock_requests = &lt;MagicMock id='4702802608'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f1010&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_both_time_set" time="0.001"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118191010&gt;
+mock_requests = &lt;MagicMock id='4702805632'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f1d30&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_both_time_set_exceed_max_range" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118191470&gt;
+mock_requests = &lt;MagicMock id='4702806640'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f2120&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_default" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118120bb0&gt;
+mock_requests = &lt;MagicMock id='4702807648'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f2510&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_with_limit" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1074ab410&gt;
+mock_requests = &lt;MagicMock id='4702808656'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f2900&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_max_limit" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1074ab710&gt;
+mock_requests = &lt;MagicMock id='4702809664'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f2cf0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_exceed_max_limit" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118175020&gt;
+mock_requests = &lt;MagicMock id='4702810672'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f30e0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_with_startTime" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1181754f0&gt;
+mock_requests = &lt;MagicMock id='4702809328'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f2e40&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_with_endTime" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118350cd0&gt;
+mock_requests = &lt;MagicMock id='4698873136'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x118131fd0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_with_startTime_and_endTime" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118350d70&gt;
+mock_requests = &lt;MagicMock id='4698868768'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x118131a90&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_24h_price_change_default" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x107663da0&gt;
+mock_requests = &lt;MagicMock id='4698874480'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1181323c0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_24h_price_change_with_symbol" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1181ddf50&gt;
+mock_requests = &lt;MagicMock id='4702804288'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f17f0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_new_order_default_buy" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1181deb50&gt;
+mock_requests = &lt;MagicMock id='4702808320'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f2a50&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_new_order_default_sell" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x11818c910&gt;
+mock_requests = &lt;MagicMock id='4702807312'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f2660&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_new_order_invalid_recv_window" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x11818cd00&gt;
+mock_requests = &lt;MagicMock id='4702806304'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f2270&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_new_order_default_limit" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1076deb70&gt;
+mock_requests = &lt;MagicMock id='4702805296'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f1e80&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_new_order_incorrect_limit_no_price" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1076deff0&gt;
+mock_requests = &lt;MagicMock id='4702801936'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f12b0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_new_order_incorrect_limit_no_time_in_force" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1076df290&gt;
+mock_requests = &lt;MagicMock id='4702803280'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f0ec0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_cancel_order_default_order_id" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1076df230&gt;
+mock_requests = &lt;MagicMock id='4698874816'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x118132270&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_cancel_order_default_client_order_id" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1076df110&gt;
+mock_requests = &lt;MagicMock id='4702802944'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f1160&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_cancel_order_default_no_id" time="0.000"><skipped type="pytest.skip" message="order_id param became mandatory">/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/sann05@python-currencycom__d790bd00__requests__aiohttp/tests/test_client.py:410: order_id param became mandatory</skipped></testcase><testcase classname="tests.test_client.TestClient" name="test_cancel_order_invalid_recv_window" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1076df1d0&gt;
+mock_requests = &lt;MagicMock id='4702809328'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x118131fd0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_open_orders_default" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118354e90&gt;
+mock_requests = &lt;MagicMock id='4702809664'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f2ba0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_open_orders_with_symbol" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118354ef0&gt;
+mock_requests = &lt;MagicMock id='4702810336'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f2f90&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_open_orders_invalid_recv_window" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118354f50&gt;
+mock_requests = &lt;MagicMock id='4702802608'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f1010&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_account_info_default" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118354fb0&gt;
+mock_requests = &lt;MagicMock id='4702805632'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f1d30&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_account_info_invalid_recv_window" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118355010&gt;
+mock_requests = &lt;MagicMock id='4702806640'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f2120&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_default" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118355070&gt;
+mock_requests = &lt;MagicMock id='4702807648'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f2510&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_with_start_time" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1183550d0&gt;
+mock_requests = &lt;MagicMock id='4702808656'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f2900&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_with_end_time" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118355130&gt;
+mock_requests = &lt;MagicMock id='4702803952'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f1940&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_with_start_and_end_times" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118355190&gt;
+mock_requests = &lt;MagicMock id='4702811680'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f34d0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_incorrect_recv_window" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1183551f0&gt;
+mock_requests = &lt;MagicMock id='4702803952'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f1a90&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_incorrect_limit" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x118355250&gt;
+mock_requests = &lt;MagicMock id='4702808656'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f27b0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client.TestClient" name="test__to_epoch_miliseconds_default" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">self = &lt;tests.test_client.TestClient object at 0x1183552b0&gt;
+mock_requests = &lt;MagicMock id='4702807648'&gt;
+
+    @pytest.fixture(autouse=True)
+    def set_client(self, mock_requests):
+&gt;       self.client = Client('', '')
+                      ^^^^^^^^^^^^^^
+
+tests/test_client.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:97: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1184f23c0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.14/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase></testsuite></testsuites>

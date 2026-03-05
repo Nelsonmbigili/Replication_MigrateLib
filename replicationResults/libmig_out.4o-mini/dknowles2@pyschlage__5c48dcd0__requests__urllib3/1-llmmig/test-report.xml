@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="13" skipped="0" tests="58" time="0.761" timestamp="2026-03-04T14:23:13.302086+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_api" name="test_locks" time="0.006" /><testcase classname="tests.test_api" name="test_users" time="0.004" /><testcase classname="tests.test_auth" name="test_authenticate" time="0.001"><failure message="AttributeError: module 'urllib3' has no attribute 'Request'. Did you mean: 'request'?">mock_cognito = &lt;MagicMock name='Cognito' id='4414124256'&gt;
+mock_srp_auth = &lt;MagicMock name='RequestsSrpAuth' id='4414124592'&gt;
+mock_request = &lt;MagicMock name='request' id='4414124928'&gt;
+
+    @mock.patch("urllib3.PoolManager.request")
+    @mock.patch("pycognito.utils.RequestsSrpAuth")
+    @mock.patch("pycognito.Cognito")
+    def test_authenticate(mock_cognito, mock_srp_auth, mock_request):
+        auth = _auth.Auth("__username__", "__password__")
+    
+        mock_cognito.assert_called_once()
+        assert mock_cognito.call_args.kwargs["username"] == "__username__"
+    
+        mock_srp_auth.assert_called_once_with(
+            password="__password__", cognito=mock_cognito.return_value
+        )
+    
+&gt;       auth.authenticate()
+
+tests/test_auth.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyschlage/auth.py:41: in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pyschlage.auth.Auth object at 0x1071a34d0&gt;
+
+    @_translate_auth_errors
+    def authenticate(self):
+        """Performs authentication with AWS.
+    
+        :raise pyschlage.exceptions.NotAuthorizedError: When authentication fails.
+        :raise pyschlage.exceptions.UnknownError: On other errors.
+        """
+&gt;       self.auth(urllib3.Request())
+                  ^^^^^^^^^^^^^^^
+E       AttributeError: module 'urllib3' has no attribute 'Request'. Did you mean: 'request'?
+
+pyschlage/auth.py:103: AttributeError</failure></testcase><testcase classname="tests.test_auth" name="test_request" time="0.001"><failure message="TypeError: '&gt;=' not supported between instances of 'MagicMock' and 'int'">mock_cognito = &lt;MagicMock name='Cognito' id='4414126608'&gt;
+mock_srp_auth = &lt;MagicMock name='RequestsSrpAuth' id='4414948080'&gt;
+mock_request = &lt;MagicMock name='request' id='4414948416'&gt;
+
+    @mock.patch("urllib3.PoolManager.request")
+    @mock.patch("pycognito.utils.RequestsSrpAuth")
+    @mock.patch("pycognito.Cognito")
+    def test_request(mock_cognito, mock_srp_auth, mock_request):
+        auth = _auth.Auth("__username__", "__password__")
+&gt;       auth.request("get", "/foo/bar", baz="bam")
+
+tests/test_auth.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (&lt;pyschlage.auth.Auth object at 0x1071c0cd0&gt;, 'get', '/foo/bar')
+kwargs = {'baz': 'bam'}, resp = &lt;MagicMock name='request()' id='4414949424'&gt;
+
+    @wraps(fn)
+    def wrapper(*args, **kwargs) -&gt; urllib3.HTTPResponse:
+        resp = fn(*args, **kwargs)
+&gt;       if resp.status &gt;= 400:
+           ^^^^^^^^^^^^^^^^^^
+E       TypeError: '&gt;=' not supported between instances of 'MagicMock' and 'int'
+
+pyschlage/auth.py:61: TypeError</failure></testcase><testcase classname="tests.test_auth" name="test_request_not_authorized" time="0.004"><failure message="AssertionError: expected call not found.&#10;Expected: request('GET', 'https://api.allegion.yonomi.cloud/v1/foo/bar', timeout=60, headers={'X-Api-Key': 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, fields={'baz': 'bam'})&#10;  Actual: request('get', 'https://api.allegion.yonomi.cloud/v1/foo/bar', baz='bam', auth=&lt;MagicMock name='RequestsSrpAuth()' spec='RequestsSrpAuth' id='4414951104'&gt;, headers={'X-Api-Key': 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, timeout=60)">TypeError: missing a required argument: 'url'
+
+The above exception was the direct cause of the following exception:
+
+mock_cognito = &lt;MagicMock name='Cognito' id='4414950768'&gt;
+mock_srp_auth = &lt;MagicMock name='RequestsSrpAuth' spec='RequestsSrpAuth' id='4414950432'&gt;
+mock_request = &lt;MagicMock name='request' spec='function' id='4414951440'&gt;
+
+    @mock.patch("urllib3.PoolManager.request", spec=True)
+    @mock.patch("pycognito.utils.RequestsSrpAuth", spec=True)
+    @mock.patch("pycognito.Cognito")
+    def test_request_not_authorized(mock_cognito, mock_srp_auth, mock_request):
+        url = "https://api.allegion.yonomi.cloud/v1/foo/bar"
+        auth = _auth.Auth("__username__", "__password__")
+        mock_request.side_effect = ClientError(
+            {
+                "Error": {
+                    "Code": "NotAuthorizedException",
+                    "Message": f"Unauthorized for url: {url}",
+                }
+            },
+            "foo-op",
+        )
+    
+        with pytest.raises(
+            pyschlage.exceptions.NotAuthorizedError, match=f"Unauthorized for url: {url}"
+        ):
+            auth.request("get", "/foo/bar", baz="bam")
+    
+&gt;       mock_request.assert_called_once_with(
+            "GET",
+            url,
+            timeout=60,
+            headers={"X-Api-Key": _auth.API_KEY},
+            fields={"baz": "bam"},
+        )
+
+tests/test_auth.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:997: in assert_called_once_with
+    return self.assert_called_with(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='request' spec='function' id='4414951440'&gt;
+args = ('GET', 'https://api.allegion.yonomi.cloud/v1/foo/bar')
+kwargs = {'fields': {'baz': 'bam'}, 'headers': {'X-Api-Key': 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, 'timeout': 60}
+expected = TypeError("missing a required argument: 'url'")
+actual = TypeError("missing a required argument: 'url'")
+_error_message = &lt;function NonCallableMock.assert_called_with.&lt;locals&gt;._error_message at 0x107186cf0&gt;
+cause = TypeError("missing a required argument: 'url'")
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\n  Actual: %s'
+                    % (expected, actual))
+            raise AssertionError(error_message)
+    
+        def _error_message():
+            msg = self._format_mock_failure_message(args, kwargs)
+            return msg
+        expected = self._call_matcher(_Call((args, kwargs), two=True))
+        actual = self._call_matcher(self.call_args)
+        if actual != expected:
+            cause = expected if isinstance(expected, Exception) else None
+&gt;           raise AssertionError(_error_message()) from cause
+E           AssertionError: expected call not found.
+E           Expected: request('GET', 'https://api.allegion.yonomi.cloud/v1/foo/bar', timeout=60, headers={'X-Api-Key': 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, fields={'baz': 'bam'})
+E             Actual: request('get', 'https://api.allegion.yonomi.cloud/v1/foo/bar', baz='bam', auth=&lt;MagicMock name='RequestsSrpAuth()' spec='RequestsSrpAuth' id='4414951104'&gt;, headers={'X-Api-Key': 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, timeout=60)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:985: AssertionError</failure></testcase><testcase classname="tests.test_auth" name="test_request_unknown_error" time="0.016"><failure message="AssertionError: expected call not found.&#10;Expected: request('GET', 'https://api.allegion.yonomi.cloud/v1/foo/bar', timeout=60, headers={'X-Api-Key': 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, fields={'baz': 'bam'})&#10;  Actual: request('get', 'https://api.allegion.yonomi.cloud/v1/foo/bar', baz='bam', auth=&lt;MagicMock name='RequestsSrpAuth()' spec='RequestsSrpAuth' id='4414953456'&gt;, headers={'X-Api-Key': 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, timeout=60)">TypeError: missing a required argument: 'url'
+
+The above exception was the direct cause of the following exception:
+
+mock_cognito = &lt;MagicMock name='Cognito' id='4414952112'&gt;
+mock_srp_auth = &lt;MagicMock name='RequestsSrpAuth' spec='RequestsSrpAuth' id='4414953120'&gt;
+mock_request = &lt;MagicMock name='request' spec='function' id='4414953792'&gt;
+
+    @mock.patch("urllib3.PoolManager.request", spec=True)
+    @mock.patch("pycognito.utils.RequestsSrpAuth", spec=True)
+    @mock.patch("pycognito.Cognito")
+    def test_request_unknown_error(mock_cognito, mock_srp_auth, mock_request):
+        url = "https://api.allegion.yonomi.cloud/v1/foo/bar"
+        auth = _auth.Auth("__username__", "__password__")
+        mock_resp = mock.create_autospec(urllib3.response.HTTPResponse)
+        mock_resp.status = 500
+        mock_resp.data = b'{"error": "Internal"}'
+        mock_request.return_value = mock_resp
+    
+        with pytest.raises(pyschlage.exceptions.UnknownError):
+            auth.request("get", "/foo/bar", baz="bam")
+    
+&gt;       mock_request.assert_called_once_with(
+            "GET",
+            url,
+            timeout=60,
+            headers={"X-Api-Key": _auth.API_KEY},
+            fields={"baz": "bam"},
+        )
+
+tests/test_auth.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:997: in assert_called_once_with
+    return self.assert_called_with(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='request' spec='function' id='4414953792'&gt;
+args = ('GET', 'https://api.allegion.yonomi.cloud/v1/foo/bar')
+kwargs = {'fields': {'baz': 'bam'}, 'headers': {'X-Api-Key': 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, 'timeout': 60}
+expected = TypeError("missing a required argument: 'url'")
+actual = TypeError("missing a required argument: 'url'")
+_error_message = &lt;function NonCallableMock.assert_called_with.&lt;locals&gt;._error_message at 0x1072f24b0&gt;
+cause = TypeError("missing a required argument: 'url'")
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\n  Actual: %s'
+                    % (expected, actual))
+            raise AssertionError(error_message)
+    
+        def _error_message():
+            msg = self._format_mock_failure_message(args, kwargs)
+            return msg
+        expected = self._call_matcher(_Call((args, kwargs), two=True))
+        actual = self._call_matcher(self.call_args)
+        if actual != expected:
+            cause = expected if isinstance(expected, Exception) else None
+&gt;           raise AssertionError(_error_message()) from cause
+E           AssertionError: expected call not found.
+E           Expected: request('GET', 'https://api.allegion.yonomi.cloud/v1/foo/bar', timeout=60, headers={'X-Api-Key': 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, fields={'baz': 'bam'})
+E             Actual: request('get', 'https://api.allegion.yonomi.cloud/v1/foo/bar', baz='bam', auth=&lt;MagicMock name='RequestsSrpAuth()' spec='RequestsSrpAuth' id='4414953456'&gt;, headers={'X-Api-Key': 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, timeout=60)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:985: AssertionError</failure></testcase><testcase classname="tests.test_auth" name="test_user_id" time="0.001"><failure message="TypeError: '&gt;=' not supported between instances of 'Mock' and 'int'">mock_cognito = &lt;MagicMock name='Cognito' id='4418797056'&gt;
+mock_srp_auth = &lt;MagicMock name='RequestsSrpAuth' id='4414950768'&gt;
+mock_request = &lt;MagicMock name='request' id='4414950432'&gt;
+
+    @mock.patch("urllib3.PoolManager.request")
+    @mock.patch("pycognito.utils.RequestsSrpAuth")
+    @mock.patch("pycognito.Cognito")
+    def test_user_id(mock_cognito, mock_srp_auth, mock_request):
+        auth = _auth.Auth("__username__", "__password__")
+        mock_request.return_value = mock.Mock(
+            data=json.dumps({
+                "consentRecords": [],
+                "created": "2022-12-24T20:00:00.000Z",
+                "email": "asdf@asdf.com",
+                "friendlyName": "username",
+                "identityId": "&lt;user-id&gt;",
+                "lastUpdated": "2022-12-24T20:00:00.000Z",
+            }).encode('utf-8')
+        )
+&gt;       assert auth.user_id == "&lt;user-id&gt;"
+               ^^^^^^^^^^^^
+
+tests/test_auth.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyschlage/auth.py:109: in user_id
+    self._user_id = self._get_user_id()
+                    ^^^^^^^^^^^^^^^^^^^
+pyschlage/auth.py:113: in _get_user_id
+    resp = self.request("GET", "users/@me")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (&lt;pyschlage.auth.Auth object at 0x1070e7360&gt;, 'GET', 'users/@me')
+kwargs = {}, resp = &lt;Mock name='request()' id='4414951776'&gt;
+
+    @wraps(fn)
+    def wrapper(*args, **kwargs) -&gt; urllib3.HTTPResponse:
+        resp = fn(*args, **kwargs)
+&gt;       if resp.status &gt;= 400:
+           ^^^^^^^^^^^^^^^^^^
+E       TypeError: '&gt;=' not supported between instances of 'Mock' and 'int'
+
+pyschlage/auth.py:61: TypeError</failure></testcase><testcase classname="tests.test_auth" name="test_user_id_is_cached" time="0.001"><failure message="TypeError: '&gt;=' not supported between instances of 'Mock' and 'int'">mock_cognito = &lt;MagicMock name='Cognito' id='4414948416'&gt;
+mock_srp_auth = &lt;MagicMock name='RequestsSrpAuth' id='4414949424'&gt;
+mock_request = &lt;MagicMock name='request' id='4414950096'&gt;
+
+    @mock.patch("urllib3.PoolManager.request")
+    @mock.patch("pycognito.utils.RequestsSrpAuth")
+    @mock.patch("pycognito.Cognito")
+    def test_user_id_is_cached(mock_cognito, mock_srp_auth, mock_request):
+        auth = _auth.Auth("__username__", "__password__")
+        mock_request.return_value = mock.Mock(
+            data=json.dumps({
+                "consentRecords": [],
+                "created": "2022-12-24T20:00:00.000Z",
+                "email": "asdf@asdf.com",
+                "friendlyName": "username",
+                "identityId": "&lt;user-id&gt;",
+                "lastUpdated": "2022-12-24T20:00:00.000Z",
+            }).encode('utf-8')
+        )
+&gt;       assert auth.user_id == "&lt;user-id&gt;"
+               ^^^^^^^^^^^^
+
+tests/test_auth.py:137: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyschlage/auth.py:109: in user_id
+    self._user_id = self._get_user_id()
+                    ^^^^^^^^^^^^^^^^^^^
+pyschlage/auth.py:113: in _get_user_id
+    resp = self.request("GET", "users/@me")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = (&lt;pyschlage.auth.Auth object at 0x1071ceb10&gt;, 'GET', 'users/@me')
+kwargs = {}, resp = &lt;Mock name='request()' id='4414948752'&gt;
+
+    @wraps(fn)
+    def wrapper(*args, **kwargs) -&gt; urllib3.HTTPResponse:
+        resp = fn(*args, **kwargs)
+&gt;       if resp.status &gt;= 400:
+           ^^^^^^^^^^^^^^^^^^
+E       TypeError: '&gt;=' not supported between instances of 'Mock' and 'int'
+
+pyschlage/auth.py:61: TypeError</failure></testcase><testcase classname="tests.test_code.TestAccessCode" name="test_to_from_json" time="0.003" /><testcase classname="tests.test_code.TestAccessCode" name="test_to_from_json_recurring_schedule" time="0.003" /><testcase classname="tests.test_code.TestAccessCode" name="test_to_from_json_temporary_schedule" time="0.003"><failure message="AssertionError: assert AccessCode(na...isabled=False) == AccessCode(na...isabled=False)&#10;  &#10;  Omitting 10 identical items, use -vv to show&#10;  Differing attributes:&#10;  ['schedule']&#10;  &#10;  Drill down into differing attribute schedule:&#10;    schedule: TemporarySchedule(start=datetime.datetime(2022, 12, 25, 12, 30), end=datetime.datetime(2022, 12, 25, 13, 0)) != TemporarySchedule(start=datetime.datetime(2022, 12, 25, 8, 30), end=datetime.datetime(2022, 12, 25, 9, 0))...&#10;  &#10;  ...Full output truncated (9 lines hidden), use '-vv' to show">self = &lt;tests.test_code.TestAccessCode object at 0x1070e56e0&gt;
+mock_auth = &lt;MagicMock spec_set='Auth' id='4414115856'&gt;
+access_code_json = {'accessCode': 123, 'accessCodeLength': 4, 'accesscodeId': '__access_code_uuid__', 'activationSecs': 0, ...}
+wifi_device = Device(device_id='__wifi_uuid__', device_type='be489wifi')
+
+    def test_to_from_json_temporary_schedule(
+        self, mock_auth: Mock, access_code_json: dict[str, Any], wifi_device: Device
+    ):
+        access_code_id = "__access_code_uuid__"
+        sched = TemporarySchedule(
+            start=datetime(2022, 12, 25, 8, 30, 0),
+            end=datetime(2022, 12, 25, 9, 0, 0),
+        )
+        json = deepcopy(access_code_json)
+        json["activationSecs"] = 1671957000
+        json["expirationSecs"] = 1671958800
+        code = AccessCode(
+            _auth=mock_auth,
+            _json=json,
+            _device=wifi_device,
+            name="Friendly name",
+            code="0123",
+            schedule=sched,
+            device_id=wifi_device.device_id,
+            access_code_id=access_code_id,
+        )
+&gt;       assert AccessCode.from_json(mock_auth, wifi_device, json) == code
+E       AssertionError: assert AccessCode(na...isabled=False) == AccessCode(na...isabled=False)
+E         
+E         Omitting 10 identical items, use -vv to show
+E         Differing attributes:
+E         ['schedule']
+E         
+E         Drill down into differing attribute schedule:
+E           schedule: TemporarySchedule(start=datetime.datetime(2022, 12, 25, 12, 30), end=datetime.datetime(2022, 12, 25, 13, 0)) != TemporarySchedule(start=datetime.datetime(2022, 12, 25, 8, 30), end=datetime.datetime(2022, 12, 25, 9, 0))...
+E         
+E         ...Full output truncated (9 lines hidden), use '-vv' to show
+
+tests/test_code.py:75: AssertionError</failure></testcase><testcase classname="tests.test_code.TestAccessCode" name="test_save" time="0.014" /><testcase classname="tests.test_code.TestAccessCode" name="test_delete" time="0.007" /><testcase classname="tests.test_common" name="test_pickle_unpickle" time="0.000" /><testcase classname="tests.test_common" name="test_redact_allow_asterisk" time="0.000" /><testcase classname="tests.test_common" name="test_redact_allow_all" time="0.000" /><testcase classname="tests.test_common" name="test_redact_all" time="0.000" /><testcase classname="tests.test_common" name="test_redact_partial" time="0.000" /><testcase classname="tests.test_lock.TestLock" name="test_from_json" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_cat_optional" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_no_connected" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_is_jammed" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_wifi_lock_unavailable" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_no_model_name" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_diagnostics" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_refresh" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_send_command_unauthenticated" time="0.000" /><testcase classname="tests.test_lock.TestLock" name="test_lock_wifi" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_unlock_wifi" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_lock_ble" time="0.003"><failure message="AssertionError: expected call not found.&#10;Expected: request('post', 'devices/__ble_uuid__/commands', json={'data': {'CAT': 'abcdef', 'deviceId': '__ble_uuid__', 'state': 1, 'userId': '&lt;user-id&gt;'}, 'name': 'changelockstate'})&#10;  Actual: request('POST', 'devices/__ble_uuid__/commands', body='{&quot;data&quot;: {&quot;CAT&quot;: &quot;abcdef&quot;, &quot;deviceId&quot;: &quot;__ble_uuid__&quot;, &quot;state&quot;: 1, &quot;userId&quot;: &quot;&lt;user-id&gt;&quot;}, &quot;name&quot;: &quot;changelockstate&quot;}', headers={'Content-Type': 'application/json'})">self = &lt;tests.test_lock.TestLock object at 0x107148910&gt;
+mock_auth = &lt;MagicMock spec_set='Auth' id='4415944560'&gt;
+ble_lock_json = {'CAT': 'abcdef', 'SAT': 'ghijkl', 'attributes': {'CAT': 'abcdef', 'SAT': 'ghijkl', 'accessCodeLength': 4, 'adminOnlyEnabled': 0, ...}, 'connected': False, ...}
+
+    def test_lock_ble(self, mock_auth, ble_lock_json):
+        with pytest.raises(NotAuthenticatedError):
+            Lock().lock()
+    
+        lock = Lock.from_json(mock_auth, ble_lock_json)
+        lock.lock()
+    
+        command_json = {
+            "data": {
+                "CAT": "abcdef",
+                "deviceId": "__ble_uuid__",
+                "state": 1,
+                "userId": "&lt;user-id&gt;",
+            },
+            "name": "changelockstate",
+        }
+&gt;       mock_auth.request.assert_called_once_with(
+            "post", "devices/__ble_uuid__/commands", json=command_json
+        )
+
+tests/test_lock.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:997: in assert_called_once_with
+    return self.assert_called_with(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.request' spec_set='function' id='4415637552'&gt;
+args = ('post', 'devices/__ble_uuid__/commands')
+kwargs = {'json': {'data': {'CAT': 'abcdef', 'deviceId': '__ble_uuid__', 'state': 1, 'userId': '&lt;user-id&gt;'}, 'name': 'changelockstate'}}
+expected = call('', ('post', 'devices/__ble_uuid__/commands'), {'json': {'data': {'CAT': 'abcdef', 'deviceId': '__ble_uuid__', 'state': 1, 'userId': '&lt;user-id&gt;'}, 'name': 'changelockstate'}})
+actual = call('', ('POST', 'devices/__ble_uuid__/commands'), {'body': '{"data": {"CAT": "abcdef", "deviceId": "__ble_uuid__", "state": 1, "userId": "&lt;user-id&gt;"}, "name": "changelockstate"}', 'headers': {'Content-Type': 'application/json'}})
+_error_message = &lt;function NonCallableMock.assert_called_with.&lt;locals&gt;._error_message at 0x1073c8460&gt;
+cause = None
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\n  Actual: %s'
+                    % (expected, actual))
+            raise AssertionError(error_message)
+    
+        def _error_message():
+            msg = self._format_mock_failure_message(args, kwargs)
+            return msg
+        expected = self._call_matcher(_Call((args, kwargs), two=True))
+        actual = self._call_matcher(self.call_args)
+        if actual != expected:
+            cause = expected if isinstance(expected, Exception) else None
+&gt;           raise AssertionError(_error_message()) from cause
+E           AssertionError: expected call not found.
+E           Expected: request('post', 'devices/__ble_uuid__/commands', json={'data': {'CAT': 'abcdef', 'deviceId': '__ble_uuid__', 'state': 1, 'userId': '&lt;user-id&gt;'}, 'name': 'changelockstate'})
+E             Actual: request('POST', 'devices/__ble_uuid__/commands', body='{"data": {"CAT": "abcdef", "deviceId": "__ble_uuid__", "state": 1, "userId": "&lt;user-id&gt;"}, "name": "changelockstate"}', headers={'Content-Type': 'application/json'})
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:985: AssertionError</failure></testcase><testcase classname="tests.test_lock.TestLock" name="test_unlock_ble" time="0.005"><failure message="AssertionError: expected call not found.&#10;Expected: request('post', 'devices/__ble_uuid__/commands', json={'data': {'CAT': 'abcdef', 'deviceId': '__ble_uuid__', 'state': 0, 'userId': '&lt;user-id&gt;'}, 'name': 'changelockstate'})&#10;  Actual: request('POST', 'devices/__ble_uuid__/commands', body='{&quot;data&quot;: {&quot;CAT&quot;: &quot;abcdef&quot;, &quot;deviceId&quot;: &quot;__ble_uuid__&quot;, &quot;state&quot;: 0, &quot;userId&quot;: &quot;&lt;user-id&gt;&quot;}, &quot;name&quot;: &quot;changelockstate&quot;}', headers={'Content-Type': 'application/json'})">self = &lt;tests.test_lock.TestLock object at 0x107148c90&gt;
+mock_auth = &lt;MagicMock spec_set='Auth' id='4415943216'&gt;
+ble_lock_json = {'CAT': 'abcdef', 'SAT': 'ghijkl', 'attributes': {'CAT': 'abcdef', 'SAT': 'ghijkl', 'accessCodeLength': 4, 'adminOnlyEnabled': 0, ...}, 'connected': False, ...}
+
+    def test_unlock_ble(self, mock_auth, ble_lock_json):
+        with pytest.raises(NotAuthenticatedError):
+            Lock().unlock()
+    
+        lock = Lock.from_json(mock_auth, ble_lock_json)
+        lock.unlock()
+    
+        command_json = {
+            "data": {
+                "CAT": "abcdef",
+                "deviceId": "__ble_uuid__",
+                "state": 0,
+                "userId": "&lt;user-id&gt;",
+            },
+            "name": "changelockstate",
+        }
+&gt;       mock_auth.request.assert_called_once_with(
+            "post", "devices/__ble_uuid__/commands", json=command_json
+        )
+
+tests/test_lock.py:246: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:997: in assert_called_once_with
+    return self.assert_called_with(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.request' spec_set='function' id='4415940528'&gt;
+args = ('post', 'devices/__ble_uuid__/commands')
+kwargs = {'json': {'data': {'CAT': 'abcdef', 'deviceId': '__ble_uuid__', 'state': 0, 'userId': '&lt;user-id&gt;'}, 'name': 'changelockstate'}}
+expected = call('', ('post', 'devices/__ble_uuid__/commands'), {'json': {'data': {'CAT': 'abcdef', 'deviceId': '__ble_uuid__', 'state': 0, 'userId': '&lt;user-id&gt;'}, 'name': 'changelockstate'}})
+actual = call('', ('POST', 'devices/__ble_uuid__/commands'), {'body': '{"data": {"CAT": "abcdef", "deviceId": "__ble_uuid__", "state": 0, "userId": "&lt;user-id&gt;"}, "name": "changelockstate"}', 'headers': {'Content-Type': 'application/json'}})
+_error_message = &lt;function NonCallableMock.assert_called_with.&lt;locals&gt;._error_message at 0x107306a30&gt;
+cause = None
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\n  Actual: %s'
+                    % (expected, actual))
+            raise AssertionError(error_message)
+    
+        def _error_message():
+            msg = self._format_mock_failure_message(args, kwargs)
+            return msg
+        expected = self._call_matcher(_Call((args, kwargs), two=True))
+        actual = self._call_matcher(self.call_args)
+        if actual != expected:
+            cause = expected if isinstance(expected, Exception) else None
+&gt;           raise AssertionError(_error_message()) from cause
+E           AssertionError: expected call not found.
+E           Expected: request('post', 'devices/__ble_uuid__/commands', json={'data': {'CAT': 'abcdef', 'deviceId': '__ble_uuid__', 'state': 0, 'userId': '&lt;user-id&gt;'}, 'name': 'changelockstate'})
+E             Actual: request('POST', 'devices/__ble_uuid__/commands', body='{"data": {"CAT": "abcdef", "deviceId": "__ble_uuid__", "state": 0, "userId": "&lt;user-id&gt;"}, "name": "changelockstate"}', headers={'Content-Type': 'application/json'})
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:985: AssertionError</failure></testcase><testcase classname="tests.test_lock.TestLock" name="test_logs" time="0.025" /><testcase classname="tests.test_lock.TestLock" name="test_refresh_access_codes" time="0.011" /><testcase classname="tests.test_lock.TestLock" name="test_add_access_code" time="0.008"><failure message="AssertionError: Calls not found.&#10;Expected: [call('post', 'devices/__wifi_uuid__/commands', json={'data': {'friendlyName': 'Friendly name', 'accessCode': 123, 'accessCodeLength': 4, 'notification': 0, 'notificationEnabled': False, 'disabled': 0, 'activationSecs': 0, 'expirationSecs': 4294967295, 'schedule1': {'daysOfWeek': '7F', 'startHour': 0, 'startMinute': 0, 'endHour': 23, 'endMinute': 59}}, 'name': 'addaccesscode'}),&#10; call('post', 'notifications/&lt;user-id&gt;___access_code_uuid__', {'notificationId': '&lt;user-id&gt;___access_code_uuid__', 'userId': '&lt;user-id&gt;', 'deviceId': '__wifi_uuid__', 'devicetypeId': 'be489wifi', 'notificationDefinitionId': 'onunlockstateaction', 'filterValue': 'Friendly name', 'active': False})]&#10;  Actual: [call('POST', 'devices/__wifi_uuid__/commands', body='{&quot;data&quot;: {&quot;friendlyName&quot;: &quot;Friendly name&quot;, &quot;accessCode&quot;: 123, &quot;accessCodeLength&quot;: 4, &quot;notification&quot;: 0, &quot;notificationEnabled&quot;: false, &quot;disabled&quot;: 0, &quot;activationSecs&quot;: 0, &quot;expirationSecs&quot;: 4294967295, &quot;schedule1&quot;: {&quot;daysOfWeek&quot;: &quot;7F&quot;, &quot;startHour&quot;: 0, &quot;startMinute&quot;: 0, &quot;endHour&quot;: 23, &quot;endMinute&quot;: 59}}, &quot;name&quot;: &quot;addaccesscode&quot;}', headers={'Content-Type': 'application/json'}),&#10; call('post', 'notifications/&lt;user-id&gt;___access_code_uuid__', {'notificationId': '&lt;user-id&gt;___access_code_uuid__', 'userId': '&lt;user-id&gt;', 'deviceId': '__wifi_uuid__', 'devicetypeId': 'be489wifi', 'notificationDefinitionId': 'onunlockstateaction', 'active': False, 'filterValue': 'Friendly name'})]">self = &lt;tests.test_lock.TestLock object at 0x107052150&gt;
+mock_auth = &lt;MagicMock spec_set='Auth' id='4419235728'&gt;
+lock_json = {'CAT': '01234', 'SAT': '98765', 'attributes': {'CAT': '01234', 'SAT': '98765', 'accessCodeLength': 4, 'actAlarmBuzzerEnabled': 0, ...}, 'connected': True, ...}
+access_code_json = {'accessCode': 123, 'accessCodeLength': 4, 'accesscodeId': '__access_code_uuid__', 'activationSecs': 0, ...}
+notification_json = {'active': False, 'deviceId': '__wifi_uuid__', 'devicetypeId': 'be489wifi', 'filterValue': 'Friendly name', ...}
+
+    def test_add_access_code(
+        self,
+        mock_auth: Mock,
+        lock_json: dict[str, Any],
+        access_code_json: dict[str, Any],
+        notification_json: dict[str, Any],
+    ):
+        lock = Lock.from_json(mock_auth, lock_json)
+        code = AccessCode.from_json(mock_auth, lock, access_code_json)
+        # Users should not set these.
+        code._auth = None
+        code._device = None
+        code.access_code_id = None
+        code.device_id = None
+        json = code.to_json()
+    
+        notification_json["active"] = False
+        mock_auth.request.side_effect = [
+            Mock(json=Mock(return_value=access_code_json)),
+            Mock(json=Mock(return_value=notification_json)),
+        ]
+        lock.add_access_code(code)
+    
+        del notification_json["createdAt"]
+        del notification_json["updatedAt"]
+&gt;       mock_auth.request.assert_has_calls(
+            [
+                call(
+                    "post",
+                    "devices/__wifi_uuid__/commands",
+                    json={"data": json, "name": "addaccesscode"},
+                ),
+                call(
+                    "post",
+                    "notifications/&lt;user-id&gt;___access_code_uuid__",
+                    notification_json,
+                ),
+            ]
+        )
+
+tests/test_lock.py:331: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.request' spec_set='function' id='4419231024'&gt;
+calls = [call('post', 'devices/__wifi_uuid__/commands', json={'data': {'friendlyName': 'Friendly name', 'accessCode': 123, 'ac...Id': 'be489wifi', 'notificationDefinitionId': 'onunlockstateaction', 'filterValue': 'Friendly name', 'active': False})]
+any_order = False
+
+    def assert_has_calls(self, calls, any_order=False):
+        """assert the mock has been called with the specified calls.
+        The `mock_calls` list is checked for the calls.
+    
+        If `any_order` is False (the default) then the calls must be
+        sequential. There can be extra calls before or after the
+        specified calls.
+    
+        If `any_order` is True then the calls can be in any order, but
+        they must all appear in `mock_calls`."""
+        expected = [self._call_matcher(c) for c in calls]
+        cause = next((e for e in expected if isinstance(e, Exception)), None)
+        all_calls = _CallList(self._call_matcher(c) for c in self.mock_calls)
+        if not any_order:
+            if expected not in all_calls:
+                if cause is None:
+                    problem = 'Calls not found.'
+                else:
+                    problem = ('Error processing expected calls.\n'
+                               'Errors: {}').format(
+                                   [e if isinstance(e, Exception) else None
+                                    for e in expected])
+&gt;               raise AssertionError(
+                    f'{problem}\n'
+                    f'Expected: {_CallList(calls)}\n'
+                    f'  Actual: {safe_repr(self.mock_calls)}'
+                ) from cause
+E               AssertionError: Calls not found.
+E               Expected: [call('post', 'devices/__wifi_uuid__/commands', json={'data': {'friendlyName': 'Friendly name', 'accessCode': 123, 'accessCodeLength': 4, 'notification': 0, 'notificationEnabled': False, 'disabled': 0, 'activationSecs': 0, 'expirationSecs': 4294967295, 'schedule1': {'daysOfWeek': '7F', 'startHour': 0, 'startMinute': 0, 'endHour': 23, 'endMinute': 59}}, 'name': 'addaccesscode'}),
+E                call('post', 'notifications/&lt;user-id&gt;___access_code_uuid__', {'notificationId': '&lt;user-id&gt;___access_code_uuid__', 'userId': '&lt;user-id&gt;', 'deviceId': '__wifi_uuid__', 'devicetypeId': 'be489wifi', 'notificationDefinitionId': 'onunlockstateaction', 'filterValue': 'Friendly name', 'active': False})]
+E                 Actual: [call('POST', 'devices/__wifi_uuid__/commands', body='{"data": {"friendlyName": "Friendly name", "accessCode": 123, "accessCodeLength": 4, "notification": 0, "notificationEnabled": false, "disabled": 0, "activationSecs": 0, "expirationSecs": 4294967295, "schedule1": {"daysOfWeek": "7F", "startHour": 0, "startMinute": 0, "endHour": 23, "endMinute": 59}}, "name": "addaccesscode"}', headers={'Content-Type': 'application/json'}),
+E                call('post', 'notifications/&lt;user-id&gt;___access_code_uuid__', {'notificationId': '&lt;user-id&gt;___access_code_uuid__', 'userId': '&lt;user-id&gt;', 'deviceId': '__wifi_uuid__', 'devicetypeId': 'be489wifi', 'notificationDefinitionId': 'onunlockstateaction', 'active': False, 'filterValue': 'Friendly name'})]
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1022: AssertionError</failure></testcase><testcase classname="tests.test_lock.TestLock" name="test_set_beeper" time="0.011" /><testcase classname="tests.test_lock.TestLock" name="test_set_lock_and_leave" time="0.013" /><testcase classname="tests.test_lock.TestLock" name="test_set_auto_lock_time" time="0.005" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_true" time="0.006" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_true_unsorted" time="0.005" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_false" time="0.003" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_fetches_logs" time="0.006" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_fetches_logs_no_logs" time="0.005" /><testcase classname="tests.test_lock.TestChangedBy" name="test_thumbturn" time="0.003" /><testcase classname="tests.test_lock.TestChangedBy" name="test_one_touch_locking" time="0.002" /><testcase classname="tests.test_lock.TestChangedBy" name="test_nfc_device" time="0.004" /><testcase classname="tests.test_lock.TestChangedBy" name="test_nfc_device_no_uuid" time="0.002" /><testcase classname="tests.test_lock.TestChangedBy" name="test_keypad" time="0.020" /><testcase classname="tests.test_lock.TestChangedBy" name="test_mobile_device" time="0.004" /><testcase classname="tests.test_lock.TestChangedBy" name="test_unknown" time="0.002" /><testcase classname="tests.test_lock.TestChangedBy" name="test_no_metadata" time="0.003" /><testcase classname="tests.test_log.TestFromJson" name="test_unlocked_by_thumbturn" time="0.001"><failure message="AssertionError: assert LockLog(creat..._code_id=None) == LockLog(creat..._code_id=None)&#10;  &#10;  Omitting 3 identical items, use -vv to show&#10;  Differing attributes:&#10;  ['created_at']&#10;  &#10;  Drill down into differing attribute created_at:&#10;    created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)">self = &lt;tests.test_log.TestFromJson object at 0x10704ae90&gt;
+log_json = {'createdAt': '2023-03-01T17:26:47.366Z', 'deviceId': '__device_uuid__', 'logId': '__log_uuid__', 'message': {'accessorUuid': 'ffffffff-ffff-ffff-ffff-ffffffffffff', 'action': 2, 'clientId': None, 'eventCode': 4, ...}, ...}
+
+    def test_unlocked_by_thumbturn(self, log_json):
+        log_json["message"]["eventCode"] = 4
+        lock_log = LockLog(
+            created_at=datetime(2023, 3, 1, 17, 26, 47, 366000),
+            accessor_id=None,
+            access_code_id=None,
+            message="Unlocked by thumbturn",
+        )
+&gt;       assert LockLog.from_json(log_json) == lock_log
+E       AssertionError: assert LockLog(creat..._code_id=None) == LockLog(creat..._code_id=None)
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing attributes:
+E         ['created_at']
+E         
+E         Drill down into differing attribute created_at:
+E           created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)
+
+tests/test_log.py:17: AssertionError</failure></testcase><testcase classname="tests.test_log.TestFromJson" name="test_unlocked_by_keypad" time="0.000"><failure message="AssertionError: assert LockLog(creat...ss-code-id__') == LockLog(creat...ss-code-id__')&#10;  &#10;  Omitting 3 identical items, use -vv to show&#10;  Differing attributes:&#10;  ['created_at']&#10;  &#10;  Drill down into differing attribute created_at:&#10;    created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)">self = &lt;tests.test_log.TestFromJson object at 0x10704b250&gt;
+log_json = {'createdAt': '2023-03-01T17:26:47.366Z', 'deviceId': '__device_uuid__', 'logId': '__log_uuid__', 'message': {'accessorUuid': 'ffffffff-ffff-ffff-ffff-ffffffffffff', 'action': 2, 'clientId': None, 'eventCode': 2, ...}, ...}
+
+    def test_unlocked_by_keypad(self, log_json):
+        log_json["message"].update(
+            {
+                "eventCode": 2,
+                "keypadUuid": "__access-code-id__",
+            }
+        )
+        lock_log = LockLog(
+            created_at=datetime(2023, 3, 1, 17, 26, 47, 366000),
+            accessor_id=None,
+            access_code_id="__access-code-id__",
+            message="Unlocked by keypad",
+        )
+&gt;       assert LockLog.from_json(log_json) == lock_log
+E       AssertionError: assert LockLog(creat...ss-code-id__') == LockLog(creat...ss-code-id__')
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing attributes:
+E         ['created_at']
+E         
+E         Drill down into differing attribute created_at:
+E           created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)
+
+tests/test_log.py:32: AssertionError</failure></testcase><testcase classname="tests.test_log.TestFromJson" name="test_unlocked_by_mobile_device" time="0.000"><failure message="AssertionError: assert LockLog(creat..._code_id=None) == LockLog(creat..._code_id=None)&#10;  &#10;  Omitting 3 identical items, use -vv to show&#10;  Differing attributes:&#10;  ['created_at']&#10;  &#10;  Drill down into differing attribute created_at:&#10;    created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)">self = &lt;tests.test_log.TestFromJson object at 0x1070e6780&gt;
+log_json = {'createdAt': '2023-03-01T17:26:47.366Z', 'deviceId': '__device_uuid__', 'logId': '__log_uuid__', 'message': {'accessorUuid': '__user-id__', 'action': 2, 'clientId': None, 'eventCode': 7, ...}, ...}
+
+    def test_unlocked_by_mobile_device(self, log_json):
+        log_json["message"].update(
+            {
+                "eventCode": 7,
+                "accessorUuid": "__user-id__",
+            }
+        )
+        lock_log = LockLog(
+            created_at=datetime(2023, 3, 1, 17, 26, 47, 366000),
+            accessor_id="__user-id__",
+            access_code_id=None,
+            message="Unlocked by mobile device",
+        )
+&gt;       assert LockLog.from_json(log_json) == lock_log
+E       AssertionError: assert LockLog(creat..._code_id=None) == LockLog(creat..._code_id=None)
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing attributes:
+E         ['created_at']
+E         
+E         Drill down into differing attribute created_at:
+E           created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)
+
+tests/test_log.py:47: AssertionError</failure></testcase><testcase classname="tests.test_notification" name="test_from_json" time="0.003" /><testcase classname="tests.test_notification" name="test_save" time="0.000" /><testcase classname="tests.test_notification" name="test_delete" time="0.003" /><testcase classname="tests.test_user" name="test_from_json" time="0.000" /><testcase classname="tests.test_user" name="test_from_json_no_name" time="0.000" /></testsuite></testsuites>

@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="9" time="16.193" timestamp="2026-03-04T11:28:15.622977+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_construction_and_io.TestSequenceFunctions" name="test_build_methods" time="0.008"><failure message="AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?">self = &lt;tests.test_construction_and_io.TestSequenceFunctions testMethod=test_build_methods&gt;
+
+    def test_build_methods(self):
+        goals = trussme.Goals(
+            minimum_fos_buckling=1.5,
+            minimum_fos_yielding=1.5,
+            maximum_mass=5.0,
+            maximum_deflection=6e-3,
+        )
+    
+        # Build truss from scratch
+        truss_from_commands = trussme.Truss()
+        truss_from_commands.add_pinned_joint([0.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([1.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([2.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([3.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([4.0, 0.0, 0.0])
+        truss_from_commands.add_pinned_joint([5.0, 0.0, 0.0])
+    
+        truss_from_commands.add_free_joint([0.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([1.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([2.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([3.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([4.5, 1.0, 0.0])
+    
+        truss_from_commands.add_out_of_plane_support("z")
+    
+        truss_from_commands.joints[7].loads[1] = -20000
+        truss_from_commands.joints[8].loads[1] = -20000
+        truss_from_commands.joints[9].loads[1] = -20000
+    
+        truss_from_commands.add_member(0, 1)
+        truss_from_commands.add_member(1, 2)
+        truss_from_commands.add_member(2, 3)
+        truss_from_commands.add_member(3, 4)
+        truss_from_commands.add_member(4, 5)
+    
+        truss_from_commands.add_member(6, 7)
+        truss_from_commands.add_member(7, 8)
+        truss_from_commands.add_member(8, 9)
+        truss_from_commands.add_member(9, 10)
+    
+        truss_from_commands.add_member(0, 6)
+        truss_from_commands.add_member(6, 1)
+        truss_from_commands.add_member(1, 7)
+        truss_from_commands.add_member(7, 2)
+        truss_from_commands.add_member(2, 8)
+        truss_from_commands.add_member(8, 3)
+        truss_from_commands.add_member(3, 9)
+        truss_from_commands.add_member(9, 4)
+        truss_from_commands.add_member(4, 10)
+        truss_from_commands.add_member(10, 5)
+    
+        # Build truss from file
+        truss_from_file = trussme.read_trs(TEST_TRUSS_FILENAME)
+    
+        self.assertEqual(
+&gt;           trussme.report_to_str(truss_from_file, goals),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            trussme.report_to_str(truss_from_commands, goals),
+        )
+
+tests/test_construction_and_io.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:49: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:254: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+truss = &lt;trussme.truss.Truss object at 0x11d6cb250&gt;, starting_shape = 'k'
+deflected_shape = None, exaggeration_factor = 10, fos_threshold = 1.0
+
+    def plot_truss(
+        truss,
+        starting_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = "k",
+        deflected_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = None,
+        exaggeration_factor: float = 10,
+        fos_threshold: float = 1.0,
+    ) -&gt; sns.axisgrid.FacetGrid:
+        """Plot the truss.
+    
+        Parameters
+        ----------
+        truss: Truss
+            The truss to plot.
+        starting_shape: None or "fos" or "force" or MatplotlibColor, default="k"
+            How to show the starting shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        deflected_shape:  None or "fos" or "force" or MatplotlibColor, default = None
+            How to show the deflected shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        exaggeration_factor: float, default=10
+            The factor by which to exaggerate the deflected shape.
+        fos_threshold: float, default=1.0
+            The threshold for the factor of safety. If the factor of safety is below this value, the member is colored red.
+    
+        Returns
+        -------
+        Figure
+            A seaborn figure containing the truss
+        """
+    
+        sns.set(style="whitegrid")
+&gt;       fig, ax = sns.subplots()
+                  ^^^^^^^^^^^^
+E       AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?
+
+trussme/visualize.py:43: AttributeError</failure></testcase><testcase classname="tests.test_construction_and_io.TestSequenceFunctions" name="test_demo_report" time="0.003"><failure message="AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?">self = &lt;tests.test_construction_and_io.TestSequenceFunctions testMethod=test_demo_report&gt;
+
+    def test_demo_report(self):
+        # Build truss from file
+        truss_from_file = trussme.read_trs(TEST_TRUSS_FILENAME)
+    
+&gt;       trussme.report_to_md(
+            os.path.join(os.path.dirname(__file__), "asdf.md"),
+            truss_from_file,
+            trussme.Goals(),
+        )
+
+tests/test_construction_and_io.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:95: in report_to_md
+    f.write(report_to_str(truss, goals, with_figures=with_figures))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:49: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:254: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+truss = &lt;trussme.truss.Truss object at 0x11d84c910&gt;, starting_shape = 'k'
+deflected_shape = None, exaggeration_factor = 10, fos_threshold = 1.0
+
+    def plot_truss(
+        truss,
+        starting_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = "k",
+        deflected_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = None,
+        exaggeration_factor: float = 10,
+        fos_threshold: float = 1.0,
+    ) -&gt; sns.axisgrid.FacetGrid:
+        """Plot the truss.
+    
+        Parameters
+        ----------
+        truss: Truss
+            The truss to plot.
+        starting_shape: None or "fos" or "force" or MatplotlibColor, default="k"
+            How to show the starting shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        deflected_shape:  None or "fos" or "force" or MatplotlibColor, default = None
+            How to show the deflected shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        exaggeration_factor: float, default=10
+            The factor by which to exaggerate the deflected shape.
+        fos_threshold: float, default=1.0
+            The threshold for the factor of safety. If the factor of safety is below this value, the member is colored red.
+    
+        Returns
+        -------
+        Figure
+            A seaborn figure containing the truss
+        """
+    
+        sns.set(style="whitegrid")
+&gt;       fig, ax = sns.subplots()
+                  ^^^^^^^^^^^^
+E       AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?
+
+trussme/visualize.py:43: AttributeError</failure></testcase><testcase classname="tests.test_construction_and_io.TestSequenceFunctions" name="test_save_to_json_and_rebuild" time="0.005"><failure message="AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?">self = &lt;tests.test_construction_and_io.TestSequenceFunctions testMethod=test_save_to_json_and_rebuild&gt;
+
+    def test_save_to_json_and_rebuild(self):
+        goals = trussme.Goals(
+            minimum_fos_buckling=1.5,
+            minimum_fos_yielding=1.5,
+            maximum_mass=5.0,
+            maximum_deflection=6e-3,
+        )
+    
+        # Build truss from file
+        truss_from_file = trussme.read_trs(TEST_TRUSS_FILENAME)
+    
+        # Save the truss
+        truss_from_file.to_json(os.path.join(os.path.dirname(__file__), "asdf.json"))
+    
+        # Rebuild
+        truss_rebuilt_from_file = trussme.read_json(
+            os.path.join(os.path.dirname(__file__), "asdf.json")
+        )
+    
+        self.assertEqual(
+&gt;           trussme.report_to_str(truss_from_file, goals),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            trussme.report_to_str(truss_rebuilt_from_file, goals),
+        )
+
+tests/test_construction_and_io.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:49: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:254: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+truss = &lt;trussme.truss.Truss object at 0x11da18050&gt;, starting_shape = 'k'
+deflected_shape = None, exaggeration_factor = 10, fos_threshold = 1.0
+
+    def plot_truss(
+        truss,
+        starting_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = "k",
+        deflected_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = None,
+        exaggeration_factor: float = 10,
+        fos_threshold: float = 1.0,
+    ) -&gt; sns.axisgrid.FacetGrid:
+        """Plot the truss.
+    
+        Parameters
+        ----------
+        truss: Truss
+            The truss to plot.
+        starting_shape: None or "fos" or "force" or MatplotlibColor, default="k"
+            How to show the starting shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        deflected_shape:  None or "fos" or "force" or MatplotlibColor, default = None
+            How to show the deflected shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        exaggeration_factor: float, default=10
+            The factor by which to exaggerate the deflected shape.
+        fos_threshold: float, default=1.0
+            The threshold for the factor of safety. If the factor of safety is below this value, the member is colored red.
+    
+        Returns
+        -------
+        Figure
+            A seaborn figure containing the truss
+        """
+    
+        sns.set(style="whitegrid")
+&gt;       fig, ax = sns.subplots()
+                  ^^^^^^^^^^^^
+E       AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?
+
+trussme/visualize.py:43: AttributeError</failure></testcase><testcase classname="tests.test_construction_and_io.TestSequenceFunctions" name="test_save_to_trs_and_rebuild" time="0.003"><failure message="AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?">self = &lt;tests.test_construction_and_io.TestSequenceFunctions testMethod=test_save_to_trs_and_rebuild&gt;
+
+    def test_save_to_trs_and_rebuild(self):
+        goals = trussme.Goals(
+            minimum_fos_buckling=1.5,
+            minimum_fos_yielding=1.5,
+            maximum_mass=5.0,
+            maximum_deflection=6e-3,
+        )
+    
+        # Build truss from file
+        truss_from_file = trussme.read_trs(TEST_TRUSS_FILENAME)
+    
+        # Save the truss
+        truss_from_file.to_trs(os.path.join(os.path.dirname(__file__), "asdf.trs"))
+    
+        # Rebuild
+        truss_rebuilt_from_file = trussme.read_trs(
+            os.path.join(os.path.dirname(__file__), "asdf.trs")
+        )
+    
+        self.assertEqual(
+&gt;           trussme.report_to_str(truss_from_file, goals),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            trussme.report_to_str(truss_rebuilt_from_file, goals),
+        )
+
+tests/test_construction_and_io.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:49: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:254: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+truss = &lt;trussme.truss.Truss object at 0x11d7d3530&gt;, starting_shape = 'k'
+deflected_shape = None, exaggeration_factor = 10, fos_threshold = 1.0
+
+    def plot_truss(
+        truss,
+        starting_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = "k",
+        deflected_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = None,
+        exaggeration_factor: float = 10,
+        fos_threshold: float = 1.0,
+    ) -&gt; sns.axisgrid.FacetGrid:
+        """Plot the truss.
+    
+        Parameters
+        ----------
+        truss: Truss
+            The truss to plot.
+        starting_shape: None or "fos" or "force" or MatplotlibColor, default="k"
+            How to show the starting shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        deflected_shape:  None or "fos" or "force" or MatplotlibColor, default = None
+            How to show the deflected shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        exaggeration_factor: float, default=10
+            The factor by which to exaggerate the deflected shape.
+        fos_threshold: float, default=1.0
+            The threshold for the factor of safety. If the factor of safety is below this value, the member is colored red.
+    
+        Returns
+        -------
+        Figure
+            A seaborn figure containing the truss
+        """
+    
+        sns.set(style="whitegrid")
+&gt;       fig, ax = sns.subplots()
+                  ^^^^^^^^^^^^
+E       AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?
+
+trussme/visualize.py:43: AttributeError</failure></testcase><testcase classname="tests.test_custom_materials_and_shapes.TestCustomStuff" name="test_custom_material" time="0.001" /><testcase classname="tests.test_custom_materials_and_shapes.TestCustomStuff" name="test_custom_shape" time="0.000" /><testcase classname="tests.test_optimization.TestCustomStuff" name="test_full_optimization" time="3.454"><failure message="AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?">self = &lt;tests.test_optimization.TestCustomStuff testMethod=test_full_optimization&gt;
+
+    def test_full_optimization(self):
+        truss_from_commands = trussme.Truss()
+        truss_from_commands.add_pinned_joint([0.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([1.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([2.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([3.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([4.0, 0.0, 0.0])
+        truss_from_commands.add_pinned_joint([5.0, 0.0, 0.0])
+    
+        truss_from_commands.add_free_joint([0.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([1.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([2.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([3.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([4.5, 1.0, 0.0])
+    
+        truss_from_commands.add_out_of_plane_support("z")
+    
+        truss_from_commands.joints[8].loads[1] = -20000
+    
+        truss_from_commands.add_member(0, 1)
+        truss_from_commands.add_member(1, 2)
+        truss_from_commands.add_member(2, 3)
+        truss_from_commands.add_member(3, 4)
+        truss_from_commands.add_member(4, 5)
+    
+        truss_from_commands.add_member(6, 7)
+        truss_from_commands.add_member(7, 8)
+        truss_from_commands.add_member(8, 9)
+        truss_from_commands.add_member(9, 10)
+    
+        truss_from_commands.add_member(0, 6)
+        truss_from_commands.add_member(6, 1)
+        truss_from_commands.add_member(1, 7)
+        truss_from_commands.add_member(7, 2)
+        truss_from_commands.add_member(2, 8)
+        truss_from_commands.add_member(8, 3)
+        truss_from_commands.add_member(3, 9)
+        truss_from_commands.add_member(9, 4)
+        truss_from_commands.add_member(4, 10)
+        truss_from_commands.add_member(10, 5)
+    
+        goals = trussme.Goals()
+    
+        x0, obj, con, gen, bnds = trussme.make_optimization_functions(
+            truss_from_commands,
+            goals,
+            joint_optimization="full",
+            member_optimization="full",
+        )
+    
+        results = scipy.optimize.minimize(
+            obj,
+            x0,
+            constraints=scipy.optimize.NonlinearConstraint(
+                con, -numpy.inf, 0.0, keep_feasible=True
+            ),
+            bounds=scipy.optimize.Bounds(bnds[0], bnds[1], keep_feasible=True),
+            method="trust-constr",
+            options={"verbose": 2, "maxiter": 50},
+        )
+    
+        result_truss = gen(results.x)
+        result_truss.analyze()
+&gt;       trussme.report_to_md(
+            os.path.join(os.path.dirname(__file__), "full_optim.md"),
+            result_truss,
+            goals,
+        )
+
+tests/test_optimization.py:196: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:95: in report_to_md
+    f.write(report_to_str(truss, goals, with_figures=with_figures))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:49: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:254: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+truss = &lt;trussme.truss.Truss object at 0x11d73f830&gt;, starting_shape = 'k'
+deflected_shape = None, exaggeration_factor = 10, fos_threshold = 1.0
+
+    def plot_truss(
+        truss,
+        starting_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = "k",
+        deflected_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = None,
+        exaggeration_factor: float = 10,
+        fos_threshold: float = 1.0,
+    ) -&gt; sns.axisgrid.FacetGrid:
+        """Plot the truss.
+    
+        Parameters
+        ----------
+        truss: Truss
+            The truss to plot.
+        starting_shape: None or "fos" or "force" or MatplotlibColor, default="k"
+            How to show the starting shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        deflected_shape:  None or "fos" or "force" or MatplotlibColor, default = None
+            How to show the deflected shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        exaggeration_factor: float, default=10
+            The factor by which to exaggerate the deflected shape.
+        fos_threshold: float, default=1.0
+            The threshold for the factor of safety. If the factor of safety is below this value, the member is colored red.
+    
+        Returns
+        -------
+        Figure
+            A seaborn figure containing the truss
+        """
+    
+        sns.set(style="whitegrid")
+&gt;       fig, ax = sns.subplots()
+                  ^^^^^^^^^^^^
+E       AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?
+
+trussme/visualize.py:43: AttributeError</failure></testcase><testcase classname="tests.test_optimization.TestCustomStuff" name="test_joint_optimization" time="1.015"><failure message="AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?">self = &lt;tests.test_optimization.TestCustomStuff testMethod=test_joint_optimization&gt;
+
+    def test_joint_optimization(self):
+        truss_from_commands = trussme.Truss()
+        truss_from_commands.add_pinned_joint([0.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([1.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([2.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([3.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([4.0, 0.0, 0.0])
+        truss_from_commands.add_pinned_joint([5.0, 0.0, 0.0])
+    
+        truss_from_commands.add_free_joint([0.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([1.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([2.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([3.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([4.5, 1.0, 0.0])
+    
+        truss_from_commands.add_out_of_plane_support("z")
+    
+        truss_from_commands.joints[8].loads[1] = -20000
+    
+        truss_from_commands.add_member(0, 1)
+        truss_from_commands.add_member(1, 2)
+        truss_from_commands.add_member(2, 3)
+        truss_from_commands.add_member(3, 4)
+        truss_from_commands.add_member(4, 5)
+    
+        truss_from_commands.add_member(6, 7)
+        truss_from_commands.add_member(7, 8)
+        truss_from_commands.add_member(8, 9)
+        truss_from_commands.add_member(9, 10)
+    
+        truss_from_commands.add_member(0, 6)
+        truss_from_commands.add_member(6, 1)
+        truss_from_commands.add_member(1, 7)
+        truss_from_commands.add_member(7, 2)
+        truss_from_commands.add_member(2, 8)
+        truss_from_commands.add_member(8, 3)
+        truss_from_commands.add_member(3, 9)
+        truss_from_commands.add_member(9, 4)
+        truss_from_commands.add_member(4, 10)
+        truss_from_commands.add_member(10, 5)
+    
+        goals = trussme.Goals()
+    
+        x0, obj, con, gen, bnds = trussme.make_optimization_functions(
+            truss_from_commands,
+            goals,
+            joint_optimization="full",
+            member_optimization=None,
+        )
+    
+        results = scipy.optimize.minimize(
+            obj,
+            x0,
+            constraints=[
+                scipy.optimize.NonlinearConstraint(
+                    con, -numpy.inf, 0.0, keep_feasible=True
+                )
+            ],
+            method="trust-constr",
+            options={"verbose": 2, "maxiter": 50},
+        )
+    
+        result_truss = gen(results.x)
+        result_truss.analyze()
+&gt;       trussme.report_to_md(
+            os.path.join(os.path.dirname(__file__), "joint_optim.md"),
+            result_truss,
+            goals,
+        )
+
+tests/test_optimization.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:95: in report_to_md
+    f.write(report_to_str(truss, goals, with_figures=with_figures))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:49: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:254: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+truss = &lt;trussme.truss.Truss object at 0x11d36bd70&gt;, starting_shape = 'k'
+deflected_shape = None, exaggeration_factor = 10, fos_threshold = 1.0
+
+    def plot_truss(
+        truss,
+        starting_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = "k",
+        deflected_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = None,
+        exaggeration_factor: float = 10,
+        fos_threshold: float = 1.0,
+    ) -&gt; sns.axisgrid.FacetGrid:
+        """Plot the truss.
+    
+        Parameters
+        ----------
+        truss: Truss
+            The truss to plot.
+        starting_shape: None or "fos" or "force" or MatplotlibColor, default="k"
+            How to show the starting shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        deflected_shape:  None or "fos" or "force" or MatplotlibColor, default = None
+            How to show the deflected shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        exaggeration_factor: float, default=10
+            The factor by which to exaggerate the deflected shape.
+        fos_threshold: float, default=1.0
+            The threshold for the factor of safety. If the factor of safety is below this value, the member is colored red.
+    
+        Returns
+        -------
+        Figure
+            A seaborn figure containing the truss
+        """
+    
+        sns.set(style="whitegrid")
+&gt;       fig, ax = sns.subplots()
+                  ^^^^^^^^^^^^
+E       AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?
+
+trussme/visualize.py:43: AttributeError</failure></testcase><testcase classname="tests.test_optimization.TestCustomStuff" name="test_setup" time="0.003"><failure message="AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?">self = &lt;tests.test_optimization.TestCustomStuff testMethod=test_setup&gt;
+
+    def test_setup(self):
+        truss_from_commands = trussme.Truss()
+        truss_from_commands.add_pinned_joint([0.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([1.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([2.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([3.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([4.0, 0.0, 0.0])
+        truss_from_commands.add_pinned_joint([5.0, 0.0, 0.0])
+    
+        truss_from_commands.add_free_joint([0.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([1.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([2.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([3.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([4.5, 1.0, 0.0])
+    
+        truss_from_commands.add_out_of_plane_support("z")
+    
+        truss_from_commands.joints[8].loads[1] = -20000
+    
+        truss_from_commands.add_member(0, 1)
+        truss_from_commands.add_member(1, 2)
+        truss_from_commands.add_member(2, 3)
+        truss_from_commands.add_member(3, 4)
+        truss_from_commands.add_member(4, 5)
+    
+        truss_from_commands.add_member(6, 7)
+        truss_from_commands.add_member(7, 8)
+        truss_from_commands.add_member(8, 9)
+        truss_from_commands.add_member(9, 10)
+    
+        truss_from_commands.add_member(0, 6)
+        truss_from_commands.add_member(6, 1)
+        truss_from_commands.add_member(1, 7)
+        truss_from_commands.add_member(7, 2)
+        truss_from_commands.add_member(2, 8)
+        truss_from_commands.add_member(8, 3)
+        truss_from_commands.add_member(3, 9)
+        truss_from_commands.add_member(9, 4)
+        truss_from_commands.add_member(4, 10)
+        truss_from_commands.add_member(10, 5)
+    
+        goals = trussme.Goals()
+    
+        x0, obj, con, gen, bnds = trussme.make_optimization_functions(
+            truss_from_commands, goals
+        )
+    
+        self.assertEqual(
+&gt;           trussme.report_to_str(gen(x0), goals),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            trussme.report_to_str(truss_from_commands, goals),
+        )
+
+tests/test_optimization.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:49: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:254: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+truss = &lt;trussme.truss.Truss object at 0x11d892c30&gt;, starting_shape = 'k'
+deflected_shape = None, exaggeration_factor = 10, fos_threshold = 1.0
+
+    def plot_truss(
+        truss,
+        starting_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = "k",
+        deflected_shape: Optional[Union[Literal["fos", "force"], MatplotlibColor]] = None,
+        exaggeration_factor: float = 10,
+        fos_threshold: float = 1.0,
+    ) -&gt; sns.axisgrid.FacetGrid:
+        """Plot the truss.
+    
+        Parameters
+        ----------
+        truss: Truss
+            The truss to plot.
+        starting_shape: None or "fos" or "force" or MatplotlibColor, default="k"
+            How to show the starting shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        deflected_shape:  None or "fos" or "force" or MatplotlibColor, default = None
+            How to show the deflected shape. If None, the starting shape is not shown. If "fos", the members are colored
+            green if the factor of safety is above the threshold and red if it is below. If "force", the members are colored
+            according to the force in the member. If a color, the members are colored that color.
+        exaggeration_factor: float, default=10
+            The factor by which to exaggerate the deflected shape.
+        fos_threshold: float, default=1.0
+            The threshold for the factor of safety. If the factor of safety is below this value, the member is colored red.
+    
+        Returns
+        -------
+        Figure
+            A seaborn figure containing the truss
+        """
+    
+        sns.set(style="whitegrid")
+&gt;       fig, ax = sns.subplots()
+                  ^^^^^^^^^^^^
+E       AttributeError: module 'seaborn' has no attribute 'subplots'. Did you mean: 'rugplot'?
+
+trussme/visualize.py:43: AttributeError</failure></testcase></testsuite></testsuites>

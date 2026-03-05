@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="18" time="5.779" timestamp="2026-03-05T02:46:27.938819+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="cronitor.tests.test_00.SyncTests" name="test_00_monitor_attributes_are_put" time="2.012" /><testcase classname="cronitor.tests.test_config.CronitorTests" name="test_apply_config" time="0.005" /><testcase classname="cronitor.tests.test_config.CronitorTests" name="test_read_config" time="0.002" /><testcase classname="cronitor.tests.test_config.CronitorTests" name="test_validate_config" time="0.003" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_create_monitor" time="0.001" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_create_monitor_fails" time="0.003"><failure message="cronitor.APIError: Unexpected error &lt;MagicMock name='put().result().text' id='4416252160'&gt;">self = &lt;cronitor.tests.test_monitor.MonitorTests testMethod=test_create_monitor_fails&gt;
+mocked_put = &lt;MagicMock name='put' id='4416256192'&gt;
+
+    @patch('cronitor.Monitor._req.put')
+    def test_create_monitor_fails(self, mocked_put):
+        mocked_put.return_value.status_code = 400
+        with self.assertRaises(cronitor.APIValidationError):
+&gt;            cronitor.Monitor.put(**MONITOR)
+
+cronitor/tests/test_monitor.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cronitor/monitor.py:75: in put
+    data = cls._put(_monitors, api_key, rollback, request_format, api_version)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @classmethod
+    def _put(cls, monitors, api_key, rollback, request_format, api_version):
+        timeout = cronitor.timeout or 10
+        payload = _prepare_payload(monitors, rollback, request_format)
+        if request_format == YAML:
+            content_type = 'application/yaml'
+            data = yaml.dump(payload)
+            url = '{}.yaml'.format(cls._monitor_api_url())
+        else:
+            content_type = 'application/json'
+            data = json.dumps(payload)
+            url = cls._monitor_api_url()
+    
+        future = cls._req.put(url,
+                        auth=(api_key, ''),
+                        data=data,
+                        headers=dict(cls._headers, **{'Content-Type': content_type, 'Cronitor-Version': api_version}),
+                        timeout=timeout)
+    
+        resp = future.result()
+        if resp.status_code == 200:
+            if request_format == YAML:
+                return yaml.load(resp.text, Loader=SafeLoader)
+            else:
+                return resp.json().get('monitors', [])
+        elif resp.status_code == 400:
+            raise cronitor.APIValidationError(resp.text)
+        else:
+&gt;           raise cronitor.APIError("Unexpected error %s" % resp.text)
+E           cronitor.APIError: Unexpected error &lt;MagicMock name='put().result().text' id='4416252160'&gt;
+
+cronitor/monitor.py:116: APIError</failure></testcase><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_create_monitors" time="0.001" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_create_monitors_yaml_body" time="0.000" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_delete_no_id" time="1.104"><failure message="cronitor.APIError: An unexpected error occured when deleting 'a-test_key'">self = &lt;cronitor.tests.test_monitor.MonitorTests testMethod=test_delete_no_id&gt;
+mocked_delete = &lt;MagicMock name='delete' id='4416257536'&gt;
+
+    @patch('requests.delete')
+    def test_delete_no_id(self, mocked_delete):
+        mocked_delete.return_value.status_code = 204
+        monitor = cronitor.Monitor(MONITOR['key'])
+&gt;       monitor.delete()
+
+cronitor/tests/test_monitor.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;cronitor.monitor.Monitor object at 0x107448640&gt;
+
+    def delete(self):
+        future = self._req.delete(
+                    self._monitor_api_url(self.key),
+                    auth=(self.api_key, ''),
+                    headers=self._headers,
+                    timeout=10)
+    
+        resp = future.result()
+        if resp.status_code == 204:
+            return True
+        elif resp.status_code == 404:
+            raise cronitor.MonitorNotFound("Monitor '%s' not found" % self.key)
+        else:
+&gt;           raise cronitor.APIError("An unexpected error occured when deleting '%s'" % self.key)
+E           cronitor.APIError: An unexpected error occured when deleting 'a-test_key'
+
+cronitor/monitor.py:150: APIError</failure></testcase><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_get_monitor_invalid_code" time="0.264"><failure message="AssertionError: MonitorNotFound not raised">self = &lt;cronitor.tests.test_monitor.MonitorTests testMethod=test_get_monitor_invalid_code&gt;
+mocked_get = &lt;MagicMock name='get' id='4416257200'&gt;
+
+    @patch('requests.get')
+    def test_get_monitor_invalid_code(self, mocked_get):
+        mocked_get.return_value.status_code = 404
+&gt;       with self.assertRaises(cronitor.MonitorNotFound):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: MonitorNotFound not raised
+
+cronitor/tests/test_monitor.py:55: AssertionError</failure></testcase><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_update_monitor_data" time="0.001" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_update_monitor_fails_validation" time="0.002"><failure message="cronitor.APIError: Unexpected error &lt;MagicMock name='put().result().text' id='4417444160'&gt;">self = &lt;cronitor.tests.test_monitor.MonitorTests testMethod=test_update_monitor_fails_validation&gt;
+mocked_update = &lt;MagicMock name='put' id='4417439120'&gt;
+
+    @patch('cronitor.Monitor._req.put')
+    def test_update_monitor_fails_validation(self, mocked_update):
+        mocked_update.return_value.status_code = 400
+        with self.assertRaises(cronitor.APIValidationError):
+&gt;           cronitor.Monitor.put(schedule='* * * * *')
+
+cronitor/tests/test_monitor.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cronitor/monitor.py:75: in put
+    data = cls._put(_monitors, api_key, rollback, request_format, api_version)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @classmethod
+    def _put(cls, monitors, api_key, rollback, request_format, api_version):
+        timeout = cronitor.timeout or 10
+        payload = _prepare_payload(monitors, rollback, request_format)
+        if request_format == YAML:
+            content_type = 'application/yaml'
+            data = yaml.dump(payload)
+            url = '{}.yaml'.format(cls._monitor_api_url())
+        else:
+            content_type = 'application/json'
+            data = json.dumps(payload)
+            url = cls._monitor_api_url()
+    
+        future = cls._req.put(url,
+                        auth=(api_key, ''),
+                        data=data,
+                        headers=dict(cls._headers, **{'Content-Type': content_type, 'Cronitor-Version': api_version}),
+                        timeout=timeout)
+    
+        resp = future.result()
+        if resp.status_code == 200:
+            if request_format == YAML:
+                return yaml.load(resp.text, Loader=SafeLoader)
+            else:
+                return resp.json().get('monitors', [])
+        elif resp.status_code == 400:
+            raise cronitor.APIValidationError(resp.text)
+        else:
+&gt;           raise cronitor.APIError("Unexpected error %s" % resp.text)
+E           cronitor.APIError: Unexpected error &lt;MagicMock name='put().result().text' id='4417444160'&gt;
+
+cronitor/monitor.py:116: APIError</failure></testcase><testcase classname="cronitor.tests.test_pings.MonitorPingTests" name="test_convert_metrics_hash" time="0.001" /><testcase classname="cronitor.tests.test_pings.MonitorPingTests" name="test_endpoints" time="2.143" /><testcase classname="cronitor.tests.test_pings.MonitorPingTests" name="test_with_all_params" time="0.002" /><testcase classname="cronitor.tests.test_pings.PingDecoratorTests" name="test_ping_with_non_default_env" time="0.002" /><testcase classname="cronitor.tests.test_pings.PingDecoratorTests" name="test_ping_wraps_function_raises_exception" time="0.001" /><testcase classname="cronitor.tests.test_pings.PingDecoratorTests" name="test_ping_wraps_function_success" time="0.001" /></testsuite></testsuites>

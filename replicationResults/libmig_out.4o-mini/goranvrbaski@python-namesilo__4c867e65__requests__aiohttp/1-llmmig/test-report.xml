@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="28" skipped="0" tests="32" time="3.227" timestamp="2026-03-04T21:07:42.365217+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_account_balance" time="0.002"><failure message="AssertionError: &lt;coroutine object NameSilo.get_account_balance at 0x107774040&gt; is not an instance of &lt;class 'float'&gt;">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_account_balance&gt;
+mock_process_data = &lt;AsyncMock name='_process_data' id='4419804800'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_account_balance(self, mock_process_data):
+        mock_process_data.return_value = mocked_data
+        balance = self.ns.get_account_balance()
+&gt;       self.assertIsInstance(balance, float)
+E       AssertionError: &lt;coroutine object NameSilo.get_account_balance at 0x107774040&gt; is not an instance of &lt;class 'float'&gt;
+
+tests/test_namesilo.py:60: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_add_contact" time="0.001"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_add_contact&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4419806816'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_add_contact(self, mock_content_xml):
+        mock_content_xml.return_value = mocked_single_contact
+        self.assertTrue(self.ns.add_contact(ContactModel(
+            **mocked_single_contact['namesilo']['reply']['contact'])
+        ))
+&gt;       mock_content_xml.assert_called_once_with(
+            'contactAdd?version=1&amp;type=xml&amp;key=name-silo-token&amp;fn=First&amp;'
+            'ln=Last&amp;ad=Fake%20Address%2018&amp;cy=Zrenjanin&amp;st=Vojvodina&amp;'
+            'zp=23000&amp;ct=RS&amp;em=some.email@some.domain.com&amp;ph=003816050005000'
+        )
+
+tests/test_namesilo.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4419806816'&gt;
+args = ('contactAdd?version=1&amp;type=xml&amp;key=name-silo-token&amp;fn=First&amp;ln=Last&amp;ad=Fake%20Address%2018&amp;cy=Zrenjanin&amp;st=Vojvodina&amp;zp=23000&amp;ct=RS&amp;em=some.email@some.domain.com&amp;ph=003816050005000',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_add_dns_record" time="0.001"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_add_dns_record&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4419811856'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_add_dns_record(self, mock_content_xml):
+        mock_content_xml.return_value = mocked_data
+        record_id = self.ns.add_dns_records(
+            "some-domain.com", "A", "test.some-domain.com", "192.168.71.50", 86400
+        )
+&gt;       mock_content_xml.assert_called_once_with(
+            "dnsAddRecord?version=1&amp;type=xml&amp;key=name-silo-token&amp;domain=some-domain.com&amp;"
+            "rrtype=A&amp;rrhost=test.some-domain.com&amp;rrvalue=192.168.71.50&amp;rrttl=86400"
+        )
+
+tests/test_namesilo.py:316: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4419811856'&gt;
+args = ('dnsAddRecord?version=1&amp;type=xml&amp;key=name-silo-token&amp;domain=some-domain.com&amp;rrtype=A&amp;rrhost=test.some-domain.com&amp;rrvalue=192.168.71.50&amp;rrttl=86400',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_add_domain_privacy" time="0.001"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_add_domain_privacy&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4419812864'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_add_domain_privacy(self, mock_content_xml):
+        domain_name = "some-domain.com"
+        mock_content_xml.return_value = mocked_data
+        self.assertTrue(self.ns.add_domain_privacy(domain_name))
+&gt;       mock_content_xml.assert_called_once_with(
+            "addPrivacy?version=1&amp;type=xml&amp;key=name-silo-token&amp;"
+            "domain=some-domain.com"
+        )
+
+tests/test_namesilo.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4419812864'&gt;
+args = ('addPrivacy?version=1&amp;type=xml&amp;key=name-silo-token&amp;domain=some-domain.com',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_add_funds" time="0.000"><failure message="TypeError: cannot unpack non-iterable coroutine object">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_add_funds&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4421501344'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_add_funds(self, mock_content_xml):
+        mock_content_xml.return_value = mocked_data
+&gt;       status, balance = self.ns.add_account_funds(5, 281)
+        ^^^^^^^^^^^^^^^
+E       TypeError: cannot unpack non-iterable coroutine object
+
+tests/test_namesilo.py:69: TypeError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_auto_renew_domain" time="0.000"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_auto_renew_domain&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4421501680'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_auto_renew_domain(self, mock_content_xml):
+        domain_name = "some-domain.com"
+        mock_content_xml.return_value = mocked_data
+        self.assertTrue(self.ns.auto_renew_domain(domain_name))
+&gt;       mock_content_xml.assert_called_once_with(
+            "addAutoRenewal?version=1&amp;type=xml&amp;key=name-silo-token&amp;"
+            "domain=some-domain.com"
+        )
+
+tests/test_namesilo.py:287: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4421501680'&gt;
+args = ('addAutoRenewal?version=1&amp;type=xml&amp;key=name-silo-token&amp;domain=some-domain.com',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_change_domain_nameservers" time="0.001"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_change_domain_nameservers&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4421502688'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_change_domain_nameservers(self, mock_content_xml):
+        mock_content_xml.return_value = mocked_data
+        self.assertTrue(
+            self.ns.change_domain_nameservers(
+                "example.com", "NS1.EXAMPLE.COM", "NS2.EXAMPLE.COM"
+            )
+        )
+&gt;       mock_content_xml.assert_called_once_with(
+            "changeNameServers?version=1&amp;type=xml&amp;key=name-silo-token&amp;"
+            "domain=example.com&amp;ns1=NS1.EXAMPLE.COM&amp;ns2=NS2.EXAMPLE.COM"
+        )
+
+tests/test_namesilo.py:245: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4421502688'&gt;
+args = ('changeNameServers?version=1&amp;type=xml&amp;key=name-silo-token&amp;domain=example.com&amp;ns1=NS1.EXAMPLE.COM&amp;ns2=NS2.EXAMPLE.COM',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_check_error_code" time="0.000" /><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_check_error_code_exception" time="0.000" /><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_contacts_lists" time="0.000"><failure message="AssertionError: &lt;coroutine object NameSilo.list_contacts at 0x10778af00&gt; is not an instance of &lt;class 'list'&gt;">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_contacts_lists&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4419811856'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_contacts_lists(self, mock_content_xml):
+        mock_content_xml.return_value = mocked_data
+&gt;       self.assertIsInstance(self.ns.list_contacts(), list)
+E       AssertionError: &lt;coroutine object NameSilo.list_contacts at 0x10778af00&gt; is not an instance of &lt;class 'list'&gt;
+
+tests/test_namesilo.py:151: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_contacts_lists_only_one_contact" time="0.000"><failure message="AssertionError: &lt;coroutine object NameSilo.list_contacts at 0x107789cf0&gt; is not an instance of &lt;class 'list'&gt;">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_contacts_lists_only_one_contact&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4419812528'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_contacts_lists_only_one_contact(self, mock_content_xml):
+        mock_content_xml.return_value = mocked_single_contact
+&gt;       self.assertIsInstance(self.ns.list_contacts(), list)
+E       AssertionError: &lt;coroutine object NameSilo.list_contacts at 0x107789cf0&gt; is not an instance of &lt;class 'list'&gt;
+
+tests/test_namesilo.py:159: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_delete_contact" time="0.000"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_delete_contact&gt;
+mock_process = &lt;AsyncMock name='_process_data' id='4419806816'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_delete_contact(self, mock_process):
+        mock_process.return_value = dict()
+        self.ns.delete_contact(500)
+&gt;       mock_process.assert_called_once_with(
+            "contactDelete?version=1&amp;type=xml&amp;"
+            "key=name-silo-token&amp;contact_id=500"
+        )
+
+tests/test_namesilo.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4419806816'&gt;
+args = ('contactDelete?version=1&amp;type=xml&amp;key=name-silo-token&amp;contact_id=500',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_domain_check_available" time="0.001"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_domain_check_available&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4419806480'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_domain_check_available(self, mock_content_xml):
+        domain_name = "some-domain.com"
+        mock_content_xml.return_value = mocked_data
+        self.assertTrue(self.ns.check_domain(domain_name))
+&gt;       mock_content_xml.assert_called_once_with(
+            "checkRegisterAvailability?version=1&amp;type=xml&amp;key=name-silo-token&amp;"
+            "domains=some-domain.com"
+        )
+
+tests/test_namesilo.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4419806480'&gt;
+args = ('checkRegisterAvailability?version=1&amp;type=xml&amp;key=name-silo-token&amp;domains=some-domain.com',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_domain_check_not_available" time="0.001"><failure message="AssertionError: &lt;coroutine object NameSilo.check_domain at 0x1077ad030&gt; is not false">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_domain_check_not_available&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4419812528'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_domain_check_not_available(self, mock_content_xml):
+        domain_name = "some-domain.com"
+        del mocked_data['namesilo']['reply']['available']
+        mock_content_xml.return_value = mocked_data
+&gt;       self.assertFalse(self.ns.check_domain(domain_name))
+E       AssertionError: &lt;coroutine object NameSilo.check_domain at 0x1077ad030&gt; is not false
+
+tests/test_namesilo.py:91: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_domain_price" time="0.000"><failure message="AssertionError: &lt;coroutine object NameSilo.get_prices at 0x10772b920&gt; is not an instance of &lt;class 'dict'&gt;">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_domain_price&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4419811856'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_domain_price(self, mock_content_xml):
+        mock_content_xml.return_value = mocked_data
+&gt;       self.assertIsInstance(self.ns.get_prices(), dict)
+E       AssertionError: &lt;coroutine object NameSilo.get_prices at 0x10772b920&gt; is not an instance of &lt;class 'dict'&gt;
+
+tests/test_namesilo.py:214: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_domain_registration" time="0.000"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_domain_registration&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4419804800'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_domain_registration(self, mock_content_xml):
+        domain_name = "some-domain.com"
+        mock_content_xml.return_value = mocked_data
+        self.assertTrue(self.ns.register_domain(domain_name))
+&gt;       mock_content_xml.assert_called_once_with(
+            "registerDomain?version=1&amp;type=xml&amp;key=name-silo-token&amp;"
+            "domain=some-domain.com&amp;years=1&amp;private=0&amp;auto_renew=0"
+        )
+
+tests/test_namesilo.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4419804800'&gt;
+args = ('registerDomain?version=1&amp;type=xml&amp;key=name-silo-token&amp;domain=some-domain.com&amp;years=1&amp;private=0&amp;auto_renew=0',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_domain_registration_fail" time="0.001"><failure message="AssertionError: DomainProcessingError not raised by register_domain">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_domain_registration_fail&gt;
+mock_content_xml = &lt;AsyncMock name='_get_content_xml' id='4419806144'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._get_content_xml')
+    def test_domain_registration_fail(self, mock_content_xml):
+        domain_name = "some-domain.com"
+        mocked_data['namesilo']['reply']['code'] = 261
+        mock_content_xml.return_value = mocked_data
+&gt;       self.assertRaises(DomainProcessingError, self.ns.register_domain,
+                          domain_name)
+E       AssertionError: DomainProcessingError not raised by register_domain
+
+tests/test_namesilo.py:255: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_domain_renewal" time="0.001"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_domain_renewal&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4419805808'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_domain_renewal(self, mock_content_xml):
+        domain_name = "some-domain.com"
+        mocked_data['namesilo']['reply']['code'] = 300
+        mock_content_xml.return_value = mocked_data
+        self.assertTrue(self.ns.renew_domain(domain_name))
+&gt;       mock_content_xml.assert_called_once_with(
+            "renewDomain?version=1&amp;type=xml&amp;key=name-silo-token&amp;"
+            "domain=some-domain.com&amp;years=1"
+        )
+
+tests/test_namesilo.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4419805808'&gt;
+args = ('renewDomain?version=1&amp;type=xml&amp;key=name-silo-token&amp;domain=some-domain.com&amp;years=1',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_get_content_xml" time="0.000"><failure message="AttributeError: module 'namesilo.core' has no attribute 'requests'">/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1429: in patched
+    with self.decoration_helper(patched,
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1411: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1487: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'namesilo.core.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'namesilo.core' has no attribute 'requests'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/pkgutil.py:473: AttributeError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_get_content_xml_exception" time="0.000"><failure message="AttributeError: module 'namesilo.core' has no attribute 'requests'">/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1429: in patched
+    with self.decoration_helper(patched,
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1411: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1487: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'namesilo.core.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'namesilo.core' has no attribute 'requests'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/pkgutil.py:473: AttributeError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_get_domain_info" time="0.001"><failure message="AssertionError: &lt;coroutine object NameSilo.get_domain_info at 0x10782fb50&gt; is not an instance of &lt;class 'namesilo.common.models.DomainInfo'&gt;">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_get_domain_info&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4421503024'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_get_domain_info(self, mock_content_xml):
+        mock_content_xml.return_value = mocked_data
+        mocked_data['namesilo']['reply']['code'] = 300
+&gt;       self.assertIsInstance(
+            self.ns.get_domain_info("some-domain.com"), DomainInfo
+        )
+E       AssertionError: &lt;coroutine object NameSilo.get_domain_info at 0x10782fb50&gt; is not an instance of &lt;class 'namesilo.common.models.DomainInfo'&gt;
+
+tests/test_namesilo.py:229: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_list_dns_records" time="0.000"><failure message="AssertionError: &lt;coroutine object NameSilo.list_dns_records at 0x1078e84f0&gt; is not an instance of &lt;class 'list'&gt;">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_list_dns_records&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4421501680'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_list_dns_records(self, mock_content_xml):
+        domain_name = "some-domain.com"
+        mock_content_xml.return_value = mocked_data
+        result = self.ns.list_dns_records(domain_name)
+&gt;       self.assertIsInstance(result, list)
+E       AssertionError: &lt;coroutine object NameSilo.list_dns_records at 0x1078e84f0&gt; is not an instance of &lt;class 'list'&gt;
+
+tests/test_namesilo.py:307: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_list_domains" time="0.000"><failure message="AssertionError: &lt;coroutine object NameSilo.list_domains at 0x107791ee0&gt; != ['some-example-domain.com', 'example.com']">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_list_domains&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4421502016'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_list_domains(self, mock_content_xml):
+        mocked_data['namesilo']['reply']['code'] = 300
+        mock_content_xml.return_value = mocked_data
+&gt;       self.assertEqual(
+            self.ns.list_domains(),
+            mocked_data['namesilo']['reply']['domains']['domain']
+        )
+E       AssertionError: &lt;coroutine object NameSilo.list_domains at 0x107791ee0&gt; != ['some-example-domain.com', 'example.com']
+
+tests/test_namesilo.py:140: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_lock_domain" time="0.001"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_lock_domain&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4421503696'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_lock_domain(self, mock_content_xml):
+        mock_content_xml.return_value = mocked_data
+        self.assertTrue(self.ns.lock_domain("example.com"))
+&gt;       mock_content_xml.assert_called_once_with(
+            "domainLock?version=1&amp;type=xml&amp;key=name-silo-token&amp;"
+            "domain=example.com"
+        )
+
+tests/test_namesilo.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4421503696'&gt;
+args = ('domainLock?version=1&amp;type=xml&amp;key=name-silo-token&amp;domain=example.com',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_process_data" time="0.001"><failure message="AssertionError: Expected '_get_content_xml' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_process_data&gt;
+mock_xml = &lt;AsyncMock name='_get_content_xml' id='4421504368'&gt;
+mock_check = &lt;MagicMock name='check_error_code' id='4421504704'&gt;
+mock_error_code = &lt;MagicMock name='_get_error_code' id='4421505376'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._get_error_code')
+    @mock.patch('namesilo.core.NameSilo.check_error_code')
+    @mock.patch('namesilo.core.NameSilo._get_content_xml')
+    def test_process_data(self, mock_xml, mock_check, mock_error_code):
+        self.ns._process_data("some-url-extend")
+&gt;       mock_xml.assert_called_once_with("some-url-extend")
+
+tests/test_namesilo.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_get_content_xml' id='4421504368'&gt;
+args = ('some-url-extend',), kwargs = {}
+msg = "Expected '_get_content_xml' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_get_content_xml' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_production_api_url" time="0.000" /><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_remove_auto_renew_domain" time="0.000"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_remove_auto_renew_domain&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4421505712'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_remove_auto_renew_domain(self, mock_content_xml):
+        domain_name = "some-domain.com"
+        mock_content_xml.return_value = mocked_data
+        self.assertTrue(self.ns.remove_auto_renew_domain(domain_name))
+&gt;       mock_content_xml.assert_called_once_with(
+            "removeAutoRenewal?version=1&amp;type=xml&amp;key=name-silo-token&amp;"
+            "domain=some-domain.com"
+        )
+
+tests/test_namesilo.py:297: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4421505712'&gt;
+args = ('removeAutoRenewal?version=1&amp;type=xml&amp;key=name-silo-token&amp;domain=some-domain.com',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_remove_domain_privacy" time="0.001"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_remove_domain_privacy&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4421506048'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_remove_domain_privacy(self, mock_content_xml):
+        domain_name = "some-domain.com"
+        mock_content_xml.return_value = mocked_data
+        self.assertTrue(self.ns.remove_domain_privacy(domain_name))
+&gt;       mock_content_xml.assert_called_once_with(
+            "removePrivacy?version=1&amp;type=xml&amp;key=name-silo-token&amp;"
+            "domain=some-domain.com"
+        )
+
+tests/test_namesilo.py:277: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4421506048'&gt;
+args = ('removePrivacy?version=1&amp;type=xml&amp;key=name-silo-token&amp;domain=some-domain.com',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_sandbox_api_url" time="0.000" /><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_unlock_domain" time="0.001"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_unlock_domain&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4421506720'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_unlock_domain(self, mock_content_xml):
+        mock_content_xml.return_value = mocked_data
+        self.assertTrue(self.ns.unlock_domain("example.com"))
+&gt;       mock_content_xml.assert_called_once_with(
+            "domainUnlock?version=1&amp;type=xml&amp;key=name-silo-token&amp;"
+            "domain=example.com"
+        )
+
+tests/test_namesilo.py:131: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4421506720'&gt;
+args = ('domainUnlock?version=1&amp;type=xml&amp;key=name-silo-token&amp;domain=example.com',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_update_contact" time="0.003"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_update_contact&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4421505712'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_update_contact(self, mock_content_xml):
+        temp_contact = ContactModel(
+            contact_id="10050",
+            first_name="First",
+            last_name="Last",
+            address="Some address",
+            city="Some city",
+            state="Some state",
+            country="US",
+            email="some.email@some-provider.com",
+            phone="00381695959559",
+            zip="21000"
+        )
+        self.assertEqual(temp_contact.__str__(), "First Last - 10050")
+        self.assertTrue(
+            self.ns.update_contact(temp_contact)
+        )
+    
+&gt;       mock_content_xml.assert_called_once_with(
+            "contactUpdate?version=1&amp;type=xml&amp;key=name-silo-token&amp;"
+            "contact_id=10050&amp;fn=First%20Last&amp;ad=Some%20address&amp;"
+            "cy=Some%20city&amp;st=Some%20state&amp;zp=21000&amp;ct=US&amp;"
+            "em=some.email@some-provider.com&amp;ph=00381695959559"
+        )
+
+tests/test_namesilo.py:195: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4421505712'&gt;
+args = ('contactUpdate?version=1&amp;type=xml&amp;key=name-silo-token&amp;contact_id=10050&amp;fn=First%20Last&amp;ad=Some%20address&amp;cy=Some%20city&amp;st=Some%20state&amp;zp=21000&amp;ct=US&amp;em=some.email@some-provider.com&amp;ph=00381695959559',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase><testcase classname="tests.test_namesilo.NameSiloTestCase" name="test_update_dns_record" time="0.001"><failure message="AssertionError: Expected '_process_data' to be called once. Called 0 times.">self = &lt;tests.test_namesilo.NameSiloTestCase testMethod=test_update_dns_record&gt;
+mock_content_xml = &lt;AsyncMock name='_process_data' id='4421504368'&gt;
+
+    @mock.patch('namesilo.core.NameSilo._process_data')
+    def test_update_dns_record(self, mock_content_xml):
+        mock_content_xml.return_value = mocked_data
+        record_id = self.ns.update_dns_records(
+            "some-domain.com", "e3f383786a647e83c49c6082c7ce8014", "test.some-domain.com", "192.168.71.55"
+        )
+&gt;       mock_content_xml.assert_called_once_with(
+            "dnsUpdateRecord?version=1&amp;type=xml&amp;key=name-silo-token&amp;domain=some-domain.com&amp;"
+            "rrid=e3f383786a647e83c49c6082c7ce8014&amp;rrhost=test.some-domain.com&amp;"
+            "rrvalue=192.168.71.55&amp;rrttl=7207"
+        )
+
+tests/test_namesilo.py:328: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;AsyncMock name='_process_data' id='4421504368'&gt;
+args = ('dnsUpdateRecord?version=1&amp;type=xml&amp;key=name-silo-token&amp;domain=some-domain.com&amp;rrid=e3f383786a647e83c49c6082c7ce8014&amp;rrhost=test.some-domain.com&amp;rrvalue=192.168.71.55&amp;rrttl=7207',)
+kwargs = {}, msg = "Expected '_process_data' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected '_process_data' to be called once. Called 0 times.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:996: AssertionError</failure></testcase></testsuite></testsuites>

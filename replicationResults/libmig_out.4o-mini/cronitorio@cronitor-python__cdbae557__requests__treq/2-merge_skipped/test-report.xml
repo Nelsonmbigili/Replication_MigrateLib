@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="18" time="2.715" timestamp="2026-03-04T13:18:48.867271+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="cronitor.tests.test_00.SyncTests" name="test_00_monitor_attributes_are_put" time="2.015" /><testcase classname="cronitor.tests.test_config.CronitorTests" name="test_apply_config" time="0.006" /><testcase classname="cronitor.tests.test_config.CronitorTests" name="test_read_config" time="0.001" /><testcase classname="cronitor.tests.test_config.CronitorTests" name="test_validate_config" time="0.001" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_create_monitor" time="0.001" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_create_monitor_fails" time="0.001"><failure message="AttributeError: type object 'Monitor' has no attribute '_req'">/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1429: in patched
+    with self.decoration_helper(patched,
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1411: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1487: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'cronitor.Monitor._req'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: type object 'Monitor' has no attribute '_req'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/pkgutil.py:473: AttributeError</failure></testcase><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_create_monitors" time="0.001" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_create_monitors_yaml_body" time="0.000" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_delete_no_id" time="0.026"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;cronitor.tests.test_monitor.MonitorTests testMethod=test_delete_no_id&gt;
+mocked_delete = &lt;MagicMock name='delete' id='4391419984'&gt;
+
+    @patch('requests.delete')
+    def test_delete_no_id(self, mocked_delete):
+        mocked_delete.return_value.status_code = 204
+        monitor = cronitor.Monitor(MONITOR['key'])
+&gt;       monitor.delete()
+
+cronitor/tests/test_monitor.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;cronitor.monitor.Monitor object at 0x1056c15b0&gt;
+
+    def delete(self):
+        resp = treq.delete(
+                    self._monitor_api_url(self.key),
+                    auth=(self.api_key, ''),
+                    headers=self._headers,
+                    timeout=10)
+    
+&gt;       if resp.status_code == 204:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+cronitor/monitor.py:139: AttributeError</failure></testcase><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_get_monitor_invalid_code" time="0.001"><failure message="TypeError: The value of headers key 'Cronitor-Version' has non-string type &lt;class 'NoneType'&gt;.">self = &lt;cronitor.tests.test_monitor.MonitorTests testMethod=test_get_monitor_invalid_code&gt;
+mocked_get = &lt;MagicMock name='get' id='4385274720'&gt;
+
+    @patch('requests.get')
+    def test_get_monitor_invalid_code(self, mocked_get):
+        mocked_get.return_value.status_code = 404
+        with self.assertRaises(cronitor.MonitorNotFound):
+             monitor = cronitor.Monitor("I don't exist")
+&gt;            monitor.data
+
+cronitor/tests/test_monitor.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cronitor/monitor.py:125: in data
+    self._data = Struct(**self._fetch())
+                          ^^^^^^^^^^^^^
+cronitor/monitor.py:170: in _fetch
+    resp = treq.get(self._monitor_api_url(self.key),
+.venv/lib/python3.14/site-packages/treq/api.py:23: in get
+    return _client(kwargs).get(url, headers=headers, _stacklevel=4, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/treq/client.py:151: in get
+    return self.request("GET", url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/treq/client.py:238: in request
+    headers = self._request_headers(headers, _stacklevel + 1)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _request_headers(
+        self, headers: Optional[_HeadersType], stacklevel: int
+    ) -&gt; Headers:
+        """
+        Convert the *headers* argument to a :class:`Headers` instance
+        """
+        if isinstance(headers, dict):
+            h = Headers({})
+            for k, v in headers.items():
+                if isinstance(v, (bytes, str)):
+                    h.addRawHeader(k, v)
+                elif isinstance(v, list):
+                    h.setRawHeaders(k, v)
+                else:
+&gt;                   raise TypeError(
+                        "The value of headers key {!r} has non-string type {}.".format(
+                            k, type(v)
+                        )
+                    )
+E                   TypeError: The value of headers key 'Cronitor-Version' has non-string type &lt;class 'NoneType'&gt;.
+
+.venv/lib/python3.14/site-packages/treq/client.py:300: TypeError</failure></testcase><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_update_monitor_data" time="0.000" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_update_monitor_fails_validation" time="0.000"><failure message="AttributeError: type object 'Monitor' has no attribute '_req'">/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1429: in patched
+    with self.decoration_helper(patched,
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1411: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1487: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'cronitor.Monitor._req'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: type object 'Monitor' has no attribute '_req'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/pkgutil.py:473: AttributeError</failure></testcase><testcase classname="cronitor.tests.test_pings.MonitorPingTests" name="test_convert_metrics_hash" time="0.000" /><testcase classname="cronitor.tests.test_pings.MonitorPingTests" name="test_endpoints" time="0.073" /><testcase classname="cronitor.tests.test_pings.MonitorPingTests" name="test_with_all_params" time="0.000"><failure message="AttributeError: type object 'Monitor' has no attribute '_req'">/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1429: in patched
+    with self.decoration_helper(patched,
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1411: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1487: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'cronitor.Monitor._req'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: type object 'Monitor' has no attribute '_req'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/pkgutil.py:473: AttributeError</failure></testcase><testcase classname="cronitor.tests.test_pings.PingDecoratorTests" name="test_ping_with_non_default_env" time="0.001" /><testcase classname="cronitor.tests.test_pings.PingDecoratorTests" name="test_ping_wraps_function_raises_exception" time="0.000" /><testcase classname="cronitor.tests.test_pings.PingDecoratorTests" name="test_ping_wraps_function_success" time="0.000" /></testsuite></testsuites>

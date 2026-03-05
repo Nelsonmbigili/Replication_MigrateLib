@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="34" time="0.436" timestamp="2026-03-04T13:17:17.208322+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="test_auth.TestAuth" name="test_auth_to_github_invalid_credentials" time="0.001" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_app" time="0.001" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_ghe" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_ghe_and_ghe_app" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_token" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_without_token" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_get_github_app_installation_token" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_get_github_app_installation_token_request_failure" time="0.000" /><testcase classname="test_contributor_stats.TestContributorStats" name="test_fetch_sponsor_info" time="0.001" /><testcase classname="test_contributor_stats.TestContributorStats" name="test_init" time="0.000" /><testcase classname="test_contributor_stats.TestContributorStats" name="test_is_new_contributor_false" time="0.000" /><testcase classname="test_contributor_stats.TestContributorStats" name="test_is_new_contributor_true" time="0.000" /><testcase classname="test_contributor_stats.TestContributorStats" name="test_merge_contributors" time="0.000" /><testcase classname="test_contributors.TestContributors" name="test_get_all_contributors_with_organization" time="0.001" /><testcase classname="test_contributors.TestContributors" name="test_get_all_contributors_with_repository" time="0.000" /><testcase classname="test_contributors.TestContributors" name="test_get_contributors" time="0.001" /><testcase classname="test_contributors.TestContributors" name="test_get_contributors_no_commit_end_date" time="0.000" /><testcase classname="test_contributors.TestContributors" name="test_get_contributors_skip_bot" time="0.000" /><testcase classname="test_contributors.TestContributors" name="test_get_contributors_skip_users_with_no_commits" time="0.001" /><testcase classname="test_env.TestEnv" name="test_get_env_vars" time="0.075"><failure message="ValueError: ORGANIZATION and REPOSITORY environment variables were not set. Please set one">self = &lt;test_env.TestEnv testMethod=test_get_env_vars&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "REPOSITORY": "repo,repo2",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "token",
+            "GH_ENTERPRISE_URL": "",
+            "START_DATE": "2022-01-01",
+            "END_DATE": "2022-12-31",
+            "SPONSOR_INFO": "False",
+            "LINK_TO_PROFILE": "True",
+        },
+        clear=True,
+    )
+    def test_get_env_vars(self):
+        """
+        Test the get_env_vars function when all environment variables are set correctly.
+        """
+    
+        (
+            organization,
+            repository_list,
+            gh_app_id,
+            gh_app_installation_id,
+            gh_app_private_key,
+            gh_app_enterprise_only,
+            token,
+            ghe,
+            start_date,
+            end_date,
+            sponsor_info,
+            link_to_profile,
+&gt;       ) = env.get_env_vars()
+            ^^^^^^^^^^^^^^^^^^
+
+test_env.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = False
+
+    def get_env_vars(
+        test: bool = False,
+    ) -&gt; tuple[
+        str | None,
+        list[str],
+        int | None,
+        int | None,
+        bytes,
+        bool,
+        str,
+        str,
+        str,
+        str,
+        bool,
+        bool,
+    ]:
+        """
+        Get the environment variables for use in the action.
+    
+        Args:
+            None
+    
+        Returns:
+            organization (str): the organization to get contributor information for
+            repository_list (list[str]): A list of the repositories to get contributor information for
+            gh_app_id (int | None): The GitHub App ID to use for authentication
+            gh_app_installation_id (int | None): The GitHub App Installation ID to use for authentication
+            gh_app_private_key_bytes (bytes): The GitHub App Private Key as bytes to use for authentication
+            gh_app_enterprise_only (bool): Set this to true if the GH APP is created on GHE and needs to communicate with GHE api only
+            token (str): The GitHub token to use for authentication
+            ghe (str): The GitHub Enterprise URL to use for authentication
+            start_date (str): The start date to get contributor information from
+            end_date (str): The end date to get contributor information to.
+            sponsor_info (str): Whether to get sponsor information on the contributor
+            link_to_profile (str): Whether to link username to Github profile in markdown output
+        """
+    
+        organization = settings.get("ORGANIZATION")
+        repositories_str = settings.get("REPOSITORY")
+        # Either organization or repository must be set
+        if not organization and not repositories_str:
+&gt;           raise ValueError(
+                "ORGANIZATION and REPOSITORY environment variables were not set. Please set one"
+            )
+E           ValueError: ORGANIZATION and REPOSITORY environment variables were not set. Please set one
+
+env.py:113: ValueError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_auth_with_github_app_installation_missing_inputs" time="0.001"><failure message="AssertionError: 'ORGANIZATION and REPOSITORY environment v[33 chars] one' != 'GH_APP_ID set and GH_APP_INSTALLATION_ID [34 chars] set'&#10;- ORGANIZATION and REPOSITORY environment variables were not set. Please set one&#10;+ GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_auth_with_github_app_installation_missing_inputs&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "my_organization",
+            "GH_APP_ID": "12345",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_auth_with_github_app_installation_missing_inputs(self):
+        """Test that an error is raised there are missing inputs for the gh app"""
+        with self.assertRaises(ValueError) as context_manager:
+            env.get_env_vars()
+        the_exception = context_manager.exception
+&gt;       self.assertEqual(
+            str(the_exception),
+            "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set",
+        )
+E       AssertionError: 'ORGANIZATION and REPOSITORY environment v[33 chars] one' != 'GH_APP_ID set and GH_APP_INSTALLATION_ID [34 chars] set'
+E       - ORGANIZATION and REPOSITORY environment variables were not set. Please set one
+E       + GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set
+
+test_env.py:220: AssertionError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_invalid_start_date" time="0.001"><failure message="AssertionError: 'ORGANIZATION and REPOSITORY environment variables were not set. Please set one' != 'START_DATE environment variable not in the format YYYY-MM-DD'&#10;- ORGANIZATION and REPOSITORY environment variables were not set. Please set one&#10;+ START_DATE environment variable not in the format YYYY-MM-DD">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_invalid_start_date&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "REPOSITORY": "repo,repo2",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "token",
+            "GH_ENTERPRISE_URL": "",
+            "START_DATE": "2022/01/01",
+            "END_DATE": "2022-12-31",
+            "SPONSOR_INFO": "False",
+            "LINK_TO_PROFILE": "True",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_invalid_start_date(self):
+        """
+        Test the get_env_vars function when invalid start date given.
+        Expect a ValueError to be raised.
+        """
+    
+        with self.assertRaises(ValueError) as cm:
+            env.get_env_vars()
+        the_exception = cm.exception
+&gt;       self.assertEqual(
+            str(the_exception),
+            "START_DATE environment variable not in the format YYYY-MM-DD",
+        )
+E       AssertionError: 'ORGANIZATION and REPOSITORY environment variables were not set. Please set one' != 'START_DATE environment variable not in the format YYYY-MM-DD'
+E       - ORGANIZATION and REPOSITORY environment variables were not set. Please set one
+E       + START_DATE environment variable not in the format YYYY-MM-DD
+
+test_env.py:137: AssertionError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_missing_org_or_repo" time="0.000" /><testcase classname="test_env.TestEnv" name="test_get_env_vars_missing_values" time="0.000"><failure message="AssertionError: 'ORGANIZATION and REPOSITORY environment variables were not set. Please set one' != 'GH_TOKEN environment variable not set'&#10;- ORGANIZATION and REPOSITORY environment variables were not set. Please set one&#10;+ GH_TOKEN environment variable not set">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_missing_values&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "REPOSITORY": "repo,repo2",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "",
+            "GH_ENTERPRISE_URL": "",
+            "START_DATE": "2022-01-01",
+            "END_DATE": "2022-12-31",
+            "SPONSOR_INFO": "False",
+            "LINK_TO_PROFILE": "True",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_missing_values(self):
+        """
+        Test the get_env_vars function when none of the environment variables are set.
+        Expect a ValueError to be raised.
+        """
+    
+        with self.assertRaises(ValueError) as cm:
+            env.get_env_vars()
+        the_exception = cm.exception
+&gt;       self.assertEqual(str(the_exception), "GH_TOKEN environment variable not set")
+E       AssertionError: 'ORGANIZATION and REPOSITORY environment variables were not set. Please set one' != 'GH_TOKEN environment variable not set'
+E       - ORGANIZATION and REPOSITORY environment variables were not set. Please set one
+E       + GH_TOKEN environment variable not set
+
+test_env.py:109: AssertionError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_no_dates" time="0.001"><failure message="ValueError: ORGANIZATION and REPOSITORY environment variables were not set. Please set one">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_no_dates&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "REPOSITORY": "repo,repo2",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "token",
+            "GH_ENTERPRISE_URL": "",
+            "START_DATE": "",
+            "END_DATE": "",
+            "SPONSOR_INFO": "False",
+            "LINK_TO_PROFILE": "True",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_no_dates(self):
+        """
+        Test the get_env_vars function when all environment variables are set correctly
+        and start_date and end_date are not set.
+        """
+    
+        (
+            organization,
+            repository_list,
+            gh_app_id,
+            gh_app_installation_id,
+            gh_app_private_key,
+            gh_app_enterprise_only,
+            token,
+            ghe,
+            start_date,
+            end_date,
+            sponsor_info,
+            link_to_profile,
+&gt;       ) = env.get_env_vars()
+            ^^^^^^^^^^^^^^^^^^
+
+test_env.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = False
+
+    def get_env_vars(
+        test: bool = False,
+    ) -&gt; tuple[
+        str | None,
+        list[str],
+        int | None,
+        int | None,
+        bytes,
+        bool,
+        str,
+        str,
+        str,
+        str,
+        bool,
+        bool,
+    ]:
+        """
+        Get the environment variables for use in the action.
+    
+        Args:
+            None
+    
+        Returns:
+            organization (str): the organization to get contributor information for
+            repository_list (list[str]): A list of the repositories to get contributor information for
+            gh_app_id (int | None): The GitHub App ID to use for authentication
+            gh_app_installation_id (int | None): The GitHub App Installation ID to use for authentication
+            gh_app_private_key_bytes (bytes): The GitHub App Private Key as bytes to use for authentication
+            gh_app_enterprise_only (bool): Set this to true if the GH APP is created on GHE and needs to communicate with GHE api only
+            token (str): The GitHub token to use for authentication
+            ghe (str): The GitHub Enterprise URL to use for authentication
+            start_date (str): The start date to get contributor information from
+            end_date (str): The end date to get contributor information to.
+            sponsor_info (str): Whether to get sponsor information on the contributor
+            link_to_profile (str): Whether to link username to Github profile in markdown output
+        """
+    
+        organization = settings.get("ORGANIZATION")
+        repositories_str = settings.get("REPOSITORY")
+        # Either organization or repository must be set
+        if not organization and not repositories_str:
+&gt;           raise ValueError(
+                "ORGANIZATION and REPOSITORY environment variables were not set. Please set one"
+            )
+E           ValueError: ORGANIZATION and REPOSITORY environment variables were not set. Please set one
+
+env.py:113: ValueError</failure></testcase><testcase classname="test_env_get_bool.TestEnv" name="test_get_bool_env_var_that_does_not_exist_and_default_value_returns_false" time="0.000" /><testcase classname="test_env_get_bool.TestEnv" name="test_get_bool_env_var_that_does_not_exist_and_default_value_returns_true" time="0.000" /><testcase classname="test_env_get_bool.TestEnv" name="test_get_bool_env_var_that_exists_and_is_false" time="0.000" /><testcase classname="test_env_get_bool.TestEnv" name="test_get_bool_env_var_that_exists_and_is_false_due_to_invalid_value" time="0.000" /><testcase classname="test_env_get_bool.TestEnv" name="test_get_bool_env_var_that_exists_and_is_true" time="0.000"><failure message="AssertionError: False is not true">self = &lt;test_env_get_bool.TestEnv testMethod=test_get_bool_env_var_that_exists_and_is_true&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "TEST_BOOL": "true",
+        },
+        clear=True,
+    )
+    def test_get_bool_env_var_that_exists_and_is_true(self):
+        """Test that gets a boolean environment variable that exists and is true"""
+        result = get_bool_env_var("TEST_BOOL", False)
+&gt;       self.assertTrue(result)
+E       AssertionError: False is not true
+
+test_env_get_bool.py:23: AssertionError</failure></testcase><testcase classname="test_json_writer.TestWriteToJson" name="test_write_to_json" time="0.004" /><testcase classname="test_markdown.TestMarkdown" name="test_write_to_markdown" time="0.001" /><testcase classname="test_markdown.TestMarkdown" name="test_write_to_markdown_with_sponsors" time="0.001" /><testcase classname="test_markdown.TestMarkdown" name="test_write_to_markdown_without_link_to_profile" time="0.001" /></testsuite></testsuites>

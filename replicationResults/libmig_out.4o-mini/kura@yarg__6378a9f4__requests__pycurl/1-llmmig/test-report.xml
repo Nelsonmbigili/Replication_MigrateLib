@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="11" skipped="0" tests="58" time="5.803" timestamp="2026-03-05T00:13:47.211580+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_client.TestClient" name="test_end_slash" time="0.119"><failure message="pycurl.error: (6, 'Could not resolve host: mock.test.mock')">self = &lt;tests.test_client.TestClient testMethod=test_end_slash&gt;
+get_mock = &lt;MagicMock name='get' id='4449769120'&gt;
+
+    @patch('requests.Session.get', return_value=GoodResponse)
+    def test_end_slash(self, get_mock):
+&gt;       get("test", pypi_server="https://mock.test.mock/test")
+
+tests/test_client.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+package_name = 'test', pypi_server = 'https://mock.test.mock/test/'
+
+    def get(package_name, pypi_server="https://pypi.python.org/pypi/"):
+        """
+        Construct a request to the PyPI server and returns an instance of
+        :class:`yarg.package.Package`.
+    
+        :param package_name: case sensitive name of the package on the PyPI server.
+        :param pypi_server: (option) URL to the PyPI server.
+    
+            &gt;&gt;&gt; import yarg
+            &gt;&gt;&gt; package = yarg.get('yarg')
+            &lt;Package yarg&gt;
+        """
+        if not pypi_server.endswith("/"):
+            pypi_server = pypi_server + "/"
+    
+        buffer = BytesIO()
+        curl = pycurl.Curl()
+        curl.setopt(curl.URL, "{0}{1}/json".format(pypi_server, package_name))
+        curl.setopt(curl.WRITEDATA, buffer)
+&gt;       curl.perform()
+E       pycurl.error: (6, 'Could not resolve host: mock.test.mock')
+
+yarg/client.py:52: error</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get" time="0.386"><failure message="AssertionError: 300 != 301">self = &lt;tests.test_client.TestClient testMethod=test_get&gt;
+get_mock = &lt;MagicMock name='get' id='4449770464'&gt;
+
+    @patch('requests.Session.get', return_value=BadResponse)
+    def test_get(self, get_mock):
+        # Python 2.6....
+        try:
+&gt;           get("test")
+
+tests/test_client.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+package_name = 'test', pypi_server = 'https://pypi.python.org/pypi/'
+
+    def get(package_name, pypi_server="https://pypi.python.org/pypi/"):
+        """
+        Construct a request to the PyPI server and returns an instance of
+        :class:`yarg.package.Package`.
+    
+        :param package_name: case sensitive name of the package on the PyPI server.
+        :param pypi_server: (option) URL to the PyPI server.
+    
+            &gt;&gt;&gt; import yarg
+            &gt;&gt;&gt; package = yarg.get('yarg')
+            &lt;Package yarg&gt;
+        """
+        if not pypi_server.endswith("/"):
+            pypi_server = pypi_server + "/"
+    
+        buffer = BytesIO()
+        curl = pycurl.Curl()
+        curl.setopt(curl.URL, "{0}{1}/json".format(pypi_server, package_name))
+        curl.setopt(curl.WRITEDATA, buffer)
+        curl.perform()
+    
+        response_code = curl.getinfo(curl.RESPONSE_CODE)
+        curl.close()
+    
+        if response_code &gt;= 300:
+&gt;           raise HTTPError(status_code=response_code, reason='HTTP Error')
+E           yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error&gt;
+
+yarg/client.py:58: HTTPError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_get&gt;
+get_mock = &lt;MagicMock name='get' id='4449770464'&gt;
+
+    @patch('requests.Session.get', return_value=BadResponse)
+    def test_get(self, get_mock):
+        # Python 2.6....
+        try:
+            get("test")
+        except HTTPError as e:
+&gt;           self.assertEqual(300, e.status_code)
+E           AssertionError: 300 != 301
+
+tests/test_client.py:29: AssertionError</failure></testcase><testcase classname="tests.test_exceptions.TestHTTPErrorWithReason" name="test_repr" time="0.001" /><testcase classname="tests.test_exceptions.TestHTTPErrorWithReason" name="test_str" time="0.001" /><testcase classname="tests.test_exceptions.TestHTTPErrorNoReason" name="test_repr" time="0.001" /><testcase classname="tests.test_exceptions.TestHTTPErrorNoReason" name="test_str" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_author" time="0.002" /><testcase classname="tests.test_package.TestPackage" name="test_bugtracker" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_classifiers" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_description" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_docs" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_downloads" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_has_egg" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_has_source" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_has_wheel" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_homepage" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_latest_release_id" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_license" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_license_from_classifiers" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_maintainer" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_name" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_pypi_url" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_python_implementations" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_python_versions" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_release_ids" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_repr" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_summary" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_bugtracker" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_docs" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_has_egg" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_has_source" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_has_wheel" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_homepage" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_latest_release_id" time="0.000" /><testcase classname="tests.test_parse.TestParse" name="test_newest_package" time="0.396"><failure message="yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;">self = &lt;tests.test_parse.TestParse testMethod=test_newest_package&gt;
+get_mock = &lt;MagicMock name='get' id='4443139984'&gt;
+
+    @patch('requests.get', return_value=GoodNewestResponse)
+    def test_newest_package(self, get_mock):
+&gt;       p = newest_packages()
+            ^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:72: in newest_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+pypi_server = 'https://pypi.python.org/pypi?%3Aaction=packages_rss'
+
+    def _get(pypi_server):
+        """
+        Query the PyPI RSS feed and return a list
+        of XML items.
+        """
+        buffer = BytesIO()
+        curl = pycurl.Curl()
+        curl.setopt(curl.URL, pypi_server)
+        curl.setopt(curl.WRITEDATA, buffer)
+        curl.perform()
+    
+        status_code = curl.getinfo(pycurl.RESPONSE_CODE)
+        if status_code &gt;= 300:
+&gt;           raise HTTPError(status_code=status_code,
+                            reason='HTTP Error: {}'.format(status_code))
+E           yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;
+
+yarg/parse.py:46: HTTPError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_newest_package_repr" time="0.388"><failure message="yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;">self = &lt;tests.test_parse.TestParse testMethod=test_newest_package_repr&gt;
+get_mock = &lt;MagicMock name='get' id='4449772480'&gt;
+
+    @patch('requests.get', return_value=GoodNewestResponse)
+    def test_newest_package_repr(self, get_mock):
+&gt;       p = newest_packages()
+            ^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:72: in newest_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+pypi_server = 'https://pypi.python.org/pypi?%3Aaction=packages_rss'
+
+    def _get(pypi_server):
+        """
+        Query the PyPI RSS feed and return a list
+        of XML items.
+        """
+        buffer = BytesIO()
+        curl = pycurl.Curl()
+        curl.setopt(curl.URL, pypi_server)
+        curl.setopt(curl.WRITEDATA, buffer)
+        curl.perform()
+    
+        status_code = curl.getinfo(pycurl.RESPONSE_CODE)
+        if status_code &gt;= 300:
+&gt;           raise HTTPError(status_code=status_code,
+                            reason='HTTP Error: {}'.format(status_code))
+E           yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;
+
+yarg/parse.py:46: HTTPError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_newest_package_version" time="0.380"><failure message="yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;">self = &lt;tests.test_parse.TestParse testMethod=test_newest_package_version&gt;
+get_mock = &lt;MagicMock name='get' id='4449770464'&gt;
+
+    @patch('requests.get', return_value=GoodNewestResponse)
+    def test_newest_package_version(self, get_mock):
+&gt;       p = newest_packages()
+            ^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:72: in newest_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+pypi_server = 'https://pypi.python.org/pypi?%3Aaction=packages_rss'
+
+    def _get(pypi_server):
+        """
+        Query the PyPI RSS feed and return a list
+        of XML items.
+        """
+        buffer = BytesIO()
+        curl = pycurl.Curl()
+        curl.setopt(curl.URL, pypi_server)
+        curl.setopt(curl.WRITEDATA, buffer)
+        curl.perform()
+    
+        status_code = curl.getinfo(pycurl.RESPONSE_CODE)
+        if status_code &gt;= 300:
+&gt;           raise HTTPError(status_code=status_code,
+                            reason='HTTP Error: {}'.format(status_code))
+E           yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;
+
+yarg/parse.py:46: HTTPError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_newest_packages" time="0.385"><failure message="yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;">self = &lt;tests.test_parse.TestParse testMethod=test_newest_packages&gt;
+get_mock = &lt;MagicMock name='get' id='4449773152'&gt;
+
+    @patch('requests.get', return_value=GoodNewestResponse)
+    def test_newest_packages(self, get_mock):
+&gt;       p = newest_packages()
+            ^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:72: in newest_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+pypi_server = 'https://pypi.python.org/pypi?%3Aaction=packages_rss'
+
+    def _get(pypi_server):
+        """
+        Query the PyPI RSS feed and return a list
+        of XML items.
+        """
+        buffer = BytesIO()
+        curl = pycurl.Curl()
+        curl.setopt(curl.URL, pypi_server)
+        curl.setopt(curl.WRITEDATA, buffer)
+        curl.perform()
+    
+        status_code = curl.getinfo(pycurl.RESPONSE_CODE)
+        if status_code &gt;= 300:
+&gt;           raise HTTPError(status_code=status_code,
+                            reason='HTTP Error: {}'.format(status_code))
+E           yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;
+
+yarg/parse.py:46: HTTPError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_newest_packages_bad_get" time="0.375"><failure message="AssertionError: 300 != 301">self = &lt;tests.test_parse.TestParse testMethod=test_newest_packages_bad_get&gt;
+get_mock = &lt;MagicMock name='get' id='4449773488'&gt;
+
+    @patch('requests.get', return_value=BadResponse)
+    def test_newest_packages_bad_get(self, get_mock):
+        # Python 2.6....
+        try:
+&gt;           newest_packages()
+
+tests/test_parse.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:72: in newest_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+pypi_server = 'https://pypi.python.org/pypi?%3Aaction=packages_rss'
+
+    def _get(pypi_server):
+        """
+        Query the PyPI RSS feed and return a list
+        of XML items.
+        """
+        buffer = BytesIO()
+        curl = pycurl.Curl()
+        curl.setopt(curl.URL, pypi_server)
+        curl.setopt(curl.WRITEDATA, buffer)
+        curl.perform()
+    
+        status_code = curl.getinfo(pycurl.RESPONSE_CODE)
+        if status_code &gt;= 300:
+&gt;           raise HTTPError(status_code=status_code,
+                            reason='HTTP Error: {}'.format(status_code))
+E           yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;
+
+yarg/parse.py:46: HTTPError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_parse.TestParse testMethod=test_newest_packages_bad_get&gt;
+get_mock = &lt;MagicMock name='get' id='4449773488'&gt;
+
+    @patch('requests.get', return_value=BadResponse)
+    def test_newest_packages_bad_get(self, get_mock):
+        # Python 2.6....
+        try:
+            newest_packages()
+        except HTTPError as e:
+&gt;           self.assertEqual(300, e.status_code)
+E           AssertionError: 300 != 301
+
+tests/test_parse.py:75: AssertionError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_updated_package" time="0.384"><failure message="yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;">self = &lt;tests.test_parse.TestParse testMethod=test_updated_package&gt;
+get_mock = &lt;MagicMock name='get' id='4449773824'&gt;
+
+    @patch('requests.get', return_value=GoodUpdatedResponse)
+    def test_updated_package(self, get_mock):
+&gt;       p = latest_updated_packages()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:95: in latest_updated_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+pypi_server = 'https://pypi.python.org/pypi?%3Aaction=rss'
+
+    def _get(pypi_server):
+        """
+        Query the PyPI RSS feed and return a list
+        of XML items.
+        """
+        buffer = BytesIO()
+        curl = pycurl.Curl()
+        curl.setopt(curl.URL, pypi_server)
+        curl.setopt(curl.WRITEDATA, buffer)
+        curl.perform()
+    
+        status_code = curl.getinfo(pycurl.RESPONSE_CODE)
+        if status_code &gt;= 300:
+&gt;           raise HTTPError(status_code=status_code,
+                            reason='HTTP Error: {}'.format(status_code))
+E           yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;
+
+yarg/parse.py:46: HTTPError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_updated_package_repr" time="0.372"><failure message="yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;">self = &lt;tests.test_parse.TestParse testMethod=test_updated_package_repr&gt;
+get_mock = &lt;MagicMock name='get' id='4449774160'&gt;
+
+    @patch('requests.get', return_value=GoodUpdatedResponse)
+    def test_updated_package_repr(self, get_mock):
+&gt;       p = latest_updated_packages()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:153: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:95: in latest_updated_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+pypi_server = 'https://pypi.python.org/pypi?%3Aaction=rss'
+
+    def _get(pypi_server):
+        """
+        Query the PyPI RSS feed and return a list
+        of XML items.
+        """
+        buffer = BytesIO()
+        curl = pycurl.Curl()
+        curl.setopt(curl.URL, pypi_server)
+        curl.setopt(curl.WRITEDATA, buffer)
+        curl.perform()
+    
+        status_code = curl.getinfo(pycurl.RESPONSE_CODE)
+        if status_code &gt;= 300:
+&gt;           raise HTTPError(status_code=status_code,
+                            reason='HTTP Error: {}'.format(status_code))
+E           yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;
+
+yarg/parse.py:46: HTTPError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_updated_packages" time="0.385"><failure message="yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;">self = &lt;tests.test_parse.TestParse testMethod=test_updated_packages&gt;
+get_mock = &lt;MagicMock name='get' id='4449774496'&gt;
+
+    @patch('requests.get', return_value=GoodUpdatedResponse)
+    def test_updated_packages(self, get_mock):
+&gt;       p = latest_updated_packages()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:95: in latest_updated_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+pypi_server = 'https://pypi.python.org/pypi?%3Aaction=rss'
+
+    def _get(pypi_server):
+        """
+        Query the PyPI RSS feed and return a list
+        of XML items.
+        """
+        buffer = BytesIO()
+        curl = pycurl.Curl()
+        curl.setopt(curl.URL, pypi_server)
+        curl.setopt(curl.WRITEDATA, buffer)
+        curl.perform()
+    
+        status_code = curl.getinfo(pycurl.RESPONSE_CODE)
+        if status_code &gt;= 300:
+&gt;           raise HTTPError(status_code=status_code,
+                            reason='HTTP Error: {}'.format(status_code))
+E           yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;
+
+yarg/parse.py:46: HTTPError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_updated_packages_bad_get" time="0.342"><failure message="AssertionError: 300 != 301">self = &lt;tests.test_parse.TestParse testMethod=test_updated_packages_bad_get&gt;
+get_mock = &lt;MagicMock name='get' id='4449774832'&gt;
+
+    @patch('requests.get', return_value=BadResponse)
+    def test_updated_packages_bad_get(self, get_mock):
+        # Python 2.6....
+        try:
+&gt;           latest_updated_packages()
+
+tests/test_parse.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:95: in latest_updated_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+pypi_server = 'https://pypi.python.org/pypi?%3Aaction=rss'
+
+    def _get(pypi_server):
+        """
+        Query the PyPI RSS feed and return a list
+        of XML items.
+        """
+        buffer = BytesIO()
+        curl = pycurl.Curl()
+        curl.setopt(curl.URL, pypi_server)
+        curl.setopt(curl.WRITEDATA, buffer)
+        curl.perform()
+    
+        status_code = curl.getinfo(pycurl.RESPONSE_CODE)
+        if status_code &gt;= 300:
+&gt;           raise HTTPError(status_code=status_code,
+                            reason='HTTP Error: {}'.format(status_code))
+E           yarg.exceptions.HTTPError: &lt;HTTPError 301 HTTP Error: 301&gt;
+
+yarg/parse.py:46: HTTPError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_parse.TestParse testMethod=test_updated_packages_bad_get&gt;
+get_mock = &lt;MagicMock name='get' id='4449774832'&gt;
+
+    @patch('requests.get', return_value=BadResponse)
+    def test_updated_packages_bad_get(self, get_mock):
+        # Python 2.6....
+        try:
+            latest_updated_packages()
+        except HTTPError as e:
+&gt;           self.assertEqual(300, e.status_code)
+E           AssertionError: 300 != 301
+
+tests/test_parse.py:85: AssertionError</failure></testcase><testcase classname="tests.test_release.TestRelease" name="test_latest_release" time="0.002" /><testcase classname="tests.test_release.TestRelease" name="test_latest_release_id" time="0.001" /><testcase classname="tests.test_release.TestRelease" name="test_release" time="0.001" /><testcase classname="tests.test_release.TestRelease" name="test_release_filename" time="0.001" /><testcase classname="tests.test_release.TestRelease" name="test_release_has_sig" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_id" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_ids" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_md5" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_package_type" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_python_version" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_size" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_unknown_package_type" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_uploaded" time="0.004" /><testcase classname="tests.test_release.TestRelease" name="test_release_url" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_repr" time="0.000" /></testsuite></testsuites>

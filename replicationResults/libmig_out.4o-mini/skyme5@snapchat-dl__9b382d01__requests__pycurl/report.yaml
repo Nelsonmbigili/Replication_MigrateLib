@@ -1,0 +1,60 @@
+mig: skyme5@snapchat-dl__9b382d01__requests__pycurl__9b382d01__requests__pycurl
+repo: skyme5@snapchat-dl__9b382d01__requests__pycurl
+commit: 9b382d01f467a9d13b1bf7db67196321d2638c6d
+source: requests
+target: pycurl
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.5
+  target_version: 7.45.7
+  finished_at: '2026-03-04 02:12:09'
+  project_coverage: 95.83333333333333
+  total_tests: 14
+  passed_tests: 12
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 78.37837837837837
+  files:
+  - path: snapchat_dl/downloader.py
+    file_change_coverage: 71.42857142857143
+    covered_changed_lines: 4-5,26-30,33-37,39,41-42
+    uncovered_changed_lines: 17,31,43-44,49,52
+  - path: snapchat_dl/snapchat_dl.py
+    file_change_coverage: 84.61538461538461
+    covered_changed_lines: 7-8,43,47-51,54-56
+    uncovered_changed_lines: 52-53
+  - path: tests/test_downlaoder.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 6-7,37
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/test_downlaoder.py::Test_downloader::test_download_url_raise
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: Exception
+    error_message: 'Exception: HTTP error: 404'
+  - test_id: tests/test_snapchat_dl.py::TestSnapchat_dl::test_invalid_username
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: APIResponseError
+    error_message: snapchat_dl.utils.APIResponseError
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

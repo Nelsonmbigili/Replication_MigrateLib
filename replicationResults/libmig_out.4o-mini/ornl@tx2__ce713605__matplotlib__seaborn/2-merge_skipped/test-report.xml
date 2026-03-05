@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="27" time="5.490" timestamp="2026-03-04T10:39:51.904994+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_calc" name="test_frequent_words_in_cluster" time="0.003" /><testcase classname="tests.test_calc" name="test_frequent_words_in_cluster_handle_empty" time="0.001" /><testcase classname="tests.test_calc" name="test_frequent_words_by_class_in_cluster" time="0.003" /><testcase classname="tests.test_calc" name="test_sort_salience_map" time="0.000" /><testcase classname="tests.test_dashboard" name="test_dashboard_init_no_crash" time="3.752" /><testcase classname="tests.test_dashboard" name="test_dashboard_render_no_crash" time="0.020"><failure message="NameError: name 'plt' is not defined">dummy_wrapper = &lt;tx2.wrapper.Wrapper object at 0x13fe5f4d0&gt;
+clear_files_teardown = None
+
+    def test_dashboard_render_no_crash(dummy_wrapper, clear_files_teardown):
+        tx2.utils.DISABLE_DEBOUNCE = True
+        dash = Dashboard(dummy_wrapper)
+&gt;       dash.render()
+
+tests/test_dashboard.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/dashboard.py:439: in render
+    fig = visualization.plot_clusters_stacked(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+clusters = {'-1': [0, 1, 2, 3]}
+cluster_words_classified = {'-1': {'awesome': {'0': '0', '1': '2', 'total': '2'}, 'row': {'0': '2', '1': '2', 'total': '4'}, 'testing': {'0': '2', '1': '2', 'total': '4'}}}
+encodings = {'awesome': 0, 'not-awesome': 1}
+colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', ...]
+
+    def plot_clusters_stacked(clusters, cluster_words_classified, encodings, colors):
+        """Plot highest word values for each cluster, colored according to entry classification"""
+        num_cols = 4
+    
+        num_rows = math.ceil(len(clusters) / num_cols)
+    
+&gt;       fig, axs = plt.subplots(
+                   ^^^
+            num_rows, num_cols, figsize=(10, num_rows * 2), squeeze=False
+        )
+E       NameError: name 'plt' is not defined
+
+tx2/visualization.py:514: NameError</failure></testcase><testcase classname="tests.test_visualizations" name="test_gen_wordcloud_no_crash" time="0.053" /><testcase classname="tests.test_visualizations" name="test_gen_wordcloud_np_no_crash" time="0.040" /><testcase classname="tests.test_visualizations" name="test_prepare_wordclouds_no_crash" time="0.085" /><testcase classname="tests.test_visualizations" name="test_prepare_wordclouds_np_no_crash" time="0.071" /><testcase classname="tests.test_visualizations" name="test_prepare_wordclouds_calls_gen_correctly" time="0.002" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_w_labels" time="0.001" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_w_labels_np" time="0.001" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_wo_labels" time="0.000" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_empty" time="0.000" /><testcase classname="tests.test_visualizations" name="test_plot_big_wordcloud_no_crash" time="0.069"><failure message="NameError: name 'plt' is not defined">dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+dummy_clusters = {'0': [0, 1], '1': [2, 3]}
+
+    def test_plot_big_wordcloud_no_crash(dummy_df, dummy_clusters):
+        prepare_wordclouds(dummy_clusters, dummy_df.text)
+&gt;       plot_big_wordcloud(0, dummy_clusters)
+
+tests/test_visualizations.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+index = 0, clusters = {'0': [0, 1], '1': [2, 3]}
+
+    def plot_big_wordcloud(index: int, clusters: Dict[str, List[int]]):
+        """Render the word cloud that the currently selected point is in.
+    
+        :param index: The index of the point to find the cluster of.
+        :param clusters: The dictionary of clusters where the values are the lists of indices of entries in that cluster.
+        """
+&gt;       fig, ax = plt.subplots(figsize=(8, 5))
+                  ^^^
+E       NameError: name 'plt' is not defined
+
+tx2/visualization.py:110: NameError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_passed_wordcloud_no_crash" time="0.036"><failure message="NameError: name 'plt' is not defined">dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+
+    def test_plot_passed_wordcloud_no_crash(dummy_df):
+        cloud = gen_wordcloud(dummy_df.text)
+&gt;       plot_passed_wordcloud(cloud, "test")
+
+tests/test_visualizations.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cloud = &lt;wordcloud.wordcloud.WordCloud object at 0x14af5c830&gt;, name = 'test'
+
+    def plot_passed_wordcloud(cloud, name):
+        """Render the given word cloud.
+    
+        :param cloud: The word cloud to render.
+        :param name: The title to render with the word cloud.
+        """
+&gt;       fig, ax = plt.subplots(figsize=(8, 5))
+                  ^^^
+E       NameError: name 'plt' is not defined
+
+tx2/visualization.py:129: NameError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_wordclouds_no_crash" time="0.071"><failure message="NameError: name 'plt' is not defined">dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+dummy_clusters = {'0': [0, 1], '1': [2, 3]}
+
+    def test_plot_wordclouds_no_crash(dummy_df, dummy_clusters):
+        dashboard = type("Dashboard", (object,), {})()
+        dashboard.transformer_wrapper = type("Wrapper", (object,), {})()
+        dashboard.transformer_wrapper.clusters = dummy_clusters
+        # forgive me for I have sinned...(I couldn't figure out how to do the equivalent with mocker)
+    
+        prepare_wordclouds(dummy_clusters, dummy_df.text)
+&gt;       plot_wordclouds(dashboard)
+
+tests/test_visualizations.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+dashboard = &lt;tests.test_visualizations.Dashboard object at 0x14af5c980&gt;
+
+    def plot_wordclouds(dashboard):
+        """Render the grid of all wordclouds.
+    
+        :param dashboard: The current dashboard, needed in order to grab the cluster data.
+        """
+        num_cols = 4
+        num_rows = max(math.ceil(len(dashboard.transformer_wrapper.clusters) / num_cols), 2)
+        # NOTE: we set a minimum row count of 2, because otherwise axs below won't be a nested array.
+    
+&gt;       fig, axs = plt.subplots(num_rows, num_cols, figsize=(8, num_rows * 1.5))
+                   ^^^
+E       NameError: name 'plt' is not defined
+
+tx2/visualization.py:150: NameError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_embedding_projections_no_crash" time="0.014"><failure message="NameError: name 'plt' is not defined">mocker = &lt;pytest_mock.plugin.MockerFixture object at 0x1492f0f50&gt;
+dummy_wrapper = &lt;tx2.wrapper.Wrapper object at 0x14af5d2b0&gt;
+dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+
+    def test_plot_embedding_projections_no_crash(
+        mocker,  # noqa: F811 -- mocker has to be passed in as fixture
+        dummy_wrapper,
+        dummy_df,
+    ):
+        tx2.utils.DISABLE_DEBOUNCE = True
+    
+        dash = Dashboard(dummy_wrapper)
+&gt;       plot_embedding_projections(dummy_df.text.iloc[0], dash)
+
+tests/test_visualizations.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/utils.py:103: in debounced
+    timer.start()
+tx2/utils.py:77: in start
+    self._callback()
+tx2/utils.py:98: in call_it
+    fn(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = 'testing row 0'
+dashboard = &lt;tx2.dashboard.Dashboard object at 0x14af5c6e0&gt;, prediction = None
+
+    @utils.debounce(1.0)
+    def plot_embedding_projections(text, dashboard, prediction=None):
+        dashboard.html_graph_status.value = (
+            "&lt;p&gt;" + tx2.visualization.get_nice_html_label("Graphing...", "#FF0000") + "&lt;/p&gt;"
+        )
+&gt;       fig, ax = plt.subplots(figsize=(10, 8))
+                  ^^^
+E       NameError: name 'plt' is not defined
+
+tx2/visualization.py:294: NameError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_embedding_projections_w_training_no_crash" time="0.013"><failure message="NameError: name 'plt' is not defined">mocker = &lt;pytest_mock.plugin.MockerFixture object at 0x1492f1bd0&gt;
+dummy_wrapper = &lt;tx2.wrapper.Wrapper object at 0x14af5d7f0&gt;
+dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+
+    def test_plot_embedding_projections_w_training_no_crash(
+        mocker,  # noqa: F811 -- mocker has to be passed in as fixture
+        dummy_wrapper,
+        dummy_df,
+    ):
+        tx2.utils.DISABLE_DEBOUNCE = True
+        dash = Dashboard(dummy_wrapper)
+        dash.chk_show_train = type("checkbox", (object,), {})()
+        dash.chk_show_train.value = True
+&gt;       plot_embedding_projections(dummy_df.text.iloc[0], dash)
+
+tests/test_visualizations.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/utils.py:103: in debounced
+    timer.start()
+tx2/utils.py:77: in start
+    self._callback()
+tx2/utils.py:98: in call_it
+    fn(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = 'testing row 0'
+dashboard = &lt;tx2.dashboard.Dashboard object at 0x14af5d940&gt;, prediction = None
+
+    @utils.debounce(1.0)
+    def plot_embedding_projections(text, dashboard, prediction=None):
+        dashboard.html_graph_status.value = (
+            "&lt;p&gt;" + tx2.visualization.get_nice_html_label("Graphing...", "#FF0000") + "&lt;/p&gt;"
+        )
+&gt;       fig, ax = plt.subplots(figsize=(10, 8))
+                  ^^^
+E       NameError: name 'plt' is not defined
+
+tx2/visualization.py:294: NameError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_embedding_projections_w_errorfocus_no_crash" time="0.013"><failure message="NameError: name 'plt' is not defined">mocker = &lt;pytest_mock.plugin.MockerFixture object at 0x14afdd940&gt;
+dummy_wrapper = &lt;tx2.wrapper.Wrapper object at 0x14af5dfd0&gt;
+dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+
+    def test_plot_embedding_projections_w_errorfocus_no_crash(
+        mocker,  # noqa: F811 -- mocker has to be passed in as fixture
+        dummy_wrapper,
+        dummy_df,
+    ):
+        tx2.utils.DISABLE_DEBOUNCE = True
+        dash = Dashboard(dummy_wrapper)
+        dash.chk_focus_errors = type("checkbox", (object,), {})()
+        dash.chk_focus_errors.value = True
+&gt;       plot_embedding_projections(dummy_df.text.iloc[0], dash)
+
+tests/test_visualizations.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/utils.py:103: in debounced
+    timer.start()
+tx2/utils.py:77: in start
+    self._callback()
+tx2/utils.py:98: in call_it
+    fn(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = 'testing row 0'
+dashboard = &lt;tx2.dashboard.Dashboard object at 0x14af5de80&gt;, prediction = None
+
+    @utils.debounce(1.0)
+    def plot_embedding_projections(text, dashboard, prediction=None):
+        dashboard.html_graph_status.value = (
+            "&lt;p&gt;" + tx2.visualization.get_nice_html_label("Graphing...", "#FF0000") + "&lt;/p&gt;"
+        )
+&gt;       fig, ax = plt.subplots(figsize=(10, 8))
+                  ^^^
+E       NameError: name 'plt' is not defined
+
+tx2/visualization.py:294: NameError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_metrics_no_crash" time="0.020" /><testcase classname="tests.test_visualizations" name="test_plot_confusion_matrix_no_crash" time="0.001"><failure message="NameError: name 'plt' is not defined">dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+dummy_encodings = {'awesome': 0, 'not-awesome': 1}
+
+    def test_plot_confusion_matrix_no_crash(dummy_df, dummy_encodings):
+&gt;       plot_confusion_matrix(dummy_df.target, dummy_df.target, dummy_encodings)
+
+tests/test_visualizations.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+pred_y = 0    0
+1    0
+2    1
+3    1
+Name: target, dtype: int64
+target_y = 0    0
+1    0
+2    1
+3    1
+Name: target, dtype: int64
+encodings = {'awesome': 0, 'not-awesome': 1}, figsize = (8, 8)
+
+    def plot_confusion_matrix(
+        pred_y: List[int], target_y: List[int], encodings: Dict[str, int], figsize=(8, 8)
+    ):
+        """Get the confusion matrix for given predictions.
+    
+        :param pred_y: Predicted labels.
+        :param target_y: Actual labels.
+        :param encodings: Dictionary of string label -&gt; numeric label.
+        :param figsize: the size with which to
+        """
+        labels = []
+        encoded = []
+        for i in range(len(encodings.keys())):
+            for key, value in encodings.items():
+                if value == i:
+                    labels.append(key)
+                    encoded.append(value)
+                    break
+        cm = confusion_matrix(target_y, pred_y, labels=list(encodings.values()))
+    
+        acc = np.trace(cm) / float(np.sum(cm))
+        miss = 1 - acc
+    
+&gt;       fig, ax = plt.subplots(figsize=figsize)
+                  ^^^
+E       NameError: name 'plt' is not defined
+
+tx2/visualization.py:238: NameError</failure></testcase><testcase classname="tests.test_wrapper" name="test_wrapper_init_no_crash" time="0.001" /><testcase classname="tests.test_wrapper" name="test_wrapper_init_np_no_crash" time="0.000" /><testcase classname="tests.test_wrapper" name="test_wrapper_prepare_no_crash" time="0.004" /><testcase classname="tests.test_wrapper" name="test_wrapper_np_prepare_no_crash" time="0.038" /></testsuite></testsuites>

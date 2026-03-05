@@ -1,0 +1,1094 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="27" time="6.563" timestamp="2026-03-04T11:44:08.778844+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_calc" name="test_frequent_words_in_cluster" time="0.002" /><testcase classname="tests.test_calc" name="test_frequent_words_in_cluster_handle_empty" time="0.001" /><testcase classname="tests.test_calc" name="test_frequent_words_by_class_in_cluster" time="0.002" /><testcase classname="tests.test_calc" name="test_sort_salience_map" time="0.000" /><testcase classname="tests.test_dashboard" name="test_dashboard_init_no_crash" time="3.132" /><testcase classname="tests.test_dashboard" name="test_dashboard_render_no_crash" time="0.095"><failure message="NameError: name 'fig' is not defined">dummy_wrapper = &lt;tx2.wrapper.Wrapper object at 0x1499d12b0&gt;
+clear_files_teardown = None
+
+    def test_dashboard_render_no_crash(dummy_wrapper, clear_files_teardown):
+        tx2.utils.DISABLE_DEBOUNCE = True
+        dash = Dashboard(dummy_wrapper)
+&gt;       dash.render()
+
+tests/test_dashboard.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/dashboard.py:482: in render
+    self.on_text_picker_change(None)
+tx2/dashboard.py:511: in on_text_picker_change
+    self.text_entry.value = new_text
+    ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/traitlets/traitlets.py:716: in __set__
+    self.set(obj, value)
+.venv/lib/python3.14/site-packages/traitlets/traitlets.py:706: in set
+    obj._notify_trait(self.name, old_value, new_value)
+.venv/lib/python3.14/site-packages/traitlets/traitlets.py:1513: in _notify_trait
+    self.notify_change(
+.venv/lib/python3.14/site-packages/ipywidgets/widgets/widget.py:701: in notify_change
+    super().notify_change(change)
+.venv/lib/python3.14/site-packages/traitlets/traitlets.py:1525: in notify_change
+    return self._notify_observers(change)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/traitlets/traitlets.py:1568: in _notify_observers
+    c(event)
+tx2/dashboard.py:556: in on_text_area_change
+    visualization.plot_embedding_projections(new_text, self, prediction)
+tx2/utils.py:103: in debounced
+    timer.start()
+tx2/utils.py:77: in start
+    self._callback()
+tx2/utils.py:98: in call_it
+    fn(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = 'testing row 0'
+dashboard = &lt;tx2.dashboard.Dashboard object at 0x1499d1160&gt;, prediction = 0
+
+    @utils.debounce(1.0)
+    def plot_embedding_projections(text, dashboard, prediction=None):
+        dashboard.html_graph_status.value = (
+            "&lt;p&gt;" + tx2.visualization.get_nice_html_label("Graphing...", "#FF0000") + "&lt;/p&gt;"
+        )
+    
+        # render all test data projections
+        if not dashboard.chk_focus_errors.value:
+            testing_x, testing_y, testing_c = _get_scatter_points_from_embeddings(
+                dashboard.colors,
+                np.array(dashboard.transformer_wrapper.projections_testing),
+                dashboard.transformer_wrapper.test_labels,
+            )
+            df_testing = pd.DataFrame({
+                'x': testing_x,
+                'y': testing_y,
+                'color': testing_c
+            })
+            scatter_chart = alt.Chart(df_testing).mark_circle().encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            ).properties(
+                width=600,
+                height=400
+            )
+        else:
+            # render incorrect test data
+            df_temp = pd.DataFrame.from_dict(
+                {
+                    "pred": dashboard.transformer_wrapper.predictions,
+                    "target": dashboard.transformer_wrapper.test_labels,
+                }
+            )
+            df_incorrect = df_temp[df_temp.pred != df_temp.target]
+    
+            incorrect_indices = list(df_incorrect.index)
+            incorrect_projections = [
+                dashboard.transformer_wrapper.projections_testing[i]
+                for i in range(len(dashboard.transformer_wrapper.projections_testing))
+                if i in incorrect_indices
+            ]
+            incorrect_x, incorrect_y, incorrect_c = _get_scatter_points_from_embeddings(
+                dashboard.colors, np.array(incorrect_projections), df_incorrect.target
+            )
+            df_incorrect = pd.DataFrame({
+                'x': incorrect_x,
+                'y': incorrect_y,
+                'color': incorrect_c
+            })
+            scatter_chart = alt.Chart(df_incorrect).mark_circle().encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            ).properties(
+                width=600,
+                height=400
+            )
+    
+            # render correct test data
+            df_correct = df_temp[df_temp.pred == df_temp.target]
+            correct_indices = list(df_correct.index)
+            correct_projections = [
+                dashboard.transformer_wrapper.projections_testing[i]
+                for i in range(len(dashboard.transformer_wrapper.projections_testing))
+                if i in correct_indices
+            ]
+            correct_x, correct_y, correct_c = _get_scatter_points_from_embeddings(
+                dashboard.colors, np.array(correct_projections), df_correct.target
+            )
+            df_correct = pd.DataFrame({
+                'x': correct_x,
+                'y': correct_y,
+                'color': correct_c
+            })
+            scatter_chart += alt.Chart(df_correct).mark_circle(opacity=0.1).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # render training data projections
+        if dashboard.chk_show_train.value:
+            training_x, training_y, training_c = _get_scatter_points_from_embeddings(
+                dashboard.colors,
+                np.array(dashboard.transformer_wrapper.projections_training),
+                dashboard.transformer_wrapper.train_labels,
+            )
+            df_training = pd.DataFrame({
+                'x': training_x,
+                'y': training_y,
+                'color': training_c
+            })
+            scatter_chart += alt.Chart(df_training).mark_circle(opacity=0.1).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # render highlighted data points
+        if len(dashboard.highlight_indices) &gt; 0:
+            highlighted_x = testing_x[dashboard.highlight_indices]
+            highlighted_y = testing_y[dashboard.highlight_indices]
+            highlighted_c = testing_c[dashboard.highlight_indices]
+            df_highlighted = pd.DataFrame({
+                'x': highlighted_x,
+                'y': highlighted_y,
+                'color': highlighted_c
+            })
+            scatter_chart += alt.Chart(df_highlighted).mark_circle(size=100, stroke='red', strokeWidth=2).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # if text differs from the selected index, render new point
+        if (
+            dashboard.prior_reference_point is None
+            or dashboard.prior_reference_text != text
+        ):
+            text_projection = dashboard.transformer_wrapper.project([text])[0]
+            if prediction is None:
+                classification = dashboard.transformer_wrapper.classify([text])[0]
+                pred_color = dashboard.colors[classification]
+            else:
+                pred_color = dashboard.colors[prediction]
+            df_new_point = pd.DataFrame({
+                'x': [text_projection[0]],
+                'y': [text_projection[1]],
+                'color': [pred_color]
+            })
+            scatter_chart += alt.Chart(df_new_point).mark_circle(size=100, stroke='black', strokeWidth=2).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # render the original reference point and arrow if applicable
+        if dashboard.prior_reference_point is not None:
+            df_ref_point = pd.DataFrame({
+                'x': [dashboard.prior_reference_point[0][0]],
+                'y': [dashboard.prior_reference_point[0][1]],
+                'color': [dashboard.prior_reference_point[1]]
+            })
+            scatter_chart += alt.Chart(df_ref_point).mark_circle(size=100, stroke='black', strokeWidth=2).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+            # arrow!
+            if dashboard.prior_reference_text != text:
+                x_dist = text_projection[0] - dashboard.prior_reference_point[0][0]
+                y_dist = text_projection[1] - dashboard.prior_reference_point[0][1]
+                arrow_data = pd.DataFrame({
+                    'x': [dashboard.prior_reference_point[0][0]],
+                    'y': [dashboard.prior_reference_point[0][1]],
+                    'x_end': [text_projection[0]],
+                    'y_end': [text_projection[1]]
+                })
+                arrow_chart = alt.Chart(arrow_data).mark_rule().encode(
+                    x='x:Q',
+                    x2='x_end:Q',
+                    y='y:Q',
+                    y2='y_end:Q',
+                    color=alt.value('black')
+                )
+                scatter_chart += arrow_chart
+    
+        # show visual cluster labels
+        if dashboard.chk_show_cluster_labels.value:
+            for x, y, label in dashboard.transformer_wrapper.cluster_labels:
+                scatter_chart += alt.Chart(pd.DataFrame({'x': [float(x)], 'y': [float(y)], 'label': [label]})).mark_text(
+                    align='center',
+                    baseline='middle',
+                    dx=5,
+                    dy=-5
+                ).encode(
+                    x='x:Q',
+                    y='y:Q',
+                    text='label:N'
+                )
+    
+        # display legend
+        legend_data = pd.DataFrame({
+            'label': list(dashboard.transformer_wrapper.encodings.keys()),
+            'color': [dashboard.colors[i] for i in range(len(dashboard.transformer_wrapper.encodings))]
+        })
+        legend_chart = alt.Chart(legend_data).mark_point().encode(
+            x=alt.X('label:N', title='Classes'),
+            y=alt.Y('color:N', title='Colors'),
+            color='color:N'
+        )
+    
+        # output
+&gt;       fig.patch.set_facecolor("white")
+        ^^^
+E       NameError: name 'fig' is not defined
+
+tx2/visualization.py:478: NameError</failure></testcase><testcase classname="tests.test_visualizations" name="test_gen_wordcloud_no_crash" time="0.221" /><testcase classname="tests.test_visualizations" name="test_gen_wordcloud_np_no_crash" time="0.045" /><testcase classname="tests.test_visualizations" name="test_prepare_wordclouds_no_crash" time="0.078" /><testcase classname="tests.test_visualizations" name="test_prepare_wordclouds_np_no_crash" time="0.080" /><testcase classname="tests.test_visualizations" name="test_prepare_wordclouds_calls_gen_correctly" time="0.002" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_w_labels" time="0.001" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_w_labels_np" time="0.001" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_wo_labels" time="0.000" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_empty" time="0.000" /><testcase classname="tests.test_visualizations" name="test_plot_big_wordcloud_no_crash" time="0.091"><failure message="ValueError: Must pass 2-d input. shape=(400, 800, 3)">dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+dummy_clusters = {'0': [0, 1], '1': [2, 3]}
+
+    def test_plot_big_wordcloud_no_crash(dummy_df, dummy_clusters):
+        prepare_wordclouds(dummy_clusters, dummy_df.text)
+&gt;       plot_big_wordcloud(0, dummy_clusters)
+
+tests/test_visualizations.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/visualization.py:112: in plot_big_wordcloud
+    wordcloud_df = pd.DataFrame(wordcloud_data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pandas/core/frame.py:814: in __init__
+    mgr = ndarray_to_mgr(
+.venv/lib/python3.14/site-packages/pandas/core/internals/construction.py:277: in ndarray_to_mgr
+    values = _ensure_2d(values)
+             ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+     ...    ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], shape=(400, 800, 3), dtype=uint8)
+
+    def _ensure_2d(values: np.ndarray) -&gt; np.ndarray:
+        """
+        Reshape 1D values, raise on anything else other than 2D.
+        """
+        if values.ndim == 1:
+            values = values.reshape((values.shape[0], 1))
+        elif values.ndim != 2:
+&gt;           raise ValueError(f"Must pass 2-d input. shape={values.shape}")
+E           ValueError: Must pass 2-d input. shape=(400, 800, 3)
+
+.venv/lib/python3.14/site-packages/pandas/core/internals/construction.py:549: ValueError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_passed_wordcloud_no_crash" time="0.041"><failure message="ValueError: Must pass 2-d input. shape=(400, 800, 3)">dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+
+    def test_plot_passed_wordcloud_no_crash(dummy_df):
+        cloud = gen_wordcloud(dummy_df.text)
+&gt;       plot_passed_wordcloud(cloud, "test")
+
+tests/test_visualizations.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/visualization.py:133: in plot_passed_wordcloud
+    wordcloud_df = pd.DataFrame(wordcloud_data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pandas/core/frame.py:814: in __init__
+    mgr = ndarray_to_mgr(
+.venv/lib/python3.14/site-packages/pandas/core/internals/construction.py:277: in ndarray_to_mgr
+    values = _ensure_2d(values)
+             ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+     ...    ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], shape=(400, 800, 3), dtype=uint8)
+
+    def _ensure_2d(values: np.ndarray) -&gt; np.ndarray:
+        """
+        Reshape 1D values, raise on anything else other than 2D.
+        """
+        if values.ndim == 1:
+            values = values.reshape((values.shape[0], 1))
+        elif values.ndim != 2:
+&gt;           raise ValueError(f"Must pass 2-d input. shape={values.shape}")
+E           ValueError: Must pass 2-d input. shape=(400, 800, 3)
+
+.venv/lib/python3.14/site-packages/pandas/core/internals/construction.py:549: ValueError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_wordclouds_no_crash" time="0.091"><failure message="ValueError: Must pass 2-d input. shape=(400, 800, 3)">dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+dummy_clusters = {'0': [0, 1], '1': [2, 3]}
+
+    def test_plot_wordclouds_no_crash(dummy_df, dummy_clusters):
+        dashboard = type("Dashboard", (object,), {})()
+        dashboard.transformer_wrapper = type("Wrapper", (object,), {})()
+        dashboard.transformer_wrapper.clusters = dummy_clusters
+        # forgive me for I have sinned...(I couldn't figure out how to do the equivalent with mocker)
+    
+        prepare_wordclouds(dummy_clusters, dummy_df.text)
+&gt;       plot_wordclouds(dashboard)
+
+tests/test_visualizations.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/visualization.py:158: in plot_wordclouds
+    wordcloud_df = pd.DataFrame(wordcloud_data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pandas/core/frame.py:814: in __init__
+    mgr = ndarray_to_mgr(
+.venv/lib/python3.14/site-packages/pandas/core/internals/construction.py:277: in ndarray_to_mgr
+    values = _ensure_2d(values)
+             ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+     ...    ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], shape=(400, 800, 3), dtype=uint8)
+
+    def _ensure_2d(values: np.ndarray) -&gt; np.ndarray:
+        """
+        Reshape 1D values, raise on anything else other than 2D.
+        """
+        if values.ndim == 1:
+            values = values.reshape((values.shape[0], 1))
+        elif values.ndim != 2:
+&gt;           raise ValueError(f"Must pass 2-d input. shape={values.shape}")
+E           ValueError: Must pass 2-d input. shape=(400, 800, 3)
+
+.venv/lib/python3.14/site-packages/pandas/core/internals/construction.py:549: ValueError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_embedding_projections_no_crash" time="1.199"><failure message="NameError: name 'fig' is not defined">mocker = &lt;pytest_mock.plugin.MockerFixture object at 0x14a431a90&gt;
+dummy_wrapper = &lt;tx2.wrapper.Wrapper object at 0x14a3cdbe0&gt;
+dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+
+    def test_plot_embedding_projections_no_crash(
+        mocker,  # noqa: F811 -- mocker has to be passed in as fixture
+        dummy_wrapper,
+        dummy_df,
+    ):
+        tx2.utils.DISABLE_DEBOUNCE = True
+    
+        dash = Dashboard(dummy_wrapper)
+&gt;       plot_embedding_projections(dummy_df.text.iloc[0], dash)
+
+tests/test_visualizations.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/utils.py:103: in debounced
+    timer.start()
+tx2/utils.py:77: in start
+    self._callback()
+tx2/utils.py:98: in call_it
+    fn(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = 'testing row 0'
+dashboard = &lt;tx2.dashboard.Dashboard object at 0x14a3cda90&gt;, prediction = None
+
+    @utils.debounce(1.0)
+    def plot_embedding_projections(text, dashboard, prediction=None):
+        dashboard.html_graph_status.value = (
+            "&lt;p&gt;" + tx2.visualization.get_nice_html_label("Graphing...", "#FF0000") + "&lt;/p&gt;"
+        )
+    
+        # render all test data projections
+        if not dashboard.chk_focus_errors.value:
+            testing_x, testing_y, testing_c = _get_scatter_points_from_embeddings(
+                dashboard.colors,
+                np.array(dashboard.transformer_wrapper.projections_testing),
+                dashboard.transformer_wrapper.test_labels,
+            )
+            df_testing = pd.DataFrame({
+                'x': testing_x,
+                'y': testing_y,
+                'color': testing_c
+            })
+            scatter_chart = alt.Chart(df_testing).mark_circle().encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            ).properties(
+                width=600,
+                height=400
+            )
+        else:
+            # render incorrect test data
+            df_temp = pd.DataFrame.from_dict(
+                {
+                    "pred": dashboard.transformer_wrapper.predictions,
+                    "target": dashboard.transformer_wrapper.test_labels,
+                }
+            )
+            df_incorrect = df_temp[df_temp.pred != df_temp.target]
+    
+            incorrect_indices = list(df_incorrect.index)
+            incorrect_projections = [
+                dashboard.transformer_wrapper.projections_testing[i]
+                for i in range(len(dashboard.transformer_wrapper.projections_testing))
+                if i in incorrect_indices
+            ]
+            incorrect_x, incorrect_y, incorrect_c = _get_scatter_points_from_embeddings(
+                dashboard.colors, np.array(incorrect_projections), df_incorrect.target
+            )
+            df_incorrect = pd.DataFrame({
+                'x': incorrect_x,
+                'y': incorrect_y,
+                'color': incorrect_c
+            })
+            scatter_chart = alt.Chart(df_incorrect).mark_circle().encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            ).properties(
+                width=600,
+                height=400
+            )
+    
+            # render correct test data
+            df_correct = df_temp[df_temp.pred == df_temp.target]
+            correct_indices = list(df_correct.index)
+            correct_projections = [
+                dashboard.transformer_wrapper.projections_testing[i]
+                for i in range(len(dashboard.transformer_wrapper.projections_testing))
+                if i in correct_indices
+            ]
+            correct_x, correct_y, correct_c = _get_scatter_points_from_embeddings(
+                dashboard.colors, np.array(correct_projections), df_correct.target
+            )
+            df_correct = pd.DataFrame({
+                'x': correct_x,
+                'y': correct_y,
+                'color': correct_c
+            })
+            scatter_chart += alt.Chart(df_correct).mark_circle(opacity=0.1).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # render training data projections
+        if dashboard.chk_show_train.value:
+            training_x, training_y, training_c = _get_scatter_points_from_embeddings(
+                dashboard.colors,
+                np.array(dashboard.transformer_wrapper.projections_training),
+                dashboard.transformer_wrapper.train_labels,
+            )
+            df_training = pd.DataFrame({
+                'x': training_x,
+                'y': training_y,
+                'color': training_c
+            })
+            scatter_chart += alt.Chart(df_training).mark_circle(opacity=0.1).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # render highlighted data points
+        if len(dashboard.highlight_indices) &gt; 0:
+            highlighted_x = testing_x[dashboard.highlight_indices]
+            highlighted_y = testing_y[dashboard.highlight_indices]
+            highlighted_c = testing_c[dashboard.highlight_indices]
+            df_highlighted = pd.DataFrame({
+                'x': highlighted_x,
+                'y': highlighted_y,
+                'color': highlighted_c
+            })
+            scatter_chart += alt.Chart(df_highlighted).mark_circle(size=100, stroke='red', strokeWidth=2).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # if text differs from the selected index, render new point
+        if (
+            dashboard.prior_reference_point is None
+            or dashboard.prior_reference_text != text
+        ):
+            text_projection = dashboard.transformer_wrapper.project([text])[0]
+            if prediction is None:
+                classification = dashboard.transformer_wrapper.classify([text])[0]
+                pred_color = dashboard.colors[classification]
+            else:
+                pred_color = dashboard.colors[prediction]
+            df_new_point = pd.DataFrame({
+                'x': [text_projection[0]],
+                'y': [text_projection[1]],
+                'color': [pred_color]
+            })
+            scatter_chart += alt.Chart(df_new_point).mark_circle(size=100, stroke='black', strokeWidth=2).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # render the original reference point and arrow if applicable
+        if dashboard.prior_reference_point is not None:
+            df_ref_point = pd.DataFrame({
+                'x': [dashboard.prior_reference_point[0][0]],
+                'y': [dashboard.prior_reference_point[0][1]],
+                'color': [dashboard.prior_reference_point[1]]
+            })
+            scatter_chart += alt.Chart(df_ref_point).mark_circle(size=100, stroke='black', strokeWidth=2).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+            # arrow!
+            if dashboard.prior_reference_text != text:
+                x_dist = text_projection[0] - dashboard.prior_reference_point[0][0]
+                y_dist = text_projection[1] - dashboard.prior_reference_point[0][1]
+                arrow_data = pd.DataFrame({
+                    'x': [dashboard.prior_reference_point[0][0]],
+                    'y': [dashboard.prior_reference_point[0][1]],
+                    'x_end': [text_projection[0]],
+                    'y_end': [text_projection[1]]
+                })
+                arrow_chart = alt.Chart(arrow_data).mark_rule().encode(
+                    x='x:Q',
+                    x2='x_end:Q',
+                    y='y:Q',
+                    y2='y_end:Q',
+                    color=alt.value('black')
+                )
+                scatter_chart += arrow_chart
+    
+        # show visual cluster labels
+        if dashboard.chk_show_cluster_labels.value:
+            for x, y, label in dashboard.transformer_wrapper.cluster_labels:
+                scatter_chart += alt.Chart(pd.DataFrame({'x': [float(x)], 'y': [float(y)], 'label': [label]})).mark_text(
+                    align='center',
+                    baseline='middle',
+                    dx=5,
+                    dy=-5
+                ).encode(
+                    x='x:Q',
+                    y='y:Q',
+                    text='label:N'
+                )
+    
+        # display legend
+        legend_data = pd.DataFrame({
+            'label': list(dashboard.transformer_wrapper.encodings.keys()),
+            'color': [dashboard.colors[i] for i in range(len(dashboard.transformer_wrapper.encodings))]
+        })
+        legend_chart = alt.Chart(legend_data).mark_point().encode(
+            x=alt.X('label:N', title='Classes'),
+            y=alt.Y('color:N', title='Colors'),
+            color='color:N'
+        )
+    
+        # output
+&gt;       fig.patch.set_facecolor("white")
+        ^^^
+E       NameError: name 'fig' is not defined
+
+tx2/visualization.py:478: NameError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_embedding_projections_w_training_no_crash" time="0.038"><failure message="NameError: name 'fig' is not defined">mocker = &lt;pytest_mock.plugin.MockerFixture object at 0x14be03d90&gt;
+dummy_wrapper = &lt;tx2.wrapper.Wrapper object at 0x14a3cfcb0&gt;
+dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+
+    def test_plot_embedding_projections_w_training_no_crash(
+        mocker,  # noqa: F811 -- mocker has to be passed in as fixture
+        dummy_wrapper,
+        dummy_df,
+    ):
+        tx2.utils.DISABLE_DEBOUNCE = True
+        dash = Dashboard(dummy_wrapper)
+        dash.chk_show_train = type("checkbox", (object,), {})()
+        dash.chk_show_train.value = True
+&gt;       plot_embedding_projections(dummy_df.text.iloc[0], dash)
+
+tests/test_visualizations.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/utils.py:103: in debounced
+    timer.start()
+tx2/utils.py:77: in start
+    self._callback()
+tx2/utils.py:98: in call_it
+    fn(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = 'testing row 0'
+dashboard = &lt;tx2.dashboard.Dashboard object at 0x14a3cfe00&gt;, prediction = None
+
+    @utils.debounce(1.0)
+    def plot_embedding_projections(text, dashboard, prediction=None):
+        dashboard.html_graph_status.value = (
+            "&lt;p&gt;" + tx2.visualization.get_nice_html_label("Graphing...", "#FF0000") + "&lt;/p&gt;"
+        )
+    
+        # render all test data projections
+        if not dashboard.chk_focus_errors.value:
+            testing_x, testing_y, testing_c = _get_scatter_points_from_embeddings(
+                dashboard.colors,
+                np.array(dashboard.transformer_wrapper.projections_testing),
+                dashboard.transformer_wrapper.test_labels,
+            )
+            df_testing = pd.DataFrame({
+                'x': testing_x,
+                'y': testing_y,
+                'color': testing_c
+            })
+            scatter_chart = alt.Chart(df_testing).mark_circle().encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            ).properties(
+                width=600,
+                height=400
+            )
+        else:
+            # render incorrect test data
+            df_temp = pd.DataFrame.from_dict(
+                {
+                    "pred": dashboard.transformer_wrapper.predictions,
+                    "target": dashboard.transformer_wrapper.test_labels,
+                }
+            )
+            df_incorrect = df_temp[df_temp.pred != df_temp.target]
+    
+            incorrect_indices = list(df_incorrect.index)
+            incorrect_projections = [
+                dashboard.transformer_wrapper.projections_testing[i]
+                for i in range(len(dashboard.transformer_wrapper.projections_testing))
+                if i in incorrect_indices
+            ]
+            incorrect_x, incorrect_y, incorrect_c = _get_scatter_points_from_embeddings(
+                dashboard.colors, np.array(incorrect_projections), df_incorrect.target
+            )
+            df_incorrect = pd.DataFrame({
+                'x': incorrect_x,
+                'y': incorrect_y,
+                'color': incorrect_c
+            })
+            scatter_chart = alt.Chart(df_incorrect).mark_circle().encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            ).properties(
+                width=600,
+                height=400
+            )
+    
+            # render correct test data
+            df_correct = df_temp[df_temp.pred == df_temp.target]
+            correct_indices = list(df_correct.index)
+            correct_projections = [
+                dashboard.transformer_wrapper.projections_testing[i]
+                for i in range(len(dashboard.transformer_wrapper.projections_testing))
+                if i in correct_indices
+            ]
+            correct_x, correct_y, correct_c = _get_scatter_points_from_embeddings(
+                dashboard.colors, np.array(correct_projections), df_correct.target
+            )
+            df_correct = pd.DataFrame({
+                'x': correct_x,
+                'y': correct_y,
+                'color': correct_c
+            })
+            scatter_chart += alt.Chart(df_correct).mark_circle(opacity=0.1).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # render training data projections
+        if dashboard.chk_show_train.value:
+            training_x, training_y, training_c = _get_scatter_points_from_embeddings(
+                dashboard.colors,
+                np.array(dashboard.transformer_wrapper.projections_training),
+                dashboard.transformer_wrapper.train_labels,
+            )
+            df_training = pd.DataFrame({
+                'x': training_x,
+                'y': training_y,
+                'color': training_c
+            })
+            scatter_chart += alt.Chart(df_training).mark_circle(opacity=0.1).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # render highlighted data points
+        if len(dashboard.highlight_indices) &gt; 0:
+            highlighted_x = testing_x[dashboard.highlight_indices]
+            highlighted_y = testing_y[dashboard.highlight_indices]
+            highlighted_c = testing_c[dashboard.highlight_indices]
+            df_highlighted = pd.DataFrame({
+                'x': highlighted_x,
+                'y': highlighted_y,
+                'color': highlighted_c
+            })
+            scatter_chart += alt.Chart(df_highlighted).mark_circle(size=100, stroke='red', strokeWidth=2).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # if text differs from the selected index, render new point
+        if (
+            dashboard.prior_reference_point is None
+            or dashboard.prior_reference_text != text
+        ):
+            text_projection = dashboard.transformer_wrapper.project([text])[0]
+            if prediction is None:
+                classification = dashboard.transformer_wrapper.classify([text])[0]
+                pred_color = dashboard.colors[classification]
+            else:
+                pred_color = dashboard.colors[prediction]
+            df_new_point = pd.DataFrame({
+                'x': [text_projection[0]],
+                'y': [text_projection[1]],
+                'color': [pred_color]
+            })
+            scatter_chart += alt.Chart(df_new_point).mark_circle(size=100, stroke='black', strokeWidth=2).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # render the original reference point and arrow if applicable
+        if dashboard.prior_reference_point is not None:
+            df_ref_point = pd.DataFrame({
+                'x': [dashboard.prior_reference_point[0][0]],
+                'y': [dashboard.prior_reference_point[0][1]],
+                'color': [dashboard.prior_reference_point[1]]
+            })
+            scatter_chart += alt.Chart(df_ref_point).mark_circle(size=100, stroke='black', strokeWidth=2).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+            # arrow!
+            if dashboard.prior_reference_text != text:
+                x_dist = text_projection[0] - dashboard.prior_reference_point[0][0]
+                y_dist = text_projection[1] - dashboard.prior_reference_point[0][1]
+                arrow_data = pd.DataFrame({
+                    'x': [dashboard.prior_reference_point[0][0]],
+                    'y': [dashboard.prior_reference_point[0][1]],
+                    'x_end': [text_projection[0]],
+                    'y_end': [text_projection[1]]
+                })
+                arrow_chart = alt.Chart(arrow_data).mark_rule().encode(
+                    x='x:Q',
+                    x2='x_end:Q',
+                    y='y:Q',
+                    y2='y_end:Q',
+                    color=alt.value('black')
+                )
+                scatter_chart += arrow_chart
+    
+        # show visual cluster labels
+        if dashboard.chk_show_cluster_labels.value:
+            for x, y, label in dashboard.transformer_wrapper.cluster_labels:
+                scatter_chart += alt.Chart(pd.DataFrame({'x': [float(x)], 'y': [float(y)], 'label': [label]})).mark_text(
+                    align='center',
+                    baseline='middle',
+                    dx=5,
+                    dy=-5
+                ).encode(
+                    x='x:Q',
+                    y='y:Q',
+                    text='label:N'
+                )
+    
+        # display legend
+        legend_data = pd.DataFrame({
+            'label': list(dashboard.transformer_wrapper.encodings.keys()),
+            'color': [dashboard.colors[i] for i in range(len(dashboard.transformer_wrapper.encodings))]
+        })
+        legend_chart = alt.Chart(legend_data).mark_point().encode(
+            x=alt.X('label:N', title='Classes'),
+            y=alt.Y('color:N', title='Colors'),
+            color='color:N'
+        )
+    
+        # output
+&gt;       fig.patch.set_facecolor("white")
+        ^^^
+E       NameError: name 'fig' is not defined
+
+tx2/visualization.py:478: NameError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_embedding_projections_w_errorfocus_no_crash" time="0.038"><failure message="NameError: name 'fig' is not defined">mocker = &lt;pytest_mock.plugin.MockerFixture object at 0x14d01cd60&gt;
+dummy_wrapper = &lt;tx2.wrapper.Wrapper object at 0x14a3cf0e0&gt;
+dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+
+    def test_plot_embedding_projections_w_errorfocus_no_crash(
+        mocker,  # noqa: F811 -- mocker has to be passed in as fixture
+        dummy_wrapper,
+        dummy_df,
+    ):
+        tx2.utils.DISABLE_DEBOUNCE = True
+        dash = Dashboard(dummy_wrapper)
+        dash.chk_focus_errors = type("checkbox", (object,), {})()
+        dash.chk_focus_errors.value = True
+&gt;       plot_embedding_projections(dummy_df.text.iloc[0], dash)
+
+tests/test_visualizations.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/utils.py:103: in debounced
+    timer.start()
+tx2/utils.py:77: in start
+    self._callback()
+tx2/utils.py:98: in call_it
+    fn(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+text = 'testing row 0'
+dashboard = &lt;tx2.dashboard.Dashboard object at 0x14a3cf230&gt;, prediction = None
+
+    @utils.debounce(1.0)
+    def plot_embedding_projections(text, dashboard, prediction=None):
+        dashboard.html_graph_status.value = (
+            "&lt;p&gt;" + tx2.visualization.get_nice_html_label("Graphing...", "#FF0000") + "&lt;/p&gt;"
+        )
+    
+        # render all test data projections
+        if not dashboard.chk_focus_errors.value:
+            testing_x, testing_y, testing_c = _get_scatter_points_from_embeddings(
+                dashboard.colors,
+                np.array(dashboard.transformer_wrapper.projections_testing),
+                dashboard.transformer_wrapper.test_labels,
+            )
+            df_testing = pd.DataFrame({
+                'x': testing_x,
+                'y': testing_y,
+                'color': testing_c
+            })
+            scatter_chart = alt.Chart(df_testing).mark_circle().encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            ).properties(
+                width=600,
+                height=400
+            )
+        else:
+            # render incorrect test data
+            df_temp = pd.DataFrame.from_dict(
+                {
+                    "pred": dashboard.transformer_wrapper.predictions,
+                    "target": dashboard.transformer_wrapper.test_labels,
+                }
+            )
+            df_incorrect = df_temp[df_temp.pred != df_temp.target]
+    
+            incorrect_indices = list(df_incorrect.index)
+            incorrect_projections = [
+                dashboard.transformer_wrapper.projections_testing[i]
+                for i in range(len(dashboard.transformer_wrapper.projections_testing))
+                if i in incorrect_indices
+            ]
+            incorrect_x, incorrect_y, incorrect_c = _get_scatter_points_from_embeddings(
+                dashboard.colors, np.array(incorrect_projections), df_incorrect.target
+            )
+            df_incorrect = pd.DataFrame({
+                'x': incorrect_x,
+                'y': incorrect_y,
+                'color': incorrect_c
+            })
+            scatter_chart = alt.Chart(df_incorrect).mark_circle().encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            ).properties(
+                width=600,
+                height=400
+            )
+    
+            # render correct test data
+            df_correct = df_temp[df_temp.pred == df_temp.target]
+            correct_indices = list(df_correct.index)
+            correct_projections = [
+                dashboard.transformer_wrapper.projections_testing[i]
+                for i in range(len(dashboard.transformer_wrapper.projections_testing))
+                if i in correct_indices
+            ]
+            correct_x, correct_y, correct_c = _get_scatter_points_from_embeddings(
+                dashboard.colors, np.array(correct_projections), df_correct.target
+            )
+            df_correct = pd.DataFrame({
+                'x': correct_x,
+                'y': correct_y,
+                'color': correct_c
+            })
+            scatter_chart += alt.Chart(df_correct).mark_circle(opacity=0.1).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # render training data projections
+        if dashboard.chk_show_train.value:
+            training_x, training_y, training_c = _get_scatter_points_from_embeddings(
+                dashboard.colors,
+                np.array(dashboard.transformer_wrapper.projections_training),
+                dashboard.transformer_wrapper.train_labels,
+            )
+            df_training = pd.DataFrame({
+                'x': training_x,
+                'y': training_y,
+                'color': training_c
+            })
+            scatter_chart += alt.Chart(df_training).mark_circle(opacity=0.1).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # render highlighted data points
+        if len(dashboard.highlight_indices) &gt; 0:
+            highlighted_x = testing_x[dashboard.highlight_indices]
+            highlighted_y = testing_y[dashboard.highlight_indices]
+            highlighted_c = testing_c[dashboard.highlight_indices]
+            df_highlighted = pd.DataFrame({
+                'x': highlighted_x,
+                'y': highlighted_y,
+                'color': highlighted_c
+            })
+            scatter_chart += alt.Chart(df_highlighted).mark_circle(size=100, stroke='red', strokeWidth=2).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # if text differs from the selected index, render new point
+        if (
+            dashboard.prior_reference_point is None
+            or dashboard.prior_reference_text != text
+        ):
+            text_projection = dashboard.transformer_wrapper.project([text])[0]
+            if prediction is None:
+                classification = dashboard.transformer_wrapper.classify([text])[0]
+                pred_color = dashboard.colors[classification]
+            else:
+                pred_color = dashboard.colors[prediction]
+            df_new_point = pd.DataFrame({
+                'x': [text_projection[0]],
+                'y': [text_projection[1]],
+                'color': [pred_color]
+            })
+            scatter_chart += alt.Chart(df_new_point).mark_circle(size=100, stroke='black', strokeWidth=2).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+        # render the original reference point and arrow if applicable
+        if dashboard.prior_reference_point is not None:
+            df_ref_point = pd.DataFrame({
+                'x': [dashboard.prior_reference_point[0][0]],
+                'y': [dashboard.prior_reference_point[0][1]],
+                'color': [dashboard.prior_reference_point[1]]
+            })
+            scatter_chart += alt.Chart(df_ref_point).mark_circle(size=100, stroke='black', strokeWidth=2).encode(
+                x='x:Q',
+                y='y:Q',
+                color='color:N',
+                tooltip=['x', 'y']
+            )
+    
+            # arrow!
+            if dashboard.prior_reference_text != text:
+                x_dist = text_projection[0] - dashboard.prior_reference_point[0][0]
+                y_dist = text_projection[1] - dashboard.prior_reference_point[0][1]
+                arrow_data = pd.DataFrame({
+                    'x': [dashboard.prior_reference_point[0][0]],
+                    'y': [dashboard.prior_reference_point[0][1]],
+                    'x_end': [text_projection[0]],
+                    'y_end': [text_projection[1]]
+                })
+                arrow_chart = alt.Chart(arrow_data).mark_rule().encode(
+                    x='x:Q',
+                    x2='x_end:Q',
+                    y='y:Q',
+                    y2='y_end:Q',
+                    color=alt.value('black')
+                )
+                scatter_chart += arrow_chart
+    
+        # show visual cluster labels
+        if dashboard.chk_show_cluster_labels.value:
+            for x, y, label in dashboard.transformer_wrapper.cluster_labels:
+                scatter_chart += alt.Chart(pd.DataFrame({'x': [float(x)], 'y': [float(y)], 'label': [label]})).mark_text(
+                    align='center',
+                    baseline='middle',
+                    dx=5,
+                    dy=-5
+                ).encode(
+                    x='x:Q',
+                    y='y:Q',
+                    text='label:N'
+                )
+    
+        # display legend
+        legend_data = pd.DataFrame({
+            'label': list(dashboard.transformer_wrapper.encodings.keys()),
+            'color': [dashboard.colors[i] for i in range(len(dashboard.transformer_wrapper.encodings))]
+        })
+        legend_chart = alt.Chart(legend_data).mark_point().encode(
+            x=alt.X('label:N', title='Classes'),
+            y=alt.Y('color:N', title='Colors'),
+            color='color:N'
+        )
+    
+        # output
+&gt;       fig.patch.set_facecolor("white")
+        ^^^
+E       NameError: name 'fig' is not defined
+
+tx2/visualization.py:478: NameError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_metrics_no_crash" time="0.002" /><testcase classname="tests.test_visualizations" name="test_plot_confusion_matrix_no_crash" time="0.008" /><testcase classname="tests.test_wrapper" name="test_wrapper_init_no_crash" time="0.001" /><testcase classname="tests.test_wrapper" name="test_wrapper_init_np_no_crash" time="0.000" /><testcase classname="tests.test_wrapper" name="test_wrapper_prepare_no_crash" time="0.004" /><testcase classname="tests.test_wrapper" name="test_wrapper_np_prepare_no_crash" time="0.036" /></testsuite></testsuites>

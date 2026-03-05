@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="26" time="8.836" timestamp="2026-03-05T03:15:15.214578+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_cache.TestUnpywallCache" name="test_reset_cache" time="0.002" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_delete" time="0.002" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_timeout" time="1.056"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_cache.TestUnpywallCache object at 0x118471350&gt;
+example_cache = &lt;unpywall.cache.UnpywallCache object at 0x1184afb50&gt;
+
+    def test_timeout(self, example_cache):
+        timeout = 1
+        doi = '10.1016/j.jns.2020.116832'
+        example_cache.timeout = timeout
+        example_cache.delete(doi)
+        assert doi not in example_cache.content
+&gt;       example_cache.get(doi)
+
+tests/test_cache.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+unpywall/cache.py:115: in get
+    downloaded = self.download(doi, errors)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+unpywall/cache.py:188: in download
+    raise e
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unpywall.cache.UnpywallCache object at 0x1184afb50&gt;
+doi = '10.1016/j.jns.2020.116832', errors = 'raise'
+
+    def download(self, doi: str, errors: str):
+        """
+        Retrieve a record from Unpaywall.
+    
+        Parameters
+        ----------
+        doi : str
+            The DOI to be retrieved.
+        errors : str
+            Whether to ignore or raise errors.
+        """
+        from .utils import UnpywallURL
+    
+        mandatory_wait_time = int(os.environ.get('MANDATORY_WAIT_TIME', 1))
+        time.sleep(mandatory_wait_time)
+        url = UnpywallURL(doi=doi).doi_url
+    
+        try:
+            r = treq.get(url)
+&gt;           if r.status_code != 200:
+               ^^^^^^^^^^^^^
+E           AttributeError: 'Deferred' object has no attribute 'status_code'
+
+unpywall/cache.py:180: AttributeError</failure></testcase><testcase classname="tests.test_cache.TestUnpywallCache" name="test_get" time="0.003"><failure message="AttributeError: module 'treq' has no attribute 'Response'. Did you mean: 'response'?">self = &lt;tests.test_cache.TestUnpywallCache object at 0x1184710f0&gt;
+example_cache = &lt;unpywall.cache.UnpywallCache object at 0x1185fa6d0&gt;
+backup_cache = &lt;unpywall.cache.UnpywallCache object at 0x1185faa50&gt;
+
+    def test_get(self, example_cache, backup_cache):
+        doi = '10.1016/j.jns.2020.116832'
+        example_cache.delete(doi)
+        assert doi not in example_cache.content
+        assert doi not in example_cache.access_times
+&gt;       assert isinstance(backup_cache.get(doi), treq.Response)  # Changed to treq.Response
+                                                 ^^^^^^^^^^^^^
+E       AttributeError: module 'treq' has no attribute 'Response'. Did you mean: 'response'?
+
+tests/test_cache.py:70: AttributeError</failure></testcase><testcase classname="tests.test_cache.TestUnpywallCache" name="test_save_load" time="0.003" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_download" time="1.044"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_cache.TestUnpywallCache object at 0x1184d4af0&gt;
+example_cache = &lt;unpywall.cache.UnpywallCache object at 0x11879bed0&gt;
+
+    def test_download(self, example_cache):
+        doi = '10.1016/j.jns.2020.116832'
+&gt;       assert isinstance(example_cache.download(doi, 'raise'), treq.Response)  # Changed to treq.Response
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_cache.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+unpywall/cache.py:188: in download
+    raise e
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unpywall.cache.UnpywallCache object at 0x11879bed0&gt;
+doi = '10.1016/j.jns.2020.116832', errors = 'raise'
+
+    def download(self, doi: str, errors: str):
+        """
+        Retrieve a record from Unpaywall.
+    
+        Parameters
+        ----------
+        doi : str
+            The DOI to be retrieved.
+        errors : str
+            Whether to ignore or raise errors.
+        """
+        from .utils import UnpywallURL
+    
+        mandatory_wait_time = int(os.environ.get('MANDATORY_WAIT_TIME', 1))
+        time.sleep(mandatory_wait_time)
+        url = UnpywallURL(doi=doi).doi_url
+    
+        try:
+            r = treq.get(url)
+&gt;           if r.status_code != 200:
+               ^^^^^^^^^^^^^
+E           AttributeError: 'Deferred' object has no attribute 'status_code'
+
+unpywall/cache.py:180: AttributeError</failure></testcase><testcase classname="tests.test_cli.TestUnpywallCli" name="test_main" time="0.001" /><testcase classname="tests.test_cli.TestUnpywallCli" name="test_view" time="1.043" /><testcase classname="tests.test_cli.TestUnpywallCli" name="test_download" time="1.046" /><testcase classname="tests.test_cli.TestUnpywallCli" name="test_link" time="1.033" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_init_cache" time="0.001" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_validate_dois" time="0.001" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_df" time="0.007" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_doi" time="1.035" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_query" time="0.013"><failure message="TypeError: 'NoneType' object is not subscriptable">self = &lt;tests.test_unpywall.TestUnpywall object at 0x11842b9b0&gt;
+Unpywall = &lt;class 'unpywall.Unpywall'&gt;
+
+    def test_query(self, Unpywall):
+    
+&gt;       df = Unpywall.query(query='test',
+                            is_oa=True,
+                            errors='ignore')
+
+tests/test_unpywall.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+query = 'test', is_oa = True, format = 'raw', errors = 'ignore'
+
+    @staticmethod
+    def query(query: str,
+              is_oa: bool = False,
+              format: str = 'raw',
+              errors: str = 'raise') -&gt; pd.DataFrame:
+        """
+        Parses information for a given query from the Unpaywall API service and
+        returns it as a pandas DataFrame.
+    
+        Parameters
+        ----------
+        query : str
+            The text to search for.
+        is_oa : bool
+            A boolean value indicating whether the returned records should be
+            Open Access or not.
+        format: str
+            The format of the DataFrame.
+        errors : str
+            Either 'raise' or 'ignore'. If the parameter errors is set to
+            'ignore' than errors will not raise an exception.
+    
+        Returns
+        -------
+        DataFrame
+            A pandas DataFrame that contains information from the Unpaywall
+            API service.
+        """
+    
+        data = Unpywall.get_json(query=query, is_oa=is_oa, errors=errors)
+    
+        df = pd.DataFrame()
+    
+&gt;       for obj in data['results']:
+                   ^^^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+unpywall/__init__.py:207: TypeError</failure></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_json" time="0.000"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = &lt;tests.test_unpywall.TestUnpywall object at 0x1184d5ae0&gt;
+Unpywall = &lt;class 'unpywall.Unpywall'&gt;
+
+    def test_get_json(self, Unpywall):
+    
+&gt;       with pytest.raises(treq.exceptions.HTTPError):
+                           ^^^^^^^^^^^^^^^
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+tests/test_unpywall.py:110: AttributeError</failure></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_pdf_link" time="0.000" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_doc_link" time="0.000" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_all_links" time="0.000" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_download_pdf_handle" time="0.014"><failure message="AttributeError: 'Deferred' object has no attribute 'text'">self = &lt;tests.test_unpywall.TestUnpywall object at 0x1184a3f20&gt;
+Unpywall = &lt;class 'unpywall.Unpywall'&gt;
+
+    def test_download_pdf_handle(self, Unpywall):
+    
+        assert isinstance(
+&gt;           Unpywall.download_pdf_handle('10.1038/nature12373'), BytesIO)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_unpywall.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+doi = '10.1038/nature12373'
+
+    @staticmethod
+    def download_pdf_handle(doi: str) -&gt; BytesIO:
+        """
+        This function returns a file-like object containing the requested PDF.
+    
+        Parameters
+        ----------
+        doi : str
+            The DOI of the requested paper.
+    
+        Returns
+        -------
+        BytesIO
+            The handle of the PDF file.
+        """
+        pdf_link = Unpywall.get_pdf_link(doi)
+        r = treq.get(pdf_link)
+&gt;       return BytesIO(bytearray(r.text, encoding='utf-8'))
+                                 ^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'text'
+
+unpywall/__init__.py:425: AttributeError</failure></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_progress" time="0.002" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_view_pdf" time="0.000" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_download_pdf_file" time="0.002"><failure message="TypeError: HTTPClient.request() got an unexpected keyword argument 'stream'">self = &lt;tests.test_unpywall.TestUnpywall object at 0x11855faf0&gt;
+Unpywall = &lt;class 'unpywall.Unpywall'&gt;
+capfd = &lt;_pytest.capture.CaptureFixture object at 0x11890d480&gt;
+
+    def test_download_pdf_file(self, Unpywall, capfd):
+    
+        filename = 'test.pdf'
+        filepath = './test_dir'
+    
+&gt;       Unpywall.download_pdf_file('10.1038/nature12373',
+                                   filename=filename,
+                                   filepath=filepath,
+                                   progress=True)
+
+tests/test_unpywall.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+unpywall/__init__.py:495: in download_pdf_file
+    r = treq.get(url, stream=url)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/treq/api.py:23: in get
+    return _client(kwargs).get(url, headers=headers, _stacklevel=4, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;treq.client.HTTPClient object at 0x1187dba50&gt;
+url = 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf'
+kwargs = {'_stacklevel': 4, 'headers': None, 'stream': 'https://dash.harvard.edu/bitstream/1/12285462/1/Nanometer-Scale%20Thermometry.pdf'}
+
+    def get(self, url: _URLType, **kwargs: Any) -&gt; "Deferred[_Response]":
+        """
+        See :func:`treq.get()`.
+        """
+        kwargs.setdefault("_stacklevel", 3)
+&gt;       return self.request("GET", url, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: HTTPClient.request() got an unexpected keyword argument 'stream'
+
+.venv/lib/python3.14/site-packages/treq/client.py:151: TypeError</failure></testcase><testcase classname="tests.test_utils.TestUnpywallCredentials" name="test_validate_email" time="0.001" /><testcase classname="tests.test_utils.TestUnpywallURL" name="test_doi_url" time="0.000" /><testcase classname="tests.test_utils.TestUnpywallURL" name="test_query_url" time="0.000" /></testsuite></testsuites>

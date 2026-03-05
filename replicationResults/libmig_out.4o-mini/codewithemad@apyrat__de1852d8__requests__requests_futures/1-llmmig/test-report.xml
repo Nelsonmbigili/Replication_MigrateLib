@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="8" time="0.172" timestamp="2026-03-05T03:17:02.303299+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.cli_test" name="test_main_download_video_with_quality" time="0.002"><failure message="assert 1 == 0&#10; +  where 1 = &lt;Result AttributeError(&quot;'Downloader' object has no attribute 'session'&quot;)&gt;.exit_code">def test_main_download_video_with_quality():
+        runner = CliRunner()
+        with patch(
+            "apyrat.apyrat.Downloader._get_available_qualities",
+            return_value=["480", "720", "1080"],
+        ) as mock_qualities:
+            result = runner.invoke(
+                main,
+                [
+                    "https://www.aparat.com/v/qur3I",
+                    "-q",
+                    "720",
+                ],
+            )
+&gt;       assert result.exit_code == 0
+E       assert 1 == 0
+E        +  where 1 = &lt;Result AttributeError("'Downloader' object has no attribute 'session'")&gt;.exit_code
+
+tests/cli_test.py:21: AssertionError</failure></testcase><testcase classname="tests.cli_test" name="test_main_download_video_without_quality" time="0.001"><failure message="assert 1 == 0&#10; +  where 1 = &lt;Result AttributeError(&quot;'Downloader' object has no attribute 'session'&quot;)&gt;.exit_code">def test_main_download_video_without_quality():
+        runner = CliRunner()
+        with patch(
+            "apyrat.apyrat.Downloader._get_available_qualities",
+            return_value=["480", "720", "1080"],
+        ), patch("click.prompt", return_value="720"):
+            result = runner.invoke(main, ["https://www.aparat.com/v/qur3I"])
+&gt;       assert result.exit_code == 0
+E       assert 1 == 0
+E        +  where 1 = &lt;Result AttributeError("'Downloader' object has no attribute 'session'")&gt;.exit_code
+
+tests/cli_test.py:32: AssertionError</failure></testcase><testcase classname="tests.cli_test" name="test_get_quality_available" time="0.000"><failure message="AttributeError: 'Downloader' object has no attribute 'session'">def test_get_quality_available():
+&gt;       downloader = Downloader("https://www.aparat.com/v/qur3I")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/cli_test.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+apyrat/apyrat.py:39: in __init__
+    self.videos = self._get_available_videos()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apyrat/apyrat.py:62: in _get_available_videos
+    return [self._get_single_video_qualities(self.video_uid)]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;apyrat.apyrat.Downloader object at 0x125839450&gt;, video_uid = 'qur3I'
+playlist_id = None
+
+    def _get_single_video_qualities(self, video_uid, playlist_id=None):
+        query = f"?playlist={playlist_id}&amp;pr=1&amp;mf=1" if playlist_id else ""
+&gt;       video_data_future = self.session.get(
+                            ^^^^^^^^^^^^
+            f"{API_BASE_URL}/video/video/show/videohash/{video_uid}{query}",
+            headers=prepare_headers(),
+        )
+E       AttributeError: 'Downloader' object has no attribute 'session'
+
+apyrat/apyrat.py:94: AttributeError</failure></testcase><testcase classname="tests.cli_test" name="test_get_quality_not_available" time="0.000"><failure message="AttributeError: 'Downloader' object has no attribute 'session'">def test_get_quality_not_available():
+&gt;       downloader = Downloader("https://www.aparat.com/v/qur3I")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/cli_test.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+apyrat/apyrat.py:39: in __init__
+    self.videos = self._get_available_videos()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apyrat/apyrat.py:62: in _get_available_videos
+    return [self._get_single_video_qualities(self.video_uid)]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;apyrat.apyrat.Downloader object at 0x12581c770&gt;, video_uid = 'qur3I'
+playlist_id = None
+
+    def _get_single_video_qualities(self, video_uid, playlist_id=None):
+        query = f"?playlist={playlist_id}&amp;pr=1&amp;mf=1" if playlist_id else ""
+&gt;       video_data_future = self.session.get(
+                            ^^^^^^^^^^^^
+            f"{API_BASE_URL}/video/video/show/videohash/{video_uid}{query}",
+            headers=prepare_headers(),
+        )
+E       AttributeError: 'Downloader' object has no attribute 'session'
+
+apyrat/apyrat.py:94: AttributeError</failure></testcase><testcase classname="tests.cli_test" name="test_get_quality_not_available_no_confirm" time="0.000"><failure message="AttributeError: 'Downloader' object has no attribute 'session'">def test_get_quality_not_available_no_confirm():
+&gt;       downloader = Downloader("https://www.aparat.com/v/qur3I")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/cli_test.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+apyrat/apyrat.py:39: in __init__
+    self.videos = self._get_available_videos()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apyrat/apyrat.py:62: in _get_available_videos
+    return [self._get_single_video_qualities(self.video_uid)]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;apyrat.apyrat.Downloader object at 0x12581df30&gt;, video_uid = 'qur3I'
+playlist_id = None
+
+    def _get_single_video_qualities(self, video_uid, playlist_id=None):
+        query = f"?playlist={playlist_id}&amp;pr=1&amp;mf=1" if playlist_id else ""
+&gt;       video_data_future = self.session.get(
+                            ^^^^^^^^^^^^
+            f"{API_BASE_URL}/video/video/show/videohash/{video_uid}{query}",
+            headers=prepare_headers(),
+        )
+E       AttributeError: 'Downloader' object has no attribute 'session'
+
+apyrat/apyrat.py:94: AttributeError</failure></testcase><testcase classname="tests.test_apyrat" name="test_get_available_videos_single_video" time="0.001"><failure message="AttributeError: 'Downloader' object has no attribute 'session'">mock_get = &lt;MagicMock name='get' id='4923243696'&gt;
+
+    @patch("requests.get")
+    def test_get_available_videos_single_video(mock_get):
+        mock_get.return_value.json.return_value = {
+            "data": {
+                "attributes": {
+                    "title": "My Video Title",
+                    "file_link_all": [
+                        {"profile": "720p", "urls": ["https://link-to-video"]},
+                        {"profile": "1080p", "urls": ["https://link-to-video"]},
+                    ],
+                }
+            }
+        }
+&gt;       downloader = Downloader("https://www.aparat.com/v/qur3I", "outputfile")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_apyrat.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+apyrat/apyrat.py:39: in __init__
+    self.videos = self._get_available_videos()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apyrat/apyrat.py:62: in _get_available_videos
+    return [self._get_single_video_qualities(self.video_uid)]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;apyrat.apyrat.Downloader object at 0x12581e2c0&gt;, video_uid = 'qur3I'
+playlist_id = None
+
+    def _get_single_video_qualities(self, video_uid, playlist_id=None):
+        query = f"?playlist={playlist_id}&amp;pr=1&amp;mf=1" if playlist_id else ""
+&gt;       video_data_future = self.session.get(
+                            ^^^^^^^^^^^^
+            f"{API_BASE_URL}/video/video/show/videohash/{video_uid}{query}",
+            headers=prepare_headers(),
+        )
+E       AttributeError: 'Downloader' object has no attribute 'session'
+
+apyrat/apyrat.py:94: AttributeError</failure></testcase><testcase classname="tests.test_apyrat" name="test_default_quality" time="0.000"><failure message="AttributeError: 'Downloader' object has no attribute 'session'">def test_default_quality():
+&gt;       downloader = Downloader("https://www.aparat.com/v/qur3I", "outputfile")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_apyrat.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+apyrat/apyrat.py:39: in __init__
+    self.videos = self._get_available_videos()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apyrat/apyrat.py:62: in _get_available_videos
+    return [self._get_single_video_qualities(self.video_uid)]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;apyrat.apyrat.Downloader object at 0x12581e780&gt;, video_uid = 'qur3I'
+playlist_id = None
+
+    def _get_single_video_qualities(self, video_uid, playlist_id=None):
+        query = f"?playlist={playlist_id}&amp;pr=1&amp;mf=1" if playlist_id else ""
+&gt;       video_data_future = self.session.get(
+                            ^^^^^^^^^^^^
+            f"{API_BASE_URL}/video/video/show/videohash/{video_uid}{query}",
+            headers=prepare_headers(),
+        )
+E       AttributeError: 'Downloader' object has no attribute 'session'
+
+apyrat/apyrat.py:94: AttributeError</failure></testcase><testcase classname="tests.test_apyrat" name="test_download_when_file_exists" time="0.000"><failure message="AttributeError: 'Downloader' object has no attribute 'session'">mock_wget = &lt;MagicMock name='download' id='4924559040'&gt;
+mock_isfile = &lt;MagicMock name='isfile' id='4924556688'&gt;
+
+    @patch("os.path.isfile", return_value=True)
+    @patch("wget.download")
+    def test_download_when_file_exists(mock_wget, mock_isfile):
+&gt;       downloader = Downloader("https://www.aparat.com/v/qur3I", "outputfile")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_apyrat.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+apyrat/apyrat.py:39: in __init__
+    self.videos = self._get_available_videos()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apyrat/apyrat.py:62: in _get_available_videos
+    return [self._get_single_video_qualities(self.video_uid)]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;apyrat.apyrat.Downloader object at 0x12581e9e0&gt;, video_uid = 'qur3I'
+playlist_id = None
+
+    def _get_single_video_qualities(self, video_uid, playlist_id=None):
+        query = f"?playlist={playlist_id}&amp;pr=1&amp;mf=1" if playlist_id else ""
+&gt;       video_data_future = self.session.get(
+                            ^^^^^^^^^^^^
+            f"{API_BASE_URL}/video/video/show/videohash/{video_uid}{query}",
+            headers=prepare_headers(),
+        )
+E       AttributeError: 'Downloader' object has no attribute 'session'
+
+apyrat/apyrat.py:94: AttributeError</failure></testcase></testsuite></testsuites>

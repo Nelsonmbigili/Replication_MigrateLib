@@ -1,0 +1,3843 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="34" skipped="0" tests="107" time="8.974" timestamp="2026-03-04T18:26:41.972380+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.audiovisual_test" name="test_status" time="0.278"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">av = &lt;filestack.models.audiovisual.AudioVisual object at 0x105349160&gt;
+
+    @responses.activate
+    def test_status(av):
+        responses.add(responses.GET, 'https://process.filestackapi.com/SOMEHANDLE', json={'status': 'completed'})
+&gt;       assert av.status == 'completed'
+               ^^^^^^^^^
+
+tests/audiovisual_test.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/models/audiovisual.py:65: in status
+    return json.loads(response.data.decode('utf-8'))['status']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x1015bef90&gt;, s = 'Bad Request\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="tests.audiovisual_test" name="test_convert" time="0.204"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">av = &lt;filestack.models.audiovisual.AudioVisual object at 0x105335e50&gt;
+
+    @responses.activate
+    def test_convert(av):
+        responses.add(
+            responses.GET, 'https://process.filestackapi.com/SOMEHANDLE',
+            json={'status': 'completed', 'data': {'url': URL}}
+        )
+&gt;       filelink = av.to_filelink()
+                   ^^^^^^^^^^^^^^^^
+
+tests/audiovisual_test.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/models/audiovisual.py:43: in to_filelink
+    if self.status != 'completed':
+       ^^^^^^^^^^^
+filestack/models/audiovisual.py:65: in status
+    return json.loads(response.data.decode('utf-8'))['status']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x1015bef90&gt;, s = 'Bad Request\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="tests.client_test" name="test_api_set" time="0.001" /><testcase classname="tests.client_test" name="test_wrong_storage" time="0.002" /><testcase classname="tests.client_test" name="test_store_external_url" time="0.654"><failure message="KeyError: 'handle'">client = &lt;filestack.models.client.Client object at 0x1052b3390&gt;
+
+    @responses.activate
+    def test_store_external_url(client):
+        responses.add(
+            responses.POST, 'https://cdn.filestackcontent.com/process', json={'handle': HANDLE}
+        )
+&gt;       filelink = client.upload_url(url='http://a.bc')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/client_test.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.client.Client object at 0x1052b3390&gt;
+url = 'http://a.bc', store_params = None, security = None
+
+    def upload_url(self, url, store_params=None, security=None):
+        """
+        Uploads file from external url
+    
+        Args:
+            url (str): file URL
+            store_params (dict): store parameters to be used during upload
+            security (:class:`filestack.Security`): Security object that will be used for this API call
+    
+        Returns:
+            :class:`filestack.Filelink`: new Filelink object
+        """
+        sec = security or self.security
+        upload_response = upload_external_url(url, self.apikey, self.storage, store_params, security=sec)
+        return filestack.models.Filelink(
+&gt;           handle=upload_response['handle'],
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+            apikey=self.apikey,
+            security=sec,
+            upload_response=upload_response
+        )
+E       KeyError: 'handle'
+
+filestack/models/client.py:124: KeyError</failure></testcase><testcase classname="tests.client_test" name="test_store_filepath" time="0.001" /><testcase classname="tests.client_test" name="test_security_inheritance" time="0.001" /><testcase classname="tests.client_test" name="test_url_screenshot" time="0.000" /><testcase classname="tests.client_test" name="test_transform_external" time="0.000" /><testcase classname="tests.client_test" name="test_zip" time="0.275"><failure message="assert 12 == 9">client = &lt;filestack.models.client.Client object at 0x1053f1bf0&gt;
+
+    @responses.activate
+    def test_zip(client):
+        responses.add(
+            responses.GET, re.compile('https://cdn.filestackcontent.com/APIKEY/zip*'),
+            body=b'zip-bytes'
+        )
+        m = mock_open()
+        with patch('filestack.models.client.open', m):
+            zip_size = client.zip('test.zip', ['handle1', 'handle2'])
+    
+&gt;       assert zip_size == 9
+E       assert 12 == 9
+
+tests/client_test.py:91: AssertionError</failure></testcase><testcase classname="tests.filelink_test" name="test_handle" time="0.001" /><testcase classname="tests.filelink_test" name="test_url" time="0.001" /><testcase classname="tests.filelink_test" name="test_signed_url[None-security=p:eyJjYWxsIjogWyJyZWFkIl0sICJleHBpcnkiOiAxMDIzODIzOX0=,s:858d1ee9c0a1f06283e495f78dc7950ff6e64136ce960465f35539791fcd486b]" time="0.001" /><testcase classname="tests.filelink_test" name="test_signed_url[security_obj1-security=p:eyJjYWxsIjogWyJ3cml0ZSJdLCAiZXhwaXJ5IjogMTY1NTk5MjQzMn0=,s:625cc5b9beab3e939fb53935f7795919c9f57f628d43adfc14566d2ad9a4ad47]" time="0.001" /><testcase classname="tests.filelink_test" name="test_get_content" time="0.266"><failure message="AssertionError: assert b'Bad Request\n' == b'file-content'&#10;  &#10;  At index 0 diff: b'B' != b'f'&#10;  Use -v to get more diff">filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_get_content(filelink):
+        responses.add(
+            responses.GET, 'https://cdn.filestackcontent.com/{}'.format(HANDLE), body=b'file-content'
+        )
+        content = filelink.get_content()
+&gt;       assert content == b'file-content'
+E       AssertionError: assert b'Bad Request\n' == b'file-content'
+E         
+E         At index 0 diff: b'B' != b'f'
+E         Use -v to get more diff
+
+tests/filelink_test.py:62: AssertionError</failure></testcase><testcase classname="tests.filelink_test" name="test_bad_call" time="0.013"><failure message="Failed: DID NOT RAISE &lt;class 'filestack.exceptions.FilestackHTTPError'&gt;">filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_bad_call(filelink):
+        responses.add(
+            responses.GET, 'https://cdn.filestackcontent.com/{}'.format(HANDLE), status=400
+        )
+&gt;       with pytest.raises(exceptions.FilestackHTTPError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'filestack.exceptions.FilestackHTTPError'&gt;
+
+tests/filelink_test.py:70: Failed</failure></testcase><testcase classname="tests.filelink_test" name="test_metadata[None-None-expected_params0]" time="0.262"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">attributes = None, security = None, expected_params = {}
+filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @pytest.mark.parametrize('attributes, security, expected_params', [
+        (None, None, {}),
+        (
+            None,
+            Security({'expiry': 123}, 'secret'),
+            {
+                'policy': 'eyJleHBpcnkiOiAxMjN9',
+                'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'
+            }
+        ),
+        (
+            ['size', 'filename'],
+            Security({'expiry': 123}, 'secret'),
+            {
+                'size': 'true',
+                'filename': 'true',
+                'policy': 'eyJleHBpcnkiOiAxMjN9',
+                'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'
+            }
+        ),
+    ])
+    @responses.activate
+    def test_metadata(attributes, security, expected_params, filelink):
+        responses.add(
+            responses.GET,
+            re.compile('https://cdn.filestackcontent.com/SOMEHANDLE/metadata.*'),
+            json={'metadata': 'content'}
+        )
+&gt;       metadata_response = filelink.metadata(attributes_list=attributes, security=security)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/filelink_test.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/models/filelink.py:66: in metadata
+    return json.loads(response.data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x1015bef90&gt;, s = 'Bad Request\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="tests.filelink_test" name="test_metadata[None-security1-expected_params1]" time="0.200"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">attributes = None
+security = &lt;filestack.models.security.Security object at 0x1053342d0&gt;
+expected_params = {'policy': 'eyJleHBpcnkiOiAxMjN9', 'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'}
+filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @pytest.mark.parametrize('attributes, security, expected_params', [
+        (None, None, {}),
+        (
+            None,
+            Security({'expiry': 123}, 'secret'),
+            {
+                'policy': 'eyJleHBpcnkiOiAxMjN9',
+                'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'
+            }
+        ),
+        (
+            ['size', 'filename'],
+            Security({'expiry': 123}, 'secret'),
+            {
+                'size': 'true',
+                'filename': 'true',
+                'policy': 'eyJleHBpcnkiOiAxMjN9',
+                'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'
+            }
+        ),
+    ])
+    @responses.activate
+    def test_metadata(attributes, security, expected_params, filelink):
+        responses.add(
+            responses.GET,
+            re.compile('https://cdn.filestackcontent.com/SOMEHANDLE/metadata.*'),
+            json={'metadata': 'content'}
+        )
+&gt;       metadata_response = filelink.metadata(attributes_list=attributes, security=security)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/filelink_test.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/models/filelink.py:66: in metadata
+    return json.loads(response.data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x1015bef90&gt;, s = 'Bad Request\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="tests.filelink_test" name="test_metadata[attributes2-security2-expected_params2]" time="0.208"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">attributes = ['size', 'filename']
+security = &lt;filestack.models.security.Security object at 0x10523be10&gt;
+expected_params = {'filename': 'true', 'policy': 'eyJleHBpcnkiOiAxMjN9', 'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01', 'size': 'true'}
+filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @pytest.mark.parametrize('attributes, security, expected_params', [
+        (None, None, {}),
+        (
+            None,
+            Security({'expiry': 123}, 'secret'),
+            {
+                'policy': 'eyJleHBpcnkiOiAxMjN9',
+                'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'
+            }
+        ),
+        (
+            ['size', 'filename'],
+            Security({'expiry': 123}, 'secret'),
+            {
+                'size': 'true',
+                'filename': 'true',
+                'policy': 'eyJleHBpcnkiOiAxMjN9',
+                'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'
+            }
+        ),
+    ])
+    @responses.activate
+    def test_metadata(attributes, security, expected_params, filelink):
+        responses.add(
+            responses.GET,
+            re.compile('https://cdn.filestackcontent.com/SOMEHANDLE/metadata.*'),
+            json={'metadata': 'content'}
+        )
+&gt;       metadata_response = filelink.metadata(attributes_list=attributes, security=security)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/filelink_test.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/models/filelink.py:66: in metadata
+    return json.loads(response.data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x1015bef90&gt;, s = 'Bad Request\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="tests.filelink_test" name="test_download" time="0.015"><failure message="assert 0 == 12">filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_download(filelink):
+        responses.add(
+            responses.GET, 'https://cdn.filestackcontent.com/{}'.format(HANDLE), body=b'file-content'
+        )
+        m = mock_open()
+        with patch('filestack.mixins.common.open', m):
+            file_size = filelink.download('tests/data/test_download.jpg')
+&gt;           assert file_size == 12
+E           assert 0 == 12
+
+tests/filelink_test.py:115: AssertionError</failure></testcase><testcase classname="tests.filelink_test" name="test_tags_without_security" time="0.000" /><testcase classname="tests.filelink_test" name="test_tags" time="0.200"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">secure_filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_tags(secure_filelink):
+        responses.add(
+            responses.GET, re.compile('https://cdn.filestackcontent.com/tags/.*/{}$'.format(HANDLE)),
+            json={'tags': {'cat': 98}}
+        )
+&gt;       assert secure_filelink.tags() == {'tags': {'cat': 98}}
+               ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/filelink_test.py:130: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:114: in tags
+    return json.loads(response.data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x1015bef90&gt;, s = 'Bad Request\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="tests.filelink_test" name="test_tags_on_transformation" time="0.201"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">secure_filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_tags_on_transformation(secure_filelink):
+        transformation = secure_filelink.resize(width=100)
+        image_tags = {'tags': {'cat': 99}}
+        responses.add(
+            responses.GET, re.compile('{}/resize.*/{}$'.format(config.CDN_URL, HANDLE)),
+            json=image_tags
+        )
+&gt;       assert transformation.tags() == image_tags
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests/filelink_test.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:114: in tags
+    return json.loads(response.data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x1015bef90&gt;, s = 'Bad Request\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="tests.filelink_test" name="test_sfw_without_security" time="0.001" /><testcase classname="tests.filelink_test" name="test_sfw" time="0.198"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">secure_filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_sfw(secure_filelink):
+        sfw_response = {'sfw': False}
+        responses.add(responses.GET, re.compile('{}.*'.format(config.CDN_URL)), json=sfw_response)
+&gt;       assert secure_filelink.sfw() == sfw_response
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests/filelink_test.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:129: in sfw
+    return json.loads(response.data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x1015bef90&gt;, s = 'Bad Request\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="tests.filelink_test" name="test_sfw_on_transformation" time="0.205"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">secure_filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_sfw_on_transformation(secure_filelink):
+        transformation = secure_filelink.resize(width=100)
+        sfw_response = {'sfw': True}
+        responses.add(responses.GET, re.compile('{}/resize.*'.format(config.CDN_URL)), json=sfw_response)
+&gt;       assert transformation.sfw() == sfw_response
+               ^^^^^^^^^^^^^^^^^^^^
+
+tests/filelink_test.py:166: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:129: in sfw
+    return json.loads(response.data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x1015bef90&gt;, s = 'Bad Request\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="tests.filelink_test" name="test_overwrite_without_security" time="0.001" /><testcase classname="tests.filelink_test" name="test_invalid_overwrite_call" time="0.000" /><testcase classname="tests.filelink_test" name="test_overwrite_with_url[True]" time="0.000"><failure message="AttributeError: module 'filestack.models.filelink' has no attribute 'requests'">args = ()
+keywargs = {'decode_base64': True, 'secure_filelink': &lt;Filelink SOMEHANDLE&gt;}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1429: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1411: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1487: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'filestack.models.filelink.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'filestack.models.filelink' has no attribute 'requests'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/pkgutil.py:473: AttributeError</failure></testcase><testcase classname="tests.filelink_test" name="test_overwrite_with_url[False]" time="0.000"><failure message="AttributeError: module 'filestack.models.filelink' has no attribute 'requests'">args = ()
+keywargs = {'decode_base64': False, 'secure_filelink': &lt;Filelink SOMEHANDLE&gt;}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1429: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1411: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1487: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'filestack.models.filelink.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'filestack.models.filelink' has no attribute 'requests'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/pkgutil.py:473: AttributeError</failure></testcase><testcase classname="tests.filelink_test" name="test_overwrite_with_filepath" time="0.000"><failure message="AttributeError: module 'filestack.models.filelink' has no attribute 'requests'">args = (), keywargs = {'secure_filelink': &lt;Filelink SOMEHANDLE&gt;}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1429: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1411: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1487: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'filestack.models.filelink.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'filestack.models.filelink' has no attribute 'requests'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/pkgutil.py:473: AttributeError</failure></testcase><testcase classname="tests.filelink_test" name="test_overwrite_with_file_obj" time="0.000"><failure message="AttributeError: module 'filestack.models.filelink' has no attribute 'requests'">args = (), keywargs = {'secure_filelink': &lt;Filelink SOMEHANDLE&gt;}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1429: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1411: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1487: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'filestack.models.filelink.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'filestack.models.filelink' has no attribute 'requests'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/pkgutil.py:473: AttributeError</failure></testcase><testcase classname="tests.filelink_test" name="test_delete_without_apikey_or_security[flink0-Security is required]" time="0.000" /><testcase classname="tests.filelink_test" name="test_delete_without_apikey_or_security[flink1-Apikey is required]" time="0.000" /><testcase classname="tests.filelink_test" name="test_successful_delete[flink0-security_arg0]" time="0.000"><failure message="AttributeError: module 'filestack.models.filelink' has no attribute 'requests'">args = ()
+keywargs = {'flink': &lt;Filelink SOMEHANDLE&gt;, 'security_arg': &lt;filestack.models.security.Security object at 0x10526fcb0&gt;}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1429: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1411: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1487: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'filestack.models.filelink.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'filestack.models.filelink' has no attribute 'requests'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/pkgutil.py:473: AttributeError</failure></testcase><testcase classname="tests.filelink_test" name="test_successful_delete[flink1-None]" time="0.000"><failure message="AttributeError: module 'filestack.models.filelink' has no attribute 'requests'">args = (), keywargs = {'flink': &lt;Filelink SOMEHANDLE&gt;, 'security_arg': None}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1429: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1411: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1487: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'filestack.models.filelink.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'filestack.models.filelink' has no attribute 'requests'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/pkgutil.py:473: AttributeError</failure></testcase><testcase classname="tests.filestack_helpers_test" name="test_webhook_verification[57cbb25386c3d6ff758a7a75cf52ba02cf2b0a1a2d6d5dfb9c886553ca6011cb-True]" time="0.000" /><testcase classname="tests.filestack_helpers_test" name="test_webhook_verification[incorrect-signature-False]" time="0.000" /><testcase classname="tests.filestack_helpers_test" name="test_agrument_validation[hook-secret-body-should be a dict-value is not a dict]" time="0.000" /><testcase classname="tests.filestack_helpers_test" name="test_agrument_validation[1-body-headers1-value is not a string]" time="0.000" /><testcase classname="tests.filestack_helpers_test" name="test_agrument_validation[hook-secret--headers2-fs-signature header is missing]" time="0.000" /><testcase classname="tests.filestack_helpers_test" name="test_agrument_validation[hook-secret-body3-headers3-Invalid webhook body]" time="0.000" /><testcase classname="tests.intelligent_ingestion_test" name="test_upload_part_success" time="1.008"><failure message="Exception: Minimal chunk size failed">self = &lt;HTTPSConnection(host='fs-upload.com', port=443) at 0x106afbc50&gt;
+
+    def _new_conn(self) -&gt; socket.socket:
+        """Establish a socket connection and set nodelay settings on it.
+    
+        :return: New socket connection.
+        """
+        try:
+&gt;           sock = connection.create_connection(
+                (self._dns_host, self.port),
+                self.timeout,
+                source_address=self.source_address,
+                socket_options=self.socket_options,
+            )
+
+.venv/lib/python3.14/site-packages/urllib3/connection.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/util/connection.py:60: in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = 'fs-upload.com', port = 443, family = &lt;AddressFamily.AF_UNSPEC: 0&gt;
+type = &lt;SocketKind.SOCK_STREAM: 1&gt;, proto = 0, flags = 0
+
+    def getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+        """Resolve host and port into list of address info entries.
+    
+        Translate the host/port argument into a sequence of 5-tuples that contain
+        all the necessary arguments for creating a socket connected to that service.
+        host is a domain name, a string representation of an IPv4/v6 address or
+        None. port is a string service name such as 'http', a numeric port number or
+        None. By passing None as the value of host and port, you can pass NULL to
+        the underlying C API.
+    
+        The family, type and proto arguments can be optionally specified in order to
+        narrow the list of addresses returned. Passing zero as a value for each of
+        these arguments selects the full range of results.
+        """
+        # We override this function since we want to translate the numeric family
+        # and socket type values to enum constants.
+        addrlist = []
+&gt;       for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/socket.py:983: gaierror
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;urllib3.connectionpool.HTTPSConnectionPool object at 0x10534fbb0&gt;
+method = 'POST', url = '/multipart/upload'
+body = '{"apikey": "Aaaaapikey", "uri": "fs-upload.com", "region": "region", "upload_id": "abc", "store": {"location": "s3"}, "part": 1, "size": 32768, "md5": "8i4CGcP74LRmYhNG2mSw0A==", "offset": 0, "fii": true}'
+headers = HTTPHeaderDict({'Content-Type': 'application/json'})
+retries = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+redirect = False, assert_same_host = False, timeout = &lt;_TYPE_DEFAULT.token: -1&gt;
+pool_timeout = None, release_conn = True, chunked = False, body_pos = None
+preload_content = True, decode_content = True, response_kw = {}
+parsed_url = Url(scheme=None, auth=None, host=None, port=None, path='/multipart/upload', query=None, fragment=None)
+destination_scheme = None, conn = None, release_this_conn = True
+http_tunnel_required = False, err = None, clean_exit = False
+
+    def urlopen(  # type: ignore[override]
+        self,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | bool | int | None = None,
+        redirect: bool = True,
+        assert_same_host: bool = True,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        pool_timeout: int | None = None,
+        release_conn: bool | None = None,
+        chunked: bool = False,
+        body_pos: _TYPE_BODY_POSITION | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        **response_kw: typing.Any,
+    ) -&gt; BaseHTTPResponse:
+        """
+        Get a connection from the pool and perform an HTTP request. This is the
+        lowest level call for making a request, so you'll need to specify all
+        the raw details.
+    
+        .. note::
+    
+           More commonly, it's appropriate to use a convenience method
+           such as :meth:`request`.
+    
+        .. note::
+    
+           `release_conn` will only behave as expected if
+           `preload_content=False` because we want to make
+           `preload_content=False` the default behaviour someday soon without
+           breaking backwards compatibility.
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            If ``None`` (default) will retry 3 times, see ``Retry.DEFAULT``. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param redirect:
+            If True, automatically handle redirects (status codes 301, 302,
+            303, 307, 308). Each redirect counts as a retry. Disabling retries
+            will disable redirect, too.
+    
+        :param assert_same_host:
+            If ``True``, will make sure that the host of the pool requests is
+            consistent else will raise HostChangedError. When ``False``, you can
+            use the pool on an HTTP proxy and request foreign hosts.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param pool_timeout:
+            If set and the pool is set to block=True, then this method will
+            block for ``pool_timeout`` seconds and raise EmptyPoolError if no
+            connection is available within the time period.
+    
+        :param bool preload_content:
+            If True, the response's body will be preloaded into memory.
+    
+        :param bool decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param release_conn:
+            If False, then the urlopen call will not release the connection
+            back into the pool once a response is received (but will release if
+            you read the entire contents of the response such as when
+            `preload_content=True`). This is useful if you're not preloading
+            the response's content immediately. You will need to call
+            ``r.release_conn()`` on the response ``r`` to return the connection
+            back into the pool. If None, it takes the value of ``preload_content``
+            which defaults to ``True``.
+    
+        :param bool chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param int body_pos:
+            Position to seek to in file-like body in the event of a retry or
+            redirect. Typically this won't need to be set because urllib3 will
+            auto-populate the value when needed.
+        """
+        parsed_url = parse_url(url)
+        destination_scheme = parsed_url.scheme
+    
+        if headers is None:
+            headers = self.headers
+    
+        if not isinstance(retries, Retry):
+            retries = Retry.from_int(retries, redirect=redirect, default=self.retries)
+    
+        if release_conn is None:
+            release_conn = preload_content
+    
+        # Check host
+        if assert_same_host and not self.is_same_host(url):
+            raise HostChangedError(self, url, retries)
+    
+        # Ensure that the URL we're connecting to is properly encoded
+        if url.startswith("/"):
+            url = to_str(_encode_target(url))
+        else:
+            url = to_str(parsed_url.url)
+    
+        conn = None
+    
+        # Track whether `conn` needs to be released before
+        # returning/raising/recursing. Update this variable if necessary, and
+        # leave `release_conn` constant throughout the function. That way, if
+        # the function recurses, the original value of `release_conn` will be
+        # passed down into the recursive call, and its value will be respected.
+        #
+        # See issue #651 [1] for details.
+        #
+        # [1] &lt;https://github.com/urllib3/urllib3/issues/651&gt;
+        release_this_conn = release_conn
+    
+        http_tunnel_required = connection_requires_http_tunnel(
+            self.proxy, self.proxy_config, destination_scheme
+        )
+    
+        # Merge the proxy headers. Only done when not using HTTP CONNECT. We
+        # have to copy the headers dict so we can safely change it without those
+        # changes being reflected in anyone else's copy.
+        if not http_tunnel_required:
+            headers = headers.copy()  # type: ignore[attr-defined]
+            headers.update(self.proxy_headers)  # type: ignore[union-attr]
+    
+        # Must keep the exception bound to a separate variable or else Python 3
+        # complains about UnboundLocalError.
+        err = None
+    
+        # Keep track of whether we cleanly exited the except block. This
+        # ensures we do proper cleanup in finally.
+        clean_exit = False
+    
+        # Rewind body position, if needed. Record current position
+        # for future rewinds in the event of a redirect/retry.
+        body_pos = set_file_position(body, body_pos)
+    
+        try:
+            # Request a connection from the queue.
+            timeout_obj = self._get_timeout(timeout)
+            conn = self._get_conn(timeout=pool_timeout)
+    
+            conn.timeout = timeout_obj.connect_timeout  # type: ignore[assignment]
+    
+            # Is this a closed/new connection that requires CONNECT tunnelling?
+            if self.proxy is not None and http_tunnel_required and conn.is_closed:
+                try:
+                    self._prepare_proxy(conn)
+                except (BaseSSLError, OSError, SocketTimeout) as e:
+                    self._raise_timeout(
+                        err=e, url=self.proxy.url, timeout_value=conn.timeout
+                    )
+                    raise
+    
+            # If we're going to release the connection in ``finally:``, then
+            # the response doesn't need to know about the connection. Otherwise
+            # it will also try to release it and we'll have a double-release
+            # mess.
+            response_conn = conn if not release_conn else None
+    
+            # Make the request on the HTTPConnection object
+&gt;           response = self._make_request(
+                conn,
+                method,
+                url,
+                timeout=timeout_obj,
+                body=body,
+                headers=headers,
+                chunked=chunked,
+                retries=retries,
+                response_conn=response_conn,
+                preload_content=preload_content,
+                decode_content=decode_content,
+                **response_kw,
+            )
+
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:787: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:488: in _make_request
+    raise new_e
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:464: in _make_request
+    self._validate_conn(conn)
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:1093: in _validate_conn
+    conn.connect()
+.venv/lib/python3.14/site-packages/urllib3/connection.py:759: in connect
+    self.sock = sock = self._new_conn()
+                       ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;HTTPSConnection(host='fs-upload.com', port=443) at 0x106afbc50&gt;
+
+    def _new_conn(self) -&gt; socket.socket:
+        """Establish a socket connection and set nodelay settings on it.
+    
+        :return: New socket connection.
+        """
+        try:
+            sock = connection.create_connection(
+                (self._dns_host, self.port),
+                self.timeout,
+                source_address=self.source_address,
+                socket_options=self.socket_options,
+            )
+        except socket.gaierror as e:
+&gt;           raise NameResolutionError(self.host, self, e) from e
+E           urllib3.exceptions.NameResolutionError: HTTPSConnection(host='fs-upload.com', port=443): Failed to resolve 'fs-upload.com' ([Errno 8] nodename nor servname provided, or not known)
+
+.venv/lib/python3.14/site-packages/urllib3/connection.py:211: NameResolutionError
+
+The above exception was the direct cause of the following exception:
+
+apikey = 'Aaaaapikey', filename = 'file.txt', filepath = 'tests/data/doom.mp4'
+filesize = 1234, storage = 's3'
+start_response = {'location_url': 'fs-upload.com', 'region': 'region', 'upload_id': 'abc', 'uri': 'fs-upload.com'}
+part = {'num': 1, 'seek_point': 0}
+
+    def upload_part(apikey, filename, filepath, filesize, storage, start_response, part):
+        with open(filepath, 'rb') as f:
+            f.seek(part['seek_point'])
+            part_bytes = io.BytesIO(f.read(DEFAULT_PART_SIZE))
+    
+        payload_base = {
+            'apikey': apikey,
+            'uri': start_response['uri'],
+            'region': start_response['region'],
+            'upload_id': start_response['upload_id'],
+            'store': {'location': storage},
+            'part': part['num']
+        }
+    
+        global CHUNK_SIZE
+        chunk_data = part_bytes.read(CHUNK_SIZE)
+        offset = 0
+    
+        while chunk_data:
+            payload = payload_base.copy()
+            payload.update({
+                'size': len(chunk_data),
+                'md5': b64encode(hashlib.md5(chunk_data).digest()).strip().decode('utf-8'),
+                'offset': offset,
+                'fii': True
+            })
+    
+            try:
+                url = 'https://{}/multipart/upload'.format(start_response['location_url'])
+&gt;               response = http.request('POST', url, body=json.dumps(payload), headers={'Content-Type': 'application/json'})
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+filestack/uploads/intelligent_ingestion.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:143: in request
+    return self.request_encode_body(
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:278: in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:457: in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:841: in urlopen
+    retries = retries.increment(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+method = 'POST', url = '/multipart/upload', response = None
+error = NameResolutionError("HTTPSConnection(host='fs-upload.com', port=443): Failed to resolve 'fs-upload.com' ([Errno 8] nodename nor servname provided, or not known)")
+_pool = &lt;urllib3.connectionpool.HTTPSConnectionPool object at 0x10534fbb0&gt;
+_stacktrace = &lt;traceback object at 0x106e86e00&gt;
+
+    def increment(
+        self,
+        method: str | None = None,
+        url: str | None = None,
+        response: BaseHTTPResponse | None = None,
+        error: Exception | None = None,
+        _pool: ConnectionPool | None = None,
+        _stacktrace: TracebackType | None = None,
+    ) -&gt; Self:
+        """Return a new Retry object with incremented retry counters.
+    
+        :param response: A response object, or None, if the server did not
+            return a response.
+        :type response: :class:`~urllib3.response.BaseHTTPResponse`
+        :param Exception error: An error encountered during the request, or
+            None if the response was received successfully.
+    
+        :return: A new ``Retry`` object.
+        """
+        if self.total is False and error:
+            # Disabled, indicate to re-raise the error.
+            raise reraise(type(error), error, _stacktrace)
+    
+        total = self.total
+        if total is not None:
+            total -= 1
+    
+        connect = self.connect
+        read = self.read
+        redirect = self.redirect
+        status_count = self.status
+        other = self.other
+        cause = "unknown"
+        status = None
+        redirect_location = None
+    
+        if error and self._is_connection_error(error):
+            # Connect retry?
+            if connect is False:
+                raise reraise(type(error), error, _stacktrace)
+            elif connect is not None:
+                connect -= 1
+    
+        elif error and self._is_read_error(error):
+            # Read retry?
+            if read is False or method is None or not self._is_method_retryable(method):
+                raise reraise(type(error), error, _stacktrace)
+            elif read is not None:
+                read -= 1
+    
+        elif error:
+            # Other retry?
+            if other is not None:
+                other -= 1
+    
+        elif response and response.get_redirect_location():
+            # Redirect retry?
+            if redirect is not None:
+                redirect -= 1
+            cause = "too many redirects"
+            response_redirect_location = response.get_redirect_location()
+            if response_redirect_location:
+                redirect_location = response_redirect_location
+            status = response.status
+    
+        else:
+            # Incrementing because of a server error like a 500 in
+            # status_forcelist and the given method is in the allowed_methods
+            cause = ResponseError.GENERIC_ERROR
+            if response and response.status:
+                if status_count is not None:
+                    status_count -= 1
+                cause = ResponseError.SPECIFIC_ERROR.format(status_code=response.status)
+                status = response.status
+    
+        history = self.history + (
+            RequestHistory(method, url, error, status, redirect_location),
+        )
+    
+        new_retry = self.new(
+            total=total,
+            connect=connect,
+            read=read,
+            redirect=redirect,
+            status=status_count,
+            other=other,
+            history=history,
+        )
+    
+        if new_retry.is_exhausted():
+            reason = error or ResponseError(cause)
+&gt;           raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='fs-upload.com', port=443): Max retries exceeded with url: /multipart/upload (Caused by NameResolutionError("HTTPSConnection(host='fs-upload.com', port=443): Failed to resolve 'fs-upload.com' ([Errno 8] nodename nor servname provided, or not known)"))
+
+.venv/lib/python3.14/site-packages/urllib3/util/retry.py:535: MaxRetryError
+
+During handling of the above exception, another exception occurred:
+
+    @responses.activate
+    def test_upload_part_success():
+        responses.add(
+            responses.POST, 'https://fs-upload.com/multipart/upload',
+            json={'url': 'http://s3.url', 'headers': {'filestack': 'headers'}}
+        )
+        responses.add(responses.PUT, 'http://s3.url')
+        responses.add(responses.POST, 'https://fs-upload.com/multipart/commit')
+    
+        part = {'seek_point': 0, 'num': 1}
+        start_response = {
+            'uri': 'fs-upload.com', 'location_url': 'fs-upload.com', 'region': 'region', 'upload_id': 'abc'
+        }
+&gt;       upload_part('Aaaaapikey', 'file.txt', 'tests/data/doom.mp4', 1234, 's3', start_response, part)
+
+tests/intelligent_ingestion_test.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/uploads/intelligent_ingestion.py:83: in upload_part
+    decrease_chunk_size()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def decrease_chunk_size():
+        global CHUNK_SIZE
+        CHUNK_SIZE //= 2
+        if CHUNK_SIZE &lt; MIN_CHUNK_SIZE:
+&gt;           raise Exception('Minimal chunk size failed')
+E           Exception: Minimal chunk size failed
+
+filestack/uploads/intelligent_ingestion.py:41: Exception</failure></testcase><testcase classname="tests.intelligent_ingestion_test" name="test_upload_part_with_resize" time="0.006"><failure message="Exception: Minimal chunk size failed">self = &lt;HTTPSConnection(host='fs-upload.com', port=443) at 0x106afb390&gt;
+
+    def _new_conn(self) -&gt; socket.socket:
+        """Establish a socket connection and set nodelay settings on it.
+    
+        :return: New socket connection.
+        """
+        try:
+&gt;           sock = connection.create_connection(
+                (self._dns_host, self.port),
+                self.timeout,
+                source_address=self.source_address,
+                socket_options=self.socket_options,
+            )
+
+.venv/lib/python3.14/site-packages/urllib3/connection.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/util/connection.py:60: in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = 'fs-upload.com', port = 443, family = &lt;AddressFamily.AF_UNSPEC: 0&gt;
+type = &lt;SocketKind.SOCK_STREAM: 1&gt;, proto = 0, flags = 0
+
+    def getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+        """Resolve host and port into list of address info entries.
+    
+        Translate the host/port argument into a sequence of 5-tuples that contain
+        all the necessary arguments for creating a socket connected to that service.
+        host is a domain name, a string representation of an IPv4/v6 address or
+        None. port is a string service name such as 'http', a numeric port number or
+        None. By passing None as the value of host and port, you can pass NULL to
+        the underlying C API.
+    
+        The family, type and proto arguments can be optionally specified in order to
+        narrow the list of addresses returned. Passing zero as a value for each of
+        these arguments selects the full range of results.
+        """
+        # We override this function since we want to translate the numeric family
+        # and socket type values to enum constants.
+        addrlist = []
+&gt;       for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/socket.py:983: gaierror
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;urllib3.connectionpool.HTTPSConnectionPool object at 0x10534fbb0&gt;
+method = 'POST', url = '/multipart/upload'
+body = '{"apikey": "Aaaaapikey", "uri": "fs-upload.com", "region": "region", "upload_id": "abc", "store": {"location": "s3"}, "part": 1, "size": 16384, "md5": "QbeEGJDXZXimo/tbjuYXUg==", "offset": 0, "fii": true}'
+headers = HTTPHeaderDict({'Content-Type': 'application/json'})
+retries = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+redirect = False, assert_same_host = False, timeout = &lt;_TYPE_DEFAULT.token: -1&gt;
+pool_timeout = None, release_conn = True, chunked = False, body_pos = None
+preload_content = True, decode_content = True, response_kw = {}
+parsed_url = Url(scheme=None, auth=None, host=None, port=None, path='/multipart/upload', query=None, fragment=None)
+destination_scheme = None, conn = None, release_this_conn = True
+http_tunnel_required = False, err = None, clean_exit = False
+
+    def urlopen(  # type: ignore[override]
+        self,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | bool | int | None = None,
+        redirect: bool = True,
+        assert_same_host: bool = True,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        pool_timeout: int | None = None,
+        release_conn: bool | None = None,
+        chunked: bool = False,
+        body_pos: _TYPE_BODY_POSITION | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        **response_kw: typing.Any,
+    ) -&gt; BaseHTTPResponse:
+        """
+        Get a connection from the pool and perform an HTTP request. This is the
+        lowest level call for making a request, so you'll need to specify all
+        the raw details.
+    
+        .. note::
+    
+           More commonly, it's appropriate to use a convenience method
+           such as :meth:`request`.
+    
+        .. note::
+    
+           `release_conn` will only behave as expected if
+           `preload_content=False` because we want to make
+           `preload_content=False` the default behaviour someday soon without
+           breaking backwards compatibility.
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            If ``None`` (default) will retry 3 times, see ``Retry.DEFAULT``. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param redirect:
+            If True, automatically handle redirects (status codes 301, 302,
+            303, 307, 308). Each redirect counts as a retry. Disabling retries
+            will disable redirect, too.
+    
+        :param assert_same_host:
+            If ``True``, will make sure that the host of the pool requests is
+            consistent else will raise HostChangedError. When ``False``, you can
+            use the pool on an HTTP proxy and request foreign hosts.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param pool_timeout:
+            If set and the pool is set to block=True, then this method will
+            block for ``pool_timeout`` seconds and raise EmptyPoolError if no
+            connection is available within the time period.
+    
+        :param bool preload_content:
+            If True, the response's body will be preloaded into memory.
+    
+        :param bool decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param release_conn:
+            If False, then the urlopen call will not release the connection
+            back into the pool once a response is received (but will release if
+            you read the entire contents of the response such as when
+            `preload_content=True`). This is useful if you're not preloading
+            the response's content immediately. You will need to call
+            ``r.release_conn()`` on the response ``r`` to return the connection
+            back into the pool. If None, it takes the value of ``preload_content``
+            which defaults to ``True``.
+    
+        :param bool chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param int body_pos:
+            Position to seek to in file-like body in the event of a retry or
+            redirect. Typically this won't need to be set because urllib3 will
+            auto-populate the value when needed.
+        """
+        parsed_url = parse_url(url)
+        destination_scheme = parsed_url.scheme
+    
+        if headers is None:
+            headers = self.headers
+    
+        if not isinstance(retries, Retry):
+            retries = Retry.from_int(retries, redirect=redirect, default=self.retries)
+    
+        if release_conn is None:
+            release_conn = preload_content
+    
+        # Check host
+        if assert_same_host and not self.is_same_host(url):
+            raise HostChangedError(self, url, retries)
+    
+        # Ensure that the URL we're connecting to is properly encoded
+        if url.startswith("/"):
+            url = to_str(_encode_target(url))
+        else:
+            url = to_str(parsed_url.url)
+    
+        conn = None
+    
+        # Track whether `conn` needs to be released before
+        # returning/raising/recursing. Update this variable if necessary, and
+        # leave `release_conn` constant throughout the function. That way, if
+        # the function recurses, the original value of `release_conn` will be
+        # passed down into the recursive call, and its value will be respected.
+        #
+        # See issue #651 [1] for details.
+        #
+        # [1] &lt;https://github.com/urllib3/urllib3/issues/651&gt;
+        release_this_conn = release_conn
+    
+        http_tunnel_required = connection_requires_http_tunnel(
+            self.proxy, self.proxy_config, destination_scheme
+        )
+    
+        # Merge the proxy headers. Only done when not using HTTP CONNECT. We
+        # have to copy the headers dict so we can safely change it without those
+        # changes being reflected in anyone else's copy.
+        if not http_tunnel_required:
+            headers = headers.copy()  # type: ignore[attr-defined]
+            headers.update(self.proxy_headers)  # type: ignore[union-attr]
+    
+        # Must keep the exception bound to a separate variable or else Python 3
+        # complains about UnboundLocalError.
+        err = None
+    
+        # Keep track of whether we cleanly exited the except block. This
+        # ensures we do proper cleanup in finally.
+        clean_exit = False
+    
+        # Rewind body position, if needed. Record current position
+        # for future rewinds in the event of a redirect/retry.
+        body_pos = set_file_position(body, body_pos)
+    
+        try:
+            # Request a connection from the queue.
+            timeout_obj = self._get_timeout(timeout)
+            conn = self._get_conn(timeout=pool_timeout)
+    
+            conn.timeout = timeout_obj.connect_timeout  # type: ignore[assignment]
+    
+            # Is this a closed/new connection that requires CONNECT tunnelling?
+            if self.proxy is not None and http_tunnel_required and conn.is_closed:
+                try:
+                    self._prepare_proxy(conn)
+                except (BaseSSLError, OSError, SocketTimeout) as e:
+                    self._raise_timeout(
+                        err=e, url=self.proxy.url, timeout_value=conn.timeout
+                    )
+                    raise
+    
+            # If we're going to release the connection in ``finally:``, then
+            # the response doesn't need to know about the connection. Otherwise
+            # it will also try to release it and we'll have a double-release
+            # mess.
+            response_conn = conn if not release_conn else None
+    
+            # Make the request on the HTTPConnection object
+&gt;           response = self._make_request(
+                conn,
+                method,
+                url,
+                timeout=timeout_obj,
+                body=body,
+                headers=headers,
+                chunked=chunked,
+                retries=retries,
+                response_conn=response_conn,
+                preload_content=preload_content,
+                decode_content=decode_content,
+                **response_kw,
+            )
+
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:787: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:488: in _make_request
+    raise new_e
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:464: in _make_request
+    self._validate_conn(conn)
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:1093: in _validate_conn
+    conn.connect()
+.venv/lib/python3.14/site-packages/urllib3/connection.py:759: in connect
+    self.sock = sock = self._new_conn()
+                       ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;HTTPSConnection(host='fs-upload.com', port=443) at 0x106afb390&gt;
+
+    def _new_conn(self) -&gt; socket.socket:
+        """Establish a socket connection and set nodelay settings on it.
+    
+        :return: New socket connection.
+        """
+        try:
+            sock = connection.create_connection(
+                (self._dns_host, self.port),
+                self.timeout,
+                source_address=self.source_address,
+                socket_options=self.socket_options,
+            )
+        except socket.gaierror as e:
+&gt;           raise NameResolutionError(self.host, self, e) from e
+E           urllib3.exceptions.NameResolutionError: HTTPSConnection(host='fs-upload.com', port=443): Failed to resolve 'fs-upload.com' ([Errno 8] nodename nor servname provided, or not known)
+
+.venv/lib/python3.14/site-packages/urllib3/connection.py:211: NameResolutionError
+
+The above exception was the direct cause of the following exception:
+
+apikey = 'Aaaaapikey', filename = 'file.txt', filepath = 'tests/data/doom.mp4'
+filesize = 5415034, storage = 's3'
+start_response = {'location_url': 'fs-upload.com', 'region': 'region', 'upload_id': 'abc', 'uri': 'fs-upload.com'}
+part = {'num': 1, 'seek_point': 0}
+
+    def upload_part(apikey, filename, filepath, filesize, storage, start_response, part):
+        with open(filepath, 'rb') as f:
+            f.seek(part['seek_point'])
+            part_bytes = io.BytesIO(f.read(DEFAULT_PART_SIZE))
+    
+        payload_base = {
+            'apikey': apikey,
+            'uri': start_response['uri'],
+            'region': start_response['region'],
+            'upload_id': start_response['upload_id'],
+            'store': {'location': storage},
+            'part': part['num']
+        }
+    
+        global CHUNK_SIZE
+        chunk_data = part_bytes.read(CHUNK_SIZE)
+        offset = 0
+    
+        while chunk_data:
+            payload = payload_base.copy()
+            payload.update({
+                'size': len(chunk_data),
+                'md5': b64encode(hashlib.md5(chunk_data).digest()).strip().decode('utf-8'),
+                'offset': offset,
+                'fii': True
+            })
+    
+            try:
+                url = 'https://{}/multipart/upload'.format(start_response['location_url'])
+&gt;               response = http.request('POST', url, body=json.dumps(payload), headers={'Content-Type': 'application/json'})
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+filestack/uploads/intelligent_ingestion.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:143: in request
+    return self.request_encode_body(
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:278: in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:457: in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:841: in urlopen
+    retries = retries.increment(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+method = 'POST', url = '/multipart/upload', response = None
+error = NameResolutionError("HTTPSConnection(host='fs-upload.com', port=443): Failed to resolve 'fs-upload.com' ([Errno 8] nodename nor servname provided, or not known)")
+_pool = &lt;urllib3.connectionpool.HTTPSConnectionPool object at 0x10534fbb0&gt;
+_stacktrace = &lt;traceback object at 0x12004d8c0&gt;
+
+    def increment(
+        self,
+        method: str | None = None,
+        url: str | None = None,
+        response: BaseHTTPResponse | None = None,
+        error: Exception | None = None,
+        _pool: ConnectionPool | None = None,
+        _stacktrace: TracebackType | None = None,
+    ) -&gt; Self:
+        """Return a new Retry object with incremented retry counters.
+    
+        :param response: A response object, or None, if the server did not
+            return a response.
+        :type response: :class:`~urllib3.response.BaseHTTPResponse`
+        :param Exception error: An error encountered during the request, or
+            None if the response was received successfully.
+    
+        :return: A new ``Retry`` object.
+        """
+        if self.total is False and error:
+            # Disabled, indicate to re-raise the error.
+            raise reraise(type(error), error, _stacktrace)
+    
+        total = self.total
+        if total is not None:
+            total -= 1
+    
+        connect = self.connect
+        read = self.read
+        redirect = self.redirect
+        status_count = self.status
+        other = self.other
+        cause = "unknown"
+        status = None
+        redirect_location = None
+    
+        if error and self._is_connection_error(error):
+            # Connect retry?
+            if connect is False:
+                raise reraise(type(error), error, _stacktrace)
+            elif connect is not None:
+                connect -= 1
+    
+        elif error and self._is_read_error(error):
+            # Read retry?
+            if read is False or method is None or not self._is_method_retryable(method):
+                raise reraise(type(error), error, _stacktrace)
+            elif read is not None:
+                read -= 1
+    
+        elif error:
+            # Other retry?
+            if other is not None:
+                other -= 1
+    
+        elif response and response.get_redirect_location():
+            # Redirect retry?
+            if redirect is not None:
+                redirect -= 1
+            cause = "too many redirects"
+            response_redirect_location = response.get_redirect_location()
+            if response_redirect_location:
+                redirect_location = response_redirect_location
+            status = response.status
+    
+        else:
+            # Incrementing because of a server error like a 500 in
+            # status_forcelist and the given method is in the allowed_methods
+            cause = ResponseError.GENERIC_ERROR
+            if response and response.status:
+                if status_count is not None:
+                    status_count -= 1
+                cause = ResponseError.SPECIFIC_ERROR.format(status_code=response.status)
+                status = response.status
+    
+        history = self.history + (
+            RequestHistory(method, url, error, status, redirect_location),
+        )
+    
+        new_retry = self.new(
+            total=total,
+            connect=connect,
+            read=read,
+            redirect=redirect,
+            status=status_count,
+            other=other,
+            history=history,
+        )
+    
+        if new_retry.is_exhausted():
+            reason = error or ResponseError(cause)
+&gt;           raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='fs-upload.com', port=443): Max retries exceeded with url: /multipart/upload (Caused by NameResolutionError("HTTPSConnection(host='fs-upload.com', port=443): Failed to resolve 'fs-upload.com' ([Errno 8] nodename nor servname provided, or not known)"))
+
+.venv/lib/python3.14/site-packages/urllib3/util/retry.py:535: MaxRetryError
+
+During handling of the above exception, another exception occurred:
+
+    @responses.activate
+    def test_upload_part_with_resize():
+        responses.add(
+            responses.POST, 'https://fs-upload.com/multipart/upload',
+            json={'url': 'https://s3.url', 'headers': {'filestack': 'headers'}}
+        )
+        responses.add(responses.PUT, 'https://s3.url', status=400)
+        responses.add(responses.PUT, 'https://s3.url')  # chunks 1 &amp; 2 of part 1
+        responses.add(responses.POST, 'https://fs-upload.com/multipart/commit')
+    
+        start_response = {
+            'uri': 'fs-upload.com', 'location_url': 'fs-upload.com', 'region': 'region', 'upload_id': 'abc'
+        }
+        part = {'seek_point': 0, 'num': 1}
+&gt;       upload_part('Aaaaapikey', 'file.txt', 'tests/data/doom.mp4', 5415034, 's3', start_response, part)
+
+tests/intelligent_ingestion_test.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/uploads/intelligent_ingestion.py:83: in upload_part
+    decrease_chunk_size()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def decrease_chunk_size():
+        global CHUNK_SIZE
+        CHUNK_SIZE //= 2
+        if CHUNK_SIZE &lt; MIN_CHUNK_SIZE:
+&gt;           raise Exception('Minimal chunk size failed')
+E           Exception: Minimal chunk size failed
+
+filestack/uploads/intelligent_ingestion.py:41: Exception</failure></testcase><testcase classname="tests.intelligent_ingestion_test" name="test_min_chunk_size_exception" time="0.005"><failure message="IndexError: list index out of range">@responses.activate
+    def test_min_chunk_size_exception():
+        responses.reset()
+        responses.add(
+            responses.POST, 'https://fs-upload.com/multipart/upload',
+            json={'url': 'https://upload.url', 'headers': {'filestack': 'headers'}}
+        )
+        responses.add(responses.PUT, 'https://upload.url', status=400)
+    
+        part = {'seek_point': 0, 'num': 1}
+        start_response = {
+            'uri': 'fs-upload.com', 'location_url': 'fs-upload.com', 'region': 'region', 'upload_id': 'abc'
+        }
+        with pytest.raises(Exception, match='Minimal chunk size failed'):
+            upload_part('Aaaaapikey', 'file.txt', 'tests/data/doom.mp4', 5415034, 's3', start_response, part)
+    
+        chunk_sizes = [len(call.request.body) for call in responses.calls if call.request.method == 'PUT']
+&gt;       assert chunk_sizes[-1] == 32768  # check size of last attempt
+               ^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/intelligent_ingestion_test.py:78: IndexError</failure></testcase><testcase classname="tests.multipart_test" name="test_upload_filepath" time="0.687"><failure message="KeyError: 'uri'">multipart_mock = None
+
+    def test_upload_filepath(multipart_mock):
+        client = Client(APIKEY)
+&gt;       filelink = client.upload(filepath='tests/data/doom.mp4')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/multipart_test.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/models/client.py:156: in upload
+    response_json = upload_method(
+filestack/uploads/multipart.py:121: in multipart_upload
+    uploaded_parts = list(executor.map(upload_func, chunks))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:639: in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:311: in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+apikey = 'APIKEY', filename = 'doom.mp4', storage = 'S3'
+start_response = {'error': 'application not found', 'timestamp': 1772634408}
+chunk = &lt;Chunk part: 1, seek: 0&gt;
+
+    def upload_chunk(apikey, filename, storage, start_response, chunk):
+        payload = {
+            'apikey': apikey,
+            'part': chunk.num,
+            'size': len(chunk.bytes),
+            'md5': b64encode(hashlib.md5(chunk.bytes).digest()).strip().decode('utf-8'),
+&gt;           'uri': start_response['uri'],
+                   ^^^^^^^^^^^^^^^^^^^^^
+            'region': start_response['region'],
+            'upload_id': start_response['upload_id'],
+            'store': {
+                'location': storage,
+            }
+        }
+E       KeyError: 'uri'
+
+filestack/uploads/multipart.py:73: KeyError</failure></testcase><testcase classname="tests.multipart_test" name="test_upload_file_obj" time="0.211"><failure message="KeyError: 'uri'">multipart_mock = None
+
+    def test_upload_file_obj(multipart_mock):
+        file_content = b'file bytes'
+&gt;       filelink = Client(APIKEY).upload(file_obj=io.BytesIO(file_content))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/multipart_test.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/models/client.py:156: in upload
+    response_json = upload_method(
+filestack/uploads/multipart.py:121: in multipart_upload
+    uploaded_parts = list(executor.map(upload_func, chunks))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:639: in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:311: in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:443: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+apikey = 'APIKEY', filename = 'unnamed_file', storage = 'S3'
+start_response = {'error': 'application not found', 'timestamp': 1772634408}
+chunk = &lt;Chunk part: 1, seek: 0&gt;
+
+    def upload_chunk(apikey, filename, storage, start_response, chunk):
+        payload = {
+            'apikey': apikey,
+            'part': chunk.num,
+            'size': len(chunk.bytes),
+            'md5': b64encode(hashlib.md5(chunk.bytes).digest()).strip().decode('utf-8'),
+&gt;           'uri': start_response['uri'],
+                   ^^^^^^^^^^^^^^^^^^^^^
+            'region': start_response['region'],
+            'upload_id': start_response['upload_id'],
+            'store': {
+                'location': storage,
+            }
+        }
+E       KeyError: 'uri'
+
+filestack/uploads/multipart.py:73: KeyError</failure></testcase><testcase classname="tests.multipart_test" name="test_upload_with_workflows" time="0.212"><failure message="KeyError: 'uri'">multipart_mock = None
+
+    def test_upload_with_workflows(multipart_mock):
+        workflow_ids = ['workflow-id-1', 'workflow-id-2']
+        store_params = {'workflows': workflow_ids}
+        client = Client(APIKEY)
+&gt;       filelink = client.upload(filepath='tests/data/bird.jpg', store_params=store_params)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/multipart_test.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/models/client.py:156: in upload
+    response_json = upload_method(
+filestack/uploads/multipart.py:121: in multipart_upload
+    uploaded_parts = list(executor.map(upload_func, chunks))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:639: in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:311: in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+apikey = 'APIKEY', filename = 'bird.jpg', storage = 'S3'
+start_response = {'error': 'application not found', 'timestamp': 1772634408}
+chunk = &lt;Chunk part: 1, seek: 0&gt;
+
+    def upload_chunk(apikey, filename, storage, start_response, chunk):
+        payload = {
+            'apikey': apikey,
+            'part': chunk.num,
+            'size': len(chunk.bytes),
+            'md5': b64encode(hashlib.md5(chunk.bytes).digest()).strip().decode('utf-8'),
+&gt;           'uri': start_response['uri'],
+                   ^^^^^^^^^^^^^^^^^^^^^
+            'region': start_response['region'],
+            'upload_id': start_response['upload_id'],
+            'store': {
+                'location': storage,
+            }
+        }
+E       KeyError: 'uri'
+
+filestack/uploads/multipart.py:73: KeyError</failure></testcase><testcase classname="tests.multipart_test" name="test_upload_chunk" time="0.009"><failure message="TypeError: argument of type 'NoneType' is not a container or iterable">def test_upload_chunk():
+        # Mocking responses is removed as responses is not compatible with urllib3
+        chunk = Chunk(num=123, seek_point=0, filepath='tests/data/doom.mp4')
+        start_response = defaultdict(str)
+        start_response['location_url'] = 'fsuploads.com'
+&gt;       upload_result = upload_chunk('apikey', 'filename', 's3', start_response, chunk)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/multipart_test.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/uploads/multipart.py:81: in upload_chunk
+    fs_resp = multipart_request(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+url = 'https://fsuploads.com/multipart/upload'
+payload = {'apikey': 'apikey', 'md5': 'kVBqYicWzPSx8M6nZEPhDg==', 'part': 123, 'region': '', ...}
+params = None, security = None
+
+    def multipart_request(url, payload, params=None, security=None):
+        for key in ('path', 'location', 'region', 'container', 'access'):
+&gt;           if key in params:
+               ^^^^^^^^^^^^^
+E           TypeError: argument of type 'NoneType' is not a container or iterable
+
+filestack/uploads/multipart.py:39: TypeError</failure></testcase><testcase classname="tests.security_test" name="test_security" time="0.000" /><testcase classname="tests.security_test" name="test_security_as_url_string" time="0.000" /><testcase classname="tests.tasks_test" name="test_createpdf" time="0.000" /><testcase classname="tests.tasks_test" name="test_animate" time="0.000" /><testcase classname="tests.tasks_test" name="test_doc_to_images" time="0.000" /><testcase classname="tests.tasks_test" name="test_smart_crop" time="0.000" /><testcase classname="tests.tasks_test" name="test_pdf_convert" time="0.000" /><testcase classname="tests.tasks_test" name="test_fallback" time="0.000" /><testcase classname="tests.transformation_test" name="test_sanity" time="0.000" /><testcase classname="tests.transformation_test" name="test_resize" time="0.000" /><testcase classname="tests.transformation_test" name="test_crop" time="0.000" /><testcase classname="tests.transformation_test" name="test_rotate" time="0.000" /><testcase classname="tests.transformation_test" name="test_flip" time="0.000" /><testcase classname="tests.transformation_test" name="test_flop" time="0.000" /><testcase classname="tests.transformation_test" name="test_watermark" time="0.000" /><testcase classname="tests.transformation_test" name="test_detect_faces" time="0.000" /><testcase classname="tests.transformation_test" name="test_crop_faces" time="0.000" /><testcase classname="tests.transformation_test" name="test_pixelate_faces" time="0.000" /><testcase classname="tests.transformation_test" name="test_round_corners" time="0.000" /><testcase classname="tests.transformation_test" name="test_vignette" time="0.000" /><testcase classname="tests.transformation_test" name="test_polaroid" time="0.000" /><testcase classname="tests.transformation_test" name="test_torn_edges" time="0.000" /><testcase classname="tests.transformation_test" name="test_shadow" time="0.000" /><testcase classname="tests.transformation_test" name="test_circle" time="0.000" /><testcase classname="tests.transformation_test" name="test_border" time="0.000" /><testcase classname="tests.transformation_test" name="test_sharpen" time="0.000" /><testcase classname="tests.transformation_test" name="test_blur" time="0.000" /><testcase classname="tests.transformation_test" name="test_monochrome" time="0.000" /><testcase classname="tests.transformation_test" name="test_blackwhite" time="0.000" /><testcase classname="tests.transformation_test" name="test_sepia" time="0.000" /><testcase classname="tests.transformation_test" name="test_pixelate" time="0.000" /><testcase classname="tests.transformation_test" name="test_oil_paint" time="0.000" /><testcase classname="tests.transformation_test" name="test_negative" time="0.000" /><testcase classname="tests.transformation_test" name="test_modulate" time="0.000" /><testcase classname="tests.transformation_test" name="test_partial_pixelate" time="0.000" /><testcase classname="tests.transformation_test" name="test_partial_blur" time="0.000" /><testcase classname="tests.transformation_test" name="test_collage" time="0.000" /><testcase classname="tests.transformation_test" name="test_upscale" time="0.000" /><testcase classname="tests.transformation_test" name="test_enhance" time="0.000" /><testcase classname="tests.transformation_test" name="test_redeye" time="0.000" /><testcase classname="tests.transformation_test" name="test_ascii" time="0.000" /><testcase classname="tests.transformation_test" name="test_zip" time="0.000" /><testcase classname="tests.transformation_test" name="test_fallback" time="0.000" /><testcase classname="tests.transformation_test" name="test_pdf_info" time="0.000" /><testcase classname="tests.transformation_test" name="test_pdf_convert" time="0.000" /><testcase classname="tests.transformation_test" name="test_minify_css" time="0.000" /><testcase classname="tests.transformation_test" name="test_minify_css_with_params" time="0.000" /><testcase classname="tests.transformation_test" name="test_minify_js" time="0.000" /><testcase classname="tests.transformation_test" name="test_filetype_conversion" time="0.000" /><testcase classname="tests.transformation_test" name="test_no_metadata" time="0.000" /><testcase classname="tests.transformation_test" name="test_chain_tasks_and_store" time="0.592"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">transform = &lt;filestack.models.transformation.Transformation object at 0x1053b6510&gt;
+
+    @responses.activate
+    def test_chain_tasks_and_store(transform):
+        responses.add(
+            responses.POST, re.compile('https://cdn.filestackcontent.com/SOMEAPIKEY*'),
+            json={'handle': HANDLE}
+        )
+        transform_obj = transform.flip().resize(width=100)
+&gt;       new_filelink = transform_obj.store(filename='filename', location='S3', container='bucket', path='folder/image.jpg')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/transformation_test.py:316: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:73: in store
+    return filestack.models.Filelink(handle=json.loads(response.data)['handle'])
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x1015bef90&gt;, s = 'Bad Request\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="tests.transformation_test" name="test_av_convert" time="0.268"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">transform = &lt;filestack.models.transformation.Transformation object at 0x106cce510&gt;
+
+    @responses.activate
+    def test_av_convert(transform):
+        responses.add(
+            responses.GET,
+            'https://cdn.filestackcontent.com/SOMEAPIKEY/video_convert=height:500,width:500/SOMEEXTERNALURL',
+            json={'url': transform.url, 'uuid': 'someuuid', 'timestamp': 'sometimestamp'}
+        )
+&gt;       new_av = transform.av_convert(width=500, height=500)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/transformation_test.py:331: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/imagetransformation.py:150: in av_convert
+    response_data = json.loads(response.data.decode('utf-8'))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x1015bef90&gt;, s = 'Bad Request\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="tests.transformation_test" name="test_auto_image" time="0.001" /><testcase classname="tests.uploads.test_upload_external_url" name="test_upload_with_store_params[S3,-store_params0-None-expected_store_tasks0]" time="0.635"><failure message="KeyError: 'handle'">default_storage = 'S3,', store_params = {'location': 'gcs'}, security = None
+expected_store_tasks = [{'name': 'store', 'params': {'location': 'gcs'}}]
+
+    @pytest.mark.parametrize('default_storage, store_params, security, expected_store_tasks', [
+        (
+            'S3,',
+            {'location': 'gcs'},
+            None,
+            [
+                {
+                    'name': 'store', 'params': {'location': 'gcs'}
+                }
+            ]
+        ),
+        (
+            'gcs',
+            {'path': 'new-path/', 'mimetype': 'application/json'},
+            type('SecurityMock', (), {'policy_b64': 'abc', 'signature': '123'}),
+            [
+                {
+                    'name': 'store', 'params': {'path': 'new-path/', 'location': 'gcs'}
+                },
+                {
+                    'name': 'security', 'params': {'policy': 'abc', 'signature': '123'}
+                }
+            ]
+        )
+    ])
+    @responses.activate
+    def test_upload_with_store_params(default_storage, store_params, security, expected_store_tasks):
+        expected_payload = {
+            'apikey': 'TESTAPIKEY',
+            'sources': ['http://image.url'],
+            'tasks': expected_store_tasks
+        }
+        responses.add(responses.POST, PROCESS_URL, json={'handle': 'newHandle'})
+        upload_response = upload_external_url(
+            url, apikey, default_storage, store_params=store_params, security=security
+        )
+&gt;       assert upload_response['handle'] == 'newHandle'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'handle'
+
+tests/uploads/test_upload_external_url.py:49: KeyError</failure></testcase><testcase classname="tests.uploads.test_upload_external_url" name="test_upload_with_store_params[gcs-store_params1-SecurityMock-expected_store_tasks1]" time="0.199"><failure message="KeyError: 'handle'">default_storage = 'gcs', store_params = {'location': 'gcs', 'path': 'new-path/'}
+security = &lt;class 'test_upload_external_url.SecurityMock'&gt;
+expected_store_tasks = [{'name': 'store', 'params': {'location': 'gcs', 'path': 'new-path/'}}, {'name': 'security', 'params': {'policy': 'abc', 'signature': '123'}}]
+
+    @pytest.mark.parametrize('default_storage, store_params, security, expected_store_tasks', [
+        (
+            'S3,',
+            {'location': 'gcs'},
+            None,
+            [
+                {
+                    'name': 'store', 'params': {'location': 'gcs'}
+                }
+            ]
+        ),
+        (
+            'gcs',
+            {'path': 'new-path/', 'mimetype': 'application/json'},
+            type('SecurityMock', (), {'policy_b64': 'abc', 'signature': '123'}),
+            [
+                {
+                    'name': 'store', 'params': {'path': 'new-path/', 'location': 'gcs'}
+                },
+                {
+                    'name': 'security', 'params': {'policy': 'abc', 'signature': '123'}
+                }
+            ]
+        )
+    ])
+    @responses.activate
+    def test_upload_with_store_params(default_storage, store_params, security, expected_store_tasks):
+        expected_payload = {
+            'apikey': 'TESTAPIKEY',
+            'sources': ['http://image.url'],
+            'tasks': expected_store_tasks
+        }
+        responses.add(responses.POST, PROCESS_URL, json={'handle': 'newHandle'})
+        upload_response = upload_external_url(
+            url, apikey, default_storage, store_params=store_params, security=security
+        )
+&gt;       assert upload_response['handle'] == 'newHandle'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'handle'
+
+tests/uploads/test_upload_external_url.py:49: KeyError</failure></testcase><testcase classname="tests.utils_test" name="test_req_wrapper_overwrite_headers" time="0.017"><failure message="urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='just.some.url', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(&quot;HTTPConnection(host='just.some.url', port=80): Failed to resolve 'just.some.url' ([Errno 8] nodename nor servname provided, or not known)&quot;))">self = &lt;HTTPConnection(host='just.some.url', port=80) at 0x106eb1a70&gt;
+
+    def _new_conn(self) -&gt; socket.socket:
+        """Establish a socket connection and set nodelay settings on it.
+    
+        :return: New socket connection.
+        """
+        try:
+&gt;           sock = connection.create_connection(
+                (self._dns_host, self.port),
+                self.timeout,
+                source_address=self.source_address,
+                socket_options=self.socket_options,
+            )
+
+.venv/lib/python3.14/site-packages/urllib3/connection.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/util/connection.py:60: in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = 'just.some.url', port = 80, family = &lt;AddressFamily.AF_UNSPEC: 0&gt;
+type = &lt;SocketKind.SOCK_STREAM: 1&gt;, proto = 0, flags = 0
+
+    def getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+        """Resolve host and port into list of address info entries.
+    
+        Translate the host/port argument into a sequence of 5-tuples that contain
+        all the necessary arguments for creating a socket connected to that service.
+        host is a domain name, a string representation of an IPv4/v6 address or
+        None. port is a string service name such as 'http', a numeric port number or
+        None. By passing None as the value of host and port, you can pass NULL to
+        the underlying C API.
+    
+        The family, type and proto arguments can be optionally specified in order to
+        narrow the list of addresses returned. Passing zero as a value for each of
+        these arguments selects the full range of results.
+        """
+        # We override this function since we want to translate the numeric family
+        # and socket type values to enum constants.
+        addrlist = []
+&gt;       for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/socket.py:983: gaierror
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;urllib3.connectionpool.HTTPConnectionPool object at 0x106ea2ba0&gt;
+method = 'POST', url = '/', body = None, headers = HTTPHeaderDict({})
+retries = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+redirect = False, assert_same_host = False, timeout = &lt;_TYPE_DEFAULT.token: -1&gt;
+pool_timeout = None, release_conn = True, chunked = False, body_pos = None
+preload_content = True, decode_content = True, response_kw = {}
+parsed_url = Url(scheme=None, auth=None, host=None, port=None, path='/', query=None, fragment=None)
+destination_scheme = None, conn = None, release_this_conn = True
+http_tunnel_required = False, err = None, clean_exit = False
+
+    def urlopen(  # type: ignore[override]
+        self,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | bool | int | None = None,
+        redirect: bool = True,
+        assert_same_host: bool = True,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        pool_timeout: int | None = None,
+        release_conn: bool | None = None,
+        chunked: bool = False,
+        body_pos: _TYPE_BODY_POSITION | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        **response_kw: typing.Any,
+    ) -&gt; BaseHTTPResponse:
+        """
+        Get a connection from the pool and perform an HTTP request. This is the
+        lowest level call for making a request, so you'll need to specify all
+        the raw details.
+    
+        .. note::
+    
+           More commonly, it's appropriate to use a convenience method
+           such as :meth:`request`.
+    
+        .. note::
+    
+           `release_conn` will only behave as expected if
+           `preload_content=False` because we want to make
+           `preload_content=False` the default behaviour someday soon without
+           breaking backwards compatibility.
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            If ``None`` (default) will retry 3 times, see ``Retry.DEFAULT``. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param redirect:
+            If True, automatically handle redirects (status codes 301, 302,
+            303, 307, 308). Each redirect counts as a retry. Disabling retries
+            will disable redirect, too.
+    
+        :param assert_same_host:
+            If ``True``, will make sure that the host of the pool requests is
+            consistent else will raise HostChangedError. When ``False``, you can
+            use the pool on an HTTP proxy and request foreign hosts.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param pool_timeout:
+            If set and the pool is set to block=True, then this method will
+            block for ``pool_timeout`` seconds and raise EmptyPoolError if no
+            connection is available within the time period.
+    
+        :param bool preload_content:
+            If True, the response's body will be preloaded into memory.
+    
+        :param bool decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param release_conn:
+            If False, then the urlopen call will not release the connection
+            back into the pool once a response is received (but will release if
+            you read the entire contents of the response such as when
+            `preload_content=True`). This is useful if you're not preloading
+            the response's content immediately. You will need to call
+            ``r.release_conn()`` on the response ``r`` to return the connection
+            back into the pool. If None, it takes the value of ``preload_content``
+            which defaults to ``True``.
+    
+        :param bool chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param int body_pos:
+            Position to seek to in file-like body in the event of a retry or
+            redirect. Typically this won't need to be set because urllib3 will
+            auto-populate the value when needed.
+        """
+        parsed_url = parse_url(url)
+        destination_scheme = parsed_url.scheme
+    
+        if headers is None:
+            headers = self.headers
+    
+        if not isinstance(retries, Retry):
+            retries = Retry.from_int(retries, redirect=redirect, default=self.retries)
+    
+        if release_conn is None:
+            release_conn = preload_content
+    
+        # Check host
+        if assert_same_host and not self.is_same_host(url):
+            raise HostChangedError(self, url, retries)
+    
+        # Ensure that the URL we're connecting to is properly encoded
+        if url.startswith("/"):
+            url = to_str(_encode_target(url))
+        else:
+            url = to_str(parsed_url.url)
+    
+        conn = None
+    
+        # Track whether `conn` needs to be released before
+        # returning/raising/recursing. Update this variable if necessary, and
+        # leave `release_conn` constant throughout the function. That way, if
+        # the function recurses, the original value of `release_conn` will be
+        # passed down into the recursive call, and its value will be respected.
+        #
+        # See issue #651 [1] for details.
+        #
+        # [1] &lt;https://github.com/urllib3/urllib3/issues/651&gt;
+        release_this_conn = release_conn
+    
+        http_tunnel_required = connection_requires_http_tunnel(
+            self.proxy, self.proxy_config, destination_scheme
+        )
+    
+        # Merge the proxy headers. Only done when not using HTTP CONNECT. We
+        # have to copy the headers dict so we can safely change it without those
+        # changes being reflected in anyone else's copy.
+        if not http_tunnel_required:
+            headers = headers.copy()  # type: ignore[attr-defined]
+            headers.update(self.proxy_headers)  # type: ignore[union-attr]
+    
+        # Must keep the exception bound to a separate variable or else Python 3
+        # complains about UnboundLocalError.
+        err = None
+    
+        # Keep track of whether we cleanly exited the except block. This
+        # ensures we do proper cleanup in finally.
+        clean_exit = False
+    
+        # Rewind body position, if needed. Record current position
+        # for future rewinds in the event of a redirect/retry.
+        body_pos = set_file_position(body, body_pos)
+    
+        try:
+            # Request a connection from the queue.
+            timeout_obj = self._get_timeout(timeout)
+            conn = self._get_conn(timeout=pool_timeout)
+    
+            conn.timeout = timeout_obj.connect_timeout  # type: ignore[assignment]
+    
+            # Is this a closed/new connection that requires CONNECT tunnelling?
+            if self.proxy is not None and http_tunnel_required and conn.is_closed:
+                try:
+                    self._prepare_proxy(conn)
+                except (BaseSSLError, OSError, SocketTimeout) as e:
+                    self._raise_timeout(
+                        err=e, url=self.proxy.url, timeout_value=conn.timeout
+                    )
+                    raise
+    
+            # If we're going to release the connection in ``finally:``, then
+            # the response doesn't need to know about the connection. Otherwise
+            # it will also try to release it and we'll have a double-release
+            # mess.
+            response_conn = conn if not release_conn else None
+    
+            # Make the request on the HTTPConnection object
+&gt;           response = self._make_request(
+                conn,
+                method,
+                url,
+                timeout=timeout_obj,
+                body=body,
+                headers=headers,
+                chunked=chunked,
+                retries=retries,
+                response_conn=response_conn,
+                preload_content=preload_content,
+                decode_content=decode_content,
+                **response_kw,
+            )
+
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:787: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:493: in _make_request
+    conn.request(
+.venv/lib/python3.14/site-packages/urllib3/connection.py:500: in request
+    self.endheaders()
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/http/client.py:1353: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/http/client.py:1113: in _send_output
+    self.send(msg)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/http/client.py:1057: in send
+    self.connect()
+.venv/lib/python3.14/site-packages/urllib3/connection.py:331: in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;HTTPConnection(host='just.some.url', port=80) at 0x106eb1a70&gt;
+
+    def _new_conn(self) -&gt; socket.socket:
+        """Establish a socket connection and set nodelay settings on it.
+    
+        :return: New socket connection.
+        """
+        try:
+            sock = connection.create_connection(
+                (self._dns_host, self.port),
+                self.timeout,
+                source_address=self.source_address,
+                socket_options=self.socket_options,
+            )
+        except socket.gaierror as e:
+&gt;           raise NameResolutionError(self.host, self, e) from e
+E           urllib3.exceptions.NameResolutionError: HTTPConnection(host='just.some.url', port=80): Failed to resolve 'just.some.url' ([Errno 8] nodename nor servname provided, or not known)
+
+.venv/lib/python3.14/site-packages/urllib3/connection.py:211: NameResolutionError
+
+The above exception was the direct cause of the following exception:
+
+    @responses.activate
+    def test_req_wrapper_overwrite_headers():
+        responses.add(responses.POST, TEST_URL)
+&gt;       response = http.request('POST', TEST_URL)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/utils_test.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:143: in request
+    return self.request_encode_body(
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:278: in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:457: in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:841: in urlopen
+    retries = retries.increment(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+method = 'POST', url = '/', response = None
+error = NameResolutionError("HTTPConnection(host='just.some.url', port=80): Failed to resolve 'just.some.url' ([Errno 8] nodename nor servname provided, or not known)")
+_pool = &lt;urllib3.connectionpool.HTTPConnectionPool object at 0x106ea2ba0&gt;
+_stacktrace = &lt;traceback object at 0x106f8ab40&gt;
+
+    def increment(
+        self,
+        method: str | None = None,
+        url: str | None = None,
+        response: BaseHTTPResponse | None = None,
+        error: Exception | None = None,
+        _pool: ConnectionPool | None = None,
+        _stacktrace: TracebackType | None = None,
+    ) -&gt; Self:
+        """Return a new Retry object with incremented retry counters.
+    
+        :param response: A response object, or None, if the server did not
+            return a response.
+        :type response: :class:`~urllib3.response.BaseHTTPResponse`
+        :param Exception error: An error encountered during the request, or
+            None if the response was received successfully.
+    
+        :return: A new ``Retry`` object.
+        """
+        if self.total is False and error:
+            # Disabled, indicate to re-raise the error.
+            raise reraise(type(error), error, _stacktrace)
+    
+        total = self.total
+        if total is not None:
+            total -= 1
+    
+        connect = self.connect
+        read = self.read
+        redirect = self.redirect
+        status_count = self.status
+        other = self.other
+        cause = "unknown"
+        status = None
+        redirect_location = None
+    
+        if error and self._is_connection_error(error):
+            # Connect retry?
+            if connect is False:
+                raise reraise(type(error), error, _stacktrace)
+            elif connect is not None:
+                connect -= 1
+    
+        elif error and self._is_read_error(error):
+            # Read retry?
+            if read is False or method is None or not self._is_method_retryable(method):
+                raise reraise(type(error), error, _stacktrace)
+            elif read is not None:
+                read -= 1
+    
+        elif error:
+            # Other retry?
+            if other is not None:
+                other -= 1
+    
+        elif response and response.get_redirect_location():
+            # Redirect retry?
+            if redirect is not None:
+                redirect -= 1
+            cause = "too many redirects"
+            response_redirect_location = response.get_redirect_location()
+            if response_redirect_location:
+                redirect_location = response_redirect_location
+            status = response.status
+    
+        else:
+            # Incrementing because of a server error like a 500 in
+            # status_forcelist and the given method is in the allowed_methods
+            cause = ResponseError.GENERIC_ERROR
+            if response and response.status:
+                if status_count is not None:
+                    status_count -= 1
+                cause = ResponseError.SPECIFIC_ERROR.format(status_code=response.status)
+                status = response.status
+    
+        history = self.history + (
+            RequestHistory(method, url, error, status, redirect_location),
+        )
+    
+        new_retry = self.new(
+            total=total,
+            connect=connect,
+            read=read,
+            redirect=redirect,
+            status=status_count,
+            other=other,
+            history=history,
+        )
+    
+        if new_retry.is_exhausted():
+            reason = error or ResponseError(cause)
+&gt;           raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='just.some.url', port=80): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPConnection(host='just.some.url', port=80): Failed to resolve 'just.some.url' ([Errno 8] nodename nor servname provided, or not known)"))
+
+.venv/lib/python3.14/site-packages/urllib3/util/retry.py:535: MaxRetryError</failure></testcase><testcase classname="tests.utils_test" name="test_req_wrapper_use_provided_headers" time="0.003"><failure message="urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='just.some.url', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(&quot;HTTPConnection(host='just.some.url', port=80): Failed to resolve 'just.some.url' ([Errno 8] nodename nor servname provided, or not known)&quot;))">self = &lt;HTTPConnection(host='just.some.url', port=80) at 0x106ad8380&gt;
+
+    def _new_conn(self) -&gt; socket.socket:
+        """Establish a socket connection and set nodelay settings on it.
+    
+        :return: New socket connection.
+        """
+        try:
+&gt;           sock = connection.create_connection(
+                (self._dns_host, self.port),
+                self.timeout,
+                source_address=self.source_address,
+                socket_options=self.socket_options,
+            )
+
+.venv/lib/python3.14/site-packages/urllib3/connection.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/util/connection.py:60: in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = 'just.some.url', port = 80, family = &lt;AddressFamily.AF_UNSPEC: 0&gt;
+type = &lt;SocketKind.SOCK_STREAM: 1&gt;, proto = 0, flags = 0
+
+    def getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+        """Resolve host and port into list of address info entries.
+    
+        Translate the host/port argument into a sequence of 5-tuples that contain
+        all the necessary arguments for creating a socket connected to that service.
+        host is a domain name, a string representation of an IPv4/v6 address or
+        None. port is a string service name such as 'http', a numeric port number or
+        None. By passing None as the value of host and port, you can pass NULL to
+        the underlying C API.
+    
+        The family, type and proto arguments can be optionally specified in order to
+        narrow the list of addresses returned. Passing zero as a value for each of
+        these arguments selects the full range of results.
+        """
+        # We override this function since we want to translate the numeric family
+        # and socket type values to enum constants.
+        addrlist = []
+&gt;       for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/socket.py:983: gaierror
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;urllib3.connectionpool.HTTPConnectionPool object at 0x106ea2ba0&gt;
+method = 'POST', url = '/', body = None
+headers = HTTPHeaderDict({'something': 'used explicitly'})
+retries = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+redirect = False, assert_same_host = False, timeout = &lt;_TYPE_DEFAULT.token: -1&gt;
+pool_timeout = None, release_conn = True, chunked = False, body_pos = None
+preload_content = True, decode_content = True, response_kw = {}
+parsed_url = Url(scheme=None, auth=None, host=None, port=None, path='/', query=None, fragment=None)
+destination_scheme = None, conn = None, release_this_conn = True
+http_tunnel_required = False, err = None, clean_exit = False
+
+    def urlopen(  # type: ignore[override]
+        self,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | bool | int | None = None,
+        redirect: bool = True,
+        assert_same_host: bool = True,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        pool_timeout: int | None = None,
+        release_conn: bool | None = None,
+        chunked: bool = False,
+        body_pos: _TYPE_BODY_POSITION | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        **response_kw: typing.Any,
+    ) -&gt; BaseHTTPResponse:
+        """
+        Get a connection from the pool and perform an HTTP request. This is the
+        lowest level call for making a request, so you'll need to specify all
+        the raw details.
+    
+        .. note::
+    
+           More commonly, it's appropriate to use a convenience method
+           such as :meth:`request`.
+    
+        .. note::
+    
+           `release_conn` will only behave as expected if
+           `preload_content=False` because we want to make
+           `preload_content=False` the default behaviour someday soon without
+           breaking backwards compatibility.
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            If ``None`` (default) will retry 3 times, see ``Retry.DEFAULT``. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param redirect:
+            If True, automatically handle redirects (status codes 301, 302,
+            303, 307, 308). Each redirect counts as a retry. Disabling retries
+            will disable redirect, too.
+    
+        :param assert_same_host:
+            If ``True``, will make sure that the host of the pool requests is
+            consistent else will raise HostChangedError. When ``False``, you can
+            use the pool on an HTTP proxy and request foreign hosts.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param pool_timeout:
+            If set and the pool is set to block=True, then this method will
+            block for ``pool_timeout`` seconds and raise EmptyPoolError if no
+            connection is available within the time period.
+    
+        :param bool preload_content:
+            If True, the response's body will be preloaded into memory.
+    
+        :param bool decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param release_conn:
+            If False, then the urlopen call will not release the connection
+            back into the pool once a response is received (but will release if
+            you read the entire contents of the response such as when
+            `preload_content=True`). This is useful if you're not preloading
+            the response's content immediately. You will need to call
+            ``r.release_conn()`` on the response ``r`` to return the connection
+            back into the pool. If None, it takes the value of ``preload_content``
+            which defaults to ``True``.
+    
+        :param bool chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param int body_pos:
+            Position to seek to in file-like body in the event of a retry or
+            redirect. Typically this won't need to be set because urllib3 will
+            auto-populate the value when needed.
+        """
+        parsed_url = parse_url(url)
+        destination_scheme = parsed_url.scheme
+    
+        if headers is None:
+            headers = self.headers
+    
+        if not isinstance(retries, Retry):
+            retries = Retry.from_int(retries, redirect=redirect, default=self.retries)
+    
+        if release_conn is None:
+            release_conn = preload_content
+    
+        # Check host
+        if assert_same_host and not self.is_same_host(url):
+            raise HostChangedError(self, url, retries)
+    
+        # Ensure that the URL we're connecting to is properly encoded
+        if url.startswith("/"):
+            url = to_str(_encode_target(url))
+        else:
+            url = to_str(parsed_url.url)
+    
+        conn = None
+    
+        # Track whether `conn` needs to be released before
+        # returning/raising/recursing. Update this variable if necessary, and
+        # leave `release_conn` constant throughout the function. That way, if
+        # the function recurses, the original value of `release_conn` will be
+        # passed down into the recursive call, and its value will be respected.
+        #
+        # See issue #651 [1] for details.
+        #
+        # [1] &lt;https://github.com/urllib3/urllib3/issues/651&gt;
+        release_this_conn = release_conn
+    
+        http_tunnel_required = connection_requires_http_tunnel(
+            self.proxy, self.proxy_config, destination_scheme
+        )
+    
+        # Merge the proxy headers. Only done when not using HTTP CONNECT. We
+        # have to copy the headers dict so we can safely change it without those
+        # changes being reflected in anyone else's copy.
+        if not http_tunnel_required:
+            headers = headers.copy()  # type: ignore[attr-defined]
+            headers.update(self.proxy_headers)  # type: ignore[union-attr]
+    
+        # Must keep the exception bound to a separate variable or else Python 3
+        # complains about UnboundLocalError.
+        err = None
+    
+        # Keep track of whether we cleanly exited the except block. This
+        # ensures we do proper cleanup in finally.
+        clean_exit = False
+    
+        # Rewind body position, if needed. Record current position
+        # for future rewinds in the event of a redirect/retry.
+        body_pos = set_file_position(body, body_pos)
+    
+        try:
+            # Request a connection from the queue.
+            timeout_obj = self._get_timeout(timeout)
+            conn = self._get_conn(timeout=pool_timeout)
+    
+            conn.timeout = timeout_obj.connect_timeout  # type: ignore[assignment]
+    
+            # Is this a closed/new connection that requires CONNECT tunnelling?
+            if self.proxy is not None and http_tunnel_required and conn.is_closed:
+                try:
+                    self._prepare_proxy(conn)
+                except (BaseSSLError, OSError, SocketTimeout) as e:
+                    self._raise_timeout(
+                        err=e, url=self.proxy.url, timeout_value=conn.timeout
+                    )
+                    raise
+    
+            # If we're going to release the connection in ``finally:``, then
+            # the response doesn't need to know about the connection. Otherwise
+            # it will also try to release it and we'll have a double-release
+            # mess.
+            response_conn = conn if not release_conn else None
+    
+            # Make the request on the HTTPConnection object
+&gt;           response = self._make_request(
+                conn,
+                method,
+                url,
+                timeout=timeout_obj,
+                body=body,
+                headers=headers,
+                chunked=chunked,
+                retries=retries,
+                response_conn=response_conn,
+                preload_content=preload_content,
+                decode_content=decode_content,
+                **response_kw,
+            )
+
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:787: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:493: in _make_request
+    conn.request(
+.venv/lib/python3.14/site-packages/urllib3/connection.py:500: in request
+    self.endheaders()
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/http/client.py:1353: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/http/client.py:1113: in _send_output
+    self.send(msg)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/http/client.py:1057: in send
+    self.connect()
+.venv/lib/python3.14/site-packages/urllib3/connection.py:331: in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;HTTPConnection(host='just.some.url', port=80) at 0x106ad8380&gt;
+
+    def _new_conn(self) -&gt; socket.socket:
+        """Establish a socket connection and set nodelay settings on it.
+    
+        :return: New socket connection.
+        """
+        try:
+            sock = connection.create_connection(
+                (self._dns_host, self.port),
+                self.timeout,
+                source_address=self.source_address,
+                socket_options=self.socket_options,
+            )
+        except socket.gaierror as e:
+&gt;           raise NameResolutionError(self.host, self, e) from e
+E           urllib3.exceptions.NameResolutionError: HTTPConnection(host='just.some.url', port=80): Failed to resolve 'just.some.url' ([Errno 8] nodename nor servname provided, or not known)
+
+.venv/lib/python3.14/site-packages/urllib3/connection.py:211: NameResolutionError
+
+The above exception was the direct cause of the following exception:
+
+    @responses.activate
+    def test_req_wrapper_use_provided_headers():
+        responses.add(responses.POST, TEST_URL)
+        custom_headers = {'something': 'used explicitly'}
+&gt;       response = http.request('POST', TEST_URL, headers=custom_headers)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/utils_test.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:143: in request
+    return self.request_encode_body(
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:278: in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:457: in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:841: in urlopen
+    retries = retries.increment(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+method = 'POST', url = '/', response = None
+error = NameResolutionError("HTTPConnection(host='just.some.url', port=80): Failed to resolve 'just.some.url' ([Errno 8] nodename nor servname provided, or not known)")
+_pool = &lt;urllib3.connectionpool.HTTPConnectionPool object at 0x106ea2ba0&gt;
+_stacktrace = &lt;traceback object at 0x121a80e40&gt;
+
+    def increment(
+        self,
+        method: str | None = None,
+        url: str | None = None,
+        response: BaseHTTPResponse | None = None,
+        error: Exception | None = None,
+        _pool: ConnectionPool | None = None,
+        _stacktrace: TracebackType | None = None,
+    ) -&gt; Self:
+        """Return a new Retry object with incremented retry counters.
+    
+        :param response: A response object, or None, if the server did not
+            return a response.
+        :type response: :class:`~urllib3.response.BaseHTTPResponse`
+        :param Exception error: An error encountered during the request, or
+            None if the response was received successfully.
+    
+        :return: A new ``Retry`` object.
+        """
+        if self.total is False and error:
+            # Disabled, indicate to re-raise the error.
+            raise reraise(type(error), error, _stacktrace)
+    
+        total = self.total
+        if total is not None:
+            total -= 1
+    
+        connect = self.connect
+        read = self.read
+        redirect = self.redirect
+        status_count = self.status
+        other = self.other
+        cause = "unknown"
+        status = None
+        redirect_location = None
+    
+        if error and self._is_connection_error(error):
+            # Connect retry?
+            if connect is False:
+                raise reraise(type(error), error, _stacktrace)
+            elif connect is not None:
+                connect -= 1
+    
+        elif error and self._is_read_error(error):
+            # Read retry?
+            if read is False or method is None or not self._is_method_retryable(method):
+                raise reraise(type(error), error, _stacktrace)
+            elif read is not None:
+                read -= 1
+    
+        elif error:
+            # Other retry?
+            if other is not None:
+                other -= 1
+    
+        elif response and response.get_redirect_location():
+            # Redirect retry?
+            if redirect is not None:
+                redirect -= 1
+            cause = "too many redirects"
+            response_redirect_location = response.get_redirect_location()
+            if response_redirect_location:
+                redirect_location = response_redirect_location
+            status = response.status
+    
+        else:
+            # Incrementing because of a server error like a 500 in
+            # status_forcelist and the given method is in the allowed_methods
+            cause = ResponseError.GENERIC_ERROR
+            if response and response.status:
+                if status_count is not None:
+                    status_count -= 1
+                cause = ResponseError.SPECIFIC_ERROR.format(status_code=response.status)
+                status = response.status
+    
+        history = self.history + (
+            RequestHistory(method, url, error, status, redirect_location),
+        )
+    
+        new_retry = self.new(
+            total=total,
+            connect=connect,
+            read=read,
+            redirect=redirect,
+            status=status_count,
+            other=other,
+            history=history,
+        )
+    
+        if new_retry.is_exhausted():
+            reason = error or ResponseError(cause)
+&gt;           raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='just.some.url', port=80): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPConnection(host='just.some.url', port=80): Failed to resolve 'just.some.url' ([Errno 8] nodename nor servname provided, or not known)"))
+
+.venv/lib/python3.14/site-packages/urllib3/util/retry.py:535: MaxRetryError</failure></testcase><testcase classname="tests.utils_test" name="test_req_wrapper_raise_exception" time="0.003"><failure message="AssertionError: Regex pattern did not match.&#10;  Expected regex: 'oops!'&#10;  Actual message: 'HTTPConnectionPool(host=\'just.some.url\', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(&quot;HTTPConnection(host=\'just.some.url\', port=80): Failed to resolve \'just.some.url\' ([Errno 8] nodename nor servname provided, or not known)&quot;))'">self = &lt;HTTPConnection(host='just.some.url', port=80) at 0x106ad8e20&gt;
+
+    def _new_conn(self) -&gt; socket.socket:
+        """Establish a socket connection and set nodelay settings on it.
+    
+        :return: New socket connection.
+        """
+        try:
+&gt;           sock = connection.create_connection(
+                (self._dns_host, self.port),
+                self.timeout,
+                source_address=self.source_address,
+                socket_options=self.socket_options,
+            )
+
+.venv/lib/python3.14/site-packages/urllib3/connection.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/util/connection.py:60: in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = 'just.some.url', port = 80, family = &lt;AddressFamily.AF_UNSPEC: 0&gt;
+type = &lt;SocketKind.SOCK_STREAM: 1&gt;, proto = 0, flags = 0
+
+    def getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+        """Resolve host and port into list of address info entries.
+    
+        Translate the host/port argument into a sequence of 5-tuples that contain
+        all the necessary arguments for creating a socket connected to that service.
+        host is a domain name, a string representation of an IPv4/v6 address or
+        None. port is a string service name such as 'http', a numeric port number or
+        None. By passing None as the value of host and port, you can pass NULL to
+        the underlying C API.
+    
+        The family, type and proto arguments can be optionally specified in order to
+        narrow the list of addresses returned. Passing zero as a value for each of
+        these arguments selects the full range of results.
+        """
+        # We override this function since we want to translate the numeric family
+        # and socket type values to enum constants.
+        addrlist = []
+&gt;       for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/socket.py:983: gaierror
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;urllib3.connectionpool.HTTPConnectionPool object at 0x106ea2ba0&gt;
+method = 'POST', url = '/', body = None, headers = HTTPHeaderDict({})
+retries = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+redirect = False, assert_same_host = False, timeout = &lt;_TYPE_DEFAULT.token: -1&gt;
+pool_timeout = None, release_conn = True, chunked = False, body_pos = None
+preload_content = True, decode_content = True, response_kw = {}
+parsed_url = Url(scheme=None, auth=None, host=None, port=None, path='/', query=None, fragment=None)
+destination_scheme = None, conn = None, release_this_conn = True
+http_tunnel_required = False, err = None, clean_exit = False
+
+    def urlopen(  # type: ignore[override]
+        self,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | bool | int | None = None,
+        redirect: bool = True,
+        assert_same_host: bool = True,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        pool_timeout: int | None = None,
+        release_conn: bool | None = None,
+        chunked: bool = False,
+        body_pos: _TYPE_BODY_POSITION | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        **response_kw: typing.Any,
+    ) -&gt; BaseHTTPResponse:
+        """
+        Get a connection from the pool and perform an HTTP request. This is the
+        lowest level call for making a request, so you'll need to specify all
+        the raw details.
+    
+        .. note::
+    
+           More commonly, it's appropriate to use a convenience method
+           such as :meth:`request`.
+    
+        .. note::
+    
+           `release_conn` will only behave as expected if
+           `preload_content=False` because we want to make
+           `preload_content=False` the default behaviour someday soon without
+           breaking backwards compatibility.
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            If ``None`` (default) will retry 3 times, see ``Retry.DEFAULT``. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param redirect:
+            If True, automatically handle redirects (status codes 301, 302,
+            303, 307, 308). Each redirect counts as a retry. Disabling retries
+            will disable redirect, too.
+    
+        :param assert_same_host:
+            If ``True``, will make sure that the host of the pool requests is
+            consistent else will raise HostChangedError. When ``False``, you can
+            use the pool on an HTTP proxy and request foreign hosts.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param pool_timeout:
+            If set and the pool is set to block=True, then this method will
+            block for ``pool_timeout`` seconds and raise EmptyPoolError if no
+            connection is available within the time period.
+    
+        :param bool preload_content:
+            If True, the response's body will be preloaded into memory.
+    
+        :param bool decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param release_conn:
+            If False, then the urlopen call will not release the connection
+            back into the pool once a response is received (but will release if
+            you read the entire contents of the response such as when
+            `preload_content=True`). This is useful if you're not preloading
+            the response's content immediately. You will need to call
+            ``r.release_conn()`` on the response ``r`` to return the connection
+            back into the pool. If None, it takes the value of ``preload_content``
+            which defaults to ``True``.
+    
+        :param bool chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param int body_pos:
+            Position to seek to in file-like body in the event of a retry or
+            redirect. Typically this won't need to be set because urllib3 will
+            auto-populate the value when needed.
+        """
+        parsed_url = parse_url(url)
+        destination_scheme = parsed_url.scheme
+    
+        if headers is None:
+            headers = self.headers
+    
+        if not isinstance(retries, Retry):
+            retries = Retry.from_int(retries, redirect=redirect, default=self.retries)
+    
+        if release_conn is None:
+            release_conn = preload_content
+    
+        # Check host
+        if assert_same_host and not self.is_same_host(url):
+            raise HostChangedError(self, url, retries)
+    
+        # Ensure that the URL we're connecting to is properly encoded
+        if url.startswith("/"):
+            url = to_str(_encode_target(url))
+        else:
+            url = to_str(parsed_url.url)
+    
+        conn = None
+    
+        # Track whether `conn` needs to be released before
+        # returning/raising/recursing. Update this variable if necessary, and
+        # leave `release_conn` constant throughout the function. That way, if
+        # the function recurses, the original value of `release_conn` will be
+        # passed down into the recursive call, and its value will be respected.
+        #
+        # See issue #651 [1] for details.
+        #
+        # [1] &lt;https://github.com/urllib3/urllib3/issues/651&gt;
+        release_this_conn = release_conn
+    
+        http_tunnel_required = connection_requires_http_tunnel(
+            self.proxy, self.proxy_config, destination_scheme
+        )
+    
+        # Merge the proxy headers. Only done when not using HTTP CONNECT. We
+        # have to copy the headers dict so we can safely change it without those
+        # changes being reflected in anyone else's copy.
+        if not http_tunnel_required:
+            headers = headers.copy()  # type: ignore[attr-defined]
+            headers.update(self.proxy_headers)  # type: ignore[union-attr]
+    
+        # Must keep the exception bound to a separate variable or else Python 3
+        # complains about UnboundLocalError.
+        err = None
+    
+        # Keep track of whether we cleanly exited the except block. This
+        # ensures we do proper cleanup in finally.
+        clean_exit = False
+    
+        # Rewind body position, if needed. Record current position
+        # for future rewinds in the event of a redirect/retry.
+        body_pos = set_file_position(body, body_pos)
+    
+        try:
+            # Request a connection from the queue.
+            timeout_obj = self._get_timeout(timeout)
+            conn = self._get_conn(timeout=pool_timeout)
+    
+            conn.timeout = timeout_obj.connect_timeout  # type: ignore[assignment]
+    
+            # Is this a closed/new connection that requires CONNECT tunnelling?
+            if self.proxy is not None and http_tunnel_required and conn.is_closed:
+                try:
+                    self._prepare_proxy(conn)
+                except (BaseSSLError, OSError, SocketTimeout) as e:
+                    self._raise_timeout(
+                        err=e, url=self.proxy.url, timeout_value=conn.timeout
+                    )
+                    raise
+    
+            # If we're going to release the connection in ``finally:``, then
+            # the response doesn't need to know about the connection. Otherwise
+            # it will also try to release it and we'll have a double-release
+            # mess.
+            response_conn = conn if not release_conn else None
+    
+            # Make the request on the HTTPConnection object
+&gt;           response = self._make_request(
+                conn,
+                method,
+                url,
+                timeout=timeout_obj,
+                body=body,
+                headers=headers,
+                chunked=chunked,
+                retries=retries,
+                response_conn=response_conn,
+                preload_content=preload_content,
+                decode_content=decode_content,
+                **response_kw,
+            )
+
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:787: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:493: in _make_request
+    conn.request(
+.venv/lib/python3.14/site-packages/urllib3/connection.py:500: in request
+    self.endheaders()
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/http/client.py:1353: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/http/client.py:1113: in _send_output
+    self.send(msg)
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/http/client.py:1057: in send
+    self.connect()
+.venv/lib/python3.14/site-packages/urllib3/connection.py:331: in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;HTTPConnection(host='just.some.url', port=80) at 0x106ad8e20&gt;
+
+    def _new_conn(self) -&gt; socket.socket:
+        """Establish a socket connection and set nodelay settings on it.
+    
+        :return: New socket connection.
+        """
+        try:
+            sock = connection.create_connection(
+                (self._dns_host, self.port),
+                self.timeout,
+                source_address=self.source_address,
+                socket_options=self.socket_options,
+            )
+        except socket.gaierror as e:
+&gt;           raise NameResolutionError(self.host, self, e) from e
+E           urllib3.exceptions.NameResolutionError: HTTPConnection(host='just.some.url', port=80): Failed to resolve 'just.some.url' ([Errno 8] nodename nor servname provided, or not known)
+
+.venv/lib/python3.14/site-packages/urllib3/connection.py:211: NameResolutionError
+
+The above exception was the direct cause of the following exception:
+
+    @responses.activate
+    def test_req_wrapper_raise_exception():
+        responses.add(responses.POST, TEST_URL, status=500, body=b'oops!')
+        with pytest.raises(Exception, match='oops!'):
+&gt;           http.request('POST', TEST_URL)
+
+tests/utils_test.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:143: in request
+    return self.request_encode_body(
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:278: in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:457: in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.14/site-packages/urllib3/connectionpool.py:841: in urlopen
+    retries = retries.increment(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+method = 'POST', url = '/', response = None
+error = NameResolutionError("HTTPConnection(host='just.some.url', port=80): Failed to resolve 'just.some.url' ([Errno 8] nodename nor servname provided, or not known)")
+_pool = &lt;urllib3.connectionpool.HTTPConnectionPool object at 0x106ea2ba0&gt;
+_stacktrace = &lt;traceback object at 0x121b8ca00&gt;
+
+    def increment(
+        self,
+        method: str | None = None,
+        url: str | None = None,
+        response: BaseHTTPResponse | None = None,
+        error: Exception | None = None,
+        _pool: ConnectionPool | None = None,
+        _stacktrace: TracebackType | None = None,
+    ) -&gt; Self:
+        """Return a new Retry object with incremented retry counters.
+    
+        :param response: A response object, or None, if the server did not
+            return a response.
+        :type response: :class:`~urllib3.response.BaseHTTPResponse`
+        :param Exception error: An error encountered during the request, or
+            None if the response was received successfully.
+    
+        :return: A new ``Retry`` object.
+        """
+        if self.total is False and error:
+            # Disabled, indicate to re-raise the error.
+            raise reraise(type(error), error, _stacktrace)
+    
+        total = self.total
+        if total is not None:
+            total -= 1
+    
+        connect = self.connect
+        read = self.read
+        redirect = self.redirect
+        status_count = self.status
+        other = self.other
+        cause = "unknown"
+        status = None
+        redirect_location = None
+    
+        if error and self._is_connection_error(error):
+            # Connect retry?
+            if connect is False:
+                raise reraise(type(error), error, _stacktrace)
+            elif connect is not None:
+                connect -= 1
+    
+        elif error and self._is_read_error(error):
+            # Read retry?
+            if read is False or method is None or not self._is_method_retryable(method):
+                raise reraise(type(error), error, _stacktrace)
+            elif read is not None:
+                read -= 1
+    
+        elif error:
+            # Other retry?
+            if other is not None:
+                other -= 1
+    
+        elif response and response.get_redirect_location():
+            # Redirect retry?
+            if redirect is not None:
+                redirect -= 1
+            cause = "too many redirects"
+            response_redirect_location = response.get_redirect_location()
+            if response_redirect_location:
+                redirect_location = response_redirect_location
+            status = response.status
+    
+        else:
+            # Incrementing because of a server error like a 500 in
+            # status_forcelist and the given method is in the allowed_methods
+            cause = ResponseError.GENERIC_ERROR
+            if response and response.status:
+                if status_count is not None:
+                    status_count -= 1
+                cause = ResponseError.SPECIFIC_ERROR.format(status_code=response.status)
+                status = response.status
+    
+        history = self.history + (
+            RequestHistory(method, url, error, status, redirect_location),
+        )
+    
+        new_retry = self.new(
+            total=total,
+            connect=connect,
+            read=read,
+            redirect=redirect,
+            status=status_count,
+            other=other,
+            history=history,
+        )
+    
+        if new_retry.is_exhausted():
+            reason = error or ResponseError(cause)
+&gt;           raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='just.some.url', port=80): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPConnection(host='just.some.url', port=80): Failed to resolve 'just.some.url' ([Errno 8] nodename nor servname provided, or not known)"))
+
+.venv/lib/python3.14/site-packages/urllib3/util/retry.py:535: MaxRetryError
+
+During handling of the above exception, another exception occurred:
+
+    @responses.activate
+    def test_req_wrapper_raise_exception():
+        responses.add(responses.POST, TEST_URL, status=500, body=b'oops!')
+&gt;       with pytest.raises(Exception, match='oops!'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'oops!'
+E         Actual message: 'HTTPConnectionPool(host=\'just.some.url\', port=80): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPConnection(host=\'just.some.url\', port=80): Failed to resolve \'just.some.url\' ([Errno 8] nodename nor servname provided, or not known)"))'
+
+tests/utils_test.py:34: AssertionError</failure></testcase></testsuite></testsuites>

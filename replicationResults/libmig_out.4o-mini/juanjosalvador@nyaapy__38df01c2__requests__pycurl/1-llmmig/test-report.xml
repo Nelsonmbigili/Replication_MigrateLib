@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="4" time="3.342" timestamp="2026-03-05T03:18:21.529397+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.integration.test_nyaasi" name="test_nyaa_last_uploads" time="0.554"><failure message="UnicodeDecodeError: 'utf-8' codec can't decode byte 0x8b in position 1: invalid start byte">def test_nyaa_last_uploads():
+&gt;       request = Nyaa.last_uploads(number_of_results=10)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_nyaasi.py:6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;class 'nyaapy.nyaasi.nyaa.Nyaa'&gt;, number_of_results = 10
+
+    @classmethod
+    def last_uploads(self, number_of_results: int):
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, self.URL)
+        c.setopt(c.WRITEDATA, buffer)
+        c.perform()
+    
+        if c.getinfo(c.RESPONSE_CODE) != 200:
+            raise Exception("Failed to fetch data from nyaa servers.")
+    
+        c.close()
+        json_data = parse_nyaa(
+&gt;           request_text=buffer.getvalue().decode('utf-8'), limit=number_of_results, site=self.SITE
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+E       UnicodeDecodeError: 'utf-8' codec can't decode byte 0x8b in position 1: invalid start byte
+
+nyaapy/anime_site.py:24: UnicodeDecodeError</failure></testcase><testcase classname="tests.integration.test_nyaasi" name="test_nyaa_search" time="0.001"><failure message="pycurl.error: (3, 'URL rejected: Malformed input to a URL function')">def test_nyaa_search():
+&gt;       request = Nyaa.search(keyword="koe no katachi")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_nyaasi.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;class 'nyaapy.nyaasi.nyaa.Nyaa'&gt;, keyword = 'koe no katachi'
+kwargs = {}, base_url = 'https://nyaa.si', user = None, category = 0
+subcategory = 0, filters = 0, page = 0, sorting = 'id'
+
+    @classmethod
+    def search(self, keyword: str, **kwargs):
+        base_url = self.URL
+    
+        user = kwargs.get("user", None)
+        category = kwargs.get("category", 0)
+        subcategory = kwargs.get("subcategory", 0)
+        filters = kwargs.get("filters", 0)
+        page = kwargs.get("page", 0)
+        sorting = kwargs.get(
+            "sort", "id"
+        )  # Sorting by id = sorting by date, this is the default.
+        order = kwargs.get("order", "desc")
+    
+        user_uri = f"user/{user}" if user else ""
+    
+        if page &gt; 0:
+            search_uri = "{}/{}?f={}&amp;c={}_{}&amp;q={}&amp;p={}&amp;s={}&amp;o={}".format(
+                base_url,
+                user_uri,
+                filters,
+                category,
+                subcategory,
+                keyword,
+                page,
+                sorting,
+                order,
+            )
+        else:
+            search_uri = "{}/{}?f={}&amp;c={}_{}&amp;q={}&amp;s={}&amp;o={}".format(
+                base_url,
+                user_uri,
+                filters,
+                category,
+                subcategory,
+                keyword,
+                sorting,
+                order,
+            )
+    
+        if not user:
+            search_uri += "&amp;page=rss"
+    
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, search_uri)
+        c.setopt(c.WRITEDATA, buffer)
+&gt;       c.perform()
+E       pycurl.error: (3, 'URL rejected: Malformed input to a URL function')
+
+nyaapy/anime_site.py:76: error</failure></testcase><testcase classname="tests.integration.test_nyaasi" name="test_nyaa_get_single" time="0.397"><failure message="IndexError: list index out of range">def test_nyaa_get_single():
+&gt;       request = Nyaa.get(view_id="1847113")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_nyaasi.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+nyaapy/anime_site.py:107: in get
+    json_data = parse_single(request_text=buffer.getvalue(), site=self.SITE)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request_text = b'\x1f\x8b\x08\x00\x00\x00\x00\x00\x04\x03\xcd[{s\x1b\xc7\x91\xff\x1b\xfe\x14#\xb8(S%-\x9e|\x1b\x80\x8e/I\xb4AQ&amp;)\xf9,...B\xd9z\xe4\x19!M\x99D%\x8a\x85e5FX\x95A\x13)e;\x82\r\xb8\x85&amp;$bb\xa4\xc1p\xddD\xfdO\xe5\xff\x00\x03~\xda&amp;\xefB\x00\x00'
+site = &lt;TorrentSite.NYAASI: 'https://nyaa.si'&gt;
+
+    def parse_single(request_text, site):
+        parser = etree.HTMLParser()
+        tree = etree.fromstring(request_text, parser)
+    
+        # Put proper domain here.
+        uri = site.value
+    
+        torrent = {}
+        data = []
+        torrent_files = []
+    
+        # Find basic uploader info &amp; torrent stats
+        for row in tree.xpath("//div[@class='row']"):
+            for div_text in row.xpath("./div[@class='col-md-5']//text()"):
+                d = div_text.strip()
+                if d:
+                    data.append(d)
+    
+        # Find files, we need only text of the li element(s).
+        # Sorry about Pycodestyle aka PEP8 (E501) error
+        for el in tree.xpath("//div[contains(@class, 'torrent-file-list')]//li/text()"):
+            if el.rstrip():
+                torrent_files.append(el)
+    
+&gt;       torrent["title"] = tree.xpath("//h3[@class='panel-title']/text()")[0].strip()
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+nyaapy/parser.py:196: IndexError</failure></testcase><testcase classname="tests.integration.test_nyaasi" name="test_nyaa_get_from_user" time="0.601"><failure message="IndexError: list index out of range">def test_nyaa_get_from_user():
+        request = Nyaa.get_from_user(username="Erai-raws")
+&gt;       torrent = request[0]
+                  ^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/integration/test_nyaasi.py:28: IndexError</failure></testcase></testsuite></testsuites>

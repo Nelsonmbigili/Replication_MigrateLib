@@ -1,0 +1,2005 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="15" failures="39" skipped="0" tests="54" time="4.655" timestamp="2026-03-04T12:49:58.202906+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_middleware.TestMiddleware" name="test_200" time="0.001"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_200' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a38be20&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestMiddleware'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_200&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_200' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_500" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_500' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a3c8d50&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestMiddleware'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_500&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_500' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_404_filter_unhandled_paths_off" time="0.001"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_404_filter" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_404_filter' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a38b480&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestMiddleware'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_404_filter&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_404_filter' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_404_group_unhandled_paths_on" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_unhandled" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_unhandled' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a38b060&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestMiddleware'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_unhandled&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_unhandled' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_ungrouped_paths" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_histogram" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_histogram' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a38ada0&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestMiddleware'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_histogram&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_histogram' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_histogram_custom_buckets" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_app_name" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_mounted_path" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_mounted_path_with_param" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_mounted_path_404" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_mounted_path_404_filter" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_staticfiles_path" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_prefix" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_multi_init" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_multi_prefix" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_requests_in_progress" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_requests_in_progress' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a388f60&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestMiddleware'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_requests_in_progress&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_requests_in_progress' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_skip_paths" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_skip_paths__re" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_skip_paths__re_partial" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddleware" name="test_skip_methods" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddlewareGroupedPaths" name="test_200" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_200' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a3677f0&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestMiddlewareGroupedPaths'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_200&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_200' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestMiddlewareGroupedPaths" name="test_200_options" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_200_options' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a3403b0&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestMiddlewareGroupedPaths'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_200_options&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_200_options' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestMiddlewareGroupedPaths" name="test_500" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_500' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a388300&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestMiddlewareGroupedPaths'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_500&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_500' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestMiddlewareGroupedPaths" name="test_404" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_404' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a389010&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestMiddlewareGroupedPaths'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_404&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_404' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestMiddlewareGroupedPaths" name="test_unhandled" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_unhandled' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a388b40&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestMiddlewareGroupedPaths'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_unhandled&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_unhandled' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestMiddlewareGroupedPaths" name="test_mounted_path_404_unfiltered" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddlewareGroupedPaths" name="test_mounted_path_404_filter" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddlewareGroupedPaths" name="test_staticfiles_path" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestMiddlewareGroupedPaths" name="test_histogram" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_histogram' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a3896f0&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestMiddlewareGroupedPaths'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_histogram&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_histogram' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestMiddlewareGroupedPaths" name="test_custom_root_path" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestBackgroundTasks" name="test_background_task_endpoint" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_background_task_endpoint' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a38a770&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestBackgroundTasks'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_background_task_endpoint&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_background_task_endpoint' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestOptionalMetrics" name="test_response_body_size" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_response_body_size' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a38a6c0&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestOptionalMetrics'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_response_body_size&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_response_body_size' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestOptionalMetrics" name="test_receive_body_size" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_receive_body_size' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">cls = &lt;class '_pytest.runner.CallInfo'&gt;
+func = &lt;function call_and_report.&lt;locals&gt;.&lt;lambda&gt; at 0x10a38be20&gt;
+when = 'setup'
+reraise = (&lt;class '_pytest.outcomes.Exit'&gt;, &lt;class 'KeyboardInterrupt'&gt;)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -&gt; CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+&gt;           result: TResult | None = func()
+                                     ^^^^^^
+
+.venv/lib/python3.14/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/_pytest/runner.py:245: in &lt;lambda&gt;
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+.venv/lib/python3.14/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+.venv/lib/python3.14/site-packages/_pytest/python.py:1723: in setup
+    self._request._fillfixtures()
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:707: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:539: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:627: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1110: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:53: in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pluggy/_callers.py:38: in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+.venv/lib/python3.14/site-packages/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='client' scope='function' baseid='tests/test_middleware.py::TestOptionalMetrics'&gt;
+request = &lt;SubRequest 'client' for &lt;Function test_receive_body_size&gt;&gt;
+
+    def pytest_fixture_setup(
+        fixturedef: FixtureDef[FixtureValue], request: SubRequest
+    ) -&gt; FixtureValue:
+        """Execution of fixture setup."""
+        kwargs = {}
+        for argname in fixturedef.argnames:
+            kwargs[argname] = request.getfixturevalue(argname)
+    
+        fixturefunc = resolve_fixture_function(fixturedef, request)
+        my_cache_key = fixturedef.cache_key(request)
+    
+        if inspect.isasyncgenfunction(fixturefunc) or inspect.iscoroutinefunction(
+            fixturefunc
+        ):
+            auto_str = " with autouse=True" if fixturedef._autouse else ""
+    
+&gt;           warnings.warn(
+                PytestRemovedIn9Warning(
+                    f"{request.node.name!r} requested an async fixture "
+                    f"{request.fixturename!r}{auto_str}, with no plugin or hook that "
+                    "handled it. This is usually an error, as pytest does not natively "
+                    "support it. "
+                    "This will turn into an error in pytest 9.\n"
+                    "See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture"
+                ),
+                # no stacklevel will point at users code, so we just point here
+                stacklevel=1,
+            )
+E           pytest.PytestRemovedIn9Warning: 'test_receive_body_size' requested an async fixture 'client', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E           See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/_pytest/fixtures.py:1188: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_middleware.TestAlwaysUseIntStatus" name="test_200_with_always_use_int_status_set" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestAlwaysUseIntStatus" name="test_200_always_use_int_status_set" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestDefaultLabels" name="test_str_default_labels" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestDefaultLabels" name="test_callable_default_values" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestDefaultLabels" name="test_async_callable" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestDefaultLabels" name="test_from_header" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestDefaultLabels" name="test_from_header_allowed_values" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestDefaultLabels" name="test_from_header_allowed_values_disallowed_value" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestDefaultLabels" name="test_from_response_header" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestDefaultLabels" name="test_from_response_header_case_insensitive" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestDefaultLabels" name="test_from_response_header_http_exception" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestDefaultLabels" name="test_from_response_header_unhandled_exception" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestDefaultLabels" name="test_from_response_header_default" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestDefaultLabels" name="test_from_response_header_allowed_values" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestDefaultLabels" name="test_from_response_header_allowed_values_disallowed" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestExemplars" name="test_exemplar" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestExemplars" name="test_exemplar_request[False]" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.test_middleware.TestExemplars" name="test_exemplar_request[True]" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase></testsuite></testsuites>

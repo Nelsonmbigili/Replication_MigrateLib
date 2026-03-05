@@ -1,0 +1,238 @@
+exitcode: 1
+summary:
+  failed: 4
+  total: 4
+  collected: 4
+collectors:
+- nodeid: ''
+  outcome: passed
+  result:
+  - nodeid: .
+    type: Dir
+- nodeid: nyaapy/nyaasi
+  outcome: passed
+  result: []
+- nodeid: nyaapy
+  outcome: passed
+  result:
+  - nodeid: nyaapy/nyaasi
+    type: Package
+- nodeid: tests/integration/test_nyaasi.py
+  outcome: passed
+  result:
+  - nodeid: tests/integration/test_nyaasi.py::test_nyaa_last_uploads
+    type: Function
+    lineno: 4
+  - nodeid: tests/integration/test_nyaasi.py::test_nyaa_search
+    type: Function
+    lineno: 12
+  - nodeid: tests/integration/test_nyaasi.py::test_nyaa_get_single
+    type: Function
+    lineno: 19
+  - nodeid: tests/integration/test_nyaasi.py::test_nyaa_get_from_user
+    type: Function
+    lineno: 25
+- nodeid: tests/integration
+  outcome: passed
+  result:
+  - nodeid: tests/integration/test_nyaasi.py
+    type: Module
+- nodeid: tests
+  outcome: passed
+  result:
+  - nodeid: tests/integration
+    type: Dir
+- nodeid: .
+  outcome: passed
+  result:
+  - nodeid: nyaapy
+    type: Package
+  - nodeid: tests
+    type: Dir
+tests:
+- nodeid: tests/integration/test_nyaasi.py::test_nyaa_last_uploads
+  lineno: 4
+  outcome: failed
+  keywords:
+  - test_nyaa_last_uploads
+  - test_nyaasi.py
+  - integration
+  - tests
+  - juanjosalvador@nyaapy__38df01c2__requests__pycurl
+  - ''
+  setup:
+    outcome: passed
+  call:
+    outcome: failed
+    crash:
+      path: "/Users/namugo/Desktop/\u1103\u1162\u1112\u1161\u11A8\u1103\u1162\u1112\
+        \u1161\u11A8/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication\
+        \ 2/Replication_MigrateLib/repos/juanjosalvador@nyaapy__38df01c2__requests__pycurl/nyaapy/anime_site.py"
+      lineno: 24
+      message: 'UnicodeDecodeError: ''utf-8'' codec can''t decode byte 0x8b in position
+        1: invalid start byte'
+    traceback:
+    - path: tests/integration/test_nyaasi.py
+      lineno: 6
+      message: ''
+    - path: nyaapy/anime_site.py
+      lineno: 24
+      message: UnicodeDecodeError
+    longrepr: "def test_nyaa_last_uploads():\n>       request = Nyaa.last_uploads(number_of_results=10)\n\
+      \                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests/integration/test_nyaasi.py:6:\
+      \ \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\
+      \ _ _ _ _ \n\nself = <class 'nyaapy.nyaasi.nyaa.Nyaa'>, number_of_results =\
+      \ 10\n\n    @classmethod\n    def last_uploads(self, number_of_results: int):\n\
+      \        buffer = BytesIO()\n        c = pycurl.Curl()\n        c.setopt(c.URL,\
+      \ self.URL)\n        c.setopt(c.WRITEDATA, buffer)\n        c.perform()\n  \
+      \  \n        if c.getinfo(c.RESPONSE_CODE) != 200:\n            raise Exception(\"\
+      Failed to fetch data from nyaa servers.\")\n    \n        c.close()\n      \
+      \  json_data = parse_nyaa(\n>           request_text=buffer.getvalue().decode('utf-8'),\
+      \ limit=number_of_results, site=self.SITE\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+      \        )\nE       UnicodeDecodeError: 'utf-8' codec can't decode byte 0x8b\
+      \ in position 1: invalid start byte\n\nnyaapy/anime_site.py:24: UnicodeDecodeError"
+  teardown:
+    outcome: passed
+- nodeid: tests/integration/test_nyaasi.py::test_nyaa_search
+  lineno: 12
+  outcome: failed
+  keywords:
+  - test_nyaa_search
+  - test_nyaasi.py
+  - integration
+  - tests
+  - juanjosalvador@nyaapy__38df01c2__requests__pycurl
+  - ''
+  setup:
+    outcome: passed
+  call:
+    outcome: failed
+    crash:
+      path: "/Users/namugo/Desktop/\u1103\u1162\u1112\u1161\u11A8\u1103\u1162\u1112\
+        \u1161\u11A8/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication\
+        \ 2/Replication_MigrateLib/repos/juanjosalvador@nyaapy__38df01c2__requests__pycurl/nyaapy/anime_site.py"
+      lineno: 76
+      message: 'pycurl.error: (3, ''URL rejected: Malformed input to a URL function'')'
+    traceback:
+    - path: tests/integration/test_nyaasi.py
+      lineno: 14
+      message: ''
+    - path: nyaapy/anime_site.py
+      lineno: 76
+      message: error
+    longrepr: "def test_nyaa_search():\n>       request = Nyaa.search(keyword=\"koe\
+      \ no katachi\")\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n\
+      tests/integration/test_nyaasi.py:14: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\
+      \ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = <class 'nyaapy.nyaasi.nyaa.Nyaa'>,\
+      \ keyword = 'koe no katachi'\nkwargs = {}, base_url = 'https://nyaa.si', user\
+      \ = None, category = 0\nsubcategory = 0, filters = 0, page = 0, sorting = 'id'\n\
+      \n    @classmethod\n    def search(self, keyword: str, **kwargs):\n        base_url\
+      \ = self.URL\n    \n        user = kwargs.get(\"user\", None)\n        category\
+      \ = kwargs.get(\"category\", 0)\n        subcategory = kwargs.get(\"subcategory\"\
+      , 0)\n        filters = kwargs.get(\"filters\", 0)\n        page = kwargs.get(\"\
+      page\", 0)\n        sorting = kwargs.get(\n            \"sort\", \"id\"\n  \
+      \      )  # Sorting by id = sorting by date, this is the default.\n        order\
+      \ = kwargs.get(\"order\", \"desc\")\n    \n        user_uri = f\"user/{user}\"\
+      \ if user else \"\"\n    \n        if page > 0:\n            search_uri = \"\
+      {}/{}?f={}&c={}_{}&q={}&p={}&s={}&o={}\".format(\n                base_url,\n\
+      \                user_uri,\n                filters,\n                category,\n\
+      \                subcategory,\n                keyword,\n                page,\n\
+      \                sorting,\n                order,\n            )\n        else:\n\
+      \            search_uri = \"{}/{}?f={}&c={}_{}&q={}&s={}&o={}\".format(\n  \
+      \              base_url,\n                user_uri,\n                filters,\n\
+      \                category,\n                subcategory,\n                keyword,\n\
+      \                sorting,\n                order,\n            )\n    \n   \
+      \     if not user:\n            search_uri += \"&page=rss\"\n    \n        buffer\
+      \ = BytesIO()\n        c = pycurl.Curl()\n        c.setopt(c.URL, search_uri)\n\
+      \        c.setopt(c.WRITEDATA, buffer)\n>       c.perform()\nE       pycurl.error:\
+      \ (3, 'URL rejected: Malformed input to a URL function')\n\nnyaapy/anime_site.py:76:\
+      \ error"
+  teardown:
+    outcome: passed
+- nodeid: tests/integration/test_nyaasi.py::test_nyaa_get_single
+  lineno: 19
+  outcome: failed
+  keywords:
+  - test_nyaa_get_single
+  - test_nyaasi.py
+  - integration
+  - tests
+  - juanjosalvador@nyaapy__38df01c2__requests__pycurl
+  - ''
+  setup:
+    outcome: passed
+  call:
+    outcome: failed
+    crash:
+      path: "/Users/namugo/Desktop/\u1103\u1162\u1112\u1161\u11A8\u1103\u1162\u1112\
+        \u1161\u11A8/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication\
+        \ 2/Replication_MigrateLib/repos/juanjosalvador@nyaapy__38df01c2__requests__pycurl/nyaapy/parser.py"
+      lineno: 196
+      message: 'IndexError: list index out of range'
+    traceback:
+    - path: tests/integration/test_nyaasi.py
+      lineno: 21
+      message: ''
+    - path: nyaapy/anime_site.py
+      lineno: 107
+      message: in get
+    - path: nyaapy/parser.py
+      lineno: 196
+      message: IndexError
+    longrepr: "def test_nyaa_get_single():\n>       request = Nyaa.get(view_id=\"\
+      1847113\")\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests/integration/test_nyaasi.py:21:\
+      \ \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\
+      \ _ _ _ _ \nnyaapy/anime_site.py:107: in get\n    json_data = parse_single(request_text=buffer.getvalue(),\
+      \ site=self.SITE)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+      _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\
+      \ _ _ \n\nrequest_text = b'\\x1f\\x8b\\x08\\x00\\x00\\x00\\x00\\x00\\x04\\x03\\\
+      xcd[{s\\x1b\\xc7\\x91\\xff\\x1b\\xfe\\x14#\\xb8(S%-\\x9e|\\x1b\\x80\\x8e/I\\\
+      xb4AQ&)\\xf9,...B\\xd9z\\xe4\\x19!M\\x99D%\\x8a\\x85e5FX\\x95A\\x13)e;\\x82\\\
+      r\\xb8\\x85&$bb\\xa4\\xc1p\\xddD\\xfdO\\xe5\\xff\\x00\\x03~\\xda&\\xefB\\x00\\\
+      x00'\nsite = <TorrentSite.NYAASI: 'https://nyaa.si'>\n\n    def parse_single(request_text,\
+      \ site):\n        parser = etree.HTMLParser()\n        tree = etree.fromstring(request_text,\
+      \ parser)\n    \n        # Put proper domain here.\n        uri = site.value\n\
+      \    \n        torrent = {}\n        data = []\n        torrent_files = []\n\
+      \    \n        # Find basic uploader info & torrent stats\n        for row in\
+      \ tree.xpath(\"//div[@class='row']\"):\n            for div_text in row.xpath(\"\
+      ./div[@class='col-md-5']//text()\"):\n                d = div_text.strip()\n\
+      \                if d:\n                    data.append(d)\n    \n        #\
+      \ Find files, we need only text of the li element(s).\n        # Sorry about\
+      \ Pycodestyle aka PEP8 (E501) error\n        for el in tree.xpath(\"//div[contains(@class,\
+      \ 'torrent-file-list')]//li/text()\"):\n            if el.rstrip():\n      \
+      \          torrent_files.append(el)\n    \n>       torrent[\"title\"] = tree.xpath(\"\
+      //h3[@class='panel-title']/text()\")[0].strip()\n                          \
+      \ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       IndexError: list\
+      \ index out of range\n\nnyaapy/parser.py:196: IndexError"
+  teardown:
+    outcome: passed
+- nodeid: tests/integration/test_nyaasi.py::test_nyaa_get_from_user
+  lineno: 25
+  outcome: failed
+  keywords:
+  - test_nyaa_get_from_user
+  - test_nyaasi.py
+  - integration
+  - tests
+  - juanjosalvador@nyaapy__38df01c2__requests__pycurl
+  - ''
+  setup:
+    outcome: passed
+  call:
+    outcome: failed
+    crash:
+      path: "/Users/namugo/Desktop/\u1103\u1162\u1112\u1161\u11A8\u1103\u1162\u1112\
+        \u1161\u11A8/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication\
+        \ 2/Replication_MigrateLib/repos/juanjosalvador@nyaapy__38df01c2__requests__pycurl/tests/integration/test_nyaasi.py"
+      lineno: 28
+      message: 'IndexError: list index out of range'
+    traceback:
+    - path: tests/integration/test_nyaasi.py
+      lineno: 28
+      message: IndexError
+    longrepr: "def test_nyaa_get_from_user():\n        request = Nyaa.get_from_user(username=\"\
+      Erai-raws\")\n>       torrent = request[0]\n                  ^^^^^^^^^^\nE\
+      \       IndexError: list index out of range\n\ntests/integration/test_nyaasi.py:28:\
+      \ IndexError"
+  teardown:
+    outcome: passed

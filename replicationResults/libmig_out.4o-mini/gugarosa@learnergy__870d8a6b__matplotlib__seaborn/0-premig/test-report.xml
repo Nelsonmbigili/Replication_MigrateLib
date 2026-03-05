@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="169" time="2731.971" timestamp="2026-03-03T21:33:30.622077+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.learnergy.core.test_dataset" name="test_dataset" time="0.001" /><testcase classname="tests.learnergy.core.test_model" name="test_model" time="0.002" /><testcase classname="tests.learnergy.math.test_metrics" name="test_calculate_ssim" time="0.002" /><testcase classname="tests.learnergy.math.test_scale" name="test_unitary_scale" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_visible_shape" time="0.002" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_visible_shape_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_filter_shape" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_filter_shape_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_hidden_shape" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_hidden_shape_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_n_filters" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_n_filters_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_n_channels" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_n_channels_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_steps" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_steps_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_lr" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_lr_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_momentum" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_momentum_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_decay" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_decay_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_W" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_W_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_a" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_a_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_b" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_b_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_optimizer" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_optimizer_setter" time="0.000" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_hidden_sampling" time="0.003" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_visible_sampling" time="0.002" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_energy" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_fit" time="76.032"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_conv_rbm_fit():
+&gt;       train = torchvision.datasets.KMNIST(
+            root="./data",
+            train=True,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_conv_rbm.py:300: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x128f78c20&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_reconstruct" time="75.015"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_conv_rbm_reconstruct():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_conv_rbm.py:325: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x1290b8a50&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_conv_rbm" name="test_conv_rbm_forward" time="0.006" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_n_classes" time="0.006" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_n_classes_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_U" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_U_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_c" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_c_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_loss" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_loss_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_labels_sampling" time="0.002" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_fit" time="75.004"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_discriminative_rbm_fit():
+&gt;       train = torchvision.datasets.KMNIST(
+            root="./data",
+            train=True,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_discriminative_rbm.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x128ecf750&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_discriminative_rbm_predict" time="75.005"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_discriminative_rbm_predict():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_discriminative_rbm.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x1290bce90&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_hybrid_discriminative_rbm_alpha" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_hybrid_discriminative_rbm_alpha_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_hybrid_discriminative_rbm_hidden_sampling" time="0.003" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_hybrid_discriminative_rbm_class_sampling" time="0.002" /><testcase classname="tests.learnergy.models.bernoulli.test_discriminative_rbm" name="test_hybrid_discriminative_rbm_fit" time="75.009"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_hybrid_discriminative_rbm_fit():
+&gt;       train = torchvision.datasets.KMNIST(
+            root="./data",
+            train=True,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_discriminative_rbm.py:196: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x1290bda70&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_dropout_rbm" name="test_dropout_rbm_p" time="0.005" /><testcase classname="tests.learnergy.models.bernoulli.test_dropout_rbm" name="test_dropout_rbm_p_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_dropout_rbm" name="test_dropout_rbm_hidden_sampling" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_dropout_rbm" name="test_dropout_rbm_reconstruct" time="75.008"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_dropout_rbm_reconstruct():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_dropout_rbm.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x1290e2e70&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_dropout_rbm" name="test_dropconnect_rbm_hidden_sampling" time="0.002" /><testcase classname="tests.learnergy.models.bernoulli.test_dropout_rbm" name="test_dropconnect_rbm_reconstruct" time="75.009"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_dropconnect_rbm_reconstruct():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_dropout_rbm.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x1290ee250&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_M" time="0.011" /><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_M_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_hidden_sampling" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_total_energy" time="0.003" /><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_energy_dropout" time="0.002" /><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_fit" time="75.007"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_e_dropout_rbm_fit():
+&gt;       train = torchvision.datasets.KMNIST(
+            root="./data",
+            train=True,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_e_dropout_rbm.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x1290ef020&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_e_dropout_rbm" name="test_e_dropout_rbm_reconstruct" time="75.005"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_e_dropout_rbm_reconstruct():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_e_dropout_rbm.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x129200450&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_n_visible" time="0.005" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_n_visible_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_n_hidden" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_n_hidden_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_steps" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_steps_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_lr" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_lr_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_momentum" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_momentum_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_decay" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_decay_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_T" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_T_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_W" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_W_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_a" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_a_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_b" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_b_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_optimizer" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_optimizer_setter" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_hidden_sampling" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_visible_sampling" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_energy" time="0.001" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_pseudo_likelihood" time="0.003" /><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_fit" time="75.005"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_rbm_fit():
+&gt;       train = torchvision.datasets.KMNIST(
+            root="./data",
+            train=True,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_rbm.py:285: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x129201450&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_reconstruct" time="75.005"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_rbm_reconstruct():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/bernoulli/test_rbm.py:310: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x1292058b0&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.bernoulli.test_rbm" name="test_rbm_forward" time="0.002" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_visible_shape" time="0.003" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_visible_shape_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_filter_shape" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_filter_shape_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_n_filters" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_n_filters_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_n_channels" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_n_channels_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_n_layers" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_n_layers_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_steps" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_steps_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_lr" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_lr_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_momentum" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_momentum_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_decay" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_decay_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_models" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_conv_dbn" name="test_dbn_models_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_n_visible" time="0.006" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_n_visible_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_n_hidden" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_n_hidden_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_n_layers" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_n_layers_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_steps" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_steps_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_lr" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_lr_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_momentum" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_momentum_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_decay" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_decay_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_T" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_T_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_models" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_models_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_dbn" name="test_dbn_reconstruct" time="75.005"><failure message="RuntimeError: Error downloading train-images-idx3-ubyte.gz:&#10;Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:&#10;&lt;urlopen error [Errno 60] Operation timed out&gt;">def test_dbn_reconstruct():
+&gt;       test = torchvision.datasets.KMNIST(
+            root="./data",
+            train=False,
+            download=True,
+            transform=torchvision.transforms.ToTensor(),
+        )
+
+tests/learnergy/models/deep/test_dbn.py:221: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:100: in __init__
+    self.download()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;[AttributeError("'KMNIST' object has no attribute 'data'") raised in repr()] KMNIST object at 0x129207200&gt;
+
+    def download(self) -&gt; None:
+        """Download the MNIST data if it doesn't exist already."""
+    
+        if self._check_exists():
+            return
+    
+        os.makedirs(self.raw_folder, exist_ok=True)
+    
+        # download files
+        for filename, md5 in self.resources:
+            errors = []
+            for mirror in self.mirrors:
+                url = f"{mirror}{filename}"
+                try:
+                    download_and_extract_archive(url, download_root=self.raw_folder, filename=filename, md5=md5)
+                except URLError as e:
+                    errors.append(e)
+                    continue
+                break
+            else:
+                s = f"Error downloading {filename}:\n"
+                for mirror, err in zip(self.mirrors, errors):
+                    s += f"Tried {mirror}, got:\n{str(err)}\n"
+&gt;               raise RuntimeError(s)
+E               RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+E               Tried http://codh.rois.ac.jp/kmnist/dataset/kmnist/, got:
+E               &lt;urlopen error [Errno 60] Operation timed out&gt;
+
+.venv/lib/python3.14/site-packages/torchvision/datasets/mnist.py:197: RuntimeError</failure></testcase><testcase classname="tests.learnergy.models.deep.test_residual_dbn" name="test_residual_dbn_zetta1" time="0.005" /><testcase classname="tests.learnergy.models.deep.test_residual_dbn" name="test_residual_dbn_zetta1_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_residual_dbn" name="test_residual_dbn_zetta2" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_residual_dbn" name="test_residual_dbn_zetta2_setter" time="0.001" /><testcase classname="tests.learnergy.models.deep.test_residual_dbn" name="test_residual_dbn_calculate_residual" time="0.005" /><testcase classname="tests.learnergy.models.deep.test_residual_dbn" name="test_residual_dbn_forward" time="0.003" /><testcase classname="tests.learnergy.models.extra.test_sigmoid_rbm" name="test_sigmoid_rbm_hidden_sampling" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_conv_rbm" name="test_gaussian_conv_rbm_hidden_sampling" time="0.002" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_conv_rbm" name="test_gaussian_conv_rbm_visible_sampling" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_rbm_normalize_setter" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_rbm_normalize" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_rbm_input_normalize_setter" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_rbm_input_normalize" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_rbm_visible_sampling" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_relu_rbm_hidden_sampling" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_gaussian_selu_rbm_hidden_sampling" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_variance_gaussian_rbm_sigma" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_variance_gaussian_rbm_sigma_setter" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_variance_gaussian_rbm_hidden_sampling" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_variance_gaussian_rbm_visible_sampling" time="0.001" /><testcase classname="tests.learnergy.models.gaussian.test_gaussian_rbm" name="test_variance_gaussian_rbm_energy" time="0.001" /><testcase classname="tests.learnergy.utils.test_constants" name="test_constants" time="0.000" /><testcase classname="tests.learnergy.utils.test_exception" name="test_error" time="0.000" /><testcase classname="tests.learnergy.utils.test_exception" name="test_argument_error" time="0.000" /><testcase classname="tests.learnergy.utils.test_exception" name="test_build_error" time="0.000" /><testcase classname="tests.learnergy.utils.test_exception" name="test_size_error" time="0.000" /><testcase classname="tests.learnergy.utils.test_exception" name="test_type_error" time="0.000" /><testcase classname="tests.learnergy.utils.test_exception" name="test_value_error" time="0.000" /><testcase classname="tests.learnergy.utils.test_logging" name="test_get_console_handler" time="0.000" /><testcase classname="tests.learnergy.utils.test_logging" name="test_get_timed_file_handler" time="0.001" /><testcase classname="tests.learnergy.utils.test_logging" name="test_get_logger" time="0.001" /><testcase classname="tests.learnergy.visual.test_convergence" name="test_convergence_plot" time="1794.969" /><testcase classname="tests.learnergy.visual.test_image" name="test_rasterize" time="0.005" /><testcase classname="tests.learnergy.visual.test_image" name="test_create_mosaic" time="0.661" /><testcase classname="tests.learnergy.visual.test_image" name="test_create_rgb_mosaic" time="9.840" /><testcase classname="tests.learnergy.visual.test_tensor" name="test_show_tensor" time="11.716" /></testsuite></testsuites>

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="18" time="2.350" timestamp="2026-03-04T14:09:02.448160+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_questrade" name="test_del_method_session_close" time="0.997"><failure message="httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&amp;refresh_token=hunter2'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400">mock_get = &lt;MagicMock name='get' id='4578789424'&gt;
+
+    @mock.patch("qtrade.questrade.httpx.get", side_effect=mocked_access_token_requests_get)
+    def test_del_method_session_close(mock_get):
+        """ "This function tests the successful session closing."""
+        with mock.patch.object(Client, "close") as mock_close:
+&gt;           qtrade = Questrade(access_code="hunter2")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_questrade.py:463: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:56: in __init__
+    self._get_access_token(save_yaml=save_yaml)
+qtrade/questrade.py:135: in _get_access_token
+    data.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [400 Bad Request]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&amp;refresh_token=hunter2'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_questrade" name="test_get_access_token" time="0.325"><failure message="httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&amp;refresh_token=hunter2'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400">mock_get = &lt;MagicMock name='get' id='4579914288'&gt;
+
+    @mock.patch("qtrade.questrade.httpx.get", side_effect=mocked_access_token_requests_get)
+    def test_get_access_token(mock_get):
+        """This function tests the get access token method."""
+&gt;       qtrade = Questrade(access_code="hunter2")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_questrade.py:471: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:56: in __init__
+    self._get_access_token(save_yaml=save_yaml)
+qtrade/questrade.py:135: in _get_access_token
+    data.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [400 Bad Request]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&amp;refresh_token=hunter2'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_questrade" name="test_init_via_yaml" time="0.006" /><testcase classname="tests.test_questrade" name="test_init_via_incomplete_yaml" time="0.005" /><testcase classname="tests.test_questrade" name="test_refresh_token_yaml" time="0.328"><failure message="httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&amp;refresh_token=hunter2'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400">mock_get = &lt;MagicMock name='get' id='4589551696'&gt;
+
+    @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+    @mock.patch("qtrade.questrade.httpx.get", side_effect=mocked_access_token_requests_get)
+    def test_refresh_token_yaml(mock_get):
+        """This function tests the refresh token method by using the yaml."""
+        qtrade = Questrade(token_yaml="access_token.yml")
+&gt;       qtrade.refresh_access_token(from_yaml=True)
+
+tests/test_questrade.py:507: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:195: in refresh_access_token
+    data.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [400 Bad Request]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&amp;refresh_token=hunter2'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_questrade" name="test_refresh_token_non_yaml" time="0.327"><failure message="httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&amp;refresh_token=hunter2'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400">mock_get = &lt;MagicMock name='get' id='4589555056'&gt;
+
+    @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+    @mock.patch("qtrade.questrade.httpx.get", side_effect=mocked_access_token_requests_get)
+    def test_refresh_token_non_yaml(mock_get):
+        """This function tests the refresh token method without yaml use."""
+        qtrade = Questrade(token_yaml="access_token.yml")
+&gt;       qtrade.refresh_access_token()
+
+tests/test_questrade.py:519: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:195: in refresh_access_token
+    data.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [400 Bad Request]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&amp;refresh_token=hunter2'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_questrade" name="test_get_account_id" time="0.005" /><testcase classname="tests.test_questrade" name="test_get_positions" time="0.006" /><testcase classname="tests.test_questrade" name="test_get_balances" time="0.005" /><testcase classname="tests.test_questrade" name="test_get_activity" time="0.005" /><testcase classname="tests.test_questrade" name="test_get_execution" time="0.008" /><testcase classname="tests.test_questrade" name="test_get_ticker_information" time="0.007" /><testcase classname="tests.test_questrade" name="test_get_quote" time="0.005" /><testcase classname="tests.test_questrade" name="test_get_historical_data" time="0.005" /><testcase classname="tests.test_questrade" name="test_get_option_chain" time="0.006" /><testcase classname="tests.test_utility" name="test_get_access_token_yaml" time="0.001" /><testcase classname="tests.test_utility" name="test_get_access_token_error" time="0.000" /><testcase classname="tests.test_utility" name="test_get_access_token_yaml_error" time="0.001" /></testsuite></testsuites>

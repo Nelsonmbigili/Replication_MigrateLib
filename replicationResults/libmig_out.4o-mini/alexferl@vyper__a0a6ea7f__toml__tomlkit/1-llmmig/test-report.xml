@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="42" time="0.220" timestamp="2026-03-03T21:31:56.683619+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_vyper.TestVyper" name="test_alias_in_config_file" time="0.002" /><testcase classname="tests.test_vyper.TestVyper" name="test_aliases" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_aliases_of_aliases" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_all_keys" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_args_override" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_args_with_bad_value" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_args_with_value" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_auto_env" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_auto_env_with_prefix" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_basics" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_bind_arg" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_bind_args" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_bound_case_sensitivity" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_case_insensitive" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_complex_bound_case_sensitivity" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_default" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_default_post" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_dirs_search" time="0.003"><failure message="vyper.util.ConfigParserError: While parsing config: 'TOMLDocument' object has no attribute 'as_dict'">r = 'key = "value is D_"\n', d = {}, config_type = 'toml'
+
+    def unmarshall_config_reader(r, d, config_type):
+        config_type = config_type.lower()
+    
+        if config_type in ["yaml", "yml"]:
+            try:
+                f = yaml.safe_load(r)
+                try:
+                    d.update(yaml.safe_load(f))
+                except AttributeError:  # to read files
+                    d.update(f)
+            except Exception as e:
+                raise ConfigParserError(e)
+    
+        elif config_type == "json":
+            try:
+                f = json.loads(r)
+                d.update(f)
+            except Exception as e:
+                raise ConfigParserError(e)
+    
+        elif config_type == "toml":
+            try:
+                try:
+&gt;                   d.update(tomlkit.loads(r).as_dict())
+                             ^^^^^^^^^^^^^^^^^^^^^^^^
+E                   AttributeError: 'TOMLDocument' object has no attribute 'as_dict'
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/vyper/util.py:73: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_vyper.TestVyper testMethod=test_dirs_search&gt;
+
+    def test_dirs_search(self):
+        root, config, cleanup = self._init_dirs()
+    
+        try:
+            v = vyper.Vyper()
+            v.set_config_name(config)
+            v.set_config_type("toml")
+            v.set_default("key", "default")
+    
+            entries = os.listdir(root)
+            for e in entries:
+                if os.path.isdir(e):
+                    v.add_config_path(e)
+    
+&gt;           v.read_in_config()
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/tests/test_vyper.py:460: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/vyper/vyper.py:561: in read_in_config
+    return self._unmarshall_reader(f, self._config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/vyper/vyper.py:603: in _unmarshall_reader
+    return util.unmarshall_config_reader(f, d, self._get_config_type())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = 'key = "value is D_"\n', d = {}, config_type = 'toml'
+
+    def unmarshall_config_reader(r, d, config_type):
+        config_type = config_type.lower()
+    
+        if config_type in ["yaml", "yml"]:
+            try:
+                f = yaml.safe_load(r)
+                try:
+                    d.update(yaml.safe_load(f))
+                except AttributeError:  # to read files
+                    d.update(f)
+            except Exception as e:
+                raise ConfigParserError(e)
+    
+        elif config_type == "json":
+            try:
+                f = json.loads(r)
+                d.update(f)
+            except Exception as e:
+                raise ConfigParserError(e)
+    
+        elif config_type == "toml":
+            try:
+                try:
+                    d.update(tomlkit.loads(r).as_dict())
+                except TypeError:  # to read files
+                    try:
+                        d.update(tomlkit.parse(r).as_dict())
+                    except TypeError:  # to read streams
+                        d.update(r)
+            except Exception as e:
+&gt;               raise ConfigParserError(e)
+E               vyper.util.ConfigParserError: While parsing config: 'TOMLDocument' object has no attribute 'as_dict'
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/vyper/util.py:80: ConfigParserError</failure></testcase><testcase classname="tests.test_vyper.TestVyper" name="test_env" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_env_override_default_subclass" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_get_bool" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_is_set" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_json" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_merge_config" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_merge_overwrite_key" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_merge_recurse_missing_destination_key" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_merge_recurse_missing_source_key" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_nested_default_post" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_nested_defaults_same_as_config" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_nested_keys_with_environment_variables" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_not_found" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_override" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_recursive_aliases" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_set_env_replacer" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_sub" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_toml" time="0.001"><failure message="vyper.util.ConfigParserError: While parsing config: Empty key at line 1 col 0">r = {'title': 'TOML Example', 'owner': {'organization': 'MongoDB', 'Bio': 'MongoDB Chief Developer Advocate &amp; Hacker at Large', 'dob': DateTime(1979, 5, 27, 7, 32, tzinfo=datetime.timezone(datetime.timedelta(0), 'UTC'))}}
+d = {}, config_type = 'toml'
+
+    def unmarshall_config_reader(r, d, config_type):
+        config_type = config_type.lower()
+    
+        if config_type in ["yaml", "yml"]:
+            try:
+                f = yaml.safe_load(r)
+                try:
+                    d.update(yaml.safe_load(f))
+                except AttributeError:  # to read files
+                    d.update(f)
+            except Exception as e:
+                raise ConfigParserError(e)
+    
+        elif config_type == "json":
+            try:
+                f = json.loads(r)
+                d.update(f)
+            except Exception as e:
+                raise ConfigParserError(e)
+    
+        elif config_type == "toml":
+            try:
+                try:
+&gt;                   d.update(tomlkit.loads(r).as_dict())
+                             ^^^^^^^^^^^^^^^^
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/vyper/util.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/.venv/lib/python3.14/site-packages/tomlkit/api.py:52: in loads
+    return parse(string)
+           ^^^^^^^^^^^^^
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/.venv/lib/python3.14/site-packages/tomlkit/api.py:99: in parse
+    return Parser(string).parse()
+           ^^^^^^^^^^^^^^^^^^^^^^
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/.venv/lib/python3.14/site-packages/tomlkit/parser.py:139: in parse
+    item = self._parse_item()
+           ^^^^^^^^^^^^^^^^^^
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/.venv/lib/python3.14/site-packages/tomlkit/parser.py:238: in _parse_item
+    return self._parse_key_value(True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/.venv/lib/python3.14/site-packages/tomlkit/parser.py:311: in _parse_key_value
+    key = self._parse_key()
+          ^^^^^^^^^^^^^^^^^
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/.venv/lib/python3.14/site-packages/tomlkit/parser.py:360: in _parse_key
+    return self._parse_bare_key()
+           ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;tomlkit.parser.Parser object at 0x10774bc50&gt;
+
+    def _parse_bare_key(self) -&gt; Key:
+        """
+        Parses a bare key.
+        """
+        while (
+            self._current.is_bare_key_char() or self._current.is_spaces()
+        ) and self.inc():
+            pass
+    
+        original = self.extract()
+        key = original.strip()
+        if not key:
+            # Empty key
+&gt;           raise self.parse_error(EmptyKeyError)
+E           tomlkit.exceptions.EmptyKeyError: Empty key at line 1 col 0
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/.venv/lib/python3.14/site-packages/tomlkit/parser.py:404: EmptyKeyError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_vyper.TestVyper testMethod=test_toml&gt;
+
+    def test_toml(self):
+&gt;       self._init_toml()
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/tests/test_vyper.py:308: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/tests/test_vyper.py:132: in _init_toml
+    self.v._unmarshall_reader(r, self.v._config)
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/vyper/vyper.py:603: in _unmarshall_reader
+    return util.unmarshall_config_reader(f, d, self._get_config_type())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+r = {'title': 'TOML Example', 'owner': {'organization': 'MongoDB', 'Bio': 'MongoDB Chief Developer Advocate &amp; Hacker at Large', 'dob': DateTime(1979, 5, 27, 7, 32, tzinfo=datetime.timezone(datetime.timedelta(0), 'UTC'))}}
+d = {}, config_type = 'toml'
+
+    def unmarshall_config_reader(r, d, config_type):
+        config_type = config_type.lower()
+    
+        if config_type in ["yaml", "yml"]:
+            try:
+                f = yaml.safe_load(r)
+                try:
+                    d.update(yaml.safe_load(f))
+                except AttributeError:  # to read files
+                    d.update(f)
+            except Exception as e:
+                raise ConfigParserError(e)
+    
+        elif config_type == "json":
+            try:
+                f = json.loads(r)
+                d.update(f)
+            except Exception as e:
+                raise ConfigParserError(e)
+    
+        elif config_type == "toml":
+            try:
+                try:
+                    d.update(tomlkit.loads(r).as_dict())
+                except TypeError:  # to read files
+                    try:
+                        d.update(tomlkit.parse(r).as_dict())
+                    except TypeError:  # to read streams
+                        d.update(r)
+            except Exception as e:
+&gt;               raise ConfigParserError(e)
+E               vyper.util.ConfigParserError: While parsing config: Empty key at line 1 col 0
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/alexferl@vyper__a0a6ea7f__toml__tomlkit/vyper/util.py:80: ConfigParserError</failure></testcase><testcase classname="tests.test_vyper.TestVyper" name="test_unmarshall" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_unmarshalling" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_unmarshalling_with_aliases" time="0.000" /><testcase classname="tests.test_vyper.TestVyper" name="test_wrong_dirs_search_not_found" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_yaml" time="0.001" /><testcase classname="tests.test_vyper.TestVyper" name="test_yaml_duplication_nested" time="0.001" /></testsuite></testsuites>

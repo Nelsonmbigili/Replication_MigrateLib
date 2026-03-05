@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="19" failures="1" skipped="0" tests="21" time="0.406" timestamp="2026-03-05T01:02:25.799375+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_kling" name="test_base_gen_init" time="0.001"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_base_gen_init' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_base_gen_init&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_base_gen_init' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_image_gen_init" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_image_gen_init' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_image_gen_init&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_image_gen_init' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_video_gen_init" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_video_gen_init' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Function test_video_gen_init&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_video_gen_init' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_parse_cookie_string" time="0.000"><failure message="NameError: name 'cookiejar_from_dict' is not defined">def test_parse_cookie_string():
+        cookie_string = "key1=value1; key2=value2; kuaishou_key=value3"
+&gt;       cookiejar, is_cn = BaseGen.parse_cookie_string(cookie_string)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie_string = 'key1=value1; key2=value2; kuaishou_key=value3'
+
+    @staticmethod
+    def parse_cookie_string(cookie_string):
+        cookie = SimpleCookie()
+        cookie.load(cookie_string)
+        cookies_dict = {}
+        cookiejar = None
+        is_cn = False
+        for key, morsel in cookie.items():
+            if key.startswith("kuaishou"):
+                is_cn = True
+            cookies_dict[key] = morsel.value
+&gt;           cookiejar = cookiejar_from_dict(
+                        ^^^^^^^^^^^^^^^^^^^
+                cookies_dict, cookiejar=None, overwrite=True
+            )
+E           NameError: name 'cookiejar_from_dict' is not defined
+
+kling/kling.py:84: NameError</failure></testcase><testcase classname="tests.test_kling" name="test_get_account_point[ImageGen]" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_get_account_point[ImageGen]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_get_account_point[ImageGen]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_get_account_point[ImageGen]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_get_account_point[ImageGen]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_get_account_point[VideoGen]" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_get_account_point[VideoGen]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_get_account_point[VideoGen]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_get_account_point[VideoGen]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_get_account_point[VideoGen]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_image_uploader" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_image_uploader' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_image_uploader&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_image_uploader&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_image_uploader' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_fetch_metadata" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_fetch_metadata' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_fetch_metadata&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_fetch_metadata&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_fetch_metadata' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_get_content[ImageGen-get_images]" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_get_content[ImageGen-get_images]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_get_content[ImageGen-get_images]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_get_content[ImageGen-get_images]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_get_content[ImageGen-get_images]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_get_content[VideoGen-get_video]" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_get_content[VideoGen-get_video]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_get_content[VideoGen-get_video]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_get_content[VideoGen-get_video]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_get_content[VideoGen-get_video]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_save_content[ImageGen-save_images]" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_save_content[ImageGen-save_images]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_save_content[ImageGen-save_images]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_save_content[ImageGen-save_images]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_save_content[ImageGen-save_images]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_save_content[VideoGen-save_video]" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_save_content[VideoGen-save_video]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_save_content[VideoGen-save_video]&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_save_content[VideoGen-save_video]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_save_content[VideoGen-save_video]' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_call_for_daily_check" time="0.035" /><testcase classname="tests.test_kling" name="test_video_gen_get_video" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_video_gen_get_video' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_video_gen_get_video&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_video_gen_get_video&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_video_gen_get_video' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_video_gen_save_video" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_video_gen_save_video' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_video_gen_save_video&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_video_gen_save_video&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_video_gen_save_video' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_image_gen_get_images" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_image_gen_get_images' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_image_gen_get_images&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_image_gen_get_images&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_image_gen_get_images' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_image_gen_save_images" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_image_gen_save_images' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_image_gen_save_images&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_image_gen_save_images&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_image_gen_save_images' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_extend_video_completed" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_extend_video_completed' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_extend_video_completed&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_extend_video_completed&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_extend_video_completed' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_extend_video_pending" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_extend_video_pending' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_extend_video_pending&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_extend_video_pending&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_extend_video_pending' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_extend_video_failed" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_extend_video_failed' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_extend_video_failed&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_extend_video_failed&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_extend_video_failed' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_kling" name="test_extend_video_no_works" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_extend_video_no_works' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_extend_video_no_works&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='mock_session' scope='function' baseid='tests/test_kling.py'&gt;
+request = &lt;SubRequest 'mock_session' for &lt;Coroutine test_extend_video_no_works&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_extend_video_no_works' requested an async fixture 'mock_session', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.14/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase></testsuite></testsuites>

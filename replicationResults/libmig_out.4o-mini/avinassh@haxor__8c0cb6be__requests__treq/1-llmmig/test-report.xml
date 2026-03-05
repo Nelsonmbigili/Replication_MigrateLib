@@ -1,0 +1,868 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="2" failures="27" skipped="1" tests="31" time="2.703" timestamp="2026-03-04T10:19:52.742182+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_api_version.TestAPIVersion" name="test_invalid_api_version" time="0.001" /><testcase classname="tests.test_api_version.TestAPIVersion" name="test_valid_api_version_1" time="0.000" /><testcase classname="tests.test_api_version.TestAPIVersion" name="test_valid_api_version_2" time="0.000" /><testcase classname="tests.test_ask_stories.TestAskStories" name="test_ask_stories" time="0.028"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_ask_stories.TestAskStories testMethod=test_ask_stories&gt;
+
+    def test_ask_stories(self):
+&gt;       ask_stories = self.hn.ask_stories(limit=10)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_ask_stories.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:321: in ask_stories
+    ask_stories = self._get_stories('askstories', limit)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:161: in _get_stories
+    story_ids = self._get_sync(url)[:limit]
+                ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x10518ce90&gt;
+url = 'https://hacker-news.firebaseio.com/v0/askstories.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_ask_stories.TestAskStories" name="test_ask_stories_raw" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_ask_stories.TestAskStories testMethod=test_ask_stories_raw&gt;
+
+    def test_ask_stories_raw(self):
+&gt;       ask_stories = self.hn.ask_stories(raw=True)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_ask_stories.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:321: in ask_stories
+    ask_stories = self._get_stories('askstories', limit)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:161: in _get_stories
+    story_ids = self._get_sync(url)[:limit]
+                ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x10518f360&gt;
+url = 'https://hacker-news.firebaseio.com/v0/askstories.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_get_all.TestAll" name="test_get_all" time="0.000"><skipped type="pytest.skip" message="Skip for timeout issue due to long runtime">/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/avinassh@haxor__8c0cb6be__requests__treq/tests/test_get_all.py:21: Skip for timeout issue due to long runtime</skipped></testcase><testcase classname="tests.test_get_async.TestGetAsync" name="test_get_async" time="0.000"><failure message="RuntimeError: There is no current event loop in thread 'MainThread'.">self = &lt;tests.test_get_async.TestGetAsync testMethod=test_get_async&gt;
+
+    def test_get_async(self):
+&gt;       response = self.hn._run_async([self.url])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_get_async.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:138: in _run_async
+    loop = asyncio.get_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;asyncio.unix_events._UnixDefaultEventLoopPolicy object at 0x1054f0830&gt;
+
+    def get_event_loop(self):
+        """Get the event loop for the current context.
+    
+        Returns an instance of EventLoop or raises an exception.
+        """
+        if self._local._loop is None:
+&gt;           raise RuntimeError('There is no current event loop in thread %r.'
+                               % threading.current_thread().name)
+E           RuntimeError: There is no current event loop in thread 'MainThread'.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/asyncio/events.py:715: RuntimeError</failure></testcase><testcase classname="tests.test_get_async.TestGetAsync" name="test_get_async" time="0.000"><error message="failed on teardown with &quot;AttributeError: 'HackerNews' object has no attribute 'session'&quot;">self = &lt;tests.test_get_async.TestGetAsync testMethod=test_get_async&gt;
+
+    def tearDown(self):
+&gt;       self.hn.session.close()
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'HackerNews' object has no attribute 'session'
+
+tests/test_get_async.py:33: AttributeError</error></testcase><testcase classname="tests.test_get_async.TestGetAsync" name="test_get_async_error" time="0.000"><failure message="RuntimeError: There is no current event loop in thread 'MainThread'.">self = &lt;tests.test_get_async.TestGetAsync testMethod=test_get_async_error&gt;
+
+    def test_get_async_error(self):
+&gt;       response = self.hn._run_async([self.err_url])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_get_async.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:138: in _run_async
+    loop = asyncio.get_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;asyncio.unix_events._UnixDefaultEventLoopPolicy object at 0x1054f0830&gt;
+
+    def get_event_loop(self):
+        """Get the event loop for the current context.
+    
+        Returns an instance of EventLoop or raises an exception.
+        """
+        if self._local._loop is None:
+&gt;           raise RuntimeError('There is no current event loop in thread %r.'
+                               % threading.current_thread().name)
+E           RuntimeError: There is no current event loop in thread 'MainThread'.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/asyncio/events.py:715: RuntimeError</failure></testcase><testcase classname="tests.test_get_async.TestGetAsync" name="test_get_async_error" time="0.000"><error message="failed on teardown with &quot;AttributeError: 'HackerNews' object has no attribute 'session'&quot;">self = &lt;tests.test_get_async.TestGetAsync testMethod=test_get_async_error&gt;
+
+    def tearDown(self):
+&gt;       self.hn.session.close()
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'HackerNews' object has no attribute 'session'
+
+tests/test_get_async.py:33: AttributeError</error></testcase><testcase classname="tests.test_get_item.TestGetItem" name="test_get_item" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_get_item.TestGetItem testMethod=test_get_item&gt;
+
+    def test_get_item(self):
+&gt;       item = self.hn.get_item(8863)
+               ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_get_item.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:186: in get_item
+    response = self._get_sync(url)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x104feb350&gt;
+url = 'https://hacker-news.firebaseio.com/v0/item/8863.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_get_item.TestGetItem" name="test_get_item_expand" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_get_item.TestGetItem testMethod=test_get_item_expand&gt;
+
+    def test_get_item_expand(self):
+&gt;       item = self.hn.get_item(8863, expand=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_get_item.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:186: in get_item
+    response = self._get_sync(url)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x1045d3df0&gt;
+url = 'https://hacker-news.firebaseio.com/v0/item/8863.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_get_item.TestGetItem" name="test_invalid_item" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_get_item.TestGetItem testMethod=test_invalid_item&gt;
+
+    def test_invalid_item(self):
+&gt;       self.assertRaises(InvalidItemID, self.hn.get_item, 0)
+
+tests/test_get_item.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:186: in get_item
+    response = self._get_sync(url)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_get_items_by_ids.TestGetItemsByIDs" name="test_get_items_by_ids" time="0.000"><failure message="RuntimeError: There is no current event loop in thread 'MainThread'.">self = &lt;tests.test_get_items_by_ids.TestGetItemsByIDs testMethod=test_get_items_by_ids&gt;
+
+    def test_get_items_by_ids(self):
+&gt;       items = self.hn.get_items_by_ids([1, 2, 3])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_get_items_by_ids.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:215: in get_items_by_ids
+    result = self._run_async(urls=urls)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:138: in _run_async
+    loop = asyncio.get_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;asyncio.unix_events._UnixDefaultEventLoopPolicy object at 0x1054f0830&gt;
+
+    def get_event_loop(self):
+        """Get the event loop for the current context.
+    
+        Returns an instance of EventLoop or raises an exception.
+        """
+        if self._local._loop is None:
+&gt;           raise RuntimeError('There is no current event loop in thread %r.'
+                               % threading.current_thread().name)
+E           RuntimeError: There is no current event loop in thread 'MainThread'.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/asyncio/events.py:715: RuntimeError</failure></testcase><testcase classname="tests.test_get_items_by_ids.TestGetItemsByIDs" name="test_get_items_by_ids_filtered" time="0.001"><failure message="RuntimeError: There is no current event loop in thread 'MainThread'.">self = &lt;tests.test_get_items_by_ids.TestGetItemsByIDs testMethod=test_get_items_by_ids_filtered&gt;
+
+    def test_get_items_by_ids_filtered(self):
+&gt;       items = self.hn.get_items_by_ids(
+            [i for i in range(1, 50)],
+            item_type='story'
+        )
+
+tests/test_get_items_by_ids.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:215: in get_items_by_ids
+    result = self._run_async(urls=urls)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:138: in _run_async
+    loop = asyncio.get_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;asyncio.unix_events._UnixDefaultEventLoopPolicy object at 0x1054f0830&gt;
+
+    def get_event_loop(self):
+        """Get the event loop for the current context.
+    
+        Returns an instance of EventLoop or raises an exception.
+        """
+        if self._local._loop is None:
+&gt;           raise RuntimeError('There is no current event loop in thread %r.'
+                               % threading.current_thread().name)
+E           RuntimeError: There is no current event loop in thread 'MainThread'.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/asyncio/events.py:715: RuntimeError</failure></testcase><testcase classname="tests.test_get_last.TestGetLast" name="test_get_item" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_get_last.TestGetLast testMethod=test_get_item&gt;
+
+    def test_get_item(self):
+&gt;       items = self.hn.get_last(5)
+                ^^^^^^^^^^^^^^^^^^^
+
+tests/test_get_last.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:420: in get_last
+    max_item = self.get_max_item()
+               ^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:393: in get_max_item
+    response = self._get_sync(url)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x10519bce0&gt;
+url = 'https://hacker-news.firebaseio.com/v0/maxitem.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_get_max_item.TestGetMaxItem" name="test_get_max_item" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_get_max_item.TestGetMaxItem testMethod=test_get_max_item&gt;
+
+    def test_get_max_item(self):
+&gt;       max_item_id = self.hn.get_max_item()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_get_max_item.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:393: in get_max_item
+    response = self._get_sync(url)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x10519bdf0&gt;
+url = 'https://hacker-news.firebaseio.com/v0/maxitem.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_get_max_item.TestGetMaxItem" name="test_get_max_item_expand" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_get_max_item.TestGetMaxItem testMethod=test_get_max_item_expand&gt;
+
+    def test_get_max_item_expand(self):
+&gt;       max_item = self.hn.get_max_item(expand=True)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_get_max_item.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:393: in get_max_item
+    response = self._get_sync(url)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x10519bce0&gt;
+url = 'https://hacker-news.firebaseio.com/v0/maxitem.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_get_sync.TestGetSync" name="test_get_sync" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'json'">self = &lt;tests.test_get_sync.TestGetSync testMethod=test_get_sync&gt;
+
+    def test_get_sync(self):
+&gt;       response = treq.get(self.url).json()  # Changed to use treq
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'json'
+
+tests/test_get_sync.py:25: AttributeError</failure></testcase><testcase classname="tests.test_get_sync.TestGetSync" name="test_get_sync_error" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_get_sync.TestGetSync testMethod=test_get_sync_error&gt;
+
+    def test_get_sync_error(self):
+&gt;       self.assertRaises(HTTPError, self.hn._get_sync, self.err_url)
+
+tests/test_get_sync.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_get_user.TestGetUser" name="test_get_invalid_user" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_get_user.TestGetUser testMethod=test_get_invalid_user&gt;
+
+    def test_get_invalid_user(self):
+&gt;       self.assertRaises(InvalidUserID, self.hn.get_user, 'a')
+
+tests/test_get_user.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:243: in get_user
+    response = self._get_sync(url)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_get_user.TestGetUser" name="test_get_user" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_get_user.TestGetUser testMethod=test_get_user&gt;
+
+    def test_get_user(self):
+&gt;       user = self.hn.get_user('pg')
+               ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_get_user.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:243: in get_user
+    response = self._get_sync(url)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x1055ec8d0&gt;
+url = 'https://hacker-news.firebaseio.com/v0/user/pg.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_get_user.TestGetUser" name="test_get_user_expand" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_get_user.TestGetUser testMethod=test_get_user_expand&gt;
+
+    def test_get_user_expand(self):
+&gt;       user = self.hn.get_user('avinassh', expand=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_get_user.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:243: in get_user
+    response = self._get_sync(url)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x1055ecf30&gt;
+url = 'https://hacker-news.firebaseio.com/v0/user/avinassh.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_get_users_by_ids.TestGetUsersByIDs" name="test_get_users_by_ids" time="0.000"><failure message="RuntimeError: There is no current event loop in thread 'MainThread'.">self = &lt;tests.test_get_users_by_ids.TestGetUsersByIDs testMethod=test_get_users_by_ids&gt;
+
+    def test_get_users_by_ids(self):
+&gt;       users = self.hn.get_users_by_ids(['pg', 'tptacek', 'jacquesm'])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_get_users_by_ids.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:272: in get_users_by_ids
+    result = self._run_async(urls=urls)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:138: in _run_async
+    loop = asyncio.get_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;asyncio.unix_events._UnixDefaultEventLoopPolicy object at 0x1054f0830&gt;
+
+    def get_event_loop(self):
+        """Get the event loop for the current context.
+    
+        Returns an instance of EventLoop or raises an exception.
+        """
+        if self._local._loop is None:
+&gt;           raise RuntimeError('There is no current event loop in thread %r.'
+                               % threading.current_thread().name)
+E           RuntimeError: There is no current event loop in thread 'MainThread'.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/asyncio/events.py:715: RuntimeError</failure></testcase><testcase classname="tests.test_job_stories.TestJobStories" name="test_job_stories" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_job_stories.TestJobStories testMethod=test_job_stories&gt;
+
+    def test_job_stories(self):
+&gt;       job_stories = self.hn.job_stories(limit=10)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_job_stories.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:355: in job_stories
+    job_stories = self._get_stories('jobstories', limit)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:161: in _get_stories
+    story_ids = self._get_sync(url)[:limit]
+                ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x1055ed480&gt;
+url = 'https://hacker-news.firebaseio.com/v0/jobstories.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_job_stories.TestJobStories" name="test_job_stories_raw" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_job_stories.TestJobStories testMethod=test_job_stories_raw&gt;
+
+    def test_job_stories_raw(self):
+&gt;       job_stories = self.hn.job_stories(raw=True)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_job_stories.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:355: in job_stories
+    job_stories = self._get_stories('jobstories', limit)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:161: in _get_stories
+    story_ids = self._get_sync(url)[:limit]
+                ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x1055ed260&gt;
+url = 'https://hacker-news.firebaseio.com/v0/jobstories.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_new_stories.TestNewStories" name="test_new_stories" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_new_stories.TestNewStories testMethod=test_new_stories&gt;
+
+    def test_new_stories(self):
+&gt;       new_stories = self.hn.new_stories(limit=10)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_new_stories.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:304: in new_stories
+    new_stories = self._get_stories('newstories', limit)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:161: in _get_stories
+    story_ids = self._get_sync(url)[:limit]
+                ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x1055ed6a0&gt;
+url = 'https://hacker-news.firebaseio.com/v0/newstories.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_new_stories.TestNewStories" name="test_new_stories_raw" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_new_stories.TestNewStories testMethod=test_new_stories_raw&gt;
+
+    def test_new_stories_raw(self):
+&gt;       new_stories = self.hn.new_stories(raw=True)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_new_stories.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:304: in new_stories
+    new_stories = self._get_stories('newstories', limit)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:161: in _get_stories
+    story_ids = self._get_sync(url)[:limit]
+                ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x1055ed8c0&gt;
+url = 'https://hacker-news.firebaseio.com/v0/newstories.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_show_stories.TestShowStories" name="test_show_stories" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_show_stories.TestShowStories testMethod=test_show_stories&gt;
+
+    def test_show_stories(self):
+&gt;       show_stories = self.hn.show_stories(limit=10)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_show_stories.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:338: in show_stories
+    show_stories = self._get_stories('showstories', limit)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:161: in _get_stories
+    story_ids = self._get_sync(url)[:limit]
+                ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x1055edae0&gt;
+url = 'https://hacker-news.firebaseio.com/v0/showstories.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_show_stories.TestShowStories" name="test_show_stories_raw" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_show_stories.TestShowStories testMethod=test_show_stories_raw&gt;
+
+    def test_show_stories_raw(self):
+&gt;       show_stories = self.hn.show_stories(raw=True)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_show_stories.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:338: in show_stories
+    show_stories = self._get_stories('showstories', limit)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:161: in _get_stories
+    story_ids = self._get_sync(url)[:limit]
+                ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x1055edd00&gt;
+url = 'https://hacker-news.firebaseio.com/v0/showstories.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_top_stories.TestTopStories" name="test_top_stories" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_top_stories.TestTopStories testMethod=test_top_stories&gt;
+
+    def test_top_stories(self):
+&gt;       top_stories = self.hn.top_stories(limit=10)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_top_stories.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:287: in top_stories
+    top_stories = self._get_stories('topstories', limit)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:161: in _get_stories
+    story_ids = self._get_sync(url)[:limit]
+                ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x1055edf20&gt;
+url = 'https://hacker-news.firebaseio.com/v0/topstories.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_top_stories.TestTopStories" name="test_top_stories_raw" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_top_stories.TestTopStories testMethod=test_top_stories_raw&gt;
+
+    def test_top_stories_raw(self):
+&gt;       top_stories = self.hn.top_stories(raw=True)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_top_stories.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:287: in top_stories
+    top_stories = self._get_stories('topstories', limit)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hackernews/__init__.py:161: in _get_stories
+    story_ids = self._get_sync(url)[:limit]
+                ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x1055ee140&gt;
+url = 'https://hacker-news.firebaseio.com/v0/topstories.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase><testcase classname="tests.test_updates.TestUpdates" name="test_top_stories" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;tests.test_updates.TestUpdates testMethod=test_top_stories&gt;
+
+    def test_top_stories(self):
+&gt;       updates = self.hn.updates()
+                  ^^^^^^^^^^^^^^^^^
+
+tests/test_updates.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+hackernews/__init__.py:372: in updates
+    response = self._get_sync(url)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;hackernews.HackerNews object at 0x1055ee360&gt;
+url = 'https://hacker-news.firebaseio.com/v0/updates.json'
+
+    def _get_sync(self, url):
+        """Internal method used for GET requests
+    
+        Args:
+            url (str): URL to fetch
+    
+        Returns:
+            Individual URL request's response
+    
+        Raises:
+          HTTPError: If HTTP request failed.
+        """
+        response = treq.get(url)
+&gt;       if response.status_code == 200:
+           ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+hackernews/__init__.py:86: AttributeError</failure></testcase></testsuite></testsuites>

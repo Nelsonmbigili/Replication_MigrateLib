@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="73" time="2.229" timestamp="2026-03-04T02:31:05.911822+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_api_client.DecodedPayloads" name="test_api_error" time="0.014" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_api_too_many_requests" time="0.002" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_extend_renewal_date_for_all_active_subscribers" time="0.003" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_extend_subscription_renewal_date" time="0.003" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_all_subscription_statuses" time="0.002" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_notification_history" time="0.003" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_refund_history" time="0.002" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_status_of_subscription_renewal_date_extensions" time="0.004" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_test_notification_status" time="0.003" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_transaction_history_v1" time="0.002" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_transaction_history_v2" time="0.001" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_transaction_history_with_malformed_app_apple_id" time="0.001" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_transaction_history_with_unknown_environment" time="0.001" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_transaction_info" time="0.001" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_look_up_order_id" time="0.001" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_request_test_notification" time="0.001" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_send_consumption_data" time="0.001" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_unknown_error" time="0.001" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_xcode_not_supported_error" time="0.000" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_api_error" time="0.001"><failure message="AssertionError: 5000000 != None">self = &lt;tests.test_api_client_async.DecodedPayloads testMethod=test_api_error&gt;
+
+    def test_api_error(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/apiException.json',
+                                                     'POST',
+                                                     'https://local-testing-base-url/inApps/v1/notifications/test',
+                                                     {},
+                                                     None,
+                                                     500)
+        try:
+&gt;           client.request_test_notification()
+
+tests/test_api_client_async.py:378: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:705: in request_test_notification
+    return self._make_request("/inApps/v1/notifications/test", "POST", {}, None, SendTestNotificationResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+appstoreserverlibrary/api_client.py:534: in _make_request
+    return self._parse_response(response.status_code, response.headers, lambda: response.json(), destination_class)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x105239310&gt;
+status_code = 500, headers = {}
+json_supplier = &lt;function AppStoreServerAPIClient._make_request.&lt;locals&gt;.&lt;lambda&gt; at 0x105255dd0&gt;
+destination_class = &lt;class 'appstoreserverlibrary.models.SendTestNotificationResponse.SendTestNotificationResponse'&gt;
+
+    def _parse_response(self, status_code: int, headers: MutableMapping, json_supplier, destination_class: Type[T]) -&gt; T:
+        if 200 &lt;= status_code &lt; 300:
+            if destination_class is None:
+                return
+            c = _get_cattrs_converter(destination_class)
+            response_body = json_supplier()
+            return c.structure(response_body, destination_class)
+        else:
+            # Best effort parsing of the response body
+            if not 'content-type' in headers or headers['content-type'] != 'application/json':
+&gt;               raise APIException(status_code)
+E               appstoreserverlibrary.api_client.APIException: 500
+
+appstoreserverlibrary/api_client.py:514: APIException
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_api_client_async.DecodedPayloads testMethod=test_api_error&gt;
+
+    def test_api_error(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/apiException.json',
+                                                     'POST',
+                                                     'https://local-testing-base-url/inApps/v1/notifications/test',
+                                                     {},
+                                                     None,
+                                                     500)
+        try:
+            client.request_test_notification()
+        except APIException as e:
+            self.assertEqual(500, e.http_status_code)
+&gt;           self.assertEqual(5000000, e.raw_api_error)
+E           AssertionError: 5000000 != None
+
+tests/test_api_client_async.py:381: AssertionError</failure></testcase><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_api_too_many_requests" time="0.001"><failure message="AssertionError: 4290000 != None">self = &lt;tests.test_api_client_async.DecodedPayloads testMethod=test_api_too_many_requests&gt;
+
+    def test_api_too_many_requests(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/apiTooManyRequestsException.json',
+                                                     'POST',
+                                                     'https://local-testing-base-url/inApps/v1/notifications/test',
+                                                     {},
+                                                     None,
+                                                     429)
+        try:
+&gt;           client.request_test_notification()
+
+tests/test_api_client_async.py:406: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:705: in request_test_notification
+    return self._make_request("/inApps/v1/notifications/test", "POST", {}, None, SendTestNotificationResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+appstoreserverlibrary/api_client.py:534: in _make_request
+    return self._parse_response(response.status_code, response.headers, lambda: response.json(), destination_class)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x105284370&gt;
+status_code = 429, headers = {}
+json_supplier = &lt;function AppStoreServerAPIClient._make_request.&lt;locals&gt;.&lt;lambda&gt; at 0x105451170&gt;
+destination_class = &lt;class 'appstoreserverlibrary.models.SendTestNotificationResponse.SendTestNotificationResponse'&gt;
+
+    def _parse_response(self, status_code: int, headers: MutableMapping, json_supplier, destination_class: Type[T]) -&gt; T:
+        if 200 &lt;= status_code &lt; 300:
+            if destination_class is None:
+                return
+            c = _get_cattrs_converter(destination_class)
+            response_body = json_supplier()
+            return c.structure(response_body, destination_class)
+        else:
+            # Best effort parsing of the response body
+            if not 'content-type' in headers or headers['content-type'] != 'application/json':
+&gt;               raise APIException(status_code)
+E               appstoreserverlibrary.api_client.APIException: 429
+
+appstoreserverlibrary/api_client.py:514: APIException
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_api_client_async.DecodedPayloads testMethod=test_api_too_many_requests&gt;
+
+    def test_api_too_many_requests(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/apiTooManyRequestsException.json',
+                                                     'POST',
+                                                     'https://local-testing-base-url/inApps/v1/notifications/test',
+                                                     {},
+                                                     None,
+                                                     429)
+        try:
+            client.request_test_notification()
+        except APIException as e:
+            self.assertEqual(429, e.http_status_code)
+&gt;           self.assertEqual(4290000, e.raw_api_error)
+E           AssertionError: 4290000 != None
+
+tests/test_api_client_async.py:409: AssertionError</failure></testcase><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_extend_renewal_date_for_all_active_subscribers" time="0.001" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_extend_subscription_renewal_date" time="0.001" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_all_subscription_statuses" time="0.001" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_notification_history" time="0.001" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_refund_history" time="0.001" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_status_of_subscription_renewal_date_extensions" time="0.001" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_test_notification_status" time="0.001" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_transaction_history_v1" time="0.001" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_transaction_history_v2" time="0.001" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_transaction_history_with_malformed_app_apple_id" time="0.001" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_transaction_history_with_unknown_environment" time="0.001" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_transaction_info" time="0.000" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_look_up_order_id" time="0.001" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_request_test_notification" time="0.000" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_send_consumption_data" time="0.001" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_unknown_error" time="0.001"><failure message="AssertionError: 9990000 != None">self = &lt;tests.test_api_client_async.DecodedPayloads testMethod=test_unknown_error&gt;
+
+    def test_unknown_error(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/apiUnknownError.json',
+                                                     'POST',
+                                                     'https://local-testing-base-url/inApps/v1/notifications/test',
+                                                     {},
+                                                     None,
+                                                     400)
+        try:
+&gt;           client.request_test_notification()
+
+tests/test_api_client_async.py:424: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:705: in request_test_notification
+    return self._make_request("/inApps/v1/notifications/test", "POST", {}, None, SendTestNotificationResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+appstoreserverlibrary/api_client.py:534: in _make_request
+    return self._parse_response(response.status_code, response.headers, lambda: response.json(), destination_class)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x1054a1650&gt;
+status_code = 400, headers = {}
+json_supplier = &lt;function AppStoreServerAPIClient._make_request.&lt;locals&gt;.&lt;lambda&gt; at 0x105452c40&gt;
+destination_class = &lt;class 'appstoreserverlibrary.models.SendTestNotificationResponse.SendTestNotificationResponse'&gt;
+
+    def _parse_response(self, status_code: int, headers: MutableMapping, json_supplier, destination_class: Type[T]) -&gt; T:
+        if 200 &lt;= status_code &lt; 300:
+            if destination_class is None:
+                return
+            c = _get_cattrs_converter(destination_class)
+            response_body = json_supplier()
+            return c.structure(response_body, destination_class)
+        else:
+            # Best effort parsing of the response body
+            if not 'content-type' in headers or headers['content-type'] != 'application/json':
+&gt;               raise APIException(status_code)
+E               appstoreserverlibrary.api_client.APIException: 400
+
+appstoreserverlibrary/api_client.py:514: APIException
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_api_client_async.DecodedPayloads testMethod=test_unknown_error&gt;
+
+    def test_unknown_error(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/apiUnknownError.json',
+                                                     'POST',
+                                                     'https://local-testing-base-url/inApps/v1/notifications/test',
+                                                     {},
+                                                     None,
+                                                     400)
+        try:
+            client.request_test_notification()
+        except APIException as e:
+            self.assertEqual(400, e.http_status_code)
+&gt;           self.assertEqual(9990000, e.raw_api_error)
+E           AssertionError: 9990000 != None
+
+tests/test_api_client_async.py:427: AssertionError</failure></testcase><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_xcode_not_supported_error" time="0.000" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_app_transaction_decoding" time="0.002" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_consumption_request_notification_decoding" time="0.003" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_external_purchase_token_notification_decoding" time="0.001" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_external_purchase_token_sandbox_notification_decoding" time="0.001" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_notification_decoding" time="0.001" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_renewal_info_decoding" time="0.002" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_summary_notification_decoding" time="0.001" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_transaction_decoding" time="0.003" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_app_store_server_notification_decoding" time="0.005" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_app_store_server_notification_decoding_production" time="0.001" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_malformed_jwt_with_malformed_data" time="0.000" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_malformed_jwt_with_too_many_parts" time="0.000" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_missing_x5c_header" time="0.001" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_renewal_info_decoding" time="0.001" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_transaction_info_decoding" time="0.002" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_wrong_app_apple_id_for_server_notification" time="0.001" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_wrong_bundle_id_for_server_notification" time="0.001" /><testcase classname="tests.test_promotional_offer_signature_creator.PromotionalOfferSignatureCreatorTest" name="test_signature_creator" time="0.001" /><testcase classname="tests.test_receipt_utility.ReceiptUtilityTest" name="test_transaction_receipt_extraction" time="0.001" /><testcase classname="tests.test_receipt_utility.ReceiptUtilityTest" name="test_xcode_app_receipt_extraction_with_no_transactions" time="0.001" /><testcase classname="tests.test_receipt_utility.ReceiptUtilityTest" name="test_xcode_app_receipt_extraction_with_transactions" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_apple_chain_is_valid_with_ocsp_and_strict" time="1.517" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_chain_different_than_root_certificate" time="0.002" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_invalid_base64_in_certificate_list" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_invalid_chain_length" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_invalid_data_in_certificate_list" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_malformed_root_cert" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_valid_chain_invalid_intermediate_OID_without_OCSP" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_valid_chain_invalid_leaf_OID_without_OCSP" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_valid_chain_without_ocsp" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_valid_expired_chain" time="0.001" /><testcase classname="tests.test_xcode_signed_data.ReceiptUtilityTest" name="test_xcode_signed_app_transaction" time="0.001" /><testcase classname="tests.test_xcode_signed_data.ReceiptUtilityTest" name="test_xcode_signed_app_transaction_with_production_environment" time="0.000" /><testcase classname="tests.test_xcode_signed_data.ReceiptUtilityTest" name="test_xcode_signed_renewal_info" time="0.001" /><testcase classname="tests.test_xcode_signed_data.ReceiptUtilityTest" name="test_xcode_signed_transaction" time="0.001" /></testsuite></testsuites>

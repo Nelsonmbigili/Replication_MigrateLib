@@ -1,0 +1,85 @@
+mig: octodns@octodns-ddns__d152390d__requests__urllib3__d152390d__requests__urllib3
+repo: octodns@octodns-ddns__d152390d__requests__urllib3
+commit: d152390dddd37895fc8331d3a5d90633aed063df
+source: requests
+target: urllib3
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 2.2.3
+  finished_at: '2026-03-05 01:28:21'
+  project_coverage: 100.0
+  total_tests: 7
+  passed_tests: 7
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 75.0
+  files:
+  - path: octodns_ddns/__init__.py
+    file_change_coverage: 77.77777777777777
+    covered_changed_lines: 17-18,43-44,51-52,56
+    uncovered_changed_lines: 45-46
+  - path: tests/test_octodns_source_ddns.py
+    file_change_coverage: 73.91304347826087
+    covered_changed_lines: 7-8,16-18,26,45,47,54,56,65,67,73,82,85,94,97
+    uncovered_changed_lines: 21-22,42,50,52,116
+  test_diffs:
+  - test_id: tests/test_octodns_source_ddns.py::TestDdnsSource::test_defaults
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: Calls not found.\nExpected: [call('GET', 'https://v4.ident.me/'),\
+      \ call('GET', 'https://v6.ident.me/')]\n  Actual: [call('GET', 'https://v4.ident.me/',\
+      \ headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'}),\n call('GET',\
+      \ 'https://v6.ident.me/', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'})]"
+  - test_id: tests/test_octodns_source_ddns.py::TestDdnsSource::test_error
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: MockResponse.__init__() got an unexpected keyword argument
+      ''raise_for_status'''
+  - test_id: tests/test_octodns_source_ddns.py::TestDdnsSource::test_types_a
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: Calls not found.\nExpected: [call('GET', 'https://v4.ident.me/')]\n\
+      \  Actual: [call('GET', 'https://v4.ident.me/', headers={'User-Agent': 'octodns/1.10.0\
+      \ octodns-ddns/0.2.1'})]"
+  - test_id: tests/test_octodns_source_ddns.py::TestDdnsSource::test_types_aaaa
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: Calls not found.\nExpected: [call('GET', 'https://v6.ident.me/')]\n\
+      \  Actual: [call('GET', 'https://v6.ident.me/', headers={'User-Agent': 'octodns/1.10.0\
+      \ octodns-ddns/0.2.1'})]"
+  - test_id: tests/test_octodns_source_ddns.py::TestDdnsSource::test_urls
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: Calls not found.\nExpected: [call('GET', 'https://foo.bar/v4'),\
+      \ call('GET', 'https://foo.bar/v6')]\n  Actual: [call('GET', 'https://foo.bar/v4',\
+      \ headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'}),\n call('GET',\
+      \ 'https://foo.bar/v6', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'})]"
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

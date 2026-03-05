@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="15" time="0.708" timestamp="2026-03-05T00:02:22.118882+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest" name="test_capture" time="0.002"><failure message="AttributeError: 'GetAccessTokenRequest' object has no attribute 'http'">self = &lt;tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest testMethod=test_capture&gt;
+mock_get = &lt;MagicMock name='get' id='4466456096'&gt;
+mock_post = &lt;MagicMock name='post' id='4466457104'&gt;
+
+    @mock.patch('requests.post', side_effect=mocked_requests_post)
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_capture(self, mock_get, mock_post):
+        payment = Payment(
+            1000,
+            'EUR',
+            '1234',
+            '4H120426JX758114N',
+            payment_method=PaymentMethod.PAYPAL
+        )
+&gt;       self._service.capture(payment)
+
+tests/Unit/Application/test_paypal_adaptor.py:486: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+modules/Domain/Services/PayPalService.py:23: in capture
+    self.status(payment)
+modules/Domain/Services/PayPalService.py:19: in status
+    self.paypal_plugin.get_access_token()
+modules/Application/PluginAdaptors/PayPal/PayPalPluginAdaptor.py:21: in get_access_token
+    response = GetAccessTokenResponse(request.send())
+                                      ^^^^^^^^^^^^^^
+modules/Application/PluginAdaptors/HTTPMixin.py:19: in send
+    return self._post()
+           ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;modules.Application.PluginAdaptors.PayPal.GetAccessToken.GetAccessTokenRequest.GetAccessTokenRequest object at 0x10a584050&gt;
+
+    def _post(self) -&gt; dict:
+        if self._is_form_encoded():
+            headers = self._headers()
+            headers['Content-Type'] = 'application/x-www-form-urlencoded'
+&gt;           response = self.http.request('POST', self._endpoint(), fields=self._data(), headers=headers, auth=self._auth())
+                       ^^^^^^^^^
+E           AttributeError: 'GetAccessTokenRequest' object has no attribute 'http'
+
+modules/Application/PluginAdaptors/HTTPMixin.py:31: AttributeError</failure></testcase><testcase classname="tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest" name="test_create" time="0.000"><failure message="AttributeError: 'GetAccessTokenRequest' object has no attribute 'http'">self = &lt;tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest testMethod=test_create&gt;
+mock_post = &lt;MagicMock name='post' id='4468523760'&gt;
+
+    @mock.patch('requests.post', side_effect=mocked_requests_post)
+    def test_create(self, mock_post):
+        payment = Payment(
+            1000,
+            'EUR',
+            '1234',
+            None,
+            'FAKE_RETURN_URL',
+            payment_method=PaymentMethod.PAYPAL
+        )
+        payer = Payer(
+            'John',
+            'Doe',
+            'demo-customer@example.com',
+            '1 Rue des Roses',
+            '2nd Floor',
+            'Nantes',
+            'FR',
+            '44230',
+            'fr'
+        )
+&gt;       self._service.pay(payment, payer)
+
+tests/Unit/Application/test_paypal_adaptor.py:463: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+modules/Domain/Services/PayPalService.py:15: in pay
+    self.paypal_plugin.get_access_token()
+modules/Application/PluginAdaptors/PayPal/PayPalPluginAdaptor.py:21: in get_access_token
+    response = GetAccessTokenResponse(request.send())
+                                      ^^^^^^^^^^^^^^
+modules/Application/PluginAdaptors/HTTPMixin.py:19: in send
+    return self._post()
+           ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;modules.Application.PluginAdaptors.PayPal.GetAccessToken.GetAccessTokenRequest.GetAccessTokenRequest object at 0x10a54e5d0&gt;
+
+    def _post(self) -&gt; dict:
+        if self._is_form_encoded():
+            headers = self._headers()
+            headers['Content-Type'] = 'application/x-www-form-urlencoded'
+&gt;           response = self.http.request('POST', self._endpoint(), fields=self._data(), headers=headers, auth=self._auth())
+                       ^^^^^^^^^
+E           AttributeError: 'GetAccessTokenRequest' object has no attribute 'http'
+
+modules/Application/PluginAdaptors/HTTPMixin.py:31: AttributeError</failure></testcase><testcase classname="tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest" name="test_status" time="0.000"><failure message="AttributeError: 'GetAccessTokenRequest' object has no attribute 'http'">self = &lt;tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest testMethod=test_status&gt;
+mock_get = &lt;MagicMock name='get' id='4468526112'&gt;
+mock_post = &lt;MagicMock name='post' id='4468526448'&gt;
+
+    @mock.patch('requests.post', side_effect=mocked_requests_post)
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_status(self, mock_get, mock_post):
+        payment = Payment(
+            1000,
+            'EUR',
+            '1234',
+            '4H120426JX758114N',
+            payment_method=PaymentMethod.PAYPAL
+        )
+&gt;       self._service.status(payment)
+
+tests/Unit/Application/test_paypal_adaptor.py:509: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+modules/Domain/Services/PayPalService.py:19: in status
+    self.paypal_plugin.get_access_token()
+modules/Application/PluginAdaptors/PayPal/PayPalPluginAdaptor.py:21: in get_access_token
+    response = GetAccessTokenResponse(request.send())
+                                      ^^^^^^^^^^^^^^
+modules/Application/PluginAdaptors/HTTPMixin.py:19: in send
+    return self._post()
+           ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;modules.Application.PluginAdaptors.PayPal.GetAccessToken.GetAccessTokenRequest.GetAccessTokenRequest object at 0x10a54f110&gt;
+
+    def _post(self) -&gt; dict:
+        if self._is_form_encoded():
+            headers = self._headers()
+            headers['Content-Type'] = 'application/x-www-form-urlencoded'
+&gt;           response = self.http.request('POST', self._endpoint(), fields=self._data(), headers=headers, auth=self._auth())
+                       ^^^^^^^^^
+E           AttributeError: 'GetAccessTokenRequest' object has no attribute 'http'
+
+modules/Application/PluginAdaptors/HTTPMixin.py:31: AttributeError</failure></testcase><testcase classname="tests.Unit.Application.test_stripe_adaptor.StripeAdaptorTest" name="test_card" time="0.002" /><testcase classname="tests.Unit.Domain.test_paypal_service.PayPalServiceTest" name="test_capture" time="0.000" /><testcase classname="tests.Unit.Domain.test_paypal_service.PayPalServiceTest" name="test_pay" time="0.000" /><testcase classname="tests.Unit.Domain.test_paypal_service.PayPalServiceTest" name="test_status" time="0.000" /><testcase classname="tests.Unit.Domain.test_stripe_service.StripeServiceTest" name="test_capture" time="0.000" /><testcase classname="tests.Unit.Domain.test_stripe_service.StripeServiceTest" name="test_pay" time="0.000" /><testcase classname="tests.Unit.Domain.test_stripe_service.StripeServiceTest" name="test_status" time="0.000" /><testcase classname="tests.Unit.Entities.test_card.CardTest" name="test_invalid_card_number" time="0.000" /><testcase classname="tests.Unit.Entities.test_card.CardTest" name="test_invalid_card_year" time="0.000" /><testcase classname="tests.Unit.Entities.test_card.CardTest" name="test_valid_card" time="0.000" /><testcase classname="tests.Unit.Entities.test_payment.PaymentTest" name="test_amount_too_high" time="0.000" /><testcase classname="tests.Unit.Entities.test_payment.PaymentTest" name="test_card_invalid_numbers" time="0.000" /></testsuite></testsuites>

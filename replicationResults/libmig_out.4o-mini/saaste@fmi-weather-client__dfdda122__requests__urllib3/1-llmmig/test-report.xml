@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="21" time="4.995" timestamp="2026-03-03T20:19:25.031716+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="test.test_http.HTTPTest" name="test_create_params_invalid_request_type" time="0.004" /><testcase classname="test.test_http.HTTPTest" name="test_create_params_missing_location" time="0.000" /><testcase classname="test.test_http.HTTPTest" name="test_handle_errors_client_error_with_exception_text" time="0.000"><failure message="AttributeError: 'Response' object has no attribute 'status'">self = &lt;test.test_http.HTTPTest testMethod=test_handle_errors_client_error_with_exception_text&gt;
+
+    def test_handle_errors_client_error_with_exception_text(self):
+        with self.assertRaises(ClientError):
+            status_code = 400
+            text = """
+                &lt;ExceptionReport&gt;
+                    &lt;ExceptionText&gt;Mock error&lt;/ExceptionText&gt;
+                    &lt;ExceptionText&gt;Something else which is not used here &lt;/ExceptionText&gt;
+                &lt;/ExceptionReport&gt;
+            """
+            Response = namedtuple("Response", ['status_code', 'text'])
+            mock_response = Response(status_code=status_code, text=text)
+&gt;           http._handle_errors(mock_response)
+
+test/test_http.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _handle_errors(response: urllib3.response.HTTPResponse):
+        """Handle error responses from FMI service"""
+&gt;       if 400 &lt;= response.status &lt; 500:
+                  ^^^^^^^^^^^^^^^
+E       AttributeError: 'Response' object has no attribute 'status'
+
+fmi_weather_client/http.py:144: AttributeError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_async_get_forecast_by_coordinates" time="0.044"><failure message="RuntimeError: There is no current event loop in thread 'MainThread'.">self = &lt;test.test_init.FMIWeatherTest testMethod=test_async_get_forecast_by_coordinates&gt;
+mock_get = &lt;MagicMock name='get' id='4347894416'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_coordinate_forecast_response)
+    def test_async_get_forecast_by_coordinates(self, mock_get):
+&gt;       loop = asyncio.get_event_loop()
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;asyncio.unix_events._UnixDefaultEventLoopPolicy object at 0x103279e80&gt;
+
+    def get_event_loop(self):
+        """Get the event loop for the current context.
+    
+        Returns an instance of EventLoop or raises an exception.
+        """
+        if self._local._loop is None:
+&gt;           raise RuntimeError('There is no current event loop in thread %r.'
+                               % threading.current_thread().name)
+E           RuntimeError: There is no current event loop in thread 'MainThread'.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/asyncio/events.py:715: RuntimeError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_async_get_forecast_by_place_name" time="0.001"><failure message="RuntimeError: There is no current event loop in thread 'MainThread'.">self = &lt;test.test_init.FMIWeatherTest testMethod=test_async_get_forecast_by_place_name&gt;
+mock_get = &lt;MagicMock name='get' id='4347896096'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_place_forecast_response)
+    def test_async_get_forecast_by_place_name(self, mock_get):
+&gt;       loop = asyncio.get_event_loop()
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;asyncio.unix_events._UnixDefaultEventLoopPolicy object at 0x103279e80&gt;
+
+    def get_event_loop(self):
+        """Get the event loop for the current context.
+    
+        Returns an instance of EventLoop or raises an exception.
+        """
+        if self._local._loop is None:
+&gt;           raise RuntimeError('There is no current event loop in thread %r.'
+                               % threading.current_thread().name)
+E           RuntimeError: There is no current event loop in thread 'MainThread'.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/asyncio/events.py:715: RuntimeError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_async_get_weather_by_coordinates" time="0.000"><failure message="RuntimeError: There is no current event loop in thread 'MainThread'.">self = &lt;test.test_init.FMIWeatherTest testMethod=test_async_get_weather_by_coordinates&gt;
+mock_get = &lt;MagicMock name='get' id='4347895760'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_coordinate_forecast_response)
+    def test_async_get_weather_by_coordinates(self, mock_get):
+&gt;       loop = asyncio.get_event_loop()
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;asyncio.unix_events._UnixDefaultEventLoopPolicy object at 0x103279e80&gt;
+
+    def get_event_loop(self):
+        """Get the event loop for the current context.
+    
+        Returns an instance of EventLoop or raises an exception.
+        """
+        if self._local._loop is None:
+&gt;           raise RuntimeError('There is no current event loop in thread %r.'
+                               % threading.current_thread().name)
+E           RuntimeError: There is no current event loop in thread 'MainThread'.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/asyncio/events.py:715: RuntimeError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_async_get_weather_by_place" time="0.000"><failure message="RuntimeError: There is no current event loop in thread 'MainThread'.">self = &lt;test.test_init.FMIWeatherTest testMethod=test_async_get_weather_by_place&gt;
+mock_get = &lt;MagicMock name='get' id='4347897104'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_place_forecast_response)
+    def test_async_get_weather_by_place(self, mock_get):
+&gt;       loop = asyncio.get_event_loop()
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;asyncio.unix_events._UnixDefaultEventLoopPolicy object at 0x103279e80&gt;
+
+    def get_event_loop(self):
+        """Get the event loop for the current context.
+    
+        Returns an instance of EventLoop or raises an exception.
+        """
+        if self._local._loop is None:
+&gt;           raise RuntimeError('There is no current event loop in thread %r.'
+                               % threading.current_thread().name)
+E           RuntimeError: There is no current event loop in thread 'MainThread'.
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/asyncio/events.py:715: RuntimeError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_get_forecast_by_coordinates" time="1.770"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_get_forecast_by_coordinates&gt;
+mock_get = &lt;MagicMock name='get' id='4347896432'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_coordinate_forecast_response)
+    def test_get_forecast_by_coordinates(self, mock_get):
+&gt;       forecast = fmi_weather_client.forecast_by_coordinates(29.742731, 67.583988)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fmi_weather_client/__init__.py:97: in forecast_by_coordinates
+    response = http.request_forecast_by_coordinates(lat, lon, timestep_hours)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:54: in request_forecast_by_coordinates
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:137: in _send_request
+    _handle_errors(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;urllib3.response.HTTPResponse object at 0x10332dae0&gt;
+
+    def _handle_errors(response: urllib3.response.HTTPResponse):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response.status &lt; 500:
+            data = xmltodict.parse(response.data.decode('utf-8'))
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response.status, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:148: ClientError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_get_forecast_by_place_name" time="0.348"><failure message="AssertionError: 3 != 12">self = &lt;test.test_init.FMIWeatherTest testMethod=test_get_forecast_by_place_name&gt;
+mock_get = &lt;MagicMock name='get' id='4347900464'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_place_forecast_response)
+    def test_get_forecast_by_place_name(self, mock_get):
+        forecast = fmi_weather_client.forecast_by_place_name('Iisalmi')
+&gt;       self.assert_name_forecast(forecast)
+
+test/test_init.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test/test_init.py:133: in assert_name_forecast
+    self.assertEqual(len(forecast.forecasts), 12)
+E   AssertionError: 3 != 12</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_get_weather_by_coordinates" time="0.332"><failure message="AssertionError: 'Maaninka' != 'Sauoiva'&#10;- Maaninka&#10;+ Sauoiva">self = &lt;test.test_init.FMIWeatherTest testMethod=test_get_weather_by_coordinates&gt;
+mock_get = &lt;MagicMock name='get' id='4347900800'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_coordinate_forecast_response)
+    def test_get_weather_by_coordinates(self, mock_get):
+        weather = fmi_weather_client.weather_by_coordinates(63.14343, 27.31317)
+&gt;       self.assert_coordinate_weather(weather)
+
+test/test_init.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test/test_init.py:124: in assert_coordinate_weather
+    self.assertEqual(weather.place, 'Sauoiva')
+E   AssertionError: 'Maaninka' != 'Sauoiva'
+E   - Maaninka
+E   + Sauoiva</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_get_weather_by_place" time="0.171"><failure message="AssertionError: 1772554200.0 != 1663585800.0">self = &lt;test.test_init.FMIWeatherTest testMethod=test_get_weather_by_place&gt;
+mock_get = &lt;MagicMock name='get' id='4347901136'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_place_forecast_response)
+    def test_get_weather_by_place(self, mock_get):
+        weather = fmi_weather_client.weather_by_place_name('Iisalmi')
+&gt;       self.assert_name_weather(weather)
+
+test/test_init.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test/test_init.py:98: in assert_name_weather
+    self.assertEqual(weather.data.time.timestamp(), 1663585800.0)
+E   AssertionError: 1772554200.0 != 1663585800.0</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_invalid_lat_lon_exception_response" time="0.202" /><testcase classname="test.test_init.FMIWeatherTest" name="test_nil_forecast_response" time="1.142"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_nil_forecast_response&gt;
+mock_get = &lt;MagicMock name='get' id='4347901808'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_nan_response)
+    def test_nil_forecast_response(self, mock_get):
+&gt;       forecast_coord = fmi_weather_client.forecast_by_coordinates(25.46816, 65.01236, 24)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fmi_weather_client/__init__.py:97: in forecast_by_coordinates
+    response = http.request_forecast_by_coordinates(lat, lon, timestep_hours)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:54: in request_forecast_by_coordinates
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:137: in _send_request
+    _handle_errors(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;urllib3.response.HTTPResponse object at 0x10332f160&gt;
+
+    def _handle_errors(response: urllib3.response.HTTPResponse):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response.status &lt; 500:
+            data = xmltodict.parse(response.data.decode('utf-8'))
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response.status, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:148: ClientError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_nil_weather_response" time="0.165"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_nil_weather_response&gt;
+mock_get = &lt;MagicMock name='get' id='4347902144'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_nan_response)
+    def test_nil_weather_response(self, mock_get):
+&gt;       weather_coord = fmi_weather_client.weather_by_coordinates(25.46816, 65.01236)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fmi_weather_client/__init__.py:18: in weather_by_coordinates
+    response = http.request_weather_by_coordinates(lat, lon)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:29: in request_weather_by_coordinates
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:137: in _send_request
+    _handle_errors(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;urllib3.response.HTTPResponse object at 0x10332fd90&gt;
+
+    def _handle_errors(response: urllib3.response.HTTPResponse):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response.status &lt; 500:
+            data = xmltodict.parse(response.data.decode('utf-8'))
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response.status, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:148: ClientError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_no_data_available_exception_response" time="0.177" /><testcase classname="test.test_init.FMIWeatherTest" name="test_no_location_exception_response" time="0.191" /><testcase classname="test.test_init.FMIWeatherTest" name="test_server_error_response" time="0.187"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_server_error_response&gt;
+mock_get = &lt;MagicMock name='get' id='4347903152'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_server_error_response)
+    def test_server_error_response(self, mock_get):
+        with self.assertRaises(ServerError):
+&gt;           fmi_weather_client.weather_by_coordinates(27.31317, 63.14343)
+
+test/test_init.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fmi_weather_client/__init__.py:18: in weather_by_coordinates
+    response = http.request_weather_by_coordinates(lat, lon)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:29: in request_weather_by_coordinates
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:137: in _send_request
+    _handle_errors(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _handle_errors(response: urllib3.response.HTTPResponse):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response.status &lt; 500:
+            data = xmltodict.parse(response.data.decode('utf-8'))
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response.status, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:148: ClientError</failure></testcase><testcase classname="test.test_models.ModelsTest" name="test_fmi_place" time="0.001" /><testcase classname="test.test_models.ModelsTest" name="test_value" time="0.004" /><testcase classname="test.test_parsers_forecast.ForecastParserTest" name="test_feels_like" time="0.001" /><testcase classname="test.test_parsers_forecast.ForecastParserTest" name="test_float_or_none" time="0.001" /></testsuite></testsuites>

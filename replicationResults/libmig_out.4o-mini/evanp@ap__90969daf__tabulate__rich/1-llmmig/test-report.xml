@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="9" skipped="0" tests="48" time="0.490" timestamp="2026-03-03T20:18:20.095050+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_accept_follower.TestAcceptFollowerCommand" name="test_accept_follower_local" time="0.003" /><testcase classname="tests.test_accept_follower.TestAcceptFollowerCommand" name="test_accept_follower_remote" time="0.002" /><testcase classname="tests.test_add.TestAdd" name="test_add" time="0.001" /><testcase classname="tests.test_create_collection.TestCreateCollectionCommand" name="test_create_collection_followers_only" time="0.001" /><testcase classname="tests.test_create_collection.TestCreateCollectionCommand" name="test_create_collection_private" time="0.002" /><testcase classname="tests.test_create_collection.TestCreateCollectionCommand" name="test_create_collection_public" time="0.001" /><testcase classname="tests.test_create_note.TestCreateNoteCommand" name="test_create_note_followers_only" time="0.001" /><testcase classname="tests.test_create_note.TestCreateNoteCommand" name="test_create_note_private" time="0.001" /><testcase classname="tests.test_create_note.TestCreateNoteCommand" name="test_create_note_public" time="0.001" /><testcase classname="tests.test_create_note.TestCreateNoteCommand" name="test_create_note_reply" time="0.001" /><testcase classname="tests.test_delete.TestDeleteCommand" name="test_delete_with_confirmation" time="0.002" /><testcase classname="tests.test_delete.TestDeleteCommand" name="test_delete_with_force" time="0.001" /><testcase classname="tests.test_follow.TestFollowCommand" name="test_follow_local" time="0.001" /><testcase classname="tests.test_follow.TestFollowCommand" name="test_follow_remote" time="0.001" /><testcase classname="tests.test_followers.TestFollowersCommand" name="test_followers" time="0.003" /><testcase classname="tests.test_following.TestFollowingCommand" name="test_following" time="0.002" /><testcase classname="tests.test_get.TestGetCommand" name="test_get_note" time="0.001" /><testcase classname="tests.test_get.TestGetCommand" name="test_get_note_with_at_symbol" time="0.001" /><testcase classname="tests.test_inbox.TestInboxCommand" name="test_inbox" time="0.004"><failure message="AssertionError: 'Page 1 Activity 10' not found in '                                  Inbox Items                                   \n┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓\n┃ id             ┃ actor          ┃ type     ┃ summary        ┃ published      ┃\n┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩\n│ https://diffe… │ other@differe… │ Activity │ Page 2         │ 2021-01-01T00… │\n│                │                │          │ Activity 11    │                │\n│ https://socia… │ evanp@social.… │ Activity │ Page 1         │ 2021-01-01T00… │\n│                │                │          │ Activity 10    │                │\n└────────────────┴────────────────┴──────────┴────────────────┴────────────────┘\n'">self = &lt;test_inbox.TestInboxCommand testMethod=test_inbox&gt;
+mock_requests_post = &lt;MagicMock name='get' id='4406596272'&gt;
+mock_requests_get = &lt;MagicMock name='post' id='4406596608'&gt;
+mock_file = &lt;MagicMock name='open' id='4406596944'&gt;
+
+    @patch("builtins.open", new_callable=mock_open, read_data=TOKEN_FILE_DATA)
+    @patch("requests_oauthlib.OAuth2Session.post", side_effect=mock_oauth_post)
+    @patch("requests_oauthlib.OAuth2Session.get", side_effect=mock_oauth_get)
+    def test_inbox(self, mock_requests_post, mock_requests_get, mock_file):
+        run_command(["inbox"], {'LANG': 'en_CA.UTF-8', 'HOME': '/home/notauser'})
+    
+        # Assertions
+        self.assertGreaterEqual(mock_requests_get.call_count, 1)
+        self.assertGreaterEqual(mock_requests_post.call_count, 1)
+&gt;       self.assertIn("Page 1 Activity 10", sys.stdout.getvalue())
+E       AssertionError: 'Page 1 Activity 10' not found in '                                  Inbox Items                                   \n┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓\n┃ id             ┃ actor          ┃ type     ┃ summary        ┃ published      ┃\n┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩\n│ https://diffe… │ other@differe… │ Activity │ Page 2         │ 2021-01-01T00… │\n│                │                │          │ Activity 11    │                │\n│ https://socia… │ evanp@social.… │ Activity │ Page 1         │ 2021-01-01T00… │\n│                │                │          │ Activity 10    │                │\n└────────────────┴────────────────┴──────────┴────────────────┴────────────────┘\n'
+
+tests/test_inbox.py:143: AssertionError</failure></testcase><testcase classname="tests.test_like.TestLikesCommand" name="test_like_local" time="0.001" /><testcase classname="tests.test_like.TestLikesCommand" name="test_likes_remote" time="0.001" /><testcase classname="tests.test_likes.TestLikesCommand" name="test_likes_local" time="0.002"><failure message="AssertionError: 'https://social.example/users/another/likes/1' not found in '&lt;rich.table.Table object at 0x1065b47d0&gt;\n'">self = &lt;test_likes.TestLikesCommand testMethod=test_likes_local&gt;
+mock_requests_post = &lt;MagicMock name='get' id='4407272384'&gt;
+mock_requests_get = &lt;MagicMock name='post' id='4407272720'&gt;
+mock_file = &lt;MagicMock name='open' id='4407273056'&gt;
+
+    @patch("builtins.open", new_callable=mock_open, read_data=TOKEN_FILE_DATA)
+    @patch("requests_oauthlib.OAuth2Session.post", side_effect=mock_oauth_post)
+    @patch("requests_oauthlib.OAuth2Session.get", side_effect=mock_oauth_get)
+    def test_likes_local(self, mock_requests_post, mock_requests_get, mock_file):
+        run_command(["likes", OBJECT_ID], {'LANG': 'en_CA.UTF-8', 'HOME': '/home/notauser'})
+    
+        # Assertions
+        self.assertGreaterEqual(mock_requests_get.call_count, 1)
+        self.assertGreaterEqual(mock_requests_post.call_count, 1)
+        output = sys.stdout.getvalue()
+&gt;       self.assertIn(LIKE_1_ID, output)
+E       AssertionError: 'https://social.example/users/another/likes/1' not found in '&lt;rich.table.Table object at 0x1065b47d0&gt;\n'
+
+tests/test_likes.py:198: AssertionError</failure></testcase><testcase classname="tests.test_likes.TestLikesCommand" name="test_likes_remote" time="0.002"><failure message="AssertionError: 'https://social.example/users/andanother/likes/2' not found in '&lt;rich.table.Table object at 0x10652a990&gt;\n'">self = &lt;test_likes.TestLikesCommand testMethod=test_likes_remote&gt;
+mock_requests_post = &lt;MagicMock name='get' id='4407276416'&gt;
+mock_requests_get = &lt;MagicMock name='post' id='4407794656'&gt;
+mock_file = &lt;MagicMock name='open' id='4407794992'&gt;
+
+    @patch("builtins.open", new_callable=mock_open, read_data=TOKEN_FILE_DATA)
+    @patch("requests_oauthlib.OAuth2Session.post", side_effect=mock_oauth_post)
+    @patch("requests_oauthlib.OAuth2Session.get", side_effect=mock_oauth_get)
+    def test_likes_remote(self, mock_requests_post, mock_requests_get, mock_file):
+        run_command(["likes", REMOTE_OBJECT_ID], {'LANG': 'en_CA.UTF-8', 'HOME': '/home/notauser'})
+    
+        # Assertions
+        self.assertGreaterEqual(mock_requests_get.call_count, 1)
+        self.assertGreaterEqual(mock_requests_post.call_count, 1)
+        output = sys.stdout.getvalue()
+        self.assertNotIn(LIKE_1_ID, output)
+        self.assertNotIn(LIKE_3_ID, output)
+        self.assertNotIn(LIKE_5_ID, output)
+&gt;       self.assertIn(LIKE_2_ID, output)
+E       AssertionError: 'https://social.example/users/andanother/likes/2' not found in '&lt;rich.table.Table object at 0x10652a990&gt;\n'
+
+tests/test_likes.py:217: AssertionError</failure></testcase><testcase classname="tests.test_outbox.TestOutboxCommand" name="test_outbox" time="0.002" /><testcase classname="tests.test_pending_followers.TestPendingFollowersCommand" name="test_pending_followers" time="0.002"><failure message="AssertionError: 'other2@social.example' not found in '&lt;rich.table.Table object at 0x10652a990&gt;\n'">self = &lt;test_pending_followers.TestPendingFollowersCommand testMethod=test_pending_followers&gt;
+mock_requests_post = &lt;MagicMock name='get' id='4408399856'&gt;
+mock_requests_get = &lt;MagicMock name='post' id='4408404896'&gt;
+mock_file = &lt;MagicMock name='open' id='4408405232'&gt;
+
+    @patch("builtins.open", new_callable=mock_open, read_data=TOKEN_FILE_DATA)
+    @patch("requests_oauthlib.OAuth2Session.post", side_effect=mock_oauth_post)
+    @patch("requests_oauthlib.OAuth2Session.get", side_effect=mock_oauth_get)
+    def test_pending_followers(self, mock_requests_post, mock_requests_get, mock_file):
+        run_command(["pending", "followers"], {'LANG': 'en_CA.UTF-8', 'HOME': '/home/notauser'})
+    
+        # Assertions
+        self.assertGreaterEqual(mock_requests_get.call_count, 1)
+        self.assertGreaterEqual(mock_requests_post.call_count, 1)
+&gt;       self.assertIn("other2@social.example", sys.stdout.getvalue())
+E       AssertionError: 'other2@social.example' not found in '&lt;rich.table.Table object at 0x10652a990&gt;\n'
+
+tests/test_pending_followers.py:130: AssertionError</failure></testcase><testcase classname="tests.test_pending_following.TestPendingFollowingCommand" name="test_pending_following" time="0.002"><failure message="AssertionError: 'other2@social.example' not found in '&lt;rich.table.Table object at 0x1065296d0&gt;\n'">self = &lt;test_pending_following.TestPendingFollowingCommand testMethod=test_pending_following&gt;
+mock_requests_post = &lt;MagicMock name='get' id='4408408592'&gt;
+mock_requests_get = &lt;MagicMock name='post' id='4408891376'&gt;
+mock_file = &lt;MagicMock name='open' id='4408891712'&gt;
+
+    @patch("builtins.open", new_callable=mock_open, read_data=TOKEN_FILE_DATA)
+    @patch("requests_oauthlib.OAuth2Session.post", side_effect=mock_oauth_post)
+    @patch("requests_oauthlib.OAuth2Session.get", side_effect=mock_oauth_get)
+    def test_pending_following(self, mock_requests_post, mock_requests_get, mock_file):
+        run_command(["pending", "following"], {'LANG': 'en_CA.UTF-8', 'HOME': '/home/notauser'})
+    
+        # Assertions
+        self.assertGreaterEqual(mock_requests_get.call_count, 1)
+        self.assertGreaterEqual(mock_requests_post.call_count, 1)
+&gt;       self.assertIn("other2@social.example", sys.stdout.getvalue())
+E       AssertionError: 'other2@social.example' not found in '&lt;rich.table.Table object at 0x1065296d0&gt;\n'
+
+tests/test_pending_following.py:130: AssertionError</failure></testcase><testcase classname="tests.test_reject_follower.TestRejectFollowerCommand" name="test_reject_follower_local" time="0.002" /><testcase classname="tests.test_reject_follower.TestRejectFollowerCommand" name="test_reject_follower_remote" time="0.001" /><testcase classname="tests.test_remove.TestRemove" name="test_remove" time="0.001" /><testcase classname="tests.test_replies.TestRepliesCommand" name="test_replies_local" time="0.011"><failure message="AssertionError: 'https://social.example/users/another/objects/1' not found in &quot;                                    Replies                                     \n┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓\n┃ id                ┃ attributedTo      ┃ content          ┃ published         ┃\n┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━┩\n│ https://social.e… │ another@social.e… │ You're doing it  │ 2020-01-01T00:00… │\n│                   │                   │ wrong.           │                   │\n│ https://social.e… │ evanp@social.exa… │ You're doing it  │ 2020-01-01T00:00… │\n│                   │                   │ wrong.           │                   │\n│ https://remote.e… │ other@remote.exa… │ You're doing it  │ 2020-01-01T00:00… │\n│                   │                   │ wrong.           │                   │\n└───────────────────┴───────────────────┴──────────────────┴───────────────────┘\n&quot;">self = &lt;test_replies.TestRepliesCommand testMethod=test_replies_local&gt;
+mock_requests_post = &lt;MagicMock name='get' id='4409908528'&gt;
+mock_requests_get = &lt;MagicMock name='post' id='4409911552'&gt;
+mock_file = &lt;MagicMock name='open' id='4409911888'&gt;
+
+    @patch("builtins.open", new_callable=mock_open, read_data=TOKEN_FILE_DATA)
+    @patch("requests_oauthlib.OAuth2Session.post", side_effect=mock_oauth_post)
+    @patch("requests_oauthlib.OAuth2Session.get", side_effect=mock_oauth_get)
+    def test_replies_local(self, mock_requests_post, mock_requests_get, mock_file):
+        run_command(["replies", OBJECT_ID], {'LANG': 'en_CA.UTF-8', 'HOME': '/home/notauser'})
+    
+        # Assertions
+        self.assertGreaterEqual(mock_requests_get.call_count, 1)
+        self.assertGreaterEqual(mock_requests_post.call_count, 1)
+        output = sys.stdout.getvalue()
+&gt;       self.assertIn(REPLY_1_ID, output)
+E       AssertionError: 'https://social.example/users/another/objects/1' not found in "                                    Replies                                     \n┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓\n┃ id                ┃ attributedTo      ┃ content          ┃ published         ┃\n┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━┩\n│ https://social.e… │ another@social.e… │ You're doing it  │ 2020-01-01T00:00… │\n│                   │                   │ wrong.           │                   │\n│ https://social.e… │ evanp@social.exa… │ You're doing it  │ 2020-01-01T00:00… │\n│                   │                   │ wrong.           │                   │\n│ https://remote.e… │ other@remote.exa… │ You're doing it  │ 2020-01-01T00:00… │\n│                   │                   │ wrong.           │                   │\n└───────────────────┴───────────────────┴──────────────────┴───────────────────┘\n"
+
+tests/test_replies.py:215: AssertionError</failure></testcase><testcase classname="tests.test_replies.TestRepliesCommand" name="test_replies_remote" time="0.003"><failure message="AssertionError: 'https://social.example/users/andanother/objects/2' not found in &quot;                                    Replies                                     \n┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓\n┃ id                ┃ attributedTo      ┃ content          ┃ published         ┃\n┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━┩\n│ https://social.e… │ andanother@socia… │ You're doing it  │ 2020-01-01T00:00… │\n│                   │                   │ wrong.           │                   │\n│ https://social.e… │ other@social.exa… │ You're doing it  │ 2020-01-01T00:00… │\n│                   │                   │ wrong.           │                   │\n└───────────────────┴───────────────────┴──────────────────┴───────────────────┘\n&quot;">self = &lt;test_replies.TestRepliesCommand testMethod=test_replies_remote&gt;
+mock_requests_post = &lt;MagicMock name='get' id='4409376256'&gt;
+mock_requests_get = &lt;MagicMock name='post' id='4409366512'&gt;
+mock_file = &lt;MagicMock name='open' id='4409365840'&gt;
+
+    @patch("builtins.open", new_callable=mock_open, read_data=TOKEN_FILE_DATA)
+    @patch("requests_oauthlib.OAuth2Session.post", side_effect=mock_oauth_post)
+    @patch("requests_oauthlib.OAuth2Session.get", side_effect=mock_oauth_get)
+    def test_replies_remote(self, mock_requests_post, mock_requests_get, mock_file):
+        run_command(["replies", REMOTE_OBJECT_ID], {'LANG':  'en_CA.UTF-8', 'HOME': '/home/notauser'})
+    
+        # Assertions
+        self.assertGreaterEqual(mock_requests_get.call_count, 1)
+        self.assertGreaterEqual(mock_requests_post.call_count, 1)
+        output = sys.stdout.getvalue()
+        self.assertNotIn(REPLY_1_ID, output)
+        self.assertNotIn(REPLY_3_ID, output)
+        self.assertNotIn(REPLY_5_ID, output)
+&gt;       self.assertIn(REPLY_2_ID, output)
+E       AssertionError: 'https://social.example/users/andanother/objects/2' not found in "                                    Replies                                     \n┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓\n┃ id                ┃ attributedTo      ┃ content          ┃ published         ┃\n┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━┩\n│ https://social.e… │ andanother@socia… │ You're doing it  │ 2020-01-01T00:00… │\n│                   │                   │ wrong.           │                   │\n│ https://social.e… │ other@social.exa… │ You're doing it  │ 2020-01-01T00:00… │\n│                   │                   │ wrong.           │                   │\n└───────────────────┴───────────────────┴──────────────────┴───────────────────┘\n"
+
+tests/test_replies.py:236: AssertionError</failure></testcase><testcase classname="tests.test_share.TestSharesCommand" name="test_share_local" time="0.001" /><testcase classname="tests.test_share.TestSharesCommand" name="test_shares_remote" time="0.001" /><testcase classname="tests.test_shares.TestLikesCommand" name="test_shares_local" time="0.003"><failure message="AssertionError: 'https://social.example/users/another/shares/1' not found in '                               Shares Information                               \n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┓\n┃                           id ┃ actor                  ┃ published            ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━┩\n│ https://social.example/user… │ another@social.example │ 2020-01-01T00:00:00Z │\n│ https://social.example/user… │ evanp@social.example   │ 2020-01-01T00:00:00Z │\n│ https://remote.example/user… │ other@remote.example   │ 2020-01-01T00:00:00Z │\n└──────────────────────────────┴────────────────────────┴──────────────────────┘\n'">self = &lt;test_shares.TestLikesCommand testMethod=test_shares_local&gt;
+mock_requests_post = &lt;MagicMock name='get' id='4408407248'&gt;
+mock_requests_get = &lt;MagicMock name='post' id='4408406912'&gt;
+mock_file = &lt;MagicMock name='open' id='4408406576'&gt;
+
+    @patch("builtins.open", new_callable=mock_open, read_data=TOKEN_FILE_DATA)
+    @patch("requests_oauthlib.OAuth2Session.post", side_effect=mock_oauth_post)
+    @patch("requests_oauthlib.OAuth2Session.get", side_effect=mock_oauth_get)
+    def test_shares_local(self, mock_requests_post, mock_requests_get, mock_file):
+        run_command(["shares", OBJECT_ID], {'LANG': 'en_CA.UTF-8', 'HOME': '/home/notauser'})
+    
+        # Assertions
+        self.assertGreaterEqual(mock_requests_get.call_count, 1)
+        self.assertGreaterEqual(mock_requests_post.call_count, 1)
+        output = sys.stdout.getvalue()
+&gt;       self.assertIn(SHARE_1_ID, output)
+E       AssertionError: 'https://social.example/users/another/shares/1' not found in '                               Shares Information                               \n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┓\n┃                           id ┃ actor                  ┃ published            ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━┩\n│ https://social.example/user… │ another@social.example │ 2020-01-01T00:00:00Z │\n│ https://social.example/user… │ evanp@social.example   │ 2020-01-01T00:00:00Z │\n│ https://remote.example/user… │ other@remote.example   │ 2020-01-01T00:00:00Z │\n└──────────────────────────────┴────────────────────────┴──────────────────────┘\n'
+
+tests/test_shares.py:198: AssertionError</failure></testcase><testcase classname="tests.test_shares.TestLikesCommand" name="test_shares_remote" time="0.003"><failure message="AssertionError: 'https://social.example/users/andanother/shares/2' not found in '                               Shares Information                               \n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┓\n┃                        id ┃ actor                     ┃ published            ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━┩\n│ https://social.example/u… │ andanother@social.example │ 2020-01-01T00:00:00Z │\n│ https://social.example/u… │ other@social.example      │ 2020-01-01T00:00:00Z │\n└───────────────────────────┴───────────────────────────┴──────────────────────┘\n'">self = &lt;test_shares.TestLikesCommand testMethod=test_shares_remote&gt;
+mock_requests_post = &lt;MagicMock name='get' id='4408402208'&gt;
+mock_requests_get = &lt;MagicMock name='post' id='4406606016'&gt;
+mock_file = &lt;MagicMock name='open' id='4406605680'&gt;
+
+    @patch("builtins.open", new_callable=mock_open, read_data=TOKEN_FILE_DATA)
+    @patch("requests_oauthlib.OAuth2Session.post", side_effect=mock_oauth_post)
+    @patch("requests_oauthlib.OAuth2Session.get", side_effect=mock_oauth_get)
+    def test_shares_remote(self, mock_requests_post, mock_requests_get, mock_file):
+        run_command(["shares", REMOTE_OBJECT_ID], {'LANG': 'en_CA.UTF-8', 'HOME': '/home/notauser'})
+    
+        # Assertions
+        self.assertGreaterEqual(mock_requests_get.call_count, 1)
+        self.assertGreaterEqual(mock_requests_post.call_count, 1)
+        output = sys.stdout.getvalue()
+        self.assertNotIn(SHARE_1_ID, output)
+        self.assertNotIn(SHARE_3_ID, output)
+        self.assertNotIn(SHARE_5_ID, output)
+&gt;       self.assertIn(SHARE_2_ID, output)
+E       AssertionError: 'https://social.example/users/andanother/shares/2' not found in '                               Shares Information                               \n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┓\n┃                        id ┃ actor                     ┃ published            ┃\n┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━┩\n│ https://social.example/u… │ andanother@social.example │ 2020-01-01T00:00:00Z │\n│ https://social.example/u… │ other@social.example      │ 2020-01-01T00:00:00Z │\n└───────────────────────────┴───────────────────────────┴──────────────────────┘\n'
+
+tests/test_shares.py:217: AssertionError</failure></testcase><testcase classname="tests.test_undo_follow.TestUndoFollowCommand" name="test_undo_follow_local" time="0.002" /><testcase classname="tests.test_undo_follow.TestUndoFollowCommand" name="test_undo_follow_pending_local" time="0.001" /><testcase classname="tests.test_undo_follow.TestUndoFollowCommand" name="test_undo_follow_pending_remote" time="0.001" /><testcase classname="tests.test_undo_follow.TestUndoFollowCommand" name="test_undo_follow_remote" time="0.002" /><testcase classname="tests.test_undo_like.TestUndoLikeCommand" name="test_undo_like_local" time="0.002" /><testcase classname="tests.test_undo_like.TestUndoLikeCommand" name="test_undo_like_remote" time="0.002" /><testcase classname="tests.test_undo_like.TestUndoLikeCommand" name="test_undo_not_liked" time="0.001" /><testcase classname="tests.test_undo_share.TestUndoShareCommand" name="test_undo_not_shared" time="0.001" /><testcase classname="tests.test_undo_share.TestUndoShareCommand" name="test_undo_share_local" time="0.002" /><testcase classname="tests.test_undo_share.TestUndoShareCommand" name="test_undo_share_remote" time="0.006" /><testcase classname="tests.test_update_note.TestUpdateNoteCommand" name="test_update_note" time="0.002" /><testcase classname="tests.test_version.TestVersionCommand" name="test_version" time="0.001" /><testcase classname="tests.test_whoami.TestWhoamiCommand" name="test_whoami" time="0.001" /></testsuite></testsuites>

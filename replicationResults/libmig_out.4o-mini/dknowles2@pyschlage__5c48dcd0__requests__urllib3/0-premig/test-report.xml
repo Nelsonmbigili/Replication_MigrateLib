@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="58" time="0.366" timestamp="2026-03-04T14:21:51.746733+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_api" name="test_locks" time="0.003" /><testcase classname="tests.test_api" name="test_users" time="0.002" /><testcase classname="tests.test_auth" name="test_authenticate" time="0.001" /><testcase classname="tests.test_auth" name="test_request" time="0.001" /><testcase classname="tests.test_auth" name="test_request_not_authorized" time="0.001" /><testcase classname="tests.test_auth" name="test_request_unknown_error" time="0.003" /><testcase classname="tests.test_auth" name="test_user_id" time="0.001" /><testcase classname="tests.test_auth" name="test_user_id_is_cached" time="0.001" /><testcase classname="tests.test_code.TestAccessCode" name="test_to_from_json" time="0.002" /><testcase classname="tests.test_code.TestAccessCode" name="test_to_from_json_recurring_schedule" time="0.002" /><testcase classname="tests.test_code.TestAccessCode" name="test_to_from_json_temporary_schedule" time="0.003"><failure message="AssertionError: assert AccessCode(na...isabled=False) == AccessCode(na...isabled=False)&#10;  &#10;  Omitting 10 identical items, use -vv to show&#10;  Differing attributes:&#10;  ['schedule']&#10;  &#10;  Drill down into differing attribute schedule:&#10;    schedule: TemporarySchedule(start=datetime.datetime(2022, 12, 25, 12, 30), end=datetime.datetime(2022, 12, 25, 13, 0)) != TemporarySchedule(start=datetime.datetime(2022, 12, 25, 8, 30), end=datetime.datetime(2022, 12, 25, 9, 0))...&#10;  &#10;  ...Full output truncated (9 lines hidden), use '-vv' to show">self = &lt;tests.test_code.TestAccessCode object at 0x10655e780&gt;
+mock_auth = &lt;MagicMock spec_set='Auth' id='4404899392'&gt;
+access_code_json = {'accessCode': 123, 'accessCodeLength': 4, 'accesscodeId': '__access_code_uuid__', 'activationSecs': 0, ...}
+wifi_device = Device(device_id='__wifi_uuid__', device_type='be489wifi')
+
+    def test_to_from_json_temporary_schedule(
+        self, mock_auth: Mock, access_code_json: dict[str, Any], wifi_device: Device
+    ):
+        access_code_id = "__access_code_uuid__"
+        sched = TemporarySchedule(
+            start=datetime(2022, 12, 25, 8, 30, 0),
+            end=datetime(2022, 12, 25, 9, 0, 0),
+        )
+        json = deepcopy(access_code_json)
+        json["activationSecs"] = 1671957000
+        json["expirationSecs"] = 1671958800
+        code = AccessCode(
+            _auth=mock_auth,
+            _json=json,
+            _device=wifi_device,
+            name="Friendly name",
+            code="0123",
+            schedule=sched,
+            device_id=wifi_device.device_id,
+            access_code_id=access_code_id,
+        )
+&gt;       assert AccessCode.from_json(mock_auth, wifi_device, json) == code
+E       AssertionError: assert AccessCode(na...isabled=False) == AccessCode(na...isabled=False)
+E         
+E         Omitting 10 identical items, use -vv to show
+E         Differing attributes:
+E         ['schedule']
+E         
+E         Drill down into differing attribute schedule:
+E           schedule: TemporarySchedule(start=datetime.datetime(2022, 12, 25, 12, 30), end=datetime.datetime(2022, 12, 25, 13, 0)) != TemporarySchedule(start=datetime.datetime(2022, 12, 25, 8, 30), end=datetime.datetime(2022, 12, 25, 9, 0))...
+E         
+E         ...Full output truncated (9 lines hidden), use '-vv' to show
+
+tests/test_code.py:75: AssertionError</failure></testcase><testcase classname="tests.test_code.TestAccessCode" name="test_save" time="0.011" /><testcase classname="tests.test_code.TestAccessCode" name="test_delete" time="0.007" /><testcase classname="tests.test_common" name="test_pickle_unpickle" time="0.001" /><testcase classname="tests.test_common" name="test_redact_allow_asterisk" time="0.000" /><testcase classname="tests.test_common" name="test_redact_allow_all" time="0.000" /><testcase classname="tests.test_common" name="test_redact_all" time="0.000" /><testcase classname="tests.test_common" name="test_redact_partial" time="0.000" /><testcase classname="tests.test_lock.TestLock" name="test_from_json" time="0.003" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_cat_optional" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_no_connected" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_is_jammed" time="0.006" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_wifi_lock_unavailable" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_no_model_name" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_diagnostics" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_refresh" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_send_command_unauthenticated" time="0.000" /><testcase classname="tests.test_lock.TestLock" name="test_lock_wifi" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_unlock_wifi" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_lock_ble" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_unlock_ble" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_logs" time="0.003" /><testcase classname="tests.test_lock.TestLock" name="test_refresh_access_codes" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_add_access_code" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_set_beeper" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_set_lock_and_leave" time="0.002" /><testcase classname="tests.test_lock.TestLock" name="test_set_auto_lock_time" time="0.002" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_true" time="0.002" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_true_unsorted" time="0.002" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_false" time="0.002" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_fetches_logs" time="0.005" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_fetches_logs_no_logs" time="0.002" /><testcase classname="tests.test_lock.TestChangedBy" name="test_thumbturn" time="0.002" /><testcase classname="tests.test_lock.TestChangedBy" name="test_one_touch_locking" time="0.002" /><testcase classname="tests.test_lock.TestChangedBy" name="test_nfc_device" time="0.002" /><testcase classname="tests.test_lock.TestChangedBy" name="test_nfc_device_no_uuid" time="0.002" /><testcase classname="tests.test_lock.TestChangedBy" name="test_keypad" time="0.002" /><testcase classname="tests.test_lock.TestChangedBy" name="test_mobile_device" time="0.002" /><testcase classname="tests.test_lock.TestChangedBy" name="test_unknown" time="0.002" /><testcase classname="tests.test_lock.TestChangedBy" name="test_no_metadata" time="0.002" /><testcase classname="tests.test_log.TestFromJson" name="test_unlocked_by_thumbturn" time="0.000"><failure message="AssertionError: assert LockLog(creat..._code_id=None) == LockLog(creat..._code_id=None)&#10;  &#10;  Omitting 3 identical items, use -vv to show&#10;  Differing attributes:&#10;  ['created_at']&#10;  &#10;  Drill down into differing attribute created_at:&#10;    created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)">self = &lt;tests.test_log.TestFromJson object at 0x106556490&gt;
+log_json = {'createdAt': '2023-03-01T17:26:47.366Z', 'deviceId': '__device_uuid__', 'logId': '__log_uuid__', 'message': {'accessorUuid': 'ffffffff-ffff-ffff-ffff-ffffffffffff', 'action': 2, 'clientId': None, 'eventCode': 4, ...}, ...}
+
+    def test_unlocked_by_thumbturn(self, log_json):
+        log_json["message"]["eventCode"] = 4
+        lock_log = LockLog(
+            created_at=datetime(2023, 3, 1, 17, 26, 47, 366000),
+            accessor_id=None,
+            access_code_id=None,
+            message="Unlocked by thumbturn",
+        )
+&gt;       assert LockLog.from_json(log_json) == lock_log
+E       AssertionError: assert LockLog(creat..._code_id=None) == LockLog(creat..._code_id=None)
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing attributes:
+E         ['created_at']
+E         
+E         Drill down into differing attribute created_at:
+E           created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)
+
+tests/test_log.py:17: AssertionError</failure></testcase><testcase classname="tests.test_log.TestFromJson" name="test_unlocked_by_keypad" time="0.000"><failure message="AssertionError: assert LockLog(creat...ss-code-id__') == LockLog(creat...ss-code-id__')&#10;  &#10;  Omitting 3 identical items, use -vv to show&#10;  Differing attributes:&#10;  ['created_at']&#10;  &#10;  Drill down into differing attribute created_at:&#10;    created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)">self = &lt;tests.test_log.TestFromJson object at 0x1065565d0&gt;
+log_json = {'createdAt': '2023-03-01T17:26:47.366Z', 'deviceId': '__device_uuid__', 'logId': '__log_uuid__', 'message': {'accessorUuid': 'ffffffff-ffff-ffff-ffff-ffffffffffff', 'action': 2, 'clientId': None, 'eventCode': 2, ...}, ...}
+
+    def test_unlocked_by_keypad(self, log_json):
+        log_json["message"].update(
+            {
+                "eventCode": 2,
+                "keypadUuid": "__access-code-id__",
+            }
+        )
+        lock_log = LockLog(
+            created_at=datetime(2023, 3, 1, 17, 26, 47, 366000),
+            accessor_id=None,
+            access_code_id="__access-code-id__",
+            message="Unlocked by keypad",
+        )
+&gt;       assert LockLog.from_json(log_json) == lock_log
+E       AssertionError: assert LockLog(creat...ss-code-id__') == LockLog(creat...ss-code-id__')
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing attributes:
+E         ['created_at']
+E         
+E         Drill down into differing attribute created_at:
+E           created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)
+
+tests/test_log.py:32: AssertionError</failure></testcase><testcase classname="tests.test_log.TestFromJson" name="test_unlocked_by_mobile_device" time="0.000"><failure message="AssertionError: assert LockLog(creat..._code_id=None) == LockLog(creat..._code_id=None)&#10;  &#10;  Omitting 3 identical items, use -vv to show&#10;  Differing attributes:&#10;  ['created_at']&#10;  &#10;  Drill down into differing attribute created_at:&#10;    created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)">self = &lt;tests.test_log.TestFromJson object at 0x10655f6f0&gt;
+log_json = {'createdAt': '2023-03-01T17:26:47.366Z', 'deviceId': '__device_uuid__', 'logId': '__log_uuid__', 'message': {'accessorUuid': '__user-id__', 'action': 2, 'clientId': None, 'eventCode': 7, ...}, ...}
+
+    def test_unlocked_by_mobile_device(self, log_json):
+        log_json["message"].update(
+            {
+                "eventCode": 7,
+                "accessorUuid": "__user-id__",
+            }
+        )
+        lock_log = LockLog(
+            created_at=datetime(2023, 3, 1, 17, 26, 47, 366000),
+            accessor_id="__user-id__",
+            access_code_id=None,
+            message="Unlocked by mobile device",
+        )
+&gt;       assert LockLog.from_json(log_json) == lock_log
+E       AssertionError: assert LockLog(creat..._code_id=None) == LockLog(creat..._code_id=None)
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing attributes:
+E         ['created_at']
+E         
+E         Drill down into differing attribute created_at:
+E           created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)
+
+tests/test_log.py:47: AssertionError</failure></testcase><testcase classname="tests.test_notification" name="test_from_json" time="0.002" /><testcase classname="tests.test_notification" name="test_save" time="0.000" /><testcase classname="tests.test_notification" name="test_delete" time="0.002" /><testcase classname="tests.test_user" name="test_from_json" time="0.000" /><testcase classname="tests.test_user" name="test_from_json_no_name" time="0.000" /></testsuite></testsuites>

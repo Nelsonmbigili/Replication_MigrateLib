@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="14" time="3.983" timestamp="2026-03-04T21:02:06.028478+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_downlaoder.Test_downloader" name="test_download_url" time="0.025"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">url = 'https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_1mb.mp4'
+dest = '.test-data/test_dl_23.mp4', sleep_interval = 0
+
+    def download_url(url: str, dest: str, sleep_interval: int):
+        """Download URL to destionation path.
+    
+        Args:
+            url (str): url to download
+            dest (str): absolute path to destination
+    
+        Raises:
+            response.raise_for_status: if response is 4** or 50*
+            FileExistsError: if file is already downloaded
+        """
+        if len(os.path.dirname(dest)) &gt; 0:
+            os.makedirs(os.path.dirname(dest), exist_ok=True)
+    
+        """Rate limiting."""
+        time.sleep(sleep_interval)
+    
+        try:
+&gt;           response = treq.get(url, stream=True, timeout=10)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+snapchat_dl/downloader.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/treq/api.py:23: in get
+    return _client(kwargs).get(url, headers=headers, _stacklevel=4, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;treq.client.HTTPClient object at 0x106f11160&gt;
+url = 'https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_1mb.mp4'
+kwargs = {'_stacklevel': 4, 'headers': None, 'stream': True, 'timeout': 10}
+
+    def get(self, url: _URLType, **kwargs: Any) -&gt; "Deferred[_Response]":
+        """
+        See :func:`treq.get()`.
+        """
+        kwargs.setdefault("_stacklevel", 3)
+&gt;       return self.request("GET", url, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: HTTPClient.request() got an unexpected keyword argument 'stream'
+
+.venv/lib/python3.14/site-packages/treq/client.py:151: TypeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_downlaoder.Test_downloader testMethod=test_download_url&gt;
+
+    def test_download_url(self):
+        """Test snapchat_dl download_url."""
+&gt;       download_url(self.test_url, ".test-data/test_dl_23.mp4", sleep_interval=0)
+
+tests/test_downlaoder.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+url = 'https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_1mb.mp4'
+dest = '.test-data/test_dl_23.mp4', sleep_interval = 0
+
+    def download_url(url: str, dest: str, sleep_interval: int):
+        """Download URL to destionation path.
+    
+        Args:
+            url (str): url to download
+            dest (str): absolute path to destination
+    
+        Raises:
+            response.raise_for_status: if response is 4** or 50*
+            FileExistsError: if file is already downloaded
+        """
+        if len(os.path.dirname(dest)) &gt; 0:
+            os.makedirs(os.path.dirname(dest), exist_ok=True)
+    
+        """Rate limiting."""
+        time.sleep(sleep_interval)
+    
+        try:
+            response = treq.get(url, stream=True, timeout=10)
+&gt;       except treq.exceptions.ConnectTimeout:
+               ^^^^^^^^^^^^^^^
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+snapchat_dl/downloader.py:28: AttributeError</failure></testcase><testcase classname="tests.test_downlaoder.Test_downloader" name="test_download_url_raise" time="0.001" /><testcase classname="tests.test_downlaoder.Test_downloader" name="test_empty_download" time="0.005"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">url = 'https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_1mb.mp4'
+dest = '.test-data/test_dl_23.mp4', sleep_interval = 0
+
+    def download_url(url: str, dest: str, sleep_interval: int):
+        """Download URL to destionation path.
+    
+        Args:
+            url (str): url to download
+            dest (str): absolute path to destination
+    
+        Raises:
+            response.raise_for_status: if response is 4** or 50*
+            FileExistsError: if file is already downloaded
+        """
+        if len(os.path.dirname(dest)) &gt; 0:
+            os.makedirs(os.path.dirname(dest), exist_ok=True)
+    
+        """Rate limiting."""
+        time.sleep(sleep_interval)
+    
+        try:
+&gt;           response = treq.get(url, stream=True, timeout=10)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+snapchat_dl/downloader.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/treq/api.py:23: in get
+    return _client(kwargs).get(url, headers=headers, _stacklevel=4, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;treq.client.HTTPClient object at 0x106dc2e90&gt;
+url = 'https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_1mb.mp4'
+kwargs = {'_stacklevel': 4, 'headers': None, 'stream': True, 'timeout': 10}
+
+    def get(self, url: _URLType, **kwargs: Any) -&gt; "Deferred[_Response]":
+        """
+        See :func:`treq.get()`.
+        """
+        kwargs.setdefault("_stacklevel", 3)
+&gt;       return self.request("GET", url, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: HTTPClient.request() got an unexpected keyword argument 'stream'
+
+.venv/lib/python3.14/site-packages/treq/client.py:151: TypeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_downlaoder.Test_downloader testMethod=test_empty_download&gt;
+
+    def test_empty_download(self):
+        """Test snapchat_dl download_url."""
+        open(".test-data/test_dl_23.mp4", "w").close()
+&gt;       download_url(self.test_url, ".test-data/test_dl_23.mp4", sleep_interval=0)
+
+tests/test_downlaoder.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+url = 'https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_1mb.mp4'
+dest = '.test-data/test_dl_23.mp4', sleep_interval = 0
+
+    def download_url(url: str, dest: str, sleep_interval: int):
+        """Download URL to destionation path.
+    
+        Args:
+            url (str): url to download
+            dest (str): absolute path to destination
+    
+        Raises:
+            response.raise_for_status: if response is 4** or 50*
+            FileExistsError: if file is already downloaded
+        """
+        if len(os.path.dirname(dest)) &gt; 0:
+            os.makedirs(os.path.dirname(dest), exist_ok=True)
+    
+        """Rate limiting."""
+        time.sleep(sleep_interval)
+    
+        try:
+            response = treq.get(url, stream=True, timeout=10)
+&gt;       except treq.exceptions.ConnectTimeout:
+               ^^^^^^^^^^^^^^^
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+snapchat_dl/downloader.py:28: AttributeError</failure></testcase><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_api_error" time="0.004" /><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_class_init" time="0.002" /><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_get_stories" time="0.015" /><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_invalid_username" time="0.067"><failure message="AttributeError: 'Deferred' object has no attribute 'text'">self = &lt;tests.test_snapchat_dl.TestSnapchat_dl testMethod=test_invalid_username&gt;
+
+    def test_invalid_username(self):
+        """Test snapchat_dl Stories are not available."""
+        with self.assertRaises(UserNotFoundError):
+&gt;           self.snapchat_dl.download("use=rname")
+
+tests/test_snapchat_dl.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+snapchat_dl/snapchat_dl.py:105: in download
+    stories, snap_user, *_ = self._web_fetch_story(username)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+snapchat_dl/snapchat_dl.py:64: in _web_fetch_story
+    response = self._api_response(username)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _api_response(self, username):
+        web_url = self.endpoint_web.format(username)
+        return treq.get(
+            web_url,
+            headers={
+                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+            },
+&gt;       ).text()
+          ^^^^
+E       AttributeError: 'Deferred' object has no attribute 'text'
+
+snapchat_dl/snapchat_dl.py:50: AttributeError</failure></testcase><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_no_stories" time="0.006" /><testcase classname="tests.test_utils.Test_utils" name="test_search_usernames" time="0.002" /><testcase classname="tests.test_utils.Test_utils" name="test_strf_time" time="0.001" /><testcase classname="tests.test_utils.Test_utils" name="test_use_batch_file" time="0.002" /><testcase classname="tests.test_utils.Test_utils" name="test_use_batch_file_err" time="0.001" /><testcase classname="tests.test_utils.Test_utils" name="test_use_prefix_dir" time="0.002" /><testcase classname="tests.test_utils.Test_utils" name="test_valid_username" time="0.001" /></testsuite></testsuites>

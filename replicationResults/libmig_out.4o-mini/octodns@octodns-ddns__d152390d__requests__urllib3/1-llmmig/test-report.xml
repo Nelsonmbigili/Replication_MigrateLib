@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="7" time="0.217" timestamp="2026-03-05T01:29:08.939726+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_connection_error" time="0.001" /><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_defaults" time="0.002"><failure message="AssertionError: Calls not found.&#10;Expected: [call('GET', 'https://v4.ident.me/'), call('GET', 'https://v6.ident.me/')]&#10;  Actual: [call('GET', 'https://v4.ident.me/', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'}),&#10; call('GET', 'https://v6.ident.me/', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'})]">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_defaults&gt;
+mock = &lt;MagicMock name='request' id='4415183168'&gt;
+
+    @patch('urllib3.PoolManager.request')
+    def test_defaults(self, mock):
+        a_value = '1.2.3.4'
+        aaaa_value = '2001:db8:85a3::8a2e:370:7334'
+        mock.side_effect = [MockResponse(a_value), MockResponse(aaaa_value)]
+    
+        zone = Zone('example.com.', [])
+        DdnsSource('dynamic').populate(zone)
+        records = sorted(list(zone.records))
+        self.assertEqual(2, len(records))
+        a = records[0]
+        self.assertEqual([a_value], a.values)
+        aaaa = records[1]
+        self.assertEqual([aaaa_value], aaaa.values)
+    
+&gt;       mock.assert_has_calls(
+            [call('GET', 'https://v4.ident.me/'), call('GET', 'https://v6.ident.me/')]
+        )
+
+tests/test_octodns_source_ddns.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='request' id='4415183168'&gt;
+calls = [call('GET', 'https://v4.ident.me/'), call('GET', 'https://v6.ident.me/')]
+any_order = False
+
+    def assert_has_calls(self, calls, any_order=False):
+        """assert the mock has been called with the specified calls.
+        The `mock_calls` list is checked for the calls.
+    
+        If `any_order` is False (the default) then the calls must be
+        sequential. There can be extra calls before or after the
+        specified calls.
+    
+        If `any_order` is True then the calls can be in any order, but
+        they must all appear in `mock_calls`."""
+        expected = [self._call_matcher(c) for c in calls]
+        cause = next((e for e in expected if isinstance(e, Exception)), None)
+        all_calls = _CallList(self._call_matcher(c) for c in self.mock_calls)
+        if not any_order:
+            if expected not in all_calls:
+                if cause is None:
+                    problem = 'Calls not found.'
+                else:
+                    problem = ('Error processing expected calls.\n'
+                               'Errors: {}').format(
+                                   [e if isinstance(e, Exception) else None
+                                    for e in expected])
+&gt;               raise AssertionError(
+                    f'{problem}\n'
+                    f'Expected: {_CallList(calls)}\n'
+                    f'  Actual: {safe_repr(self.mock_calls)}'
+                ) from cause
+E               AssertionError: Calls not found.
+E               Expected: [call('GET', 'https://v4.ident.me/'), call('GET', 'https://v6.ident.me/')]
+E                 Actual: [call('GET', 'https://v4.ident.me/', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'}),
+E                call('GET', 'https://v6.ident.me/', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'})]
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1022: AssertionError</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_empty_response" time="0.001" /><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_error" time="0.001"><failure message="TypeError: MockResponse.__init__() got an unexpected keyword argument 'raise_for_status'">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_error&gt;
+mock = &lt;MagicMock name='request' id='4415188880'&gt;
+
+    @patch('urllib3.PoolManager.request')
+    def test_error(self, mock):
+&gt;       mock.side_effect = [MockResponse(raise_for_status='boom', status=500)]
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: MockResponse.__init__() got an unexpected keyword argument 'raise_for_status'
+
+tests/test_octodns_source_ddns.py:47: TypeError</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_types_a" time="0.001"><failure message="AssertionError: Calls not found.&#10;Expected: [call('GET', 'https://v4.ident.me/')]&#10;  Actual: [call('GET', 'https://v4.ident.me/', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'})]">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_types_a&gt;
+mock = &lt;MagicMock name='request' id='4415183504'&gt;
+
+    @patch('urllib3.PoolManager.request')
+    def test_types_a(self, mock):
+        a_value = '1.2.3.4'
+        mock.side_effect = [MockResponse(a_value)]
+    
+        zone = Zone('example.com.', [])
+        DdnsSource('dynamic', types=('A',)).populate(zone)
+        self.assertEqual(1, len(zone.records))
+    
+&gt;       mock.assert_has_calls([call('GET', 'https://v4.ident.me/')])
+
+tests/test_octodns_source_ddns.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='request' id='4415183504'&gt;
+calls = [call('GET', 'https://v4.ident.me/')], any_order = False
+
+    def assert_has_calls(self, calls, any_order=False):
+        """assert the mock has been called with the specified calls.
+        The `mock_calls` list is checked for the calls.
+    
+        If `any_order` is False (the default) then the calls must be
+        sequential. There can be extra calls before or after the
+        specified calls.
+    
+        If `any_order` is True then the calls can be in any order, but
+        they must all appear in `mock_calls`."""
+        expected = [self._call_matcher(c) for c in calls]
+        cause = next((e for e in expected if isinstance(e, Exception)), None)
+        all_calls = _CallList(self._call_matcher(c) for c in self.mock_calls)
+        if not any_order:
+            if expected not in all_calls:
+                if cause is None:
+                    problem = 'Calls not found.'
+                else:
+                    problem = ('Error processing expected calls.\n'
+                               'Errors: {}').format(
+                                   [e if isinstance(e, Exception) else None
+                                    for e in expected])
+&gt;               raise AssertionError(
+                    f'{problem}\n'
+                    f'Expected: {_CallList(calls)}\n'
+                    f'  Actual: {safe_repr(self.mock_calls)}'
+                ) from cause
+E               AssertionError: Calls not found.
+E               Expected: [call('GET', 'https://v4.ident.me/')]
+E                 Actual: [call('GET', 'https://v4.ident.me/', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'})]
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1022: AssertionError</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_types_aaaa" time="0.001"><failure message="AssertionError: Calls not found.&#10;Expected: [call('GET', 'https://v6.ident.me/')]&#10;  Actual: [call('GET', 'https://v6.ident.me/', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'})]">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_types_aaaa&gt;
+mock = &lt;MagicMock name='request' id='4415184176'&gt;
+
+    @patch('urllib3.PoolManager.request')
+    def test_types_aaaa(self, mock):
+        aaaa_value = '2001:db8:85a3::8a2e:370:7334'
+        mock.side_effect = [MockResponse(aaaa_value)]
+    
+        zone = Zone('example.com.', [])
+        DdnsSource('dynamic', types=('AAAA',)).populate(zone)
+        self.assertEqual(1, len(zone.records))
+    
+&gt;       mock.assert_has_calls([call('GET', 'https://v6.ident.me/')])
+
+tests/test_octodns_source_ddns.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='request' id='4415184176'&gt;
+calls = [call('GET', 'https://v6.ident.me/')], any_order = False
+
+    def assert_has_calls(self, calls, any_order=False):
+        """assert the mock has been called with the specified calls.
+        The `mock_calls` list is checked for the calls.
+    
+        If `any_order` is False (the default) then the calls must be
+        sequential. There can be extra calls before or after the
+        specified calls.
+    
+        If `any_order` is True then the calls can be in any order, but
+        they must all appear in `mock_calls`."""
+        expected = [self._call_matcher(c) for c in calls]
+        cause = next((e for e in expected if isinstance(e, Exception)), None)
+        all_calls = _CallList(self._call_matcher(c) for c in self.mock_calls)
+        if not any_order:
+            if expected not in all_calls:
+                if cause is None:
+                    problem = 'Calls not found.'
+                else:
+                    problem = ('Error processing expected calls.\n'
+                               'Errors: {}').format(
+                                   [e if isinstance(e, Exception) else None
+                                    for e in expected])
+&gt;               raise AssertionError(
+                    f'{problem}\n'
+                    f'Expected: {_CallList(calls)}\n'
+                    f'  Actual: {safe_repr(self.mock_calls)}'
+                ) from cause
+E               AssertionError: Calls not found.
+E               Expected: [call('GET', 'https://v6.ident.me/')]
+E                 Actual: [call('GET', 'https://v6.ident.me/', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'})]
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1022: AssertionError</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_urls" time="0.001"><failure message="AssertionError: Calls not found.&#10;Expected: [call('GET', 'https://foo.bar/v4'), call('GET', 'https://foo.bar/v6')]&#10;  Actual: [call('GET', 'https://foo.bar/v4', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'}),&#10; call('GET', 'https://foo.bar/v6', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'})]">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_urls&gt;
+mock = &lt;MagicMock name='request' id='4415188880'&gt;
+
+    @patch('urllib3.PoolManager.request')
+    def test_urls(self, mock):
+        a_value = '1.2.3.4'
+        aaaa_value = '2001:db8:85a3::8a2e:370:7334'
+        mock.side_effect = [MockResponse(a_value), MockResponse(aaaa_value)]
+    
+        zone = Zone('example.com.', [])
+        DdnsSource(
+            'dynamic',
+            urls={'A': 'https://foo.bar/v4', 'AAAA': 'https://foo.bar/v6'},
+        ).populate(zone)
+        records = sorted(list(zone.records))
+        self.assertEqual(2, len(records))
+        a = records[0]
+        self.assertEqual([a_value], a.values)
+        aaaa = records[1]
+        self.assertEqual([aaaa_value], aaaa.values)
+    
+&gt;       mock.assert_has_calls(
+            [call('GET', 'https://foo.bar/v4'), call('GET', 'https://foo.bar/v6')]
+        )
+
+tests/test_octodns_source_ddns.py:115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='request' id='4415188880'&gt;
+calls = [call('GET', 'https://foo.bar/v4'), call('GET', 'https://foo.bar/v6')]
+any_order = False
+
+    def assert_has_calls(self, calls, any_order=False):
+        """assert the mock has been called with the specified calls.
+        The `mock_calls` list is checked for the calls.
+    
+        If `any_order` is False (the default) then the calls must be
+        sequential. There can be extra calls before or after the
+        specified calls.
+    
+        If `any_order` is True then the calls can be in any order, but
+        they must all appear in `mock_calls`."""
+        expected = [self._call_matcher(c) for c in calls]
+        cause = next((e for e in expected if isinstance(e, Exception)), None)
+        all_calls = _CallList(self._call_matcher(c) for c in self.mock_calls)
+        if not any_order:
+            if expected not in all_calls:
+                if cause is None:
+                    problem = 'Calls not found.'
+                else:
+                    problem = ('Error processing expected calls.\n'
+                               'Errors: {}').format(
+                                   [e if isinstance(e, Exception) else None
+                                    for e in expected])
+&gt;               raise AssertionError(
+                    f'{problem}\n'
+                    f'Expected: {_CallList(calls)}\n'
+                    f'  Actual: {safe_repr(self.mock_calls)}'
+                ) from cause
+E               AssertionError: Calls not found.
+E               Expected: [call('GET', 'https://foo.bar/v4'), call('GET', 'https://foo.bar/v6')]
+E                 Actual: [call('GET', 'https://foo.bar/v4', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'}),
+E                call('GET', 'https://foo.bar/v6', headers={'User-Agent': 'octodns/1.10.0 octodns-ddns/0.2.1'})]
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1022: AssertionError</failure></testcase></testsuite></testsuites>
