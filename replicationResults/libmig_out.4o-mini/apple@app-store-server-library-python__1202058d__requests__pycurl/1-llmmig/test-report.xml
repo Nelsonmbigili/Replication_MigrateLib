@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="18" skipped="0" tests="73" time="3.357" timestamp="2026-03-04T12:35:15.402864+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_api_client.DecodedPayloads" name="test_api_error" time="0.013"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_api_error&gt;
+
+    def test_api_error(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/apiException.json',
+                                                     'POST',
+                                                     'https://local-testing-base-url/inApps/v1/notifications/test',
+                                                     {},
+                                                     None,
+                                                     500)
+        try:
+&gt;           client.request_test_notification()
+
+tests/test_api_client.py:377: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:734: in request_test_notification
+    return self._make_request("/inApps/v1/notifications/test", "POST", {}, None, SendTestNotificationResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x1065367b0&gt;
+path = '/inApps/v1/notifications/test', method = 'POST', queryParameters = {}
+body = None
+destination_class = &lt;class 'appstoreserverlibrary.models.SendTestNotificationResponse.SendTestNotificationResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_api_too_many_requests" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_api_too_many_requests&gt;
+
+    def test_api_too_many_requests(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/apiTooManyRequestsException.json',
+                                                     'POST',
+                                                     'https://local-testing-base-url/inApps/v1/notifications/test',
+                                                     {},
+                                                     None,
+                                                     429)
+        try:
+&gt;           client.request_test_notification()
+
+tests/test_api_client.py:405: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:734: in request_test_notification
+    return self._make_request("/inApps/v1/notifications/test", "POST", {}, None, SendTestNotificationResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x1065f51d0&gt;
+path = '/inApps/v1/notifications/test', method = 'POST', queryParameters = {}
+body = None
+destination_class = &lt;class 'appstoreserverlibrary.models.SendTestNotificationResponse.SendTestNotificationResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_extend_renewal_date_for_all_active_subscribers" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_extend_renewal_date_for_all_active_subscribers&gt;
+
+    def test_extend_renewal_date_for_all_active_subscribers(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/extendRenewalDateForAllActiveSubscribersResponse.json',
+                                           'POST',
+                                           'https://local-testing-base-url/inApps/v1/subscriptions/extend/mass',
+                                           {},
+                                           {'extendByDays': 45, 'extendReasonCode': 1, 'requestIdentifier': 'fdf964a4-233b-486c-aac1-97d8d52688ac', 'storefrontCountryCodes': ['USA', 'MEX'], 'productId': 'com.example.productId'})
+    
+        extend_renewal_date_request = MassExtendRenewalDateRequest(
+             extendByDays=45,
+             extendReasonCode=ExtendReasonCode.CUSTOMER_SATISFACTION,
+             requestIdentifier='fdf964a4-233b-486c-aac1-97d8d52688ac',
+             storefrontCountryCodes=['USA', 'MEX'],
+             productId='com.example.productId')
+    
+&gt;       mass_extend_renewal_date_response = client.extend_renewal_date_for_all_active_subscribers(extend_renewal_date_request)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_client.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:577: in extend_renewal_date_for_all_active_subscribers
+    return self._make_request("/inApps/v1/subscriptions/extend/mass", "POST", {}, mass_extend_renewal_date_request, MassExtendRenewalDateResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x1065f5a90&gt;
+path = '/inApps/v1/subscriptions/extend/mass', method = 'POST'
+queryParameters = {}
+body = MassExtendRenewalDateRequest(extendByDays=45, extendReasonCode=&lt;ExtendReasonCode.CUSTOMER_SATISFACTION: 1&gt;, requestIdentifier='fdf964a4-233b-486c-aac1-97d8d52688ac', storefrontCountryCodes=['USA', 'MEX'], productId='com.example.productId')
+destination_class = &lt;class 'appstoreserverlibrary.models.MassExtendRenewalDateResponse.MassExtendRenewalDateResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_extend_subscription_renewal_date" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_extend_subscription_renewal_date&gt;
+
+    def test_extend_subscription_renewal_date(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/extendSubscriptionRenewalDateResponse.json',
+                                           'PUT',
+                                           'https://local-testing-base-url/inApps/v1/subscriptions/extend/4124214',
+                                           {},
+                                           {'extendByDays': 45, 'extendReasonCode': 1, 'requestIdentifier': 'fdf964a4-233b-486c-aac1-97d8d52688ac'})
+    
+        extend_renewal_date_request = ExtendRenewalDateRequest(
+             extendByDays=45,
+             extendReasonCode=ExtendReasonCode.CUSTOMER_SATISFACTION,
+             requestIdentifier='fdf964a4-233b-486c-aac1-97d8d52688ac'
+        )
+    
+&gt;       extend_renewal_date_response = client.extend_subscription_renewal_date('4124214', extend_renewal_date_request)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_client.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:589: in extend_subscription_renewal_date
+    return self._make_request("/inApps/v1/subscriptions/extend/" + original_transaction_id, "PUT", {}, extend_renewal_date_request, ExtendRenewalDateResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x1065828b0&gt;
+path = '/inApps/v1/subscriptions/extend/4124214', method = 'PUT'
+queryParameters = {}
+body = ExtendRenewalDateRequest(extendByDays=45, extendReasonCode=&lt;ExtendReasonCode.CUSTOMER_SATISFACTION: 1&gt;, requestIdentifier='fdf964a4-233b-486c-aac1-97d8d52688ac')
+destination_class = &lt;class 'appstoreserverlibrary.models.ExtendRenewalDateResponse.ExtendRenewalDateResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_all_subscription_statuses" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_get_all_subscription_statuses&gt;
+
+    def test_get_all_subscription_statuses(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/getAllSubscriptionStatusesResponse.json',
+                                           'GET',
+                                           'https://local-testing-base-url/inApps/v1/subscriptions/4321',
+                                           {'status': [2, 1]},
+                                           None)
+    
+&gt;       status_response = client.get_all_subscription_statuses('4321', [Status.EXPIRED, Status.ACTIVE])
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_client.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:605: in get_all_subscription_statuses
+    return self._make_request("/inApps/v1/subscriptions/" + transaction_id, "GET", queryParameters, None, StatusResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x106583950&gt;
+path = '/inApps/v1/subscriptions/4321', method = 'GET'
+queryParameters = {'status': [2, 1]}, body = None
+destination_class = &lt;class 'appstoreserverlibrary.models.StatusResponse.StatusResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_notification_history" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_get_notification_history&gt;
+
+    def test_get_notification_history(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/getNotificationHistoryResponse.json',
+                                           'POST',
+                                           'https://local-testing-base-url/inApps/v1/notifications/history',
+                                           {'paginationToken': ['a036bc0e-52b8-4bee-82fc-8c24cb6715d6']},
+                                           {'startDate': 1698148900000, 'endDate': 1698148950000, 'notificationType': 'SUBSCRIBED', 'notificationSubtype': 'INITIAL_BUY', 'transactionId': '999733843', 'onlyFailures': True})
+    
+        notification_history_request = NotificationHistoryRequest(
+            startDate=1698148900000,
+            endDate=1698148950000,
+            notificationType=NotificationTypeV2.SUBSCRIBED,
+            notificationSubtype=Subtype.INITIAL_BUY,
+            transactionId='999733843',
+            onlyFailures=True
+        )
+    
+&gt;       notification_history_response = client.get_notification_history('a036bc0e-52b8-4bee-82fc-8c24cb6715d6', notification_history_request)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_client.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:661: in get_notification_history
+    return self._make_request("/inApps/v1/notifications/history", "POST", queryParameters, notification_history_request, NotificationHistoryResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x10667cef0&gt;
+path = '/inApps/v1/notifications/history', method = 'POST'
+queryParameters = {'paginationToken': ['a036bc0e-52b8-4bee-82fc-8c24cb6715d6']}
+body = NotificationHistoryRequest(startDate=1698148900000, endDate=1698148950000, notificationType=&lt;NotificationTypeV2.SUBSCR... 'SUBSCRIBED'&gt;, notificationSubtype=&lt;Subtype.INITIAL_BUY: 'INITIAL_BUY'&gt;, transactionId='999733843', onlyFailures=True)
+destination_class = &lt;class 'appstoreserverlibrary.models.NotificationHistoryResponse.NotificationHistoryResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_refund_history" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_get_refund_history&gt;
+
+    def test_get_refund_history(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/getRefundHistoryResponse.json',
+                                           'GET',
+                                           'https://local-testing-base-url/inApps/v2/refund/lookup/555555',
+                                           {'revision': ['revision_input']},
+                                           None)
+    
+&gt;       refund_history_response = client.get_refund_history('555555', 'revision_input')
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_client.py:141: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:622: in get_refund_history
+    return self._make_request("/inApps/v2/refund/lookup/" + transaction_id, "GET", queryParameters, None, RefundHistoryResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x1065f99d0&gt;
+path = '/inApps/v2/refund/lookup/555555', method = 'GET'
+queryParameters = {'revision': ['revision_input']}, body = None
+destination_class = &lt;class 'appstoreserverlibrary.models.RefundHistoryResponse.RefundHistoryResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_status_of_subscription_renewal_date_extensions" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_get_status_of_subscription_renewal_date_extensions&gt;
+
+    def test_get_status_of_subscription_renewal_date_extensions(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/getStatusOfSubscriptionRenewalDateExtensionsResponse.json',
+                                           'GET',
+                                           'https://local-testing-base-url/inApps/v1/subscriptions/extend/mass/20fba8a0-2b80-4a7d-a17f-85c1854727f8/com.example.product',
+                                           {},
+                                           None)
+    
+&gt;       mass_extend_renewal_date_status_response = client.get_status_of_subscription_renewal_date_extensions('com.example.product', '20fba8a0-2b80-4a7d-a17f-85c1854727f8')
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_client.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:634: in get_status_of_subscription_renewal_date_extensions
+    return self._make_request("/inApps/v1/subscriptions/extend/mass/" + product_id + "/" + request_identifier, "GET", {}, None, MassExtendRenewalDateStatusResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x1065fa030&gt;
+path = '/inApps/v1/subscriptions/extend/mass/20fba8a0-2b80-4a7d-a17f-85c1854727f8/com.example.product'
+method = 'GET', queryParameters = {}, body = None
+destination_class = &lt;class 'appstoreserverlibrary.models.MassExtendRenewalDateStatusResponse.MassExtendRenewalDateStatusResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_test_notification_status" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_get_test_notification_status&gt;
+
+    def test_get_test_notification_status(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/getTestNotificationStatusResponse.json',
+                                           'GET',
+                                           'https://local-testing-base-url/inApps/v1/notifications/test/8cd2974c-f905-492a-bf9a-b2f47c791d19',
+                                           {},
+                                           None)
+    
+&gt;       check_test_notification_response = client.get_test_notification_status('8cd2974c-f905-492a-bf9a-b2f47c791d19')
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_client.py:171: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:645: in get_test_notification_status
+    return self._make_request("/inApps/v1/notifications/test/" + test_notification_token, "GET", {}, None, CheckTestNotificationResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x10664b750&gt;
+path = '/inApps/v1/notifications/test/8cd2974c-f905-492a-bf9a-b2f47c791d19'
+method = 'GET', queryParameters = {}, body = None
+destination_class = &lt;class 'appstoreserverlibrary.models.CheckTestNotificationResponse.CheckTestNotificationResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_transaction_history_v1" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_get_transaction_history_v1&gt;
+
+    def test_get_transaction_history_v1(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/transactionHistoryResponse.json',
+                                           'GET',
+                                           'https://local-testing-base-url/inApps/v1/history/1234',
+                                           {'revision': ['revision_input'],
+                                            'startDate': ['123455'],
+                                            'endDate': ['123456'],
+                                            'productId': ['com.example.1', 'com.example.2'],
+                                            'productType': ['CONSUMABLE', 'AUTO_RENEWABLE'],
+                                            'sort': ['ASCENDING'],
+                                            'subscriptionGroupIdentifier': ['sub_group_id', 'sub_group_id_2'],
+                                            'inAppOwnershipType': ['FAMILY_SHARED'],
+                                            'revoked': ['False']},
+                                            None)
+    
+        request = TransactionHistoryRequest(
+            sort=Order.ASCENDING,
+            productTypes=[ProductType.CONSUMABLE, ProductType.AUTO_RENEWABLE],
+            endDate=123456,
+            startDate=123455,
+            revoked=False,
+            inAppOwnershipType=InAppOwnershipType.FAMILY_SHARED,
+            productIds=['com.example.1', 'com.example.2'],
+            subscriptionGroupIdentifiers=['sub_group_id', 'sub_group_id_2']
+        )
+    
+&gt;       history_response = client.get_transaction_history('1234', 'revision_input', request, GetTransactionHistoryVersion.V1)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_client.py:248: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:703: in get_transaction_history
+    return self._make_request("/inApps/" + version + "/history/" + transaction_id, "GET", queryParameters, None, HistoryResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x10664a650&gt;
+path = '/inApps/v1/history/1234', method = 'GET'
+queryParameters = {'endDate': ['123456'], 'inAppOwnershipType': ['FAMILY_SHARED'], 'productId': ['com.example.1', 'com.example.2'], 'productType': ['CONSUMABLE', 'AUTO_RENEWABLE'], ...}
+body = None
+destination_class = &lt;class 'appstoreserverlibrary.models.HistoryResponse.HistoryResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_transaction_history_v2" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_get_transaction_history_v2&gt;
+
+    def test_get_transaction_history_v2(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/transactionHistoryResponse.json',
+                                           'GET',
+                                           'https://local-testing-base-url/inApps/v2/history/1234',
+                                           {'revision': ['revision_input'],
+                                            'startDate': ['123455'],
+                                            'endDate': ['123456'],
+                                            'productId': ['com.example.1', 'com.example.2'],
+                                            'productType': ['CONSUMABLE', 'AUTO_RENEWABLE'],
+                                            'sort': ['ASCENDING'],
+                                            'subscriptionGroupIdentifier': ['sub_group_id', 'sub_group_id_2'],
+                                            'inAppOwnershipType': ['FAMILY_SHARED'],
+                                            'revoked': ['False']},
+                                            None)
+    
+        request = TransactionHistoryRequest(
+            sort=Order.ASCENDING,
+            productTypes=[ProductType.CONSUMABLE, ProductType.AUTO_RENEWABLE],
+            endDate=123456,
+            startDate=123455,
+            revoked=False,
+            inAppOwnershipType=InAppOwnershipType.FAMILY_SHARED,
+            productIds=['com.example.1', 'com.example.2'],
+            subscriptionGroupIdentifiers=['sub_group_id', 'sub_group_id_2']
+        )
+    
+&gt;       history_response = client.get_transaction_history('1234', 'revision_input', request, GetTransactionHistoryVersion.V2)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_client.py:285: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:703: in get_transaction_history
+    return self._make_request("/inApps/" + version + "/history/" + transaction_id, "GET", queryParameters, None, HistoryResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x1065f0d70&gt;
+path = '/inApps/v2/history/1234', method = 'GET'
+queryParameters = {'endDate': ['123456'], 'inAppOwnershipType': ['FAMILY_SHARED'], 'productId': ['com.example.1', 'com.example.2'], 'productType': ['CONSUMABLE', 'AUTO_RENEWABLE'], ...}
+body = None
+destination_class = &lt;class 'appstoreserverlibrary.models.HistoryResponse.HistoryResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_transaction_history_with_malformed_app_apple_id" time="0.001" /><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_transaction_history_with_unknown_environment" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_get_transaction_history_with_unknown_environment&gt;
+
+    def test_get_transaction_history_with_unknown_environment(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/transactionHistoryResponseWithMalformedEnvironment.json',
+                                           'GET',
+                                           'https://local-testing-base-url/inApps/v2/history/1234',
+                                           {'revision': ['revision_input'],
+                                            'startDate': ['123455'],
+                                            'endDate': ['123456'],
+                                            'productId': ['com.example.1', 'com.example.2'],
+                                            'productType': ['CONSUMABLE', 'AUTO_RENEWABLE'],
+                                            'sort': ['ASCENDING'],
+                                            'subscriptionGroupIdentifier': ['sub_group_id', 'sub_group_id_2'],
+                                            'inAppOwnershipType': ['FAMILY_SHARED'],
+                                            'revoked': ['False']},
+                                            None)
+    
+        request = TransactionHistoryRequest(
+            sort=Order.ASCENDING,
+            productTypes=[ProductType.CONSUMABLE, ProductType.AUTO_RENEWABLE],
+            endDate=123456,
+            startDate=123455,
+            revoked=False,
+            inAppOwnershipType=InAppOwnershipType.FAMILY_SHARED,
+            productIds=['com.example.1', 'com.example.2'],
+            subscriptionGroupIdentifiers=['sub_group_id', 'sub_group_id_2']
+        )
+    
+&gt;       history_response = client.get_transaction_history('1234', 'revision_input', request, GetTransactionHistoryVersion.V2)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_client.py:459: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:703: in get_transaction_history
+    return self._make_request("/inApps/" + version + "/history/" + transaction_id, "GET", queryParameters, None, HistoryResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x1065aa510&gt;
+path = '/inApps/v2/history/1234', method = 'GET'
+queryParameters = {'endDate': ['123456'], 'inAppOwnershipType': ['FAMILY_SHARED'], 'productId': ['com.example.1', 'com.example.2'], 'productType': ['CONSUMABLE', 'AUTO_RENEWABLE'], ...}
+body = None
+destination_class = &lt;class 'appstoreserverlibrary.models.HistoryResponse.HistoryResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_get_transaction_info" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_get_transaction_info&gt;
+
+    def test_get_transaction_info(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/transactionInfoResponse.json',
+                                           'GET',
+                                           'https://local-testing-base-url/inApps/v1/transactions/1234',
+                                           {},
+                                           None)
+    
+&gt;       transaction_info_response = client.get_transaction_info('1234')
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_client.py:303: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:714: in get_transaction_info
+    return self._make_request("/inApps/v1/transactions/" + transaction_id, "GET", {}, None, TransactionInfoResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x1065a8c90&gt;
+path = '/inApps/v1/transactions/1234', method = 'GET', queryParameters = {}
+body = None
+destination_class = &lt;class 'appstoreserverlibrary.models.TransactionInfoResponse.TransactionInfoResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_look_up_order_id" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_look_up_order_id&gt;
+
+    def test_look_up_order_id(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/lookupOrderIdResponse.json',
+                                           'GET',
+                                           'https://local-testing-base-url/inApps/v1/lookup/W002182',
+                                           {},
+                                           None)
+    
+&gt;       order_lookup_response = client.look_up_order_id('W002182')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_client.py:315: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:725: in look_up_order_id
+    return self._make_request("/inApps/v1/lookup/" + order_id, "GET", {}, None, OrderLookupResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x1045bba00&gt;
+path = '/inApps/v1/lookup/W002182', method = 'GET', queryParameters = {}
+body = None
+destination_class = &lt;class 'appstoreserverlibrary.models.OrderLookupResponse.OrderLookupResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_request_test_notification" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_request_test_notification&gt;
+
+    def test_request_test_notification(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/requestTestNotificationResponse.json',
+                                           'POST',
+                                           'https://local-testing-base-url/inApps/v1/notifications/test',
+                                           {},
+                                           None)
+    
+&gt;       send_test_notification_response = client.request_test_notification()
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_client.py:329: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:734: in request_test_notification
+    return self._make_request("/inApps/v1/notifications/test", "POST", {}, None, SendTestNotificationResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x106873890&gt;
+path = '/inApps/v1/notifications/test', method = 'POST', queryParameters = {}
+body = None
+destination_class = &lt;class 'appstoreserverlibrary.models.SendTestNotificationResponse.SendTestNotificationResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_send_consumption_data" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_send_consumption_data&gt;
+
+    def test_send_consumption_data(self):
+        client = self.get_client_with_body(b'',
+                                           'PUT',
+                                           'https://local-testing-base-url/inApps/v1/transactions/consumption/49571273',
+                                           {},
+                                           {'customerConsented': True,
+                                            'consumptionStatus': 1,
+                                            'platform': 2,
+                                            'sampleContentProvided': False,
+                                            'deliveryStatus': 3,
+                                            'appAccountToken': '7389a31a-fb6d-4569-a2a6-db7d85d84813',
+                                            'accountTenure': 4,
+                                            'playTime': 5,
+                                            'lifetimeDollarsRefunded': 6,
+                                            'lifetimeDollarsPurchased': 7,
+                                            'userStatus': 4,
+                                            'refundPreference': 3})
+    
+        consumptionRequest = ConsumptionRequest(
+            customerConsented=True,
+            consumptionStatus=ConsumptionStatus.NOT_CONSUMED,
+            platform=Platform.NON_APPLE,
+            sampleContentProvided=False,
+            deliveryStatus=DeliveryStatus.DID_NOT_DELIVER_DUE_TO_SERVER_OUTAGE,
+            appAccountToken='7389a31a-fb6d-4569-a2a6-db7d85d84813',
+            accountTenure=AccountTenure.THIRTY_DAYS_TO_NINETY_DAYS,
+            playTime=PlayTime.ONE_DAY_TO_FOUR_DAYS,
+            lifetimeDollarsRefunded=LifetimeDollarsRefunded.ONE_THOUSAND_DOLLARS_TO_ONE_THOUSAND_NINE_HUNDRED_NINETY_NINE_DOLLARS_AND_NINETY_NINE_CENTS,
+            lifetimeDollarsPurchased=LifetimeDollarsPurchased.TWO_THOUSAND_DOLLARS_OR_GREATER,
+            userStatus=UserStatus.LIMITED_ACCESS,
+            refundPreference=RefundPreference.NO_PREFERENCE
+        )
+    
+&gt;       client.send_consumption_data('49571273', consumptionRequest)
+
+tests/test_api_client.py:367: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:745: in send_consumption_data
+    self._make_request("/inApps/v1/transactions/consumption/" + transaction_id, "PUT", {}, consumption_request, None)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x106873e90&gt;
+path = '/inApps/v1/transactions/consumption/49571273', method = 'PUT'
+queryParameters = {}
+body = ConsumptionRequest(customerConsented=True, consumptionStatus=&lt;ConsumptionStatus.NOT_CONSUMED: 1&gt;, rawConsumptionStatus...tatus.LIMITED_ACCESS: 4&gt;, rawUserStatus=4, refundPreference=&lt;RefundPreference.NO_PREFERENCE: 3&gt;, rawRefundPreference=3)
+destination_class = None
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_unknown_error" time="0.001"><failure message="TypeError: '_io.BytesIO' object is not subscriptable">self = &lt;tests.test_api_client.DecodedPayloads testMethod=test_unknown_error&gt;
+
+    def test_unknown_error(self):
+        client = self.get_client_with_body_from_file('tests/resources/models/apiUnknownError.json',
+                                                     'POST',
+                                                     'https://local-testing-base-url/inApps/v1/notifications/test',
+                                                     {},
+                                                     None,
+                                                     400)
+        try:
+&gt;           client.request_test_notification()
+
+tests/test_api_client.py:423: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/api_client.py:734: in request_test_notification
+    return self._make_request("/inApps/v1/notifications/test", "POST", {}, None, SendTestNotificationResponse)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.api_client.AppStoreServerAPIClient object at 0x10658dde0&gt;
+path = '/inApps/v1/notifications/test', method = 'POST', queryParameters = {}
+body = None
+destination_class = &lt;class 'appstoreserverlibrary.models.SendTestNotificationResponse.SendTestNotificationResponse'&gt;
+
+    def _make_request(self, path: str, method: str, queryParameters: Dict[str, Union[str, List[str]]], body, destination_class: Type[T]) -&gt; T:
+        url = self._get_full_url(path)
+        json = self._get_request_json(body)
+        headers = self._get_headers()
+    
+        response = self._execute_request(method, url, queryParameters, headers, json)
+&gt;       return self._parse_response(response[0], response[1], lambda: response[2], destination_class)
+                                    ^^^^^^^^^^^
+E       TypeError: '_io.BytesIO' object is not subscriptable
+
+appstoreserverlibrary/api_client.py:534: TypeError</failure></testcase><testcase classname="tests.test_api_client.DecodedPayloads" name="test_xcode_not_supported_error" time="0.000" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_api_error" time="0.017" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_api_too_many_requests" time="0.006" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_extend_renewal_date_for_all_active_subscribers" time="0.008" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_extend_subscription_renewal_date" time="0.011" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_all_subscription_statuses" time="0.008" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_notification_history" time="0.008" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_refund_history" time="0.007" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_status_of_subscription_renewal_date_extensions" time="0.006" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_test_notification_status" time="0.007" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_transaction_history_v1" time="0.006" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_transaction_history_v2" time="0.006" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_transaction_history_with_malformed_app_apple_id" time="0.006" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_transaction_history_with_unknown_environment" time="0.006" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_get_transaction_info" time="0.006" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_look_up_order_id" time="0.006" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_request_test_notification" time="0.006" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_send_consumption_data" time="0.006" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_unknown_error" time="0.006" /><testcase classname="tests.test_api_client_async.DecodedPayloads" name="test_xcode_not_supported_error" time="0.002" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_app_transaction_decoding" time="0.002" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_consumption_request_notification_decoding" time="0.002" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_external_purchase_token_notification_decoding" time="0.001" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_external_purchase_token_sandbox_notification_decoding" time="0.001" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_notification_decoding" time="0.001" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_renewal_info_decoding" time="0.002" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_summary_notification_decoding" time="0.001" /><testcase classname="tests.test_decoded_payloads.DecodedPayloads" name="test_transaction_decoding" time="0.002" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_app_store_server_notification_decoding" time="0.004" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_app_store_server_notification_decoding_production" time="0.001" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_malformed_jwt_with_malformed_data" time="0.000" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_malformed_jwt_with_too_many_parts" time="0.000" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_missing_x5c_header" time="0.000" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_renewal_info_decoding" time="0.001" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_transaction_info_decoding" time="0.001" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_wrong_app_apple_id_for_server_notification" time="0.001" /><testcase classname="tests.test_payload_verification.PayloadVerification" name="test_wrong_bundle_id_for_server_notification" time="0.001" /><testcase classname="tests.test_promotional_offer_signature_creator.PromotionalOfferSignatureCreatorTest" name="test_signature_creator" time="0.001" /><testcase classname="tests.test_receipt_utility.ReceiptUtilityTest" name="test_transaction_receipt_extraction" time="0.001" /><testcase classname="tests.test_receipt_utility.ReceiptUtilityTest" name="test_xcode_app_receipt_extraction_with_no_transactions" time="0.001" /><testcase classname="tests.test_receipt_utility.ReceiptUtilityTest" name="test_xcode_app_receipt_extraction_with_transactions" time="0.000" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_apple_chain_is_valid_with_ocsp_and_strict" time="0.713"><failure message="pycurl.error: cannot invoke getinfo() - no curl handle">self = &lt;tests.test_x509_verifiction.X509Verification testMethod=test_apple_chain_is_valid_with_ocsp_and_strict&gt;
+
+    def test_apple_chain_is_valid_with_ocsp_and_strict(self):
+        verifier = _ChainVerifier([b64decode(REAL_APPLE_ROOT_BASE64_ENCODED)])
+&gt;       verifier.verify_chain([
+            REAL_APPLE_SIGNING_CERTIFICATE_BASE64_ENCODED,
+            REAL_APPLE_INTERMEDIATE_BASE64_ENCODED,
+            REAL_APPLE_ROOT_BASE64_ENCODED
+        ], True, EFFECTIVE_DATE)
+
+tests/test_x509_verifiction.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+appstoreserverlibrary/signed_data_verifier.py:190: in verify_chain
+    self.check_ocsp_status(trusted_chain[1], trusted_chain[2], trusted_chain[2])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;appstoreserverlibrary.signed_data_verifier._ChainVerifier object at 0x1069a94f0&gt;
+cert = &lt;OpenSSL.crypto.X509 object at 0x10693eed0&gt;
+issuer = &lt;OpenSSL.crypto.X509 object at 0x10693ef30&gt;
+root = &lt;OpenSSL.crypto.X509 object at 0x10693ef30&gt;
+
+    def check_ocsp_status(self, cert: crypto.X509, issuer: crypto.X509, root: crypto.X509):
+        builder = ocsp.OCSPRequestBuilder()
+        builder = builder.add_certificate(cert.to_cryptography(), issuer.to_cryptography(), SHA256())
+        req = builder.build()
+        authority_values = (
+            cert.to_cryptography()
+            .extensions.get_extension_for_oid(x509.oid.ExtensionOID.AUTHORITY_INFORMATION_ACCESS)
+            .value
+        )
+        ocsps = [val for val in authority_values if val.access_method == x509.oid.AuthorityInformationAccessOID.OCSP]
+        for o in ocsps:
+            buffer = BytesIO()
+            c = pycurl.Curl()
+            c.setopt(c.URL, o.access_location.value)
+            c.setopt(c.HTTPHEADER, ["Content-Type: application/ocsp-request"])
+            c.setopt(c.POSTFIELDS, req.public_bytes(serialization.Encoding.DER))
+            c.setopt(c.WRITEDATA, buffer)
+            c.perform()
+            c.close()
+            response_data = buffer.getvalue()
+&gt;           if c.getinfo(c.RESPONSE_CODE) == 200:
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           pycurl.error: cannot invoke getinfo() - no curl handle
+
+appstoreserverlibrary/signed_data_verifier.py:225: error</failure></testcase><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_chain_different_than_root_certificate" time="0.002" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_invalid_base64_in_certificate_list" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_invalid_chain_length" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_invalid_data_in_certificate_list" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_malformed_root_cert" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_valid_chain_invalid_intermediate_OID_without_OCSP" time="0.002" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_valid_chain_invalid_leaf_OID_without_OCSP" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_valid_chain_without_ocsp" time="0.001" /><testcase classname="tests.test_x509_verifiction.X509Verification" name="test_valid_expired_chain" time="0.001" /><testcase classname="tests.test_xcode_signed_data.ReceiptUtilityTest" name="test_xcode_signed_app_transaction" time="0.001" /><testcase classname="tests.test_xcode_signed_data.ReceiptUtilityTest" name="test_xcode_signed_app_transaction_with_production_environment" time="0.000" /><testcase classname="tests.test_xcode_signed_data.ReceiptUtilityTest" name="test_xcode_signed_renewal_info" time="0.000" /><testcase classname="tests.test_xcode_signed_data.ReceiptUtilityTest" name="test_xcode_signed_transaction" time="0.001" /></testsuite></testsuites>

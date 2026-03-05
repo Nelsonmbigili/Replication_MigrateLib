@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="14" time="0.563" timestamp="2026-03-04T12:05:54.146334+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_downlaoder.Test_downloader" name="test_download_url" time="0.001"><failure message="TypeError: get() got an unexpected keyword argument 'stream'">self = &lt;tests.test_downlaoder.Test_downloader testMethod=test_download_url&gt;
+
+    def test_download_url(self):
+        """Test snapchat_dl download_url."""
+&gt;       download_url(self.test_url, ".test-data/test_dl_23.mp4", sleep_interval=0)
+
+tests/test_downlaoder.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+url = 'https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_1mb.mp4'
+dest = '.test-data/test_dl_23.mp4', sleep_interval = 0
+
+    def download_url(url: str, dest: str, sleep_interval: int):
+        """Download URL to destionation path.
+    
+        Args:
+            url (str): url to download
+            dest (str): absolute path to destination
+    
+        Raises:
+            response.raise_for_status: if response is 4** or 50*
+            FileExistsError: if file is already downloaded
+        """
+        if len(os.path.dirname(dest)) &gt; 0:
+            os.makedirs(os.path.dirname(dest), exist_ok=True)
+    
+        """Rate limiting."""
+        time.sleep(sleep_interval)
+    
+        try:
+&gt;           response = httpx.get(url, stream=True, timeout=10)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: get() got an unexpected keyword argument 'stream'
+
+snapchat_dl/downloader.py:27: TypeError</failure></testcase><testcase classname="tests.test_downlaoder.Test_downloader" name="test_download_url_raise" time="0.000"><failure message="NameError: name 'httpx' is not defined">self = &lt;tests.test_downlaoder.Test_downloader testMethod=test_download_url_raise&gt;
+
+    def test_download_url_raise(self):
+        """Test snapchat_dl download_url with invalid url."""
+&gt;       with self.assertRaises(httpx.HTTPStatusError):
+                               ^^^^^
+E       NameError: name 'httpx' is not defined
+
+tests/test_downlaoder.py:35: NameError</failure></testcase><testcase classname="tests.test_downlaoder.Test_downloader" name="test_empty_download" time="0.001"><failure message="TypeError: get() got an unexpected keyword argument 'stream'">self = &lt;tests.test_downlaoder.Test_downloader testMethod=test_empty_download&gt;
+
+    def test_empty_download(self):
+        """Test snapchat_dl download_url."""
+        open(".test-data/test_dl_23.mp4", "w").close()
+&gt;       download_url(self.test_url, ".test-data/test_dl_23.mp4", sleep_interval=0)
+
+tests/test_downlaoder.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+url = 'https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_1mb.mp4'
+dest = '.test-data/test_dl_23.mp4', sleep_interval = 0
+
+    def download_url(url: str, dest: str, sleep_interval: int):
+        """Download URL to destionation path.
+    
+        Args:
+            url (str): url to download
+            dest (str): absolute path to destination
+    
+        Raises:
+            response.raise_for_status: if response is 4** or 50*
+            FileExistsError: if file is already downloaded
+        """
+        if len(os.path.dirname(dest)) &gt; 0:
+            os.makedirs(os.path.dirname(dest), exist_ok=True)
+    
+        """Rate limiting."""
+        time.sleep(sleep_interval)
+    
+        try:
+&gt;           response = httpx.get(url, stream=True, timeout=10)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: get() got an unexpected keyword argument 'stream'
+
+snapchat_dl/downloader.py:27: TypeError</failure></testcase><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_api_error" time="0.002" /><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_class_init" time="0.000" /><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_get_stories" time="0.005" /><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_invalid_username" time="0.347"><failure message="snapchat_dl.utils.APIResponseError">def _web_fetch_story(self, username):
+        """Download user stories from Web.
+    
+        Args:
+            username (str): Snapchat `username`
+    
+        Raises:
+            APIResponseError: API Error
+    
+        Returns:
+            (dict, dict): user_info, stories
+        """
+        response = self._api_response(username)
+        response_json_raw = re.findall(self.regexp_web_json, response)
+    
+        try:
+&gt;           response_json = json.loads(response_json_raw[0])
+                                       ^^^^^^^^^^^^^^^^^^^^
+E           IndexError: list index out of range
+
+snapchat_dl/snapchat_dl.py:70: IndexError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_snapchat_dl.TestSnapchat_dl testMethod=test_invalid_username&gt;
+
+    def test_invalid_username(self):
+        """Test snapchat_dl Stories are not available."""
+        with self.assertRaises(UserNotFoundError):
+&gt;           self.snapchat_dl.download("use=rname")
+
+tests/test_snapchat_dl.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+snapchat_dl/snapchat_dl.py:107: in download
+    stories, snap_user, *_ = self._web_fetch_story(username)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _web_fetch_story(self, username):
+        """Download user stories from Web.
+    
+        Args:
+            username (str): Snapchat `username`
+    
+        Raises:
+            APIResponseError: API Error
+    
+        Returns:
+            (dict, dict): user_info, stories
+        """
+        response = self._api_response(username)
+        response_json_raw = re.findall(self.regexp_web_json, response)
+    
+        try:
+            response_json = json.loads(response_json_raw[0])
+    
+            def util_web_user_info(content: dict):
+                if "userProfile" in content["props"]["pageProps"]:
+                    user_profile = content["props"]["pageProps"]["userProfile"]
+                    field_id = user_profile["$case"]
+                    return user_profile[field_id]
+                else:
+                    raise UserNotFoundError
+    
+            def util_web_story(content: dict):
+                if "story" in content["props"]["pageProps"]:
+                    return content["props"]["pageProps"]["story"]["snapList"]
+                return list()
+    
+            def util_web_extract(content: dict):
+                if "curatedHighlights" in content["props"]["pageProps"]:
+                    return content["props"]["pageProps"]["curatedHighlights"]
+                return list()
+    
+            user_info = util_web_user_info(response_json)
+            stories = util_web_story(response_json)
+            curatedHighlights = util_web_extract(response_json)
+            spotHighlights = util_web_extract(response_json)
+            return stories, user_info, curatedHighlights, spotHighlights
+        except (IndexError, KeyError, ValueError):
+&gt;           raise APIResponseError
+E           snapchat_dl.utils.APIResponseError
+
+snapchat_dl/snapchat_dl.py:96: APIResponseError</failure></testcase><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_no_stories" time="0.004" /><testcase classname="tests.test_utils.Test_utils" name="test_search_usernames" time="0.001" /><testcase classname="tests.test_utils.Test_utils" name="test_strf_time" time="0.001" /><testcase classname="tests.test_utils.Test_utils" name="test_use_batch_file" time="0.001" /><testcase classname="tests.test_utils.Test_utils" name="test_use_batch_file_err" time="0.001" /><testcase classname="tests.test_utils.Test_utils" name="test_use_prefix_dir" time="0.000" /><testcase classname="tests.test_utils.Test_utils" name="test_valid_username" time="0.000" /></testsuite></testsuites>

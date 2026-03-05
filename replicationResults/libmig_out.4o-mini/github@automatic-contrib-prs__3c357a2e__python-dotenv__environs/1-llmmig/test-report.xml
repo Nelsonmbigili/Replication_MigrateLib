@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="22" time="0.377" timestamp="2026-03-04T17:22:17.176600+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="test_auth.TestAuth" name="test_auth_to_github_invalid_credentials" time="0.001" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_app" time="0.001" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_ghe" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_ghe_and_ghe_app" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_token" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_without_token" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_get_github_app_installation_token" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_get_github_app_installation_token_request_failure" time="0.000" /><testcase classname="test_env.TestEnv" name="test_get_env_vars_auth_with_github_app_installation_missing_inputs" time="0.001"><failure message="AssertionError: 'Environment variable &quot;GH_APP_INSTALLATION[30 chars]ger.' != 'GH_APP_ID set and GH_APP_INSTALLATION_ID [34 chars] set'&#10;- Environment variable &quot;GH_APP_INSTALLATION_ID&quot; invalid: Not a valid integer.&#10;+ GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_auth_with_github_app_installation_missing_inputs&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "my_organization",
+            "GH_APP_ID": "12345",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_auth_with_github_app_installation_missing_inputs(self):
+        """Test that an error is raised when there are missing inputs for the gh app"""
+        with self.assertRaises(ValueError) as context_manager:
+            get_env_vars(True)
+        the_exception = context_manager.exception
+&gt;       self.assertEqual(
+            str(the_exception),
+            "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set",
+        )
+E       AssertionError: 'Environment variable "GH_APP_INSTALLATION[30 chars]ger.' != 'GH_APP_ID set and GH_APP_INSTALLATION_ID [34 chars] set'
+E       - Environment variable "GH_APP_INSTALLATION_ID" invalid: Not a valid integer.
+E       + GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set
+
+test_env.py:183: AssertionError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_missing_all_authentication" time="0.001" /><testcase classname="test_env.TestEnv" name="test_get_env_vars_missing_organization" time="0.000" /><testcase classname="test_env.TestEnv" name="test_get_env_vars_no_organization_set" time="0.001" /><testcase classname="test_env.TestEnv" name="test_get_env_vars_optional_values" time="0.001"><failure message="environs.exceptions.EnvValidationError: Environment variable &quot;GH_APP_ID&quot; invalid: Not a valid integer.">self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _validated(self, value: typing.Any) -&gt; _NumT:
+        """Format the value or raise a :exc:`ValidationError` if an error occurs."""
+        # (value is True or value is False) is ~5x faster than isinstance(value, bool)
+        if value is True or value is False:
+            raise self.make_error("invalid", input=value)
+        try:
+&gt;           return self._format_num(value)
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:943: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _format_num(self, value) -&gt; _NumT:
+        """Return the number value for value, given this field's `num_type`."""
+&gt;       return self.num_type(value)  # type: ignore[call-arg]
+               ^^^^^^^^^^^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: ''
+
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:935: ValueError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'GH_APP_ID', default = None
+subcast = None, validate = None, kwargs = {}, load_default = None
+preprocess_kwargs = {}
+field = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+parsed_key = 'GH_APP_ID', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+&gt;           value = field.deserialize(value)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/environs/__init__.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:374: in deserialize
+    output = self._deserialize(value, attr, data, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:960: in _deserialize
+    return self._validated(value)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:990: in _validated
+    return super()._validated(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _validated(self, value: typing.Any) -&gt; _NumT:
+        """Format the value or raise a :exc:`ValidationError` if an error occurs."""
+        # (value is True or value is False) is ~5x faster than isinstance(value, bool)
+        if value is True or value is False:
+            raise self.make_error("invalid", input=value)
+        try:
+            return self._format_num(value)
+        except (TypeError, ValueError) as error:
+&gt;           raise self.make_error("invalid", input=value) from error
+E           marshmallow.exceptions.ValidationError: Not a valid integer.
+
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:945: ValidationError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;test_env.TestEnv testMethod=test_get_env_vars_optional_values&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_ACTOR": "testactor",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GITHUB_APP_ENTERPRISE_ONLY": "",
+            "GH_ENTERPRISE_URL": "testghe",
+            "GH_TOKEN": TOKEN,
+            "ORGANIZATION": ORGANIZATION,
+            "PR_BODY": BODY,
+            "PR_TITLE": TITLE,
+            "REPOS_JSON_LOCATION": "test/repos.json",
+        },
+    )
+    def test_get_env_vars_optional_values(self):
+        """Test that optional values are set to their default values if not provided"""
+        expected_result = EnvVars(
+            "testactor",
+            None,
+            None,
+            b"",
+            False,
+            "testghe",
+            TOKEN,
+            ORGANIZATION,
+            BODY,
+            TITLE,
+            "test/repos.json",
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_env.py:137: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+env.py:134: in get_env_vars
+    gh_app_id = env.int("GH_APP_ID", None)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'GH_APP_ID', default = None
+subcast = None, validate = None, kwargs = {}, load_default = None
+preprocess_kwargs = {}
+field = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+parsed_key = 'GH_APP_ID', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+            value = field.deserialize(value)
+        except ma.ValidationError as error:
+            if self.eager:
+&gt;               raise EnvValidationError(
+                    f'Environment variable "{source_key}" invalid: {error.args[0]}',
+                    error.messages,
+                ) from error
+E               environs.exceptions.EnvValidationError: Environment variable "GH_APP_ID" invalid: Not a valid integer.
+
+.venv/lib/python3.14/site-packages/environs/__init__.py:131: EnvValidationError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_pr_body_too_long" time="0.001" /><testcase classname="test_env.TestEnv" name="test_get_env_vars_pr_title_too_long" time="0.001" /><testcase classname="test_env.TestEnv" name="test_get_env_vars_with_github_app" time="0.001"><failure message="environs.exceptions.EnvValidationError: Environment variable &quot;GITHUB_APP_ENTERPRISE_ONLY&quot; invalid: Not a valid boolean.">self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'GITHUB_APP_ENTERPRISE_ONLY'
+default = False, subcast = None, validate = None, kwargs = {}
+load_default = False, preprocess_kwargs = {}
+field = &lt;fields.Boolean(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...d field.', 'null': 'Field may not be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid boolean.'})&gt;
+parsed_key = 'GITHUB_APP_ENTERPRISE_ONLY', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+&gt;           value = field.deserialize(value)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/environs/__init__.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:374: in deserialize
+    output = self._deserialize(value, attr, data, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fields.Boolean(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...d field.', 'null': 'Field may not be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid boolean.'})&gt;
+value = '', attr = None, data = None, kwargs = {}
+
+    def _deserialize(
+        self,
+        value: typing.Any,
+        attr: str | None,
+        data: typing.Mapping[str, typing.Any] | None,
+        **kwargs,
+    ) -&gt; bool:
+        if not self.truthy:
+            return bool(value)
+        try:
+            if value in self.truthy:
+                return True
+            if value in self.falsy:
+                return False
+        except TypeError as error:
+            raise self.make_error("invalid", input=value) from error
+&gt;       raise self.make_error("invalid", input=value)
+E       marshmallow.exceptions.ValidationError: Not a valid boolean.
+
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:1196: ValidationError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;test_env.TestEnv testMethod=test_get_env_vars_with_github_app&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_ACTOR": "",
+            "GH_APP_ID": "12345",
+            "GH_APP_INSTALLATION_ID": "678910",
+            "GH_APP_PRIVATE_KEY": "hello",
+            "GITHUB_APP_ENTERPRISE_ONLY": "",
+            "GH_ENTERPRISE_URL": "",
+            "GH_TOKEN": "",
+            "ORGANIZATION": ORGANIZATION,
+            "PR_BODY": BODY,
+            "PR_TITLE": TITLE,
+        },
+        clear=True,
+    )
+    def test_get_env_vars_with_github_app(self):
+        """Test that all environment variables are set correctly using github app authentication"""
+        expected_result = EnvVars(
+            "",
+            12345,
+            678910,
+            b"hello",
+            False,
+            "",
+            "",
+            ORGANIZATION,
+            BODY,
+            TITLE,
+            REPOS_JSON_LOCATION,
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_env.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+env.py:137: in get_env_vars
+    gh_app_enterprise_only = env.bool("GITHUB_APP_ENTERPRISE_ONLY", False)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'GITHUB_APP_ENTERPRISE_ONLY'
+default = False, subcast = None, validate = None, kwargs = {}
+load_default = False, preprocess_kwargs = {}
+field = &lt;fields.Boolean(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...d field.', 'null': 'Field may not be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid boolean.'})&gt;
+parsed_key = 'GITHUB_APP_ENTERPRISE_ONLY', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+            value = field.deserialize(value)
+        except ma.ValidationError as error:
+            if self.eager:
+&gt;               raise EnvValidationError(
+                    f'Environment variable "{source_key}" invalid: {error.args[0]}',
+                    error.messages,
+                ) from error
+E               environs.exceptions.EnvValidationError: Environment variable "GITHUB_APP_ENTERPRISE_ONLY" invalid: Not a valid boolean.
+
+.venv/lib/python3.14/site-packages/environs/__init__.py:131: EnvValidationError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_with_token" time="0.001"><failure message="environs.exceptions.EnvValidationError: Environment variable &quot;GH_APP_ID&quot; invalid: Not a valid integer.">self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _validated(self, value: typing.Any) -&gt; _NumT:
+        """Format the value or raise a :exc:`ValidationError` if an error occurs."""
+        # (value is True or value is False) is ~5x faster than isinstance(value, bool)
+        if value is True or value is False:
+            raise self.make_error("invalid", input=value)
+        try:
+&gt;           return self._format_num(value)
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:943: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _format_num(self, value) -&gt; _NumT:
+        """Return the number value for value, given this field's `num_type`."""
+&gt;       return self.num_type(value)  # type: ignore[call-arg]
+               ^^^^^^^^^^^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: ''
+
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:935: ValueError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'GH_APP_ID', default = None
+subcast = None, validate = None, kwargs = {}, load_default = None
+preprocess_kwargs = {}
+field = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+parsed_key = 'GH_APP_ID', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+&gt;           value = field.deserialize(value)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/environs/__init__.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:374: in deserialize
+    output = self._deserialize(value, attr, data, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:960: in _deserialize
+    return self._validated(value)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:990: in _validated
+    return super()._validated(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _validated(self, value: typing.Any) -&gt; _NumT:
+        """Format the value or raise a :exc:`ValidationError` if an error occurs."""
+        # (value is True or value is False) is ~5x faster than isinstance(value, bool)
+        if value is True or value is False:
+            raise self.make_error("invalid", input=value)
+        try:
+            return self._format_num(value)
+        except (TypeError, ValueError) as error:
+&gt;           raise self.make_error("invalid", input=value) from error
+E           marshmallow.exceptions.ValidationError: Not a valid integer.
+
+.venv/lib/python3.14/site-packages/marshmallow/fields.py:945: ValidationError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;test_env.TestEnv testMethod=test_get_env_vars_with_token&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_ACTOR": "",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GITHUB_APP_ENTERPRISE_ONLY": "",
+            "GH_ENTERPRISE_URL": "",
+            "GH_TOKEN": TOKEN,
+            "ORGANIZATION": ORGANIZATION,
+            "PR_BODY": BODY,
+            "PR_TITLE": TITLE,
+        },
+    )
+    def test_get_env_vars_with_token(self):
+        """Test that all environment variables are set correctly using a token"""
+        expected_result = EnvVars(
+            "",
+            None,
+            None,
+            b"",
+            False,
+            "",
+            TOKEN,
+            ORGANIZATION,
+            BODY,
+            TITLE,
+            REPOS_JSON_LOCATION,
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_env.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+env.py:134: in get_env_vars
+    gh_app_id = env.int("GH_APP_ID", None)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'GH_APP_ID', default = None
+subcast = None, validate = None, kwargs = {}, load_default = None
+preprocess_kwargs = {}
+field = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+parsed_key = 'GH_APP_ID', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+            value = field.deserialize(value)
+        except ma.ValidationError as error:
+            if self.eager:
+&gt;               raise EnvValidationError(
+                    f'Environment variable "{source_key}" invalid: {error.args[0]}',
+                    error.messages,
+                ) from error
+E               environs.exceptions.EnvValidationError: Environment variable "GH_APP_ID" invalid: Not a valid integer.
+
+.venv/lib/python3.14/site-packages/environs/__init__.py:131: EnvValidationError</failure></testcase><testcase classname="test_open_contrib_pr.TestOpenContribPR" name="test_get_repos_json" time="0.001" /><testcase classname="test_open_contrib_pr.TestCloneRepository" name="test_clone_repository_failure" time="0.000" /><testcase classname="test_open_contrib_pr.TestCloneRepository" name="test_clone_repository_success" time="0.000" /><testcase classname="test_open_contrib_pr.TestCreatePullRequest" name="test_create_pull_exceptions" time="0.001" /><testcase classname="test_open_contrib_pr.TestCreatePullRequest" name="test_create_pull_request_success" time="0.000" /></testsuite></testsuites>

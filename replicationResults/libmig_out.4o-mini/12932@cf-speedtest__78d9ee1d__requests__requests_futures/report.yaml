@@ -1,0 +1,55 @@
+mig: 12932@cf-speedtest__78d9ee1d__requests__requests_futures__78d9ee1d__requests__requests_futures
+repo: 12932@cf-speedtest__78d9ee1d__requests__requests_futures
+commit: 78d9ee1dd00b63dcb64300b8ab24c87b00bae70e
+source: requests
+target: requests_futures
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.5
+  target_version: 1.0.2
+  finished_at: '2026-03-04 09:52:32'
+  project_coverage: 84.05797101449275
+  total_tests: 51
+  passed_tests: 46
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 57.142857142857146
+  files:
+  - path: cf_speedtest/speedtest.py
+    file_change_coverage: 57.142857142857146
+    covered_changed_lines: 10,16,114-115,130,135,199-200
+    uncovered_changed_lines: 54,59,77-78,98-99
+  test_diffs:
+  - test_id: tests/network_test.py::test_get_our_country
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert 'Unknown' == 'GB'\n  \n  - GB\n  + Unknown"
+  - test_id: tests/network_test.py::test_preamble_unit
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: assert '1.2.3.4' in "Your IP:\t<MagicMock name='REQ_SESSION.get().result().headers.get()'
+      id='4571750352'> (US)\nServer loc:\t<MagicMock n...ders.get()' id='4571750352'>
+      (<MagicMock name='REQ_SESSION.get().result().headers.get()' id='4571750352'>)
+      - (Unknown)"
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

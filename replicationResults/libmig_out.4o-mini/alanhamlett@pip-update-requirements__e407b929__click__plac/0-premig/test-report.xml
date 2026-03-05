@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="56" time="4.513" timestamp="2026-03-05T00:38:59.668506+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_pur.PurTestCase" name="test_does_not_update_package_with_multiline_spec" time="0.113" /><testcase classname="tests.test_pur.PurTestCase" name="test_does_not_update_package_with_wildcard_spec" time="0.062" /><testcase classname="tests.test_pur.PurTestCase" name="test_dry_run" time="0.049" /><testcase classname="tests.test_pur.PurTestCase" name="test_dry_run_changed" time="0.045" /><testcase classname="tests.test_pur.PurTestCase" name="test_dry_run_changed_invalid_package" time="0.053" /><testcase classname="tests.test_pur.PurTestCase" name="test_dry_run_changed_no_updates" time="0.046" /><testcase classname="tests.test_pur.PurTestCase" name="test_dry_run_invalid_package" time="0.043" /><testcase classname="tests.test_pur.PurTestCase" name="test_dry_run_with_nested_requirements_file" time="0.090" /><testcase classname="tests.test_pur.PurTestCase" name="test_exit_code_from_nested_requirements_file" time="0.084" /><testcase classname="tests.test_pur.PurTestCase" name="test_exit_code_from_no_updates" time="0.046" /><testcase classname="tests.test_pur.PurTestCase" name="test_exit_code_from_some_updates" time="0.045" /><testcase classname="tests.test_pur.PurTestCase" name="test_help_contents" time="0.002" /><testcase classname="tests.test_pur.PurTestCase" name="test_interactive_choice_default" time="0.044"><failure message="AssertionError: AttributeError(&quot;'ExitCodeException' object has no attribute 'show_color'&quot;) is not None">self = &lt;tests.test_pur.PurTestCase testMethod=test_interactive_choice_default&gt;
+
+    def test_interactive_choice_default(self):
+        tempdir = tempfile.mkdtemp()
+        requirements = os.path.join(tempdir, 'requirements.txt')
+        shutil.copy('tests/samples/requirements.txt', requirements)
+        args = ['-r', requirements, '--interactive']
+    
+        with patch('pip._internal.index.package_finder.PackageFinder.find_all_candidates') as mock_find_all_candidates:
+            project = 'flask'
+            version = '0.10.1'
+            link = Link('')
+            candidate = InstallationCandidate(project, version, link)
+            mock_find_all_candidates.return_value = [candidate]
+    
+            result = self.runner.invoke(pur, args)
+    
+&gt;           self.assertIsNone(result.exception)
+E           AssertionError: AttributeError("'ExitCodeException' object has no attribute 'show_color'") is not None
+
+tests/test_pur.py:1063: AssertionError</failure></testcase><testcase classname="tests.test_pur.PurTestCase" name="test_interactive_choice_invalid" time="0.045" /><testcase classname="tests.test_pur.PurTestCase" name="test_interactive_choice_no" time="0.045" /><testcase classname="tests.test_pur.PurTestCase" name="test_interactive_choice_quit" time="0.047" /><testcase classname="tests.test_pur.PurTestCase" name="test_interactive_choice_yes" time="0.048" /><testcase classname="tests.test_pur.PurTestCase" name="test_invalid_package" time="0.050" /><testcase classname="tests.test_pur.PurTestCase" name="test_max_version_spec_prevents_updating_package" time="0.046" /><testcase classname="tests.test_pur.PurTestCase" name="test_minor_skips" time="0.048" /><testcase classname="tests.test_pur.PurTestCase" name="test_minor_skips_with_wildcard" time="0.045" /><testcase classname="tests.test_pur.PurTestCase" name="test_minor_upgrades" time="0.047" /><testcase classname="tests.test_pur.PurTestCase" name="test_missing_requirements_file" time="0.042"><failure message="AttributeError: 'AttributeError' object has no attribute 'code'">self = &lt;tests.test_pur.PurTestCase testMethod=test_missing_requirements_file&gt;
+
+    def test_missing_requirements_file(self):
+        tempdir = tempfile.mkdtemp()
+        args = ['-r', 'missing.txt']
+    
+        with patch('pip._internal.index.package_finder.PackageFinder.find_all_candidates') as mock_find_all_candidates:
+            project = 'flask'
+            version = '0.10.1'
+            link = Link('')
+            candidate = InstallationCandidate(project, version, link)
+            mock_find_all_candidates.return_value = [candidate]
+    
+            with self.cd(tempdir):
+                result = self.runner.invoke(pur, args)
+    
+&gt;           self.assertEqual(result.exception.code, 2)
+                             ^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'AttributeError' object has no attribute 'code'
+
+tests/test_pur.py:680: AttributeError</failure></testcase><testcase classname="tests.test_pur.PurTestCase" name="test_no_arguments" time="0.045" /><testcase classname="tests.test_pur.PurTestCase" name="test_no_arguments_and_no_requirements_file" time="0.041"><failure message="AttributeError: 'AttributeError' object has no attribute 'code'">self = &lt;tests.test_pur.PurTestCase testMethod=test_no_arguments_and_no_requirements_file&gt;
+
+    def test_no_arguments_and_no_requirements_file(self):
+        tempdir = tempfile.mkdtemp()
+        args = []
+    
+        with patch('pip._internal.index.package_finder.PackageFinder.find_all_candidates') as mock_find_all_candidates:
+            project = 'flask'
+            version = '0.10.1'
+            link = Link('')
+            candidate = InstallationCandidate(project, version, link)
+            mock_find_all_candidates.return_value = [candidate]
+    
+            with self.cd(tempdir):
+                result = self.runner.invoke(pur, args)
+    
+&gt;           self.assertEqual(result.exception.code, 2)
+                             ^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'AttributeError' object has no attribute 'code'
+
+tests/test_pur.py:661: AttributeError</failure></testcase><testcase classname="tests.test_pur.PurTestCase" name="test_no_recursive_option" time="0.045" /><testcase classname="tests.test_pur.PurTestCase" name="test_notequal_version_spec_prevents_updating_package" time="0.043" /><testcase classname="tests.test_pur.PurTestCase" name="test_only" time="0.046" /><testcase classname="tests.test_pur.PurTestCase" name="test_only_multiple_packages" time="0.059" /><testcase classname="tests.test_pur.PurTestCase" name="test_only_stable_versions_selected" time="0.061" /><testcase classname="tests.test_pur.PurTestCase" name="test_patch_skips" time="0.052" /><testcase classname="tests.test_pur.PurTestCase" name="test_patch_skips_with_wildcard" time="0.044" /><testcase classname="tests.test_pur.PurTestCase" name="test_patch_upgrades" time="0.044" /><testcase classname="tests.test_pur.PurTestCase" name="test_pre_upgrades" time="0.045" /><testcase classname="tests.test_pur.PurTestCase" name="test_pre_upgrades_with_wildcard" time="0.043" /><testcase classname="tests.test_pur.PurTestCase" name="test_requirements_long_option_accepted" time="0.046" /><testcase classname="tests.test_pur.PurTestCase" name="test_skip_multiple_packages" time="0.042" /><testcase classname="tests.test_pur.PurTestCase" name="test_skip_package" time="0.052" /><testcase classname="tests.test_pur.PurTestCase" name="test_skip_package_in_nested_requirements" time="0.087" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_from_alt_index_url" time="0.057" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_from_alt_index_url_command_line_arg" time="0.046" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_from_alt_index_url_with_verify_command_line_arg" time="0.045" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_nested_requirements_to_output_file" time="0.085" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_nested_requirements_to_output_file_with_no_recursive" time="0.046" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_package" time="0.047" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_package_in_nested_requirements" time="0.088" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_package_in_nested_requirements_without_command_line" time="0.091" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_package_to_output_file" time="0.044" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_package_with_extras" time="0.046" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_package_with_max_version_spec" time="0.047" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_package_with_min_version_spec" time="0.043" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_package_with_multiline_spec" time="0.045" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_package_with_no_version_specified" time="0.045" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_package_with_number_in_name" time="0.044" /><testcase classname="tests.test_pur.PurTestCase" name="test_updates_package_without_command_line" time="0.044" /><testcase classname="tests.test_pur.PurTestCase" name="test_version" time="0.001" /></testsuite></testsuites>

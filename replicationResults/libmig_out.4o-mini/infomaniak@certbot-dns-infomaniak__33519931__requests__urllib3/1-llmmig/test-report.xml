@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="11" time="1.543" timestamp="2026-03-05T01:19:28.201328+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_cleanup" time="0.014" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_get_chall_pref" time="0.001" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_more_info" time="0.000" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_parser_arguments" time="0.001" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_perform" time="1.012" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_add_txt_record" time="0.005"><failure message="urllib3.exceptions.URLSchemeUnknown: Not supported URL scheme mock">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record&gt;
+
+    def test_add_txt_record(self):
+        """add_txt_record with normal params should succeed"""
+        self._register_response(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            data=[
+                {
+                    "id": 654321,
+                    "account_id": 1234,
+                    "service_id": 14,
+                    "service_name": "domain",
+                    "customer_name": DOMAIN,
+                }
+            ],
+        )
+        self._register_response("/1/domain/654321/dns/record", "1001234", "POST")
+&gt;       self.client.add_txt_record(
+            DOMAIN, self.record_name, self.record_content, self.record_ttl
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+certbot_dns_infomaniak/dns_infomaniak.py:212: in add_txt_record
+    (domain_id, domain_name) = self._find_zone(domain)
+                               ^^^^^^^^^^^^^^^^^^^^^^^
+certbot_dns_infomaniak/dns_infomaniak.py:192: in _find_zone
+    result = self._get_request(
+certbot_dns_infomaniak/dns_infomaniak.py:97: in _get_request
+    response = self.http.request('GET', url, fields=payload, headers=self.headers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:135: in request
+    return self.request_encode_url(
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:182: in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:446: in urlopen
+    conn = self.connection_from_host(u.host, port=u.port, scheme=u.scheme)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:317: in connection_from_host
+    return self.connection_from_context(request_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;urllib3.poolmanager.PoolManager object at 0x115152fd0&gt;
+request_context = {'host': 'endpoint', 'port': 80, 'scheme': 'mock'}
+
+    def connection_from_context(
+        self, request_context: dict[str, typing.Any]
+    ) -&gt; HTTPConnectionPool:
+        """
+        Get a :class:`urllib3.connectionpool.ConnectionPool` based on the request context.
+    
+        ``request_context`` must at least contain the ``scheme`` key and its
+        value must be a key in ``key_fn_by_scheme`` instance variable.
+        """
+        if "strict" in request_context:
+            warnings.warn(
+                "The 'strict' parameter is no longer needed on Python 3+. "
+                "This will raise an error in urllib3 v2.1.0.",
+                DeprecationWarning,
+            )
+            request_context.pop("strict")
+    
+        scheme = request_context["scheme"].lower()
+        pool_key_constructor = self.key_fn_by_scheme.get(scheme)
+        if not pool_key_constructor:
+&gt;           raise URLSchemeUnknown(scheme)
+E           urllib3.exceptions.URLSchemeUnknown: Not supported URL scheme mock
+
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:339: URLSchemeUnknown</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_add_txt_record_fail_to_authenticate" time="0.001"><failure message="urllib3.exceptions.URLSchemeUnknown: Not supported URL scheme mock">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record_fail_to_authenticate&gt;
+
+    def test_add_txt_record_fail_to_authenticate(self):
+        """add_txt_record with wrong token should fail"""
+        self._register_error(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            "not_authorized",
+            "Authorization required",
+        )
+        with self.assertRaises(PluginError):
+&gt;           self.client.add_txt_record(
+                DOMAIN, self.record_name, self.record_content, self.record_ttl
+            )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:152: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+certbot_dns_infomaniak/dns_infomaniak.py:212: in add_txt_record
+    (domain_id, domain_name) = self._find_zone(domain)
+                               ^^^^^^^^^^^^^^^^^^^^^^^
+certbot_dns_infomaniak/dns_infomaniak.py:192: in _find_zone
+    result = self._get_request(
+certbot_dns_infomaniak/dns_infomaniak.py:97: in _get_request
+    response = self.http.request('GET', url, fields=payload, headers=self.headers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:135: in request
+    return self.request_encode_url(
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:182: in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:446: in urlopen
+    conn = self.connection_from_host(u.host, port=u.port, scheme=u.scheme)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:317: in connection_from_host
+    return self.connection_from_context(request_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def connection_from_context(
+        self, request_context: dict[str, typing.Any]
+    ) -&gt; HTTPConnectionPool:
+        """
+        Get a :class:`urllib3.connectionpool.ConnectionPool` based on the request context.
+    
+        ``request_context`` must at least contain the ``scheme`` key and its
+        value must be a key in ``key_fn_by_scheme`` instance variable.
+        """
+        if "strict" in request_context:
+            warnings.warn(
+                "The 'strict' parameter is no longer needed on Python 3+. "
+                "This will raise an error in urllib3 v2.1.0.",
+                DeprecationWarning,
+            )
+            request_context.pop("strict")
+    
+        scheme = request_context["scheme"].lower()
+        pool_key_constructor = self.key_fn_by_scheme.get(scheme)
+        if not pool_key_constructor:
+&gt;           raise URLSchemeUnknown(scheme)
+E           urllib3.exceptions.URLSchemeUnknown: Not supported URL scheme mock
+
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:339: URLSchemeUnknown</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_add_txt_record_fail_to_find_domain" time="0.001"><failure message="urllib3.exceptions.URLSchemeUnknown: Not supported URL scheme mock">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record_fail_to_find_domain&gt;
+
+    def test_add_txt_record_fail_to_find_domain(self):
+        """add_txt_record with non existing domain should fail"""
+        self._register_response(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            data=[],
+        )
+        with self.assertRaises(PluginError):
+&gt;           self.client.add_txt_record(
+                DOMAIN, self.record_name, self.record_content, self.record_ttl
+            )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:140: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+certbot_dns_infomaniak/dns_infomaniak.py:212: in add_txt_record
+    (domain_id, domain_name) = self._find_zone(domain)
+                               ^^^^^^^^^^^^^^^^^^^^^^^
+certbot_dns_infomaniak/dns_infomaniak.py:192: in _find_zone
+    result = self._get_request(
+certbot_dns_infomaniak/dns_infomaniak.py:97: in _get_request
+    response = self.http.request('GET', url, fields=payload, headers=self.headers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:135: in request
+    return self.request_encode_url(
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:182: in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:446: in urlopen
+    conn = self.connection_from_host(u.host, port=u.port, scheme=u.scheme)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:317: in connection_from_host
+    return self.connection_from_context(request_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def connection_from_context(
+        self, request_context: dict[str, typing.Any]
+    ) -&gt; HTTPConnectionPool:
+        """
+        Get a :class:`urllib3.connectionpool.ConnectionPool` based on the request context.
+    
+        ``request_context`` must at least contain the ``scheme`` key and its
+        value must be a key in ``key_fn_by_scheme`` instance variable.
+        """
+        if "strict" in request_context:
+            warnings.warn(
+                "The 'strict' parameter is no longer needed on Python 3+. "
+                "This will raise an error in urllib3 v2.1.0.",
+                DeprecationWarning,
+            )
+            request_context.pop("strict")
+    
+        scheme = request_context["scheme"].lower()
+        pool_key_constructor = self.key_fn_by_scheme.get(scheme)
+        if not pool_key_constructor:
+&gt;           raise URLSchemeUnknown(scheme)
+E           urllib3.exceptions.URLSchemeUnknown: Not supported URL scheme mock
+
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:339: URLSchemeUnknown</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_del_txt_record" time="0.001"><failure message="urllib3.exceptions.URLSchemeUnknown: Not supported URL scheme mock">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record&gt;
+
+    def test_del_txt_record(self):
+        """del_txt_record with normal params should succeed"""
+        self._register_response(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            data=[
+                {
+                    "id": "654321",
+                    "account_id": "1234",
+                    "service_id": "14",
+                    "service_name": "domain",
+                    "customer_name": DOMAIN,
+                }
+            ],
+        )
+        self._register_response(
+            "/1/domain/654321/dns/record",
+            [
+                {
+                    "id": "11110",
+                    "source": ".",
+                    "source_idn": DOMAIN,
+                    "type": "NS",
+                    "ttl": 3600,
+                    "target": "ns1.death.star",
+                },
+                {
+                    "id": "11111",
+                    "source": self.record_name,
+                    "source_idn": "{name}.{domain}".format(name=self.record_name, domain=DOMAIN),
+                    "type": "TXT",
+                    "ttl": self.record_ttl,
+                    "target": self.record_content,
+                },
+            ],
+        )
+        self._register_response(
+            "/1/domain/654321/dns/record/11111",
+            True,
+            "DELETE",
+        )
+&gt;       self.client.del_txt_record(
+            DOMAIN, "{name}.{domain}".format(name=self.record_name, domain=DOMAIN),
+            self.record_content,
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:196: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+certbot_dns_infomaniak/dns_infomaniak.py:229: in del_txt_record
+    (domain_id, domain_name) = self._find_zone(domain)
+                               ^^^^^^^^^^^^^^^^^^^^^^^
+certbot_dns_infomaniak/dns_infomaniak.py:192: in _find_zone
+    result = self._get_request(
+certbot_dns_infomaniak/dns_infomaniak.py:97: in _get_request
+    response = self.http.request('GET', url, fields=payload, headers=self.headers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:135: in request
+    return self.request_encode_url(
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:182: in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:446: in urlopen
+    conn = self.connection_from_host(u.host, port=u.port, scheme=u.scheme)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:317: in connection_from_host
+    return self.connection_from_context(request_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;urllib3.poolmanager.PoolManager object at 0x11546da30&gt;
+request_context = {'host': 'endpoint', 'port': 80, 'scheme': 'mock'}
+
+    def connection_from_context(
+        self, request_context: dict[str, typing.Any]
+    ) -&gt; HTTPConnectionPool:
+        """
+        Get a :class:`urllib3.connectionpool.ConnectionPool` based on the request context.
+    
+        ``request_context`` must at least contain the ``scheme`` key and its
+        value must be a key in ``key_fn_by_scheme`` instance variable.
+        """
+        if "strict" in request_context:
+            warnings.warn(
+                "The 'strict' parameter is no longer needed on Python 3+. "
+                "This will raise an error in urllib3 v2.1.0.",
+                DeprecationWarning,
+            )
+            request_context.pop("strict")
+    
+        scheme = request_context["scheme"].lower()
+        pool_key_constructor = self.key_fn_by_scheme.get(scheme)
+        if not pool_key_constructor:
+&gt;           raise URLSchemeUnknown(scheme)
+E           urllib3.exceptions.URLSchemeUnknown: Not supported URL scheme mock
+
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:339: URLSchemeUnknown</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_del_txt_record_fail_to_authenticate" time="0.001"><failure message="urllib3.exceptions.URLSchemeUnknown: Not supported URL scheme mock">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record_fail_to_authenticate&gt;
+
+    def test_del_txt_record_fail_to_authenticate(self):
+        """del_txt_recod with wrong token should fail"""
+        self._register_error(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            "not_authorized",
+            "Authorization required",
+        )
+        with self.assertRaises(PluginError):
+&gt;           self.client.del_txt_record(
+                DOMAIN, self.record_name, self.record_content
+            )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:220: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+certbot_dns_infomaniak/dns_infomaniak.py:229: in del_txt_record
+    (domain_id, domain_name) = self._find_zone(domain)
+                               ^^^^^^^^^^^^^^^^^^^^^^^
+certbot_dns_infomaniak/dns_infomaniak.py:192: in _find_zone
+    result = self._get_request(
+certbot_dns_infomaniak/dns_infomaniak.py:97: in _get_request
+    response = self.http.request('GET', url, fields=payload, headers=self.headers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:135: in request
+    return self.request_encode_url(
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:182: in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:446: in urlopen
+    conn = self.connection_from_host(u.host, port=u.port, scheme=u.scheme)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:317: in connection_from_host
+    return self.connection_from_context(request_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def connection_from_context(
+        self, request_context: dict[str, typing.Any]
+    ) -&gt; HTTPConnectionPool:
+        """
+        Get a :class:`urllib3.connectionpool.ConnectionPool` based on the request context.
+    
+        ``request_context`` must at least contain the ``scheme`` key and its
+        value must be a key in ``key_fn_by_scheme`` instance variable.
+        """
+        if "strict" in request_context:
+            warnings.warn(
+                "The 'strict' parameter is no longer needed on Python 3+. "
+                "This will raise an error in urllib3 v2.1.0.",
+                DeprecationWarning,
+            )
+            request_context.pop("strict")
+    
+        scheme = request_context["scheme"].lower()
+        pool_key_constructor = self.key_fn_by_scheme.get(scheme)
+        if not pool_key_constructor:
+&gt;           raise URLSchemeUnknown(scheme)
+E           urllib3.exceptions.URLSchemeUnknown: Not supported URL scheme mock
+
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:339: URLSchemeUnknown</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_del_txt_record_fail_to_find_domain" time="0.001"><failure message="urllib3.exceptions.URLSchemeUnknown: Not supported URL scheme mock">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record_fail_to_find_domain&gt;
+
+    def test_del_txt_record_fail_to_find_domain(self):
+        """del_txt_record with non existing domain should fail"""
+        self._register_response(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            data=[],
+        )
+        with self.assertRaises(PluginError):
+&gt;           self.client.del_txt_record(
+                DOMAIN, self.record_name, self.record_content
+            )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+certbot_dns_infomaniak/dns_infomaniak.py:229: in del_txt_record
+    (domain_id, domain_name) = self._find_zone(domain)
+                               ^^^^^^^^^^^^^^^^^^^^^^^
+certbot_dns_infomaniak/dns_infomaniak.py:192: in _find_zone
+    result = self._get_request(
+certbot_dns_infomaniak/dns_infomaniak.py:97: in _get_request
+    response = self.http.request('GET', url, fields=payload, headers=self.headers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:135: in request
+    return self.request_encode_url(
+.venv/lib/python3.14/site-packages/urllib3/_request_methods.py:182: in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:446: in urlopen
+    conn = self.connection_from_host(u.host, port=u.port, scheme=u.scheme)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:317: in connection_from_host
+    return self.connection_from_context(request_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def connection_from_context(
+        self, request_context: dict[str, typing.Any]
+    ) -&gt; HTTPConnectionPool:
+        """
+        Get a :class:`urllib3.connectionpool.ConnectionPool` based on the request context.
+    
+        ``request_context`` must at least contain the ``scheme`` key and its
+        value must be a key in ``key_fn_by_scheme`` instance variable.
+        """
+        if "strict" in request_context:
+            warnings.warn(
+                "The 'strict' parameter is no longer needed on Python 3+. "
+                "This will raise an error in urllib3 v2.1.0.",
+                DeprecationWarning,
+            )
+            request_context.pop("strict")
+    
+        scheme = request_context["scheme"].lower()
+        pool_key_constructor = self.key_fn_by_scheme.get(scheme)
+        if not pool_key_constructor:
+&gt;           raise URLSchemeUnknown(scheme)
+E           urllib3.exceptions.URLSchemeUnknown: Not supported URL scheme mock
+
+.venv/lib/python3.14/site-packages/urllib3/poolmanager.py:339: URLSchemeUnknown</failure></testcase></testsuite></testsuites>

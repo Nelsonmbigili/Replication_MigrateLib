@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="41" time="30.320" timestamp="2026-03-04T11:28:49.143088+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_ocspchecker" name="test_get_cert_chain_bad_host" time="0.382" /><testcase classname="tests.test_ocspchecker" name="test_get_cert_chain_host_timeout" time="3.034" /><testcase classname="tests.test_ocspchecker" name="test_get_cert_chain_success" time="0.072"><failure message="AssertionError: assert '-----BEGIN C...FICATE-----\n' == '-----BEGIN C...FICATE-----\n'&#10;  &#10;    -----BEGIN CERTIFICATE-----&#10;  + MIIDXzCCAuagAwIBAgIQNuBZ7YiN1Xrt1XC2cn+b2jAKBggqhkjOPQQDAzBfMQsw&#10;  + CQYDVQQGEwJHQjEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVkMTYwNAYDVQQDEy1T&#10;  + ZWN0aWdvIFB1YmxpYyBTZXJ2ZXIgQXV0aGVudGljYXRpb24gUm9vdCBFNDYwHhcN&#10;  + MjEwMzIyMDAwMDAwWhcNMzYwMzIxMjM1OTU5WjBgMQswCQYDVQQGEwJHQjEYMBYG&#10;  + A1UEChMPU2VjdGlnbyBMaW1pdGVkMTcwNQYDVQQDEy5TZWN0aWdvIFB1YmxpYyBT...&#10;  &#10;  ...Full output truncated (35 lines hidden), use '-vv' to show">def test_get_cert_chain_success():
+        """Validate the issuer for microsoft.com with ms_pem"""
+    
+        host = "github.com"
+        port = 443
+    
+        github = get_certificate_chain(host, port)
+    
+&gt;       assert github[1] == certs.github_issuer_pem
+E       AssertionError: assert '-----BEGIN C...FICATE-----\n' == '-----BEGIN C...FICATE-----\n'
+E         
+E           -----BEGIN CERTIFICATE-----
+E         + MIIDXzCCAuagAwIBAgIQNuBZ7YiN1Xrt1XC2cn+b2jAKBggqhkjOPQQDAzBfMQsw
+E         + CQYDVQQGEwJHQjEYMBYGA1UEChMPU2VjdGlnbyBMaW1pdGVkMTYwNAYDVQQDEy1T
+E         + ZWN0aWdvIFB1YmxpYyBTZXJ2ZXIgQXV0aGVudGljYXRpb24gUm9vdCBFNDYwHhcN
+E         + MjEwMzIyMDAwMDAwWhcNMzYwMzIxMjM1OTU5WjBgMQswCQYDVQQGEwJHQjEYMBYG
+E         + A1UEChMPU2VjdGlnbyBMaW1pdGVkMTcwNQYDVQQDEy5TZWN0aWdvIFB1YmxpYyBT...
+E         
+E         ...Full output truncated (35 lines hidden), use '-vv' to show
+
+tests/test_ocspchecker.py:54: AssertionError</failure></testcase><testcase classname="tests.test_ocspchecker" name="test_get_cert_chain_bad_port" time="0.001" /><testcase classname="tests.test_ocspchecker" name="test_invalid_certificate" time="1.172" /><testcase classname="tests.test_ocspchecker" name="test_extract_ocsp_url_success" time="0.059" /><testcase classname="tests.test_ocspchecker" name="test_build_ocsp_request_success" time="0.049"><failure message="AssertionError: assert b'0Q0O0M0K0I0...a4vP\xe8K\xbe' == b'0Q0O0M0K0I0...\x0e\xb7B\xa5'&#10;  &#10;  At index 23 diff: b'\xb7' != b'\xcf'&#10;  Use -v to get more diff">def test_build_ocsp_request_success():
+        """test a successful build_ocsp_request function invocation"""
+    
+        host = "github.com"
+        cert_chain = get_certificate_chain(host)
+        ocsp_request_data = build_ocsp_request(cert_chain)
+    
+&gt;       assert ocsp_request_data == certs.github_ocsp_data
+E       AssertionError: assert b'0Q0O0M0K0I0...a4vP\xe8K\xbe' == b'0Q0O0M0K0I0...\x0e\xb7B\xa5'
+E         
+E         At index 23 diff: b'\xb7' != b'\xcf'
+E         Use -v to get more diff
+
+tests/test_ocspchecker.py:102: AssertionError</failure></testcase><testcase classname="tests.test_ocspchecker" name="test_build_ocsp_request_failure" time="0.001" /><testcase classname="tests.test_ocspchecker" name="test_get_ocsp_response_bad_url_format" time="0.001" /><testcase classname="tests.test_ocspchecker" name="test_get_ocsp_response_connection_error" time="0.434" /><testcase classname="tests.test_ocspchecker" name="test_get_ocsp_response_timeout" time="4.232" /><testcase classname="tests.test_ocspchecker" name="test_extract_ocsp_result_unauthorized" time="0.215" /><testcase classname="tests.test_ocspchecker" name="test_extract_ocsp_result_success" time="0.143" /><testcase classname="tests.test_ocspchecker" name="test_end_to_end_success_test" time="0.143" /><testcase classname="tests.test_ocspchecker" name="test_end_to_end_test_bad_host" time="0.002" /><testcase classname="tests.test_ocspchecker" name="test_end_to_end_test_bad_fqdn" time="0.021" /><testcase classname="tests.test_ocspchecker" name="test_end_to_end_test_host_timeout" time="3.004" /><testcase classname="tests.test_ocspchecker" name="test_bad_port_overflow" time="0.003" /><testcase classname="tests.test_ocspchecker" name="test_bad_port_typeerror" time="0.001" /><testcase classname="tests.test_ocspchecker" name="test_no_port_supplied" time="0.123" /><testcase classname="tests.test_ocspchecker" name="test_strip_http_from_host" time="0.112" /><testcase classname="tests.test_ocspchecker" name="test_strip_https_from_host" time="0.124" /><testcase classname="tests.test_ocspchecker" name="test_tls_fatal_alert_112" time="0.739" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[identrust.com]" time="0.559" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[digicert.com]" time="0.625" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[sectigo.com]" time="0.622" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[www.godaddy.com]" time="0.340" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[globalsign.com]" time="0.868" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[certum.pl]" time="1.245" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[actalis.it]" time="3.733"><failure message="IndexError: list index out of range">root_ca = 'actalis.it'
+
+    @pytest.mark.parametrize("root_ca", certs.cert_authorities)
+    def test_a_cert_from_each_root_ca(root_ca):
+        """Test a cert from each root CA to ensure test coverage"""
+    
+        try:
+            ocsp_request = get_ocsp_status(root_ca, 443)
+    
+        except Exception as err:
+            raise err
+    
+&gt;       assert ocsp_request[2] == "OCSP Status: GOOD"
+               ^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_responders.py:27: IndexError</failure></testcase><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[entrustdatacard.com]" time="0.819" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[secom.co.jp]" time="2.266" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[letsencrypt.org]" time="0.286"><failure message="IndexError: list index out of range">root_ca = 'letsencrypt.org'
+
+    @pytest.mark.parametrize("root_ca", certs.cert_authorities)
+    def test_a_cert_from_each_root_ca(root_ca):
+        """Test a cert from each root CA to ensure test coverage"""
+    
+        try:
+            ocsp_request = get_ocsp_status(root_ca, 443)
+    
+        except Exception as err:
+            raise err
+    
+&gt;       assert ocsp_request[2] == "OCSP Status: GOOD"
+               ^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_responders.py:27: IndexError</failure></testcase><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[microsoft.com]" time="0.360" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[trustwave.com]" time="0.343" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[wisekey.com]" time="1.234" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[networksolutions.com]" time="0.137" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[amazontrust.com]" time="0.423" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[lencr.org]" time="0.521"><failure message="IndexError: list index out of range">root_ca = 'lencr.org'
+
+    @pytest.mark.parametrize("root_ca", certs.cert_authorities)
+    def test_a_cert_from_each_root_ca(root_ca):
+        """Test a cert from each root CA to ensure test coverage"""
+    
+        try:
+            ocsp_request = get_ocsp_status(root_ca, 443)
+    
+        except Exception as err:
+            raise err
+    
+&gt;       assert ocsp_request[2] == "OCSP Status: GOOD"
+               ^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_responders.py:27: IndexError</failure></testcase><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[comodoca.com]" time="0.645" /><testcase classname="tests.test_responders" name="test_a_cert_from_each_root_ca[www.starfieldtech.com]" time="0.123"><failure message="IndexError: list index out of range">root_ca = 'www.starfieldtech.com'
+
+    @pytest.mark.parametrize("root_ca", certs.cert_authorities)
+    def test_a_cert_from_each_root_ca(root_ca):
+        """Test a cert from each root CA to ensure test coverage"""
+    
+        try:
+            ocsp_request = get_ocsp_status(root_ca, 443)
+    
+        except Exception as err:
+            raise err
+    
+&gt;       assert ocsp_request[2] == "OCSP Status: GOOD"
+               ^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_responders.py:27: IndexError</failure></testcase></testsuite></testsuites>

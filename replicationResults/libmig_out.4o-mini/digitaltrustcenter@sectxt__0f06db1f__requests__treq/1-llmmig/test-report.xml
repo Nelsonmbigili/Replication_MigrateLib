@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="31" time="1.130" timestamp="2026-03-04T12:27:36.389309+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_byte_order_mark" time="0.034"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;test.test_sectxt.SecTxtTestCase testMethod=test_byte_order_mark&gt;
+
+    def test_byte_order_mark(self):
+        with Mocker() as m:
+            expires = f"Expires: {(date.today() + timedelta(days=10)).isoformat()}T18:37:07z\n"
+            byte_content_with_bom = b'\xef\xbb\xbf\xef\xbb\xbfContact: mailto:me@example.com\n' \
+                                    + expires.encode()
+            m.get(
+                "https://example.com/.well-known/security.txt",
+                headers={"content-type": "text/plain"},
+                content=byte_content_with_bom,
+            )
+&gt;           s = SecurityTXT("example.com")
+
+test/test_sectxt.py:355: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sectxt/__init__.py:544: in __init__
+    super().__init__(b'', recommend_unknown_fields=recommend_unknown_fields, is_local=is_local)
+sectxt/__init__.py:91: in __init__
+    self._process()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;sectxt.SecurityTXT object at 0x111d3f770&gt;
+
+    def _process(self) -&gt; None:
+        if self.is_local:
+            security_txt_file = open(self._loc, mode="rb")
+            self._content = security_txt_file.read()
+            security_txt_file.close()
+            super()._process()
+        else:
+            security_txt_found = False
+            for scheme in ["https", "http"]:
+                for path in [".well-known/security.txt", "security.txt"]:
+                    url = urlunsplit((scheme, self._loc, path, None, None))
+                    try:
+                        resp = treq.get(  # Changed from requests.get to treq.get
+                            url,
+                            headers={
+                                'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) '
+                                              'Gecko/20100101 Firefox/12.0'},
+                            timeout=5
+                        )
+                    except treq.exceptions.SSLError:
+                        if not any(d["code"] == "invalid_cert" for d in self._errors):
+                            self._add_error(
+                                "invalid_cert",
+                                "security.txt must be served with a valid TLS certificate.",
+                            )
+                        try:
+                            resp = treq.get(  # Changed from requests.get to treq.get
+                                url,
+                                headers={
+                                    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) '
+                                                  'Gecko/20100101 Firefox/12.0'},
+                                timeout=5,
+                                verify=False
+                            )
+                        except:
+                            continue
+                    except:
+                        continue
+&gt;                   if resp.status_code == 200:
+E                   AttributeError: 'Deferred' object has no attribute 'status_code'
+
+sectxt/__init__.py:584: AttributeError</failure></testcase><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_byte_order_mark_parser" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_contact_field_properties" time="0.005" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_csaf_https_uri" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_csaf_provider_file" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_empty_key" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_empty_key2" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_expired" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_future_expires" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_invalid_expires" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_invalid_uri_scheme" time="0.000"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = &lt;test.test_sectxt.SecTxtTestCase testMethod=test_invalid_uri_scheme&gt;
+
+    def test_invalid_uri_scheme(self):
+        with Mocker() as m:
+            m.get(
+                "https://example.com/.well-known/security.txt",
+&gt;               exc=treq.exceptions.ConnectTimeout,
+            )
+E           AttributeError: module 'treq' has no attribute 'exceptions'
+
+test/test_sectxt.py:326: AttributeError</failure></testcase><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_local_file" time="0.002" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_long_expiry" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_missing_space" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_missing_value" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_multiple_csaf_notification" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_multiple_signed_messages" time="0.000"><failure message="AssertionError: True is not false">self = &lt;test.test_sectxt.SecTxtTestCase testMethod=test_multiple_signed_messages&gt;
+
+    def test_multiple_signed_messages(self):
+        content = _signed_example.replace(
+            "-----BEGIN PGP SIGNATURE-----",
+            "-----BEGIN PGP SIGNATURE-----\n-----BEGIN PGP SIGNATURE-----",
+        )
+        p = Parser(content.encode())
+&gt;       self.assertFalse(p.is_valid())
+E       AssertionError: True is not false
+
+test/test_sectxt.py:272: AssertionError</failure></testcase><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_no_https" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_no_line_separators" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_no_uri" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_not_correct_path" time="0.000"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = &lt;test.test_sectxt.SecTxtTestCase testMethod=test_not_correct_path&gt;
+
+    def test_not_correct_path(self):
+        with Mocker() as m:
+            m.get(
+                "https://example.com/.well-known/security.txt",
+&gt;               exc=treq.exceptions.ConnectTimeout,
+            )
+E           AttributeError: module 'treq' has no attribute 'exceptions'
+
+test/test_sectxt.py:314: AttributeError</failure></testcase><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_pgp_signed_formatting" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_prec_ws" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_preferred_languages" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_signed" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_signed_dash_escaped" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_signed_invalid_pgp" time="0.025" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_signed_no_canonical" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_too_many_final_newlines_signed" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_unknown_fields" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_valid_security_txt" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;test.test_sectxt.SecTxtTestCase testMethod=test_valid_security_txt&gt;
+
+    def test_valid_security_txt(self):
+        with Mocker() as m:
+            expires = f"Expires: {(date.today() + timedelta(days=10)).isoformat()}T18:37:07z\n"
+            byte_content = b'Contact: mailto:me@example.com\n' + bytes(expires, "utf-8")
+            m.get(
+                "https://example.com/.well-known/security.txt",
+                headers={"content-type": "text/plain"},
+                content=byte_content
+            )
+            m.get("https://example.com/security.txt", text=_signed_example)
+&gt;           s = SecurityTXT("example.com")
+
+test/test_sectxt.py:306: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sectxt/__init__.py:544: in __init__
+    super().__init__(b'', recommend_unknown_fields=recommend_unknown_fields, is_local=is_local)
+sectxt/__init__.py:91: in __init__
+    self._process()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;sectxt.SecurityTXT object at 0x111fa0910&gt;
+
+    def _process(self) -&gt; None:
+        if self.is_local:
+            security_txt_file = open(self._loc, mode="rb")
+            self._content = security_txt_file.read()
+            security_txt_file.close()
+            super()._process()
+        else:
+            security_txt_found = False
+            for scheme in ["https", "http"]:
+                for path in [".well-known/security.txt", "security.txt"]:
+                    url = urlunsplit((scheme, self._loc, path, None, None))
+                    try:
+                        resp = treq.get(  # Changed from requests.get to treq.get
+                            url,
+                            headers={
+                                'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) '
+                                              'Gecko/20100101 Firefox/12.0'},
+                            timeout=5
+                        )
+                    except treq.exceptions.SSLError:
+                        if not any(d["code"] == "invalid_cert" for d in self._errors):
+                            self._add_error(
+                                "invalid_cert",
+                                "security.txt must be served with a valid TLS certificate.",
+                            )
+                        try:
+                            resp = treq.get(  # Changed from requests.get to treq.get
+                                url,
+                                headers={
+                                    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) '
+                                                  'Gecko/20100101 Firefox/12.0'},
+                                timeout=5,
+                                verify=False
+                            )
+                        except:
+                            continue
+                    except:
+                        continue
+&gt;                   if resp.status_code == 200:
+E                   AttributeError: 'Deferred' object has no attribute 'status_code'
+
+sectxt/__init__.py:584: AttributeError</failure></testcase></testsuite></testsuites>

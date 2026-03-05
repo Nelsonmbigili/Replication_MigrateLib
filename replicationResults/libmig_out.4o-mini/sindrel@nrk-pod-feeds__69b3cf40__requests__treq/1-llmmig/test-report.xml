@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="11" skipped="0" tests="14" time="1.525" timestamp="2026-03-04T09:55:27.114132+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="common.test_helpers" name="test_write_feeds_file" time="0.002" /><testcase classname="common.test_helpers" name="test_write_podcasts_changelog" time="0.002" /><testcase classname="common.test_helpers" name="test_get_podcasts_config" time="0.001" /><testcase classname="common.test_psapi" name="test_get_podcast_metadata" time="0.054"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">def test_get_podcast_metadata():
+        podcast_id = "kongerekka"
+    
+&gt;       metadata = psapi.get_podcast_metadata(podcast_id)
+
+common/test_psapi.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+podcast_id = 'kongerekka', format = 'json'
+
+    def get_podcast_metadata(podcast_id, format = "json"):
+        logging.debug(f"Fetching metadata for podcast {podcast_id}...")
+    
+        url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}"
+        r = treq.get(url, headers=headers)
+    
+&gt;       if r.status_code != 200:
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+common/psapi.py:92: AttributeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_podcast_episodes" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">def test_get_podcast_episodes():
+        podcast_id = "berrum_beyer_snakker_om_greier"
+    
+&gt;       episodes = psapi.get_podcast_episodes(podcast_id)
+
+common/test_psapi.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+podcast_id = 'berrum_beyer_snakker_om_greier', season = None, format = 'json'
+
+    def get_podcast_episodes(podcast_id, season = None, format = "json"):
+        logging.info(f"Fetching episodes for podcast {podcast_id} ({season})...")
+    
+        url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}/episodes?page=1&amp;pageSize=10&amp;sort=desc"
+        if season:
+            url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}/seasons/{season}?page=1&amp;pageSize=10&amp;sort=desc"
+    
+        r = treq.get(url, headers=headers)
+&gt;       if r.status_code != 200:
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+common/psapi.py:59: AttributeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_all_podcast_episodes" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">def test_get_all_podcast_episodes():
+        podcast_id = "kongerekka"
+    
+&gt;       episodes = psapi.get_all_podcast_episodes(podcast_id)
+
+common/test_psapi.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+podcast_id = 'kongerekka', season = None
+
+    def get_all_podcast_episodes(podcast_id, season = None):
+        url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}/episodes?page=1&amp;pageSize=30&amp;sort=asc"
+    
+        if season:
+            url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}/seasons/{season}?page=1&amp;pageSize=30&amp;sort=asc"
+    
+        episodes = []
+        while True:
+            r = treq.get(url, headers=headers)
+&gt;           if r.status_code != 200:
+E           AttributeError: 'Deferred' object has no attribute 'status_code'
+
+common/psapi.py:33: AttributeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_all_podcast_episodes_all_seasons" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">def test_get_all_podcast_episodes_all_seasons():
+        podcast_id = "klassikere_fra_p3-arkivet"
+    
+&gt;       metadata = psapi.get_podcast_metadata(podcast_id)
+
+common/test_psapi.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+podcast_id = 'klassikere_fra_p3-arkivet', format = 'json'
+
+    def get_podcast_metadata(podcast_id, format = "json"):
+        logging.debug(f"Fetching metadata for podcast {podcast_id}...")
+    
+        url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}"
+        r = treq.get(url, headers=headers)
+    
+&gt;       if r.status_code != 200:
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+common/psapi.py:92: AttributeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_episode_manifest" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">def test_get_episode_manifest():
+        podcast_id = "kongerekka"
+    
+&gt;       episodes = psapi.get_podcast_episodes(podcast_id)
+
+common/test_psapi.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+podcast_id = 'kongerekka', season = None, format = 'json'
+
+    def get_podcast_episodes(podcast_id, season = None, format = "json"):
+        logging.info(f"Fetching episodes for podcast {podcast_id} ({season})...")
+    
+        url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}/episodes?page=1&amp;pageSize=10&amp;sort=desc"
+        if season:
+            url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}/seasons/{season}?page=1&amp;pageSize=10&amp;sort=desc"
+    
+        r = treq.get(url, headers=headers)
+&gt;       if r.status_code != 200:
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+common/psapi.py:59: AttributeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_latest_podcast_season" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">def test_get_latest_podcast_season():
+        podcast_id = "kongerekka"
+    
+&gt;       metadata = psapi.get_podcast_metadata(podcast_id)
+
+common/test_psapi.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+podcast_id = 'kongerekka', format = 'json'
+
+    def get_podcast_metadata(podcast_id, format = "json"):
+        logging.debug(f"Fetching metadata for podcast {podcast_id}...")
+    
+        url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}"
+        r = treq.get(url, headers=headers)
+    
+&gt;       if r.status_code != 200:
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+common/psapi.py:92: AttributeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_podcast_episodes_by_season" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">def test_get_podcast_episodes_by_season():
+        podcast_id = "kongerekka"
+        season_id = "2020"
+    
+&gt;       episodes = psapi.get_podcast_episodes(podcast_id, season_id)
+
+common/test_psapi.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+podcast_id = 'kongerekka', season = '2020', format = 'json'
+
+    def get_podcast_episodes(podcast_id, season = None, format = "json"):
+        logging.info(f"Fetching episodes for podcast {podcast_id} ({season})...")
+    
+        url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}/episodes?page=1&amp;pageSize=10&amp;sort=desc"
+        if season:
+            url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}/seasons/{season}?page=1&amp;pageSize=10&amp;sort=desc"
+    
+        r = treq.get(url, headers=headers)
+&gt;       if r.status_code != 200:
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+common/psapi.py:59: AttributeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_all_podcasts" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">def test_get_all_podcasts():
+&gt;       podcasts = psapi.get_all_podcasts()
+
+common/test_psapi.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_all_podcasts():
+        url = f"{api_base_url}/radio/search/categories/podcast?take=1000"
+    
+        podcasts = {}
+        series_c = 0
+    
+        while True:
+            r = treq.get(url, headers=headers)
+&gt;           if r.status_code != 200:
+E           AttributeError: 'Deferred' object has no attribute 'status_code'
+
+common/psapi.py:109: AttributeError</failure></testcase><testcase classname="test_discover_feeds" name="test_update_podcasts_config" time="0.014"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">def test_update_podcasts_config():
+        configured = [
+            {
+                "id": "abels_taarn",
+                "title": "De 10 siste fra Abels Tårn",
+                "season": None,
+                "enabled": True,
+            },
+            {
+                "id": "berrum_beyer_snakker_om_greier",
+                "title": "De 10 siste fra Foo og Bar",
+                "season": None,
+                "enabled": False,
+                "ignore": True,
+            },
+        ]
+        discovered = {
+            "hele_historien" : {
+                "seriesId": "hele_historien",
+                "title": "De 10 siste fra Hele Historien",
+            },
+            "abels_taarn" : {
+                "seriesId": "abels_taarn",
+                "title": "De 10 siste fra Abels Tårn",
+            },
+            "berrum_beyer_snakker_om_greier" : {
+                "seriesId": "berrum_beyer_snakker_om_greier",
+                "title": "De 10 siste fra Foo og Bar",
+            },
+            "dagsnytt_atten" : {
+                "seriesId": "dagsnytt_atten",
+                "title": "De 10 siste fra dagsnytt_atten",
+            }
+        }
+    
+&gt;       updated, changes = update_podcasts_config(configured, discovered)
+
+test_discover_feeds.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+discover_feeds.py:54: in update_podcasts_config
+    metadata = psapi.get_podcast_metadata(podcast['seriesId'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+podcast_id = 'hele_historien', format = 'json'
+
+    def get_podcast_metadata(podcast_id, format = "json"):
+        logging.debug(f"Fetching metadata for podcast {podcast_id}...")
+    
+        url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}"
+        r = treq.get(url, headers=headers)
+    
+&gt;       if r.status_code != 200:
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+common/psapi.py:92: AttributeError</failure></testcase><testcase classname="test_generate_feeds" name="test_get_podcast" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">def test_get_podcast():
+        feeds_dir = "tests/rss"
+        os.makedirs(feeds_dir, exist_ok=True)
+    
+        podcast_id = "kongerekka"
+        season_id = "2020"
+    
+&gt;       podcast = get_podcast(podcast_id, season_id, feeds_dir, 10)
+
+test_generate_feeds.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+generate_feeds.py:25: in get_podcast
+    metadata = get_podcast_metadata(podcast_id)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+podcast_id = 'kongerekka', format = 'json'
+
+    def get_podcast_metadata(podcast_id, format = "json"):
+        logging.debug(f"Fetching metadata for podcast {podcast_id}...")
+    
+        url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}"
+        r = treq.get(url, headers=headers)
+    
+&gt;       if r.status_code != 200:
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+common/psapi.py:92: AttributeError</failure></testcase><testcase classname="test_generate_feeds" name="test_get_podcast_void" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">def test_get_podcast_void():
+        feeds_dir = "tests/rss"
+    
+        podcast_id = "kongerdekka"
+        season_id = "2020"
+    
+&gt;       podcast = get_podcast(podcast_id, season_id, feeds_dir, 10)
+
+test_generate_feeds.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+generate_feeds.py:25: in get_podcast
+    metadata = get_podcast_metadata(podcast_id)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+podcast_id = 'kongerdekka', format = 'json'
+
+    def get_podcast_metadata(podcast_id, format = "json"):
+        logging.debug(f"Fetching metadata for podcast {podcast_id}...")
+    
+        url = f"{api_base_url}/radio/catalog/podcast/{podcast_id}"
+        r = treq.get(url, headers=headers)
+    
+&gt;       if r.status_code != 200:
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+common/psapi.py:92: AttributeError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,217 @@
+## Running premig
+creating venv at /Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/hh-h@aiohttp-swagger3__311f0dc9__attrs__cattrs/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 5 files
+### migrating aiohttp_swagger3/exceptions.py
+### migrating aiohttp_swagger3/swagger_info.py
+### migrating aiohttp_swagger3/swagger_route.py
+### migrating aiohttp_swagger3/ui_settings.py
+### migrating aiohttp_swagger3/validators.py
+### running tests
+- test finished with status 4, cov finished with status 1
+### test diff with round premig
+- `tests/test_authentication.py::test_all_of_auth[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_any_of_auth[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_api_key_cookie_auth[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_api_key_header_auth[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_api_key_query_auth[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_basic_auth[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_bearer_auth[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_complex_auth[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_disabled_security[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_global_security[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_missing_basic_word_in_auth[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_missing_bearer_word_in_auth[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_optional_any_of_auth[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_overwrite_global_security[pyloop]: passed != not found`
+- `tests/test_authentication.py::test_unknown_security: passed != not found`
+- `tests/test_class_based_view.py::test_class_based_spec_file[pyloop]: passed != not found`
+- `tests/test_class_based_view.py::test_class_based_view[pyloop]: passed != not found`
+- `tests/test_class_based_view.py::test_decorated_class_based_view[pyloop]: passed != not found`
+- `tests/test_custom_handlers.py::test_asterisk_custom_handlers[pyloop]: passed != not found`
+- `tests/test_custom_handlers.py::test_custom_media_type[pyloop]: passed != not found`
+- `tests/test_custom_handlers.py::test_file_upload[pyloop]: passed != not found`
+- `tests/test_custom_handlers.py::test_missing_custom_media_type: passed != not found`
+- `tests/test_custom_keys.py::test_custom_request_key[pyloop]: passed != not found`
+- `tests/test_discriminator.py::test_any_of_discriminator[pyloop]: passed != not found`
+- `tests/test_discriminator.py::test_invalid_discriminator[pyloop]: passed != not found`
+- `tests/test_discriminator.py::test_one_of_discriminator[pyloop]: passed != not found`
+- `tests/test_docs_cookies.py::test_cookies[pyloop]: passed != not found`
+- `tests/test_docs_cookies.py::test_fail_validation[pyloop]: passed != not found`
+- `tests/test_docs_cookies.py::test_missing_cookie_parameter[pyloop]: passed != not found`
+- `tests/test_docs_cookies.py::test_missing_cookies[pyloop]: passed != not found`
+- `tests/test_docs_decorator.py::test_decorated_handlers[pyloop]: passed != not found`
+- `tests/test_docs_decorator.py::test_docstring_and_decorator_collision[pyloop]: passed != not found`
+- `tests/test_docs_headers.py::test_header[pyloop]: passed != not found`
+- `tests/test_docs_headers.py::test_header_always_lower_case[pyloop]: passed != not found`
+- `tests/test_docs_headers.py::test_missing_header_parameter[pyloop]: passed != not found`
+- `tests/test_docs_headers.py::test_optional_header[pyloop]: passed != not found`
+- `tests/test_docs_mixed.py::test_default[pyloop]: passed != not found`
+- `tests/test_docs_mixed.py::test_exclusive_minimum_maximum[pyloop]: passed != not found`
+- `tests/test_docs_mixed.py::test_int32_bounds[pyloop]: passed != not found`
+- `tests/test_docs_mixed.py::test_min_max_items[pyloop]: passed != not found`
+- `tests/test_docs_mixed.py::test_min_max_length[pyloop]: passed != not found`
+- `tests/test_docs_mixed.py::test_minimum_maximum[pyloop]: passed != not found`
+- `tests/test_docs_mixed.py::test_one_of_basic[pyloop]: passed != not found`
+- `tests/test_docs_mixed.py::test_optional[pyloop]: passed != not found`
+- `tests/test_docs_mixed.py::test_unique_items[pyloop]: passed != not found`
+- `tests/test_docs_paths.py::test_already_exists_path[pyloop]: passed != not found`
+- `tests/test_docs_paths.py::test_decorated_handlers[pyloop]: passed != not found`
+- `tests/test_docs_paths.py::test_path[pyloop]: passed != not found`
+- `tests/test_docs_paths.py::test_path_with_regex[pyloop]: passed != not found`
+- `tests/test_docs_queries.py::test_array[pyloop]: passed != not found`
+- `tests/test_docs_queries.py::test_corner_cases[pyloop]: passed != not found`
+- `tests/test_docs_queries.py::test_decorated_routes[pyloop]: passed != not found`
+- `tests/test_docs_queries.py::test_enum[pyloop]: passed != not found`
+- `tests/test_docs_queries.py::test_missing_query_parameter[pyloop]: passed != not found`
+- `tests/test_docs_queries.py::test_primitives[pyloop]: passed != not found`
+- `tests/test_docs_queries.py::test_query_array[pyloop]: passed != not found`
+- `tests/test_docs_queries.py::test_string_formats[pyloop]: passed != not found`
+- `tests/test_docs_queries.py::test_string_pattern[pyloop]: passed != not found`
+- `tests/test_docs_queries.py::test_wrong_item_in_array[pyloop]: passed != not found`
+- `tests/test_docs_refs.py::test_ref[pyloop]: passed != not found`
+- `tests/test_docs_refs.py::test_ref_parameter[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_all_of_object[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_any_of_object[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_array_in_object[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_body[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_body_with_additional_properties[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_body_with_no_additional_properties[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_body_with_object_additional_properties[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_body_with_optional_properties[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_deep_nested[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_float_as_int[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_form_data[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_incorrect_json_body[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_media_type_with_charset[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_min_max_properties[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_no_content_type[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_no_content_type_body_required[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_no_handler[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_nullable[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_nullable_ref[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_object_can_have_optional_props[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_one_of_object[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_optional_body_explicit[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_optional_body_implicit[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_required_no_content_type[pyloop]: passed != not found`
+- `tests/test_docs_request_bodies.py::test_wrong_body[pyloop]: passed != not found`
+- `tests/test_docs_without_docs.py::test_no_docs[pyloop]: passed != not found`
+- `tests/test_file_spec.py::test_route_out_of_spec_file[pyloop]: passed != not found`
+- `tests/test_file_spec.py::test_spec_file[pyloop]: passed != not found`
+- `tests/test_methods.py::test_all_methods[pyloop]: passed != not found`
+- `tests/test_methods.py::test_allow_head[pyloop]: passed != not found`
+- `tests/test_methods.py::test_meth_any[pyloop]: passed != not found`
+- `tests/test_middleware.py::test_validation_exception_middleware[pyloop]: passed != not found`
+- `tests/test_named_resources.py::test_named_resources: passed != not found`
+- `tests/test_read_only.py::test_ignore_read_only[pyloop]: passed != not found`
+- `tests/test_read_only.py::test_object_read_only_properties_passed[pyloop]: passed != not found`
+- `tests/test_read_only.py::test_object_read_only_properties_skipped[pyloop]: passed != not found`
+- `tests/test_read_only.py::test_object_required_read_only_properties[pyloop]: passed != not found`
+- `tests/test_string_formats.py::test_custom_string_format[pyloop]: passed != not found`
+- `tests/test_string_formats.py::test_override_default_string_format[pyloop]: passed != not found`
+- `tests/test_string_formats.py::test_unknown_string_format[pyloop]: passed != not found`
+- `tests/test_swagger.py::test_all_uis[pyloop]: passed != not found`
+- `tests/test_swagger.py::test_bind_swagger_to_root[pyloop]: passed != not found`
+- `tests/test_swagger.py::test_default_serialization[pyloop]: passed != not found`
+- `tests/test_swagger.py::test_deprecated_properties: passed != not found`
+- `tests/test_swagger.py::test_incorrect_rapidoc_ui_path: passed != not found`
+- `tests/test_swagger.py::test_incorrect_redoc_ui_path: passed != not found`
+- `tests/test_swagger.py::test_incorrect_swagger_ui_path: passed != not found`
+- `tests/test_swagger.py::test_mix_info_with_other_properties: passed != not found`
+- `tests/test_swagger.py::test_no_swagger_routes[pyloop]: passed != not found`
+- `tests/test_swagger.py::test_no_ui[pyloop]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_bg_color_default: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[bg_color-#333]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[bg_color-#AAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[bg_color-#FFFff4]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[bg_color-#bbbbbbbb]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_accent_color-#333]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_accent_color-#AAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_accent_color-#FFFff4]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_accent_color-#bbbbbbbb]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_bg_color-#333]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_bg_color-#AAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_bg_color-#FFFff4]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_bg_color-#bbbbbbbb]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_hover_bg_color-#333]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_hover_bg_color-#AAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_hover_bg_color-#FFFff4]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_hover_bg_color-#bbbbbbbb]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_hover_text_color-#333]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_hover_text_color-#AAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_hover_text_color-#FFFff4]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_hover_text_color-#bbbbbbbb]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_text_color-#333]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_text_color-#AAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_text_color-#FFFff4]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[nav_text_color-#bbbbbbbb]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[text_color-#333]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[text_color-#AAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[text_color-#FFFff4]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator[text_color-#bbbbbbbb]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[bg_color-#12]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[bg_color-#AAAAAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[bg_color-#fffff]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[bg_color-#test]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[bg_color-asdlkalsdk]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_accent_color-#12]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_accent_color-#AAAAAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_accent_color-#fffff]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_accent_color-#test]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_accent_color-asdlkalsdk]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_bg_color-#12]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_bg_color-#AAAAAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_bg_color-#fffff]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_bg_color-#test]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_bg_color-asdlkalsdk]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_hover_bg_color-#12]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_hover_bg_color-#AAAAAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_hover_bg_color-#fffff]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_hover_bg_color-#test]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_hover_bg_color-asdlkalsdk]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_hover_text_color-#12]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_hover_text_color-#AAAAAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_hover_text_color-#fffff]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_hover_text_color-#test]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_hover_text_color-asdlkalsdk]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_text_color-#12]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_text_color-#AAAAAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_text_color-#fffff]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_text_color-#test]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[nav_text_color-asdlkalsdk]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[text_color-#12]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[text_color-#AAAAAAA]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[text_color-#fffff]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[text_color-#test]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_hex_color_validator_invalid[text_color-asdlkalsdk]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_static_files[pyloop]: passed != not found`
+- `tests/test_swagger.py::test_rapidoc_ui_text_color_default: passed != not found`
+- `tests/test_swagger.py::test_redirect[pyloop]: passed != not found`
+- `tests/test_swagger.py::test_redoc_ui_expand_responses_validator: passed != not found`
+- `tests/test_swagger.py::test_redoc_ui_index_html[pyloop]: passed != not found`
+- `tests/test_swagger.py::test_redoc_ui_json_sample_expand_level_validator: passed != not found`
+- `tests/test_swagger.py::test_redoc_ui_static_files[pyloop]: passed != not found`
+- `tests/test_swagger.py::test_swagger_file_no_spec: passed != not found`
+- `tests/test_swagger.py::test_swagger_invalid_schema: passed != not found`
+- `tests/test_swagger.py::test_swagger_json[pyloop]: passed != not found`
+- `tests/test_swagger.py::test_swagger_json_renders_datetime[pyloop]: passed != not found`
+- `tests/test_swagger.py::test_swagger_ui_index_html[pyloop]: passed != not found`
+- `tests/test_swagger.py::test_two_uis_one_path: passed != not found`
+- `tests/test_validation.py::test_route_validation_false[pyloop]: passed != not found`
+- `tests/test_validation.py::test_spec_file_route_validation_false[pyloop]: passed != not found`
+- `tests/test_validation.py::test_spec_file_validation_false[pyloop]: passed != not found`
+- `tests/test_validation.py::test_validation_false[pyloop]: passed != not found`
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+### Finding async transforms
+- Found 0 functions to mark async including 0 tests
+- Found 0 calls to await
+- async_transform finished

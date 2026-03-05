@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="13" time="1.468" timestamp="2026-03-04T03:52:06.368975+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_base.TestBase" name="test_content_type" time="0.001" /><testcase classname="tests.test_base.TestBase" name="test_discover_get" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'raise_for_status'">self = &lt;test_base.TestBase testMethod=test_discover_get&gt;
+mock_head = &lt;MagicMock name='head' id='4567863312'&gt;
+mock_get = &lt;MagicMock name='get' id='4567864320'&gt;
+
+    @patch('requests.get')
+    @patch('requests.head')
+    def test_discover_get(self, mock_head, mock_get):
+        inbox = "http://example.org/inbox"
+        links = {"type": {"url": "http://www.w3.org/ns/ldp#Container"}}
+        headers = {"content-type": "application/n-triples"}
+    
+        mock_res1 = Mock()
+        mock_res1.links = links
+        mock_res1.headers = headers
+        mock_head.return_value = mock_res1
+    
+        mock_res2 = Mock()
+        mock_res2.links = links
+        mock_res2.headers = headers
+        mock_res2.text = "&lt;http://example.org/resource&gt; " + \
+                         "&lt;http://www.w3.org/ns/ldp#inbox&gt; " + \
+                         "&lt;http://example.org/inbox&gt; .\n"
+        mock_get.return_value = mock_res2
+    
+        ldn = BaseLDN()
+&gt;       self.assertEqual(ldn.discover("http://example.org/resource"), inbox)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_base.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/base.py:52: in discover
+    inbox = self.__discover_head(target, headers=headers,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.base.BaseLDN object at 0x110474910&gt;
+target = 'http://example.org/resource'
+kwargs = {'allow_redirects': True, 'headers': {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}}
+r = &lt;Deferred at 0x1104f8d70&gt;
+
+    def __discover_head(self, target, **kwargs):
+        r = treq.head(target, **kwargs)
+&gt;       r.raise_for_status()
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'raise_for_status'
+
+ldnlib/base.py:19: AttributeError</failure></testcase><testcase classname="tests.test_base.TestBase" name="test_discover_head" time="0.001"><failure message="AttributeError: 'Deferred' object has no attribute 'raise_for_status'">self = &lt;test_base.TestBase testMethod=test_discover_head&gt;
+mock_head = &lt;MagicMock name='head' id='4568618656'&gt;
+
+    @patch('requests.head')
+    def test_discover_head(self, mock_head):
+        inbox = "http://example.org/inbox"
+        mock_res = Mock()
+        mock_res.links = {"http://www.w3.org/ns/ldp#inbox": {"url": inbox}}
+    
+        mock_head.return_value = mock_res
+    
+        ldn = BaseLDN()
+&gt;       self.assertEqual(ldn.discover("http://example.org/resource"), inbox)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_base.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/base.py:52: in discover
+    inbox = self.__discover_head(target, headers=headers,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.base.BaseLDN object at 0x110476850&gt;
+target = 'http://example.org/resource'
+kwargs = {'allow_redirects': True, 'headers': {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}}
+r = &lt;Deferred at 0x110477750&gt;
+
+    def __discover_head(self, target, **kwargs):
+        r = treq.head(target, **kwargs)
+&gt;       r.raise_for_status()
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'raise_for_status'
+
+ldnlib/base.py:19: AttributeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notification_jsonld" time="0.001"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;test_consumer.TestConsumer testMethod=test_notification_jsonld&gt;
+mock_get = &lt;MagicMock name='get' id='4567862976'&gt;
+
+    @patch('requests.get')
+    def test_notification_jsonld(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/notification1.json", "r") as f:
+            attrs = {'json.return_value': json.loads("[" + f.read() + "]")}
+            mock_res.configure_mock(**attrs)
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notification = Consumer().notification("http://example.org/inbox/1")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x1104fa270&gt;
+iri = 'http://example.org/inbox/1', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+r = &lt;Deferred at 0x110878910&gt;
+
+    def notification(self, iri, **kwargs):
+        """
+        Retrieve a single LDN notification and decode into a Python object.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        r = treq.get(iri, headers=headers, **kwargs)
+&gt;       if r.status_code != 200:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+ldnlib/consumer.py:38: AttributeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notification_turtle" time="0.001"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;test_consumer.TestConsumer testMethod=test_notification_turtle&gt;
+mock_get = &lt;MagicMock name='get' id='4568622352'&gt;
+
+    @patch('requests.get')
+    def test_notification_turtle(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "text/turtle; charset=utf-8"}
+        with open("tests/notification.ttl", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notification = Consumer().notification("http://example.org/inbox/1")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x110878cd0&gt;
+iri = 'http://example.org/inbox/1', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+r = &lt;Deferred at 0x110879090&gt;
+
+    def notification(self, iri, **kwargs):
+        """
+        Retrieve a single LDN notification and decode into a Python object.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        r = treq.get(iri, headers=headers, **kwargs)
+&gt;       if r.status_code != 200:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+ldnlib/consumer.py:38: AttributeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_jsonld_compacted" time="0.001"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_jsonld_compacted&gt;
+mock_get = &lt;MagicMock name='get' id='4568623360'&gt;
+
+    @patch('requests.get')
+    def test_notifications_jsonld_compacted(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/inbox.jsonld", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x110879590&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+r = &lt;Deferred at 0x110879450&gt;
+
+    def notifications(self, inbox, **kwargs):
+        """
+        Retrieve all of the notification IRIs from an ldp:inbox as a list.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        r = treq.get(inbox, headers=headers, **kwargs)
+&gt;       if r.status_code != 200:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+ldnlib/consumer.py:23: AttributeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_jsonld_expanded" time="0.001"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_jsonld_expanded&gt;
+mock_get = &lt;MagicMock name='get' id='4568624368'&gt;
+
+    @patch('requests.get')
+    def test_notifications_jsonld_expanded(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/inbox_expanded.jsonld", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x1108dc2b0&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+r = &lt;Deferred at 0x110879a90&gt;
+
+    def notifications(self, inbox, **kwargs):
+        """
+        Retrieve all of the notification IRIs from an ldp:inbox as a list.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        r = treq.get(inbox, headers=headers, **kwargs)
+&gt;       if r.status_code != 200:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+ldnlib/consumer.py:23: AttributeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_ntriples" time="0.001"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_ntriples&gt;
+mock_get = &lt;MagicMock name='get' id='4568625376'&gt;
+
+    @patch('requests.get')
+    def test_notifications_ntriples(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/n-triples"}
+        with open("tests/inbox.nt", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x1108dc770&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+r = &lt;Deferred at 0x110879e50&gt;
+
+    def notifications(self, inbox, **kwargs):
+        """
+        Retrieve all of the notification IRIs from an ldp:inbox as a list.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        r = treq.get(inbox, headers=headers, **kwargs)
+&gt;       if r.status_code != 200:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+ldnlib/consumer.py:23: AttributeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_turtle" time="0.001"><failure message="AttributeError: 'Deferred' object has no attribute 'status_code'">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_turtle&gt;
+mock_get = &lt;MagicMock name='get' id='4568626384'&gt;
+
+    @patch('requests.get')
+    def test_notifications_turtle(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "text/turtle; charset=utf-8"}
+        with open("tests/inbox.ttl", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x1108f4830&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+r = &lt;Deferred at 0x11087a210&gt;
+
+    def notifications(self, inbox, **kwargs):
+        """
+        Retrieve all of the notification IRIs from an ldp:inbox as a list.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        r = treq.get(inbox, headers=headers, **kwargs)
+&gt;       if r.status_code != 200:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+ldnlib/consumer.py:23: AttributeError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_dict" time="0.026"><failure message="TypeError: ('Could not adapt', '{&quot;@context&quot;: {&quot;schema&quot;: &quot;http://schema.org/&quot;, &quot;creator&quot;: {&quot;@id&quot;: &quot;schema:creator&quot;, &quot;@type&quot;: &quot;@id&quot;}}, &quot;creator&quot;: &quot;http://example.org/user&quot;}', &lt;InterfaceClass twisted.web.iweb.IBodyProducer&gt;)">self = &lt;test_sender.TestSender testMethod=test_send_dict&gt;
+mock_post = &lt;MagicMock name='post' id='4568627392'&gt;
+
+    @patch('requests.post')
+    def test_send_dict(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = json.loads(f.read())
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:43: in send
+    self.__post_message(inbox, json.dumps(data), self.JSON_LD,
+ldnlib/sender.py:35: in __post_message
+    r = treq.post(inbox, data=data, headers=headers, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/treq/api.py:32: in post
+    return _client(kwargs).post(url, data=data, _stacklevel=4, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/treq/client.py:178: in post
+    return self.request("POST", url, data=data, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/treq/client.py:240: in request
+    bodyProducer, contentType = self._request_body(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;treq.client.HTTPClient object at 0x1108bb050&gt;
+data = '{"@context": {"schema": "http://schema.org/", "creator": {"@id": "schema:creator", "@type": "@id"}}, "creator": "http://example.org/user"}'
+files = None, json = &lt;treq.client._Nothing object at 0x1104402f0&gt;
+stacklevel = 5
+
+    def _request_body(
+        self,
+        data: Optional[_DataType],
+        files: Optional[_FilesType],
+        json: Union[_JSONType, _Nothing],
+        stacklevel: int,
+    ) -&gt; Tuple[Optional[IBodyProducer], Optional[bytes]]:
+        """
+        Here we choose a right producer based on the parameters passed in.
+    
+        :params data:
+            Arbitrary request body data.
+    
+            If *files* is also passed this must be a :class:`dict`,
+            a :class:`tuple` or :class:`list` of field tuples as accepted by
+            :class:`MultiPartProducer`. The request is assigned a Content-Type
+            of ``multipart/form-data``.
+    
+            If a :class:`dict`, :class:`list`, or :class:`tuple` it is
+            URL-encoded and the request assigned a Content-Type of
+            ``application/x-www-form-urlencoded``.
+    
+            Otherwise, any non-``None`` value is passed to the client's
+            *data_to_body_producer* callable (by default,
+            :class:`IBodyProducer`), which accepts file-like objects.
+    
+        :params files:
+            Files to include in the request body, in any of the several formats
+            described in :func:`_convert_files()`.
+    
+        :params json:
+            JSON-encodable data, or the sentinel `_NOTHING`. The sentinel is
+            necessary because ``None`` is a valid JSON value.
+        """
+        if json is not _NOTHING:
+            if files or data:
+                raise TypeError(
+                    "Argument 'json' cannot be combined with '{}'.".format(
+                        "data" if data else "files"
+                    )
+                )
+            return (
+                self._data_to_body_producer(
+                    json_dumps(json, separators=(",", ":")).encode("utf-8"),
+                ),
+                b"application/json; charset=UTF-8",
+            )
+    
+        if files:
+            # If the files keyword is present we will issue a
+            # multipart/form-data request as it suits better for cases
+            # with files and/or large objects.
+            fields: List[Tuple[str, _FileValue]] = []
+            if data:
+                for field in _convert_params(data):
+                    fields.append(field)
+            for field in _convert_files(files):
+                fields.append(field)
+    
+            boundary = str(uuid.uuid4()).encode("ascii")
+            return (
+                multipart.MultiPartProducer(fields, boundary=boundary),
+                b"multipart/form-data; boundary=" + boundary,
+            )
+    
+        # Otherwise stick to x-www-form-urlencoded format
+        # as it's generally faster for smaller requests.
+        if isinstance(data, (dict, list, tuple)):
+            return (
+                # FIXME: The use of doseq here is not permitted in the types, and
+                # sequence values aren't supported in the files codepath. It is
+                # maintained here for backwards compatibility. See
+                # https://github.com/twisted/treq/issues/360.
+                self._data_to_body_producer(urlencode(data, doseq=True)),
+                b"application/x-www-form-urlencoded",
+            )
+        elif data:
+            return (
+&gt;               self._data_to_body_producer(data),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                None,
+            )
+E           TypeError: ('Could not adapt', '{"@context": {"schema": "http://schema.org/", "creator": {"@id": "schema:creator", "@type": "@id"}}, "creator": "http://example.org/user"}', &lt;InterfaceClass twisted.web.iweb.IBodyProducer&gt;)
+
+.venv/lib/python3.14/site-packages/treq/client.py:396: TypeError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_graph" time="0.004"><failure message="AttributeError: module 'treq' has no attribute 'options'">self = &lt;test_sender.TestSender testMethod=test_send_graph&gt;
+mock_post = &lt;MagicMock name='post' id='4568628400'&gt;
+
+    @patch('requests.post')
+    def test_send_graph(self, mock_post):
+        data = Graph().parse("tests/notification.nt", format="ntriples")
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:48: in send
+    ct = self.__accept_post_options(inbox, **kwargs) or self.JSON_LD
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.sender.Sender object at 0x11087aad0&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+
+    def __accept_post_options(self, inbox, **kwargs):
+&gt;       r = treq.options(inbox, **kwargs)
+            ^^^^^^^^^^^^
+E       AttributeError: module 'treq' has no attribute 'options'
+
+ldnlib/sender.py:19: AttributeError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_list" time="0.001"><failure message="TypeError: ('Could not adapt', '[{&quot;@context&quot;: {&quot;schema&quot;: &quot;http://schema.org/&quot;, &quot;creator&quot;: {&quot;@id&quot;: &quot;schema:creator&quot;, &quot;@type&quot;: &quot;@id&quot;}}, &quot;creator&quot;: &quot;http://example.org/user&quot;}]', &lt;InterfaceClass twisted.web.iweb.IBodyProducer&gt;)">self = &lt;test_sender.TestSender testMethod=test_send_list&gt;
+mock_post = &lt;MagicMock name='post' id='4573087120'&gt;
+
+    @patch('requests.post')
+    def test_send_list(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = json.loads("[" + f.read() + "]")
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:43: in send
+    self.__post_message(inbox, json.dumps(data), self.JSON_LD,
+ldnlib/sender.py:35: in __post_message
+    r = treq.post(inbox, data=data, headers=headers, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/treq/api.py:32: in post
+    return _client(kwargs).post(url, data=data, _stacklevel=4, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/treq/client.py:178: in post
+    return self.request("POST", url, data=data, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/treq/client.py:240: in request
+    bodyProducer, contentType = self._request_body(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;treq.client.HTTPClient object at 0x11094a150&gt;
+data = '[{"@context": {"schema": "http://schema.org/", "creator": {"@id": "schema:creator", "@type": "@id"}}, "creator": "http://example.org/user"}]'
+files = None, json = &lt;treq.client._Nothing object at 0x1104402f0&gt;
+stacklevel = 5
+
+    def _request_body(
+        self,
+        data: Optional[_DataType],
+        files: Optional[_FilesType],
+        json: Union[_JSONType, _Nothing],
+        stacklevel: int,
+    ) -&gt; Tuple[Optional[IBodyProducer], Optional[bytes]]:
+        """
+        Here we choose a right producer based on the parameters passed in.
+    
+        :params data:
+            Arbitrary request body data.
+    
+            If *files* is also passed this must be a :class:`dict`,
+            a :class:`tuple` or :class:`list` of field tuples as accepted by
+            :class:`MultiPartProducer`. The request is assigned a Content-Type
+            of ``multipart/form-data``.
+    
+            If a :class:`dict`, :class:`list`, or :class:`tuple` it is
+            URL-encoded and the request assigned a Content-Type of
+            ``application/x-www-form-urlencoded``.
+    
+            Otherwise, any non-``None`` value is passed to the client's
+            *data_to_body_producer* callable (by default,
+            :class:`IBodyProducer`), which accepts file-like objects.
+    
+        :params files:
+            Files to include in the request body, in any of the several formats
+            described in :func:`_convert_files()`.
+    
+        :params json:
+            JSON-encodable data, or the sentinel `_NOTHING`. The sentinel is
+            necessary because ``None`` is a valid JSON value.
+        """
+        if json is not _NOTHING:
+            if files or data:
+                raise TypeError(
+                    "Argument 'json' cannot be combined with '{}'.".format(
+                        "data" if data else "files"
+                    )
+                )
+            return (
+                self._data_to_body_producer(
+                    json_dumps(json, separators=(",", ":")).encode("utf-8"),
+                ),
+                b"application/json; charset=UTF-8",
+            )
+    
+        if files:
+            # If the files keyword is present we will issue a
+            # multipart/form-data request as it suits better for cases
+            # with files and/or large objects.
+            fields: List[Tuple[str, _FileValue]] = []
+            if data:
+                for field in _convert_params(data):
+                    fields.append(field)
+            for field in _convert_files(files):
+                fields.append(field)
+    
+            boundary = str(uuid.uuid4()).encode("ascii")
+            return (
+                multipart.MultiPartProducer(fields, boundary=boundary),
+                b"multipart/form-data; boundary=" + boundary,
+            )
+    
+        # Otherwise stick to x-www-form-urlencoded format
+        # as it's generally faster for smaller requests.
+        if isinstance(data, (dict, list, tuple)):
+            return (
+                # FIXME: The use of doseq here is not permitted in the types, and
+                # sequence values aren't supported in the files codepath. It is
+                # maintained here for backwards compatibility. See
+                # https://github.com/twisted/treq/issues/360.
+                self._data_to_body_producer(urlencode(data, doseq=True)),
+                b"application/x-www-form-urlencoded",
+            )
+        elif data:
+            return (
+&gt;               self._data_to_body_producer(data),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                None,
+            )
+E           TypeError: ('Could not adapt', '[{"@context": {"schema": "http://schema.org/", "creator": {"@id": "schema:creator", "@type": "@id"}}, "creator": "http://example.org/user"}]', &lt;InterfaceClass twisted.web.iweb.IBodyProducer&gt;)
+
+.venv/lib/python3.14/site-packages/treq/client.py:396: TypeError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_string" time="0.001"><failure message="TypeError: ('Could not adapt', '{\n    &quot;@context&quot; : {\n        &quot;schema&quot; : &quot;http://schema.org/&quot;,\n        &quot;creator&quot; : { &quot;@id&quot; : &quot;schema:creator&quot;, &quot;@type&quot; : &quot;@id&quot; }\n    },\n    &quot;creator&quot; : &quot;http://example.org/user&quot;\n}\n', &lt;InterfaceClass twisted.web.iweb.IBodyProducer&gt;)">self = &lt;test_sender.TestSender testMethod=test_send_string&gt;
+mock_post = &lt;MagicMock name='post' id='4568628400'&gt;
+
+    @patch('requests.post')
+    def test_send_string(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = f.read()
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:46: in send
+    self.__post_message(inbox, data, self.JSON_LD, **kwargs)
+ldnlib/sender.py:35: in __post_message
+    r = treq.post(inbox, data=data, headers=headers, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/treq/api.py:32: in post
+    return _client(kwargs).post(url, data=data, _stacklevel=4, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/treq/client.py:178: in post
+    return self.request("POST", url, data=data, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/treq/client.py:240: in request
+    bodyProducer, contentType = self._request_body(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;treq.client.HTTPClient object at 0x1108d0f50&gt;
+data = '{\n    "@context" : {\n        "schema" : "http://schema.org/",\n        "creator" : { "@id" : "schema:creator", "@type" : "@id" }\n    },\n    "creator" : "http://example.org/user"\n}\n'
+files = None, json = &lt;treq.client._Nothing object at 0x1104402f0&gt;
+stacklevel = 5
+
+    def _request_body(
+        self,
+        data: Optional[_DataType],
+        files: Optional[_FilesType],
+        json: Union[_JSONType, _Nothing],
+        stacklevel: int,
+    ) -&gt; Tuple[Optional[IBodyProducer], Optional[bytes]]:
+        """
+        Here we choose a right producer based on the parameters passed in.
+    
+        :params data:
+            Arbitrary request body data.
+    
+            If *files* is also passed this must be a :class:`dict`,
+            a :class:`tuple` or :class:`list` of field tuples as accepted by
+            :class:`MultiPartProducer`. The request is assigned a Content-Type
+            of ``multipart/form-data``.
+    
+            If a :class:`dict`, :class:`list`, or :class:`tuple` it is
+            URL-encoded and the request assigned a Content-Type of
+            ``application/x-www-form-urlencoded``.
+    
+            Otherwise, any non-``None`` value is passed to the client's
+            *data_to_body_producer* callable (by default,
+            :class:`IBodyProducer`), which accepts file-like objects.
+    
+        :params files:
+            Files to include in the request body, in any of the several formats
+            described in :func:`_convert_files()`.
+    
+        :params json:
+            JSON-encodable data, or the sentinel `_NOTHING`. The sentinel is
+            necessary because ``None`` is a valid JSON value.
+        """
+        if json is not _NOTHING:
+            if files or data:
+                raise TypeError(
+                    "Argument 'json' cannot be combined with '{}'.".format(
+                        "data" if data else "files"
+                    )
+                )
+            return (
+                self._data_to_body_producer(
+                    json_dumps(json, separators=(",", ":")).encode("utf-8"),
+                ),
+                b"application/json; charset=UTF-8",
+            )
+    
+        if files:
+            # If the files keyword is present we will issue a
+            # multipart/form-data request as it suits better for cases
+            # with files and/or large objects.
+            fields: List[Tuple[str, _FileValue]] = []
+            if data:
+                for field in _convert_params(data):
+                    fields.append(field)
+            for field in _convert_files(files):
+                fields.append(field)
+    
+            boundary = str(uuid.uuid4()).encode("ascii")
+            return (
+                multipart.MultiPartProducer(fields, boundary=boundary),
+                b"multipart/form-data; boundary=" + boundary,
+            )
+    
+        # Otherwise stick to x-www-form-urlencoded format
+        # as it's generally faster for smaller requests.
+        if isinstance(data, (dict, list, tuple)):
+            return (
+                # FIXME: The use of doseq here is not permitted in the types, and
+                # sequence values aren't supported in the files codepath. It is
+                # maintained here for backwards compatibility. See
+                # https://github.com/twisted/treq/issues/360.
+                self._data_to_body_producer(urlencode(data, doseq=True)),
+                b"application/x-www-form-urlencoded",
+            )
+        elif data:
+            return (
+&gt;               self._data_to_body_producer(data),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                None,
+            )
+E           TypeError: ('Could not adapt', '{\n    "@context" : {\n        "schema" : "http://schema.org/",\n        "creator" : { "@id" : "schema:creator", "@type" : "@id" }\n    },\n    "creator" : "http://example.org/user"\n}\n', &lt;InterfaceClass twisted.web.iweb.IBodyProducer&gt;)
+
+.venv/lib/python3.14/site-packages/treq/client.py:396: TypeError</failure></testcase></testsuite></testsuites>

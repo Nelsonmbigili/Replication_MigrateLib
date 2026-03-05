@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="27" time="6.782" timestamp="2026-03-04T11:43:52.662911+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_calc" name="test_frequent_words_in_cluster" time="0.010" /><testcase classname="tests.test_calc" name="test_frequent_words_in_cluster_handle_empty" time="0.001" /><testcase classname="tests.test_calc" name="test_frequent_words_by_class_in_cluster" time="0.004" /><testcase classname="tests.test_calc" name="test_sort_salience_map" time="0.000" /><testcase classname="tests.test_dashboard" name="test_dashboard_init_no_crash" time="3.085" /><testcase classname="tests.test_dashboard" name="test_dashboard_render_no_crash" time="0.081" /><testcase classname="tests.test_visualizations" name="test_gen_wordcloud_no_crash" time="0.224" /><testcase classname="tests.test_visualizations" name="test_gen_wordcloud_np_no_crash" time="0.032" /><testcase classname="tests.test_visualizations" name="test_prepare_wordclouds_no_crash" time="0.069" /><testcase classname="tests.test_visualizations" name="test_prepare_wordclouds_np_no_crash" time="0.071" /><testcase classname="tests.test_visualizations" name="test_prepare_wordclouds_calls_gen_correctly" time="0.002" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_w_labels" time="0.001" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_w_labels_np" time="0.000" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_wo_labels" time="0.000" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_empty" time="0.000" /><testcase classname="tests.test_visualizations" name="test_plot_big_wordcloud_no_crash" time="0.064"><failure message="ValueError: Must pass 2-d input. shape=(400, 800, 3)">dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+dummy_clusters = {'0': [0, 1], '1': [2, 3]}
+
+    def test_plot_big_wordcloud_no_crash(dummy_df, dummy_clusters):
+        prepare_wordclouds(dummy_clusters, dummy_df.text)
+&gt;       plot_big_wordcloud(0, dummy_clusters)
+
+tests/test_visualizations.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/visualization.py:112: in plot_big_wordcloud
+    wordcloud_df = pd.DataFrame(wordcloud_data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pandas/core/frame.py:814: in __init__
+    mgr = ndarray_to_mgr(
+.venv/lib/python3.14/site-packages/pandas/core/internals/construction.py:277: in ndarray_to_mgr
+    values = _ensure_2d(values)
+             ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+     ...    ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], shape=(400, 800, 3), dtype=uint8)
+
+    def _ensure_2d(values: np.ndarray) -&gt; np.ndarray:
+        """
+        Reshape 1D values, raise on anything else other than 2D.
+        """
+        if values.ndim == 1:
+            values = values.reshape((values.shape[0], 1))
+        elif values.ndim != 2:
+&gt;           raise ValueError(f"Must pass 2-d input. shape={values.shape}")
+E           ValueError: Must pass 2-d input. shape=(400, 800, 3)
+
+.venv/lib/python3.14/site-packages/pandas/core/internals/construction.py:549: ValueError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_passed_wordcloud_no_crash" time="0.035"><failure message="ValueError: Must pass 2-d input. shape=(400, 800, 3)">dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+
+    def test_plot_passed_wordcloud_no_crash(dummy_df):
+        cloud = gen_wordcloud(dummy_df.text)
+&gt;       plot_passed_wordcloud(cloud, "test")
+
+tests/test_visualizations.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/visualization.py:133: in plot_passed_wordcloud
+    wordcloud_df = pd.DataFrame(wordcloud_data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pandas/core/frame.py:814: in __init__
+    mgr = ndarray_to_mgr(
+.venv/lib/python3.14/site-packages/pandas/core/internals/construction.py:277: in ndarray_to_mgr
+    values = _ensure_2d(values)
+             ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+     ...    ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], shape=(400, 800, 3), dtype=uint8)
+
+    def _ensure_2d(values: np.ndarray) -&gt; np.ndarray:
+        """
+        Reshape 1D values, raise on anything else other than 2D.
+        """
+        if values.ndim == 1:
+            values = values.reshape((values.shape[0], 1))
+        elif values.ndim != 2:
+&gt;           raise ValueError(f"Must pass 2-d input. shape={values.shape}")
+E           ValueError: Must pass 2-d input. shape=(400, 800, 3)
+
+.venv/lib/python3.14/site-packages/pandas/core/internals/construction.py:549: ValueError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_wordclouds_no_crash" time="0.072"><failure message="ValueError: Must pass 2-d input. shape=(400, 800, 3)">dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+dummy_clusters = {'0': [0, 1], '1': [2, 3]}
+
+    def test_plot_wordclouds_no_crash(dummy_df, dummy_clusters):
+        dashboard = type("Dashboard", (object,), {})()
+        dashboard.transformer_wrapper = type("Wrapper", (object,), {})()
+        dashboard.transformer_wrapper.clusters = dummy_clusters
+        # forgive me for I have sinned...(I couldn't figure out how to do the equivalent with mocker)
+    
+        prepare_wordclouds(dummy_clusters, dummy_df.text)
+&gt;       plot_wordclouds(dashboard)
+
+tests/test_visualizations.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/visualization.py:158: in plot_wordclouds
+    wordcloud_df = pd.DataFrame(wordcloud_data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/pandas/core/frame.py:814: in __init__
+    mgr = ndarray_to_mgr(
+.venv/lib/python3.14/site-packages/pandas/core/internals/construction.py:277: in ndarray_to_mgr
+    values = _ensure_2d(values)
+             ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = array([[[255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255],
+        ...,
+        [255, 255, 255],
+     ...    ...,
+        [255, 255, 255],
+        [255, 255, 255],
+        [255, 255, 255]]], shape=(400, 800, 3), dtype=uint8)
+
+    def _ensure_2d(values: np.ndarray) -&gt; np.ndarray:
+        """
+        Reshape 1D values, raise on anything else other than 2D.
+        """
+        if values.ndim == 1:
+            values = values.reshape((values.shape[0], 1))
+        elif values.ndim != 2:
+&gt;           raise ValueError(f"Must pass 2-d input. shape={values.shape}")
+E           ValueError: Must pass 2-d input. shape=(400, 800, 3)
+
+.venv/lib/python3.14/site-packages/pandas/core/internals/construction.py:549: ValueError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_embedding_projections_no_crash" time="1.032" /><testcase classname="tests.test_visualizations" name="test_plot_embedding_projections_w_training_no_crash" time="0.034" /><testcase classname="tests.test_visualizations" name="test_plot_embedding_projections_w_errorfocus_no_crash" time="0.035" /><testcase classname="tests.test_visualizations" name="test_plot_metrics_no_crash" time="0.002" /><testcase classname="tests.test_visualizations" name="test_plot_confusion_matrix_no_crash" time="0.007" /><testcase classname="tests.test_wrapper" name="test_wrapper_init_no_crash" time="0.000" /><testcase classname="tests.test_wrapper" name="test_wrapper_init_np_no_crash" time="0.000" /><testcase classname="tests.test_wrapper" name="test_wrapper_prepare_no_crash" time="0.003" /><testcase classname="tests.test_wrapper" name="test_wrapper_np_prepare_no_crash" time="0.031" /></testsuite></testsuites>

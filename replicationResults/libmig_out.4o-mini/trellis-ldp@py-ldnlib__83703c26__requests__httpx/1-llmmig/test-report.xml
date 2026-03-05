@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="13" time="1.692" timestamp="2026-03-04T10:09:29.517766+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_base.TestBase" name="test_content_type" time="0.001" /><testcase classname="tests.test_base.TestBase" name="test_discover_get" time="0.055"><failure message="TypeError: head() got an unexpected keyword argument 'allow_redirects'. Did you mean 'follow_redirects'?">self = &lt;test_base.TestBase testMethod=test_discover_get&gt;
+mock_head = &lt;MagicMock name='head' id='4426454352'&gt;
+mock_get = &lt;MagicMock name='get' id='4426455360'&gt;
+
+    @patch('requests.get')
+    @patch('requests.head')
+    def test_discover_get(self, mock_head, mock_get):
+        inbox = "http://example.org/inbox"
+        links = {"type": {"url": "http://www.w3.org/ns/ldp#Container"}}
+        headers = {"content-type": "application/n-triples"}
+    
+        mock_res1 = Mock()
+        mock_res1.links = links
+        mock_res1.headers = headers
+        mock_head.return_value = mock_res1
+    
+        mock_res2 = Mock()
+        mock_res2.links = links
+        mock_res2.headers = headers
+        mock_res2.text = "&lt;http://example.org/resource&gt; " + \
+                         "&lt;http://www.w3.org/ns/ldp#inbox&gt; " + \
+                         "&lt;http://example.org/inbox&gt; .\n"
+        mock_get.return_value = mock_res2
+    
+        ldn = BaseLDN()
+&gt;       self.assertEqual(ldn.discover("http://example.org/resource"), inbox)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_base.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/base.py:47: in discover
+    inbox = self.__discover_head(target, headers=headers,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.base.BaseLDN object at 0x107da5590&gt;
+target = 'http://example.org/resource'
+kwargs = {'allow_redirects': True, 'headers': {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}}
+
+    def __discover_head(self, target, **kwargs):
+&gt;       r = httpx.head(target, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: head() got an unexpected keyword argument 'allow_redirects'. Did you mean 'follow_redirects'?
+
+ldnlib/base.py:18: TypeError</failure></testcase><testcase classname="tests.test_base.TestBase" name="test_discover_head" time="0.000"><failure message="TypeError: head() got an unexpected keyword argument 'allow_redirects'. Did you mean 'follow_redirects'?">self = &lt;test_base.TestBase testMethod=test_discover_head&gt;
+mock_head = &lt;MagicMock name='head' id='4426457040'&gt;
+
+    @patch('requests.head')
+    def test_discover_head(self, mock_head):
+        inbox = "http://example.org/inbox"
+        mock_res = Mock()
+        mock_res.links = {"http://www.w3.org/ns/ldp#inbox": {"url": inbox}}
+    
+        mock_head.return_value = mock_res
+    
+        ldn = BaseLDN()
+&gt;       self.assertEqual(ldn.discover("http://example.org/resource"), inbox)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_base.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/base.py:47: in discover
+    inbox = self.__discover_head(target, headers=headers,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.base.BaseLDN object at 0x107da5f90&gt;
+target = 'http://example.org/resource'
+kwargs = {'allow_redirects': True, 'headers': {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}}
+
+    def __discover_head(self, target, **kwargs):
+&gt;       r = httpx.head(target, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: head() got an unexpected keyword argument 'allow_redirects'. Did you mean 'follow_redirects'?
+
+ldnlib/base.py:18: TypeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notification_jsonld" time="0.238"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://example.org/inbox/1'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test_consumer.TestConsumer testMethod=test_notification_jsonld&gt;
+mock_get = &lt;MagicMock name='get' id='4423708896'&gt;
+
+    @patch('requests.get')
+    def test_notification_jsonld(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/notification1.json", "r") as f:
+            attrs = {'json.return_value': json.loads("[" + f.read() + "]")}
+            mock_res.configure_mock(**attrs)
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notification = Consumer().notification("http://example.org/inbox/1")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/consumer.py:37: in notification
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://example.org/inbox/1'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notification_turtle" time="0.143"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://example.org/inbox/1'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test_consumer.TestConsumer testMethod=test_notification_turtle&gt;
+mock_get = &lt;MagicMock name='get' id='4426461408'&gt;
+
+    @patch('requests.get')
+    def test_notification_turtle(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "text/turtle; charset=utf-8"}
+        with open("tests/notification.ttl", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notification = Consumer().notification("http://example.org/inbox/1")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/consumer.py:37: in notification
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://example.org/inbox/1'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_jsonld_compacted" time="0.097"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://example.org/inbox'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_jsonld_compacted&gt;
+mock_get = &lt;MagicMock name='get' id='4426460736'&gt;
+
+    @patch('requests.get')
+    def test_notifications_jsonld_compacted(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/inbox.jsonld", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/consumer.py:23: in notifications
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://example.org/inbox'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_jsonld_expanded" time="0.079"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://example.org/inbox'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_jsonld_expanded&gt;
+mock_get = &lt;MagicMock name='get' id='4426462080'&gt;
+
+    @patch('requests.get')
+    def test_notifications_jsonld_expanded(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/inbox_expanded.jsonld", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/consumer.py:23: in notifications
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://example.org/inbox'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_ntriples" time="0.061"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://example.org/inbox'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_ntriples&gt;
+mock_get = &lt;MagicMock name='get' id='4428427824'&gt;
+
+    @patch('requests.get')
+    def test_notifications_ntriples(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/n-triples"}
+        with open("tests/inbox.nt", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/consumer.py:23: in notifications
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://example.org/inbox'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_turtle" time="0.082"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://example.org/inbox'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_turtle&gt;
+mock_get = &lt;MagicMock name='get' id='4563996688'&gt;
+
+    @patch('requests.get')
+    def test_notifications_turtle(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "text/turtle; charset=utf-8"}
+        with open("tests/inbox.ttl", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/consumer.py:23: in notifications
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://example.org/inbox'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_dict" time="0.061"><failure message="httpx.HTTPStatusError: Client error '405 Not Allowed' for url 'http://example.org/inbox'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405">self = &lt;test_sender.TestSender testMethod=test_send_dict&gt;
+mock_post = &lt;MagicMock name='post' id='4423706880'&gt;
+
+    @patch('requests.post')
+    def test_send_dict(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = json.loads(f.read())
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:43: in send
+    self.__post_message(inbox, json.dumps(data), self.JSON_LD,
+ldnlib/sender.py:36: in __post_message
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [405 Not Allowed]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '405 Not Allowed' for url 'http://example.org/inbox'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_graph" time="0.143"><failure message="httpx.HTTPStatusError: Client error '405 Not Allowed' for url 'http://example.org/inbox'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405">self = &lt;test_sender.TestSender testMethod=test_send_graph&gt;
+mock_post = &lt;MagicMock name='post' id='4428426144'&gt;
+
+    @patch('requests.post')
+    def test_send_graph(self, mock_post):
+        data = Graph().parse("tests/notification.nt", format="ntriples")
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:49: in send
+    self.__post_message(inbox, data.serialize(format=ct), ct,
+ldnlib/sender.py:36: in __post_message
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [405 Not Allowed]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '405 Not Allowed' for url 'http://example.org/inbox'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_list" time="0.059"><failure message="httpx.HTTPStatusError: Client error '405 Not Allowed' for url 'http://example.org/inbox'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405">self = &lt;test_sender.TestSender testMethod=test_send_list&gt;
+mock_post = &lt;MagicMock name='post' id='4426457040'&gt;
+
+    @patch('requests.post')
+    def test_send_list(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = json.loads("[" + f.read() + "]")
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:43: in send
+    self.__post_message(inbox, json.dumps(data), self.JSON_LD,
+ldnlib/sender.py:36: in __post_message
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [405 Not Allowed]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '405 Not Allowed' for url 'http://example.org/inbox'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_string" time="0.163"><failure message="httpx.HTTPStatusError: Client error '405 Not Allowed' for url 'http://example.org/inbox'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405">self = &lt;test_sender.TestSender testMethod=test_send_string&gt;
+mock_post = &lt;MagicMock name='post' id='4426459056'&gt;
+
+    @patch('requests.post')
+    def test_send_string(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = f.read()
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:46: in send
+    self.__post_message(inbox, data, self.JSON_LD, **kwargs)
+ldnlib/sender.py:36: in __post_message
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [405 Not Allowed]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '405 Not Allowed' for url 'http://example.org/inbox'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/405
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,652 @@
+## Running premig
+creating venv at /Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/avast@ep-stats__95f8d93e__fastapi__sanic/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 7 files
+### migrating src/epstats/server/api.py
+### migrating src/epstats/server/api_evaluate.py
+### migrating src/epstats/server/api_sample_size_calculation.py
+### migrating src/epstats/server/json_response.py
+### migrating tests/epstats/server/test_api_evaluate.py
+### migrating tests/epstats/server/test_api_sample_size_calculation.py
+### migrating tests/epstats/server/test_req.py
+### running tests
+- test finished with status 2, cov finished with status 1
+### test diff with round premig
+- `tests/epstats/server/test_api_evaluate.py::test_conversion_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_dimension_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_false_positive_risk: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_filter_scope_goal: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_metric_with_minimum_effect: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_multi_check: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_multiple_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_prometheus_metrics: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_real_valued_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_sequential: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_sum_ratio_check: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.05-0.4-None-9489]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.1-0-0-nan]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.1-0-1-inf]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.1-0.2-1.2-56512]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[3-0.05-0.4-None-11492]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation_error[1-0.05-0.2-must be at least two variants]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation_error[2--0.4-0.2-minimum_effect must be greater than zero]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation_error[2-0.05-1.4-mean must be between zero and one]: passed != not found`
+- `tests/epstats/server/test_req.py::test_date_parsing: passed != not found`
+- `tests/epstats/server/test_req.py::test_filter_scope_exposure_empty_dimension: passed != not found`
+- `tests/epstats/server/test_req.py::test_filter_scope_trigger_empty_dimension: passed != not found`
+- `tests/epstats/server/test_req.py::test_filter_scope_trigger_empty_goal: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_control_variant: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_date_for_between_date_to_and_date_for: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_date_for_requires_date_to_and_date_for: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_date_to_ge_from: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_default_check_type: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_metric_denominator: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_metric_nominator: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_metric_parsing: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_sum_ratio_nominator: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_multi_check: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_srm: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_srm_negative: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_srm_one_variant: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_sum_ratio: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_bad_experiment_unit: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_binary_valued: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_degrees_of_freedom: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_different_control_variant: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_dimension: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_dimension_operators: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_duplicate_metric_ids_raise_exception: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_false_positive_risk: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_filter_scope_goal: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_metric_with_minimum_effect: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_all: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_all_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_data_unique_goal: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_default: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_default_exposure: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_default_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_exposure: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_variant: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_multi_dimension: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_operator_precedence: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_real_by_unit: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_real_valued: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_first_day: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_last_day: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_middle: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_today: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_simple_metric: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_single_metric_in_multiple_experiment_1: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_single_metric_in_multiple_experiment_2: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_single_metrics_in_multiple_experiment: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_trigger_evaluate: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_unique: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_update_dimension_to_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[evaluate_agg]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[evaluate_by_unit]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[evaluate_wide_agg]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[get_dimension_columns]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[get_goals]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_evaluate_agg: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_evaluate_agg_dimensional: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_duplicate_dimensions: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_incorrect_syntax: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_unknown_function: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_unknown_unit_type: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser0-expected0]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser1-expected1]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser2-expected2]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser3-expected3]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser4-expected4]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser5-expected5]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser6-expected6]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser7-expected7]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser0-expected_goals0]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser1-expected_goals1]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser2-expected_goals2]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser3-expected_goals3]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser4-expected_goals4]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser5-expected_goals5]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser6-expected_goals6]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser7-expected_goals7]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser8-expected_goals8]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_numbers[-1 * count(test_unit_type.global.conversion)]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_numbers[2 * count(test_unit_type.global.conversion)]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_operator_position_not_correct[232>44]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_operator_position_not_correct[<=2]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_operator_position_not_correct[abc^def]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_false_positive_risk: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-0-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-1-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-14-0.95]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-2-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-3-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[28-28-0.95]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[28-4-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[28-8-0.9998]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[7-1-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[2-200000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[2-400000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[2-627911]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[3-500000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[4-300000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant_is_nan[args0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant_is_nan[args1]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant_nan_params: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[2-0.05-0.4-None-9490]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[2-0.1-0.1-None-14749]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[3-0.05-0.4-None-11455]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[4-0.1-0.1-None-19596]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.2-1.2-226048]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.2-2.0-627911]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.3-1.2-100466]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.3-2.0-279072]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.2-1.2-56512]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.2-2.0-156978]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.3-1.2-25117]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.3-2.0-69768]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[3-0.05-0.3-2.0-336878]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[3-0.1-0.2-1.2-68218]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[4-0.1-0.2-2.0-208576]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-0-0-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-0-1-isinf]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-0-nan-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-nan-nan-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[nan-nan-nan-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_raises_exception[1--0.1-0.2-1.2-required_sample_size_per_variant]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_raises_exception[2--0.1-0.2-1.2-required_sample_size_per_variant]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_raises_exception[2-0.1-10.1-None-required_sample_size_per_variant_bernoulli]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_unequal_variance[0.05-0.3-2.0-2.5]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_unequal_variance[0.1-0.2-1.2-2.0]: passed != not found`
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+### Finding async transforms
+- Found 1 functions to mark async including 0 tests
+- Found 0 calls to await
+- 1 files requires transformation
+- transforming src/epstats/server/api_sample_size_calculation.py
+### running tests
+- test finished with status 2, cov finished with status 1
+### test diff with round premig
+- `tests/epstats/server/test_api_evaluate.py::test_conversion_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_dimension_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_false_positive_risk: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_filter_scope_goal: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_metric_with_minimum_effect: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_multi_check: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_multiple_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_prometheus_metrics: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_real_valued_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_sequential: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_sum_ratio_check: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.05-0.4-None-9489]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.1-0-0-nan]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.1-0-1-inf]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.1-0.2-1.2-56512]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[3-0.05-0.4-None-11492]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation_error[1-0.05-0.2-must be at least two variants]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation_error[2--0.4-0.2-minimum_effect must be greater than zero]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation_error[2-0.05-1.4-mean must be between zero and one]: passed != not found`
+- `tests/epstats/server/test_req.py::test_date_parsing: passed != not found`
+- `tests/epstats/server/test_req.py::test_filter_scope_exposure_empty_dimension: passed != not found`
+- `tests/epstats/server/test_req.py::test_filter_scope_trigger_empty_dimension: passed != not found`
+- `tests/epstats/server/test_req.py::test_filter_scope_trigger_empty_goal: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_control_variant: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_date_for_between_date_to_and_date_for: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_date_for_requires_date_to_and_date_for: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_date_to_ge_from: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_default_check_type: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_metric_denominator: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_metric_nominator: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_metric_parsing: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_sum_ratio_nominator: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_multi_check: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_srm: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_srm_negative: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_srm_one_variant: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_sum_ratio: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_bad_experiment_unit: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_binary_valued: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_degrees_of_freedom: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_different_control_variant: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_dimension: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_dimension_operators: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_duplicate_metric_ids_raise_exception: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_false_positive_risk: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_filter_scope_goal: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_metric_with_minimum_effect: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_all: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_all_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_data_unique_goal: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_default: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_default_exposure: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_default_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_exposure: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_variant: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_multi_dimension: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_operator_precedence: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_real_by_unit: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_real_valued: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_first_day: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_last_day: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_middle: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_today: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_simple_metric: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_single_metric_in_multiple_experiment_1: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_single_metric_in_multiple_experiment_2: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_single_metrics_in_multiple_experiment: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_trigger_evaluate: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_unique: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_update_dimension_to_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[evaluate_agg]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[evaluate_by_unit]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[evaluate_wide_agg]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[get_dimension_columns]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[get_goals]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_evaluate_agg: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_evaluate_agg_dimensional: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_duplicate_dimensions: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_incorrect_syntax: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_unknown_function: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_unknown_unit_type: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser0-expected0]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser1-expected1]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser2-expected2]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser3-expected3]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser4-expected4]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser5-expected5]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser6-expected6]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser7-expected7]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser0-expected_goals0]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser1-expected_goals1]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser2-expected_goals2]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser3-expected_goals3]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser4-expected_goals4]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser5-expected_goals5]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser6-expected_goals6]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser7-expected_goals7]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser8-expected_goals8]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_numbers[-1 * count(test_unit_type.global.conversion)]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_numbers[2 * count(test_unit_type.global.conversion)]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_operator_position_not_correct[232>44]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_operator_position_not_correct[<=2]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_operator_position_not_correct[abc^def]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_false_positive_risk: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-0-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-1-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-14-0.95]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-2-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-3-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[28-28-0.95]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[28-4-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[28-8-0.9998]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[7-1-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[2-200000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[2-400000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[2-627911]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[3-500000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[4-300000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant_is_nan[args0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant_is_nan[args1]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant_nan_params: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[2-0.05-0.4-None-9490]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[2-0.1-0.1-None-14749]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[3-0.05-0.4-None-11455]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[4-0.1-0.1-None-19596]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.2-1.2-226048]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.2-2.0-627911]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.3-1.2-100466]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.3-2.0-279072]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.2-1.2-56512]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.2-2.0-156978]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.3-1.2-25117]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.3-2.0-69768]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[3-0.05-0.3-2.0-336878]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[3-0.1-0.2-1.2-68218]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[4-0.1-0.2-2.0-208576]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-0-0-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-0-1-isinf]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-0-nan-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-nan-nan-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[nan-nan-nan-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_raises_exception[1--0.1-0.2-1.2-required_sample_size_per_variant]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_raises_exception[2--0.1-0.2-1.2-required_sample_size_per_variant]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_raises_exception[2-0.1-10.1-None-required_sample_size_per_variant_bernoulli]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_unequal_variance[0.05-0.3-2.0-2.5]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_unequal_variance[0.1-0.2-1.2-2.0]: passed != not found`
+- async_transform finished
+## Running premig
+creating venv at /Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/avast@ep-stats__95f8d93e__fastapi__sanic/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 7 files
+### migrating src/epstats/server/api.py
+### migrating src/epstats/server/api_evaluate.py
+### migrating src/epstats/server/api_sample_size_calculation.py
+### migrating src/epstats/server/json_response.py
+### migrating tests/epstats/server/test_api_evaluate.py
+### migrating tests/epstats/server/test_api_sample_size_calculation.py
+### migrating tests/epstats/server/test_req.py
+### running tests
+- test finished with status 2, cov finished with status 1
+### test diff with round premig
+- `tests/epstats/server/test_api_evaluate.py::test_conversion_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_dimension_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_false_positive_risk: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_filter_scope_goal: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_metric_with_minimum_effect: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_multi_check: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_multiple_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_prometheus_metrics: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_real_valued_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_sequential: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_sum_ratio_check: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.05-0.4-None-9489]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.1-0-0-nan]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.1-0-1-inf]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.1-0.2-1.2-56512]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[3-0.05-0.4-None-11492]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation_error[1-0.05-0.2-must be at least two variants]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation_error[2--0.4-0.2-minimum_effect must be greater than zero]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation_error[2-0.05-1.4-mean must be between zero and one]: passed != not found`
+- `tests/epstats/server/test_req.py::test_date_parsing: passed != not found`
+- `tests/epstats/server/test_req.py::test_filter_scope_exposure_empty_dimension: passed != not found`
+- `tests/epstats/server/test_req.py::test_filter_scope_trigger_empty_dimension: passed != not found`
+- `tests/epstats/server/test_req.py::test_filter_scope_trigger_empty_goal: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_control_variant: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_date_for_between_date_to_and_date_for: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_date_for_requires_date_to_and_date_for: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_date_to_ge_from: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_default_check_type: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_metric_denominator: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_metric_nominator: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_metric_parsing: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_sum_ratio_nominator: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_multi_check: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_srm: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_srm_negative: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_srm_one_variant: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_sum_ratio: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_bad_experiment_unit: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_binary_valued: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_degrees_of_freedom: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_different_control_variant: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_dimension: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_dimension_operators: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_duplicate_metric_ids_raise_exception: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_false_positive_risk: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_filter_scope_goal: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_metric_with_minimum_effect: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_all: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_all_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_data_unique_goal: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_default: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_default_exposure: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_default_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_exposure: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_variant: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_multi_dimension: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_operator_precedence: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_real_by_unit: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_real_valued: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_first_day: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_last_day: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_middle: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_today: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_simple_metric: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_single_metric_in_multiple_experiment_1: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_single_metric_in_multiple_experiment_2: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_single_metrics_in_multiple_experiment: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_trigger_evaluate: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_unique: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_update_dimension_to_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[evaluate_agg]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[evaluate_by_unit]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[evaluate_wide_agg]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[get_dimension_columns]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[get_goals]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_evaluate_agg: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_evaluate_agg_dimensional: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_duplicate_dimensions: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_incorrect_syntax: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_unknown_function: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_unknown_unit_type: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser0-expected0]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser1-expected1]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser2-expected2]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser3-expected3]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser4-expected4]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser5-expected5]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser6-expected6]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser7-expected7]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser0-expected_goals0]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser1-expected_goals1]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser2-expected_goals2]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser3-expected_goals3]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser4-expected_goals4]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser5-expected_goals5]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser6-expected_goals6]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser7-expected_goals7]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser8-expected_goals8]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_numbers[-1 * count(test_unit_type.global.conversion)]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_numbers[2 * count(test_unit_type.global.conversion)]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_operator_position_not_correct[232>44]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_operator_position_not_correct[<=2]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_operator_position_not_correct[abc^def]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_false_positive_risk: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-0-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-1-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-14-0.95]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-2-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-3-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[28-28-0.95]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[28-4-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[28-8-0.9998]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[7-1-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[2-200000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[2-400000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[2-627911]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[3-500000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[4-300000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant_is_nan[args0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant_is_nan[args1]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant_nan_params: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[2-0.05-0.4-None-9490]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[2-0.1-0.1-None-14749]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[3-0.05-0.4-None-11455]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[4-0.1-0.1-None-19596]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.2-1.2-226048]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.2-2.0-627911]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.3-1.2-100466]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.3-2.0-279072]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.2-1.2-56512]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.2-2.0-156978]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.3-1.2-25117]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.3-2.0-69768]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[3-0.05-0.3-2.0-336878]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[3-0.1-0.2-1.2-68218]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[4-0.1-0.2-2.0-208576]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-0-0-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-0-1-isinf]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-0-nan-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-nan-nan-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[nan-nan-nan-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_raises_exception[1--0.1-0.2-1.2-required_sample_size_per_variant]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_raises_exception[2--0.1-0.2-1.2-required_sample_size_per_variant]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_raises_exception[2-0.1-10.1-None-required_sample_size_per_variant_bernoulli]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_unequal_variance[0.05-0.3-2.0-2.5]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_unequal_variance[0.1-0.2-1.2-2.0]: passed != not found`
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+### Finding async transforms
+- Found 1 functions to mark async including 0 tests
+- Found 0 calls to await
+- 1 files requires transformation
+- transforming src/epstats/server/api_sample_size_calculation.py
+### running tests
+- test finished with status 2, cov finished with status 1
+### test diff with round premig
+- `tests/epstats/server/test_api_evaluate.py::test_conversion_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_dimension_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_false_positive_risk: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_filter_scope_goal: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_metric_with_minimum_effect: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_multi_check: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_multiple_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_prometheus_metrics: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_real_valued_evaluate: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_sequential: passed != not found`
+- `tests/epstats/server/test_api_evaluate.py::test_sum_ratio_check: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.05-0.4-None-9489]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.1-0-0-nan]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.1-0-1-inf]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[2-0.1-0.2-1.2-56512]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation[3-0.05-0.4-None-11492]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation_error[1-0.05-0.2-must be at least two variants]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation_error[2--0.4-0.2-minimum_effect must be greater than zero]: passed != not found`
+- `tests/epstats/server/test_api_sample_size_calculation.py::test_sample_size_calculation_error[2-0.05-1.4-mean must be between zero and one]: passed != not found`
+- `tests/epstats/server/test_req.py::test_date_parsing: passed != not found`
+- `tests/epstats/server/test_req.py::test_filter_scope_exposure_empty_dimension: passed != not found`
+- `tests/epstats/server/test_req.py::test_filter_scope_trigger_empty_dimension: passed != not found`
+- `tests/epstats/server/test_req.py::test_filter_scope_trigger_empty_goal: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_control_variant: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_date_for_between_date_to_and_date_for: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_date_for_requires_date_to_and_date_for: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_date_to_ge_from: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_default_check_type: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_metric_denominator: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_metric_nominator: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_metric_parsing: passed != not found`
+- `tests/epstats/server/test_req.py::test_validate_sum_ratio_nominator: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_multi_check: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_srm: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_srm_negative: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_srm_one_variant: passed != not found`
+- `tests/epstats/toolkit/test_check.py::test_sum_ratio: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_bad_experiment_unit: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_binary_valued: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_degrees_of_freedom: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_different_control_variant: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_dimension: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_dimension_operators: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_duplicate_metric_ids_raise_exception: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_false_positive_risk: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_filter_scope_goal: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_metric_with_minimum_effect: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_all: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_all_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_data_unique_goal: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_default: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_default_exposure: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_default_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_exposure: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_missing_variant: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_multi_dimension: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_operator_precedence: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_real_by_unit: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_real_valued: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_first_day: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_last_day: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_middle: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_sequential_today: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_simple_metric: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_single_metric_in_multiple_experiment_1: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_single_metric_in_multiple_experiment_2: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_single_metrics_in_multiple_experiment: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_trigger_evaluate: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_unique: passed != not found`
+- `tests/epstats/toolkit/test_experiment.py::test_update_dimension_to_value: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[evaluate_agg]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[evaluate_by_unit]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[evaluate_wide_agg]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[get_dimension_columns]: passed != not found`
+- `tests/epstats/toolkit/test_experiment_docstring.py::test_experiment_docstring[get_goals]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_evaluate_agg: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_evaluate_agg_dimensional: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_duplicate_dimensions: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_incorrect_syntax: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_unknown_function: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_fail_if_unknown_unit_type: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser0-expected0]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser1-expected1]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser2-expected2]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser3-expected3]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser4-expected4]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser5-expected5]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser6-expected6]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals[parser7-expected7]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser0-expected_goals0]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser1-expected_goals1]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser2-expected_goals2]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser3-expected_goals3]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser4-expected_goals4]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser5-expected_goals5]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser6-expected_goals6]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser7-expected_goals7]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_get_goals_dimensional[parser8-expected_goals8]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_numbers[-1 * count(test_unit_type.global.conversion)]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_numbers[2 * count(test_unit_type.global.conversion)]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_operator_position_not_correct[232>44]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_operator_position_not_correct[<=2]: passed != not found`
+- `tests/epstats/toolkit/test_parser.py::test_operator_position_not_correct[abc^def]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_false_positive_risk: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-0-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-1-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-14-0.95]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-2-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[14-3-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[28-28-0.95]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[28-4-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[28-8-0.9998]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_obf_alpha_spending_function[7-1-1.0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[2-200000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[2-400000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[2-627911]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[3-500000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant[4-300000]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant_is_nan[args0]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant_is_nan[args1]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_power_from_required_sample_size_per_variant_nan_params: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[2-0.05-0.4-None-9490]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[2-0.1-0.1-None-14749]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[3-0.05-0.4-None-11455]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_bernoulli[4-0.1-0.1-None-19596]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.2-1.2-226048]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.2-2.0-627911]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.3-1.2-100466]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.05-0.3-2.0-279072]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.2-1.2-56512]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.2-2.0-156978]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.3-1.2-25117]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[2-0.1-0.3-2.0-69768]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[3-0.05-0.3-2.0-336878]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[3-0.1-0.2-1.2-68218]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_equal_variance[4-0.1-0.2-2.0-208576]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-0-0-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-0-1-isinf]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-0-nan-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[0.1-nan-nan-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_not_valid[nan-nan-nan-isnan]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_raises_exception[1--0.1-0.2-1.2-required_sample_size_per_variant]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_raises_exception[2--0.1-0.2-1.2-required_sample_size_per_variant]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_raises_exception[2-0.1-10.1-None-required_sample_size_per_variant_bernoulli]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_unequal_variance[0.05-0.3-2.0-2.5]: passed != not found`
+- `tests/epstats/toolkit/test_statistics.py::test_required_sample_size_per_variant_unequal_variance[0.1-0.2-1.2-2.0]: passed != not found`
+- async_transform finished

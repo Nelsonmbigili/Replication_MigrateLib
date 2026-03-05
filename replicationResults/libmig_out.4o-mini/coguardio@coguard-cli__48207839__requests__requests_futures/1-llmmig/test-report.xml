@@ -1,0 +1,2462 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="32" skipped="0" tests="379" time="5.741" timestamp="2026-03-04T03:55:50.444786+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_does_user_with_email_already_exist_200_status" time="0.002"><failure message="requests.exceptions.MissingSchema: Invalid URL 'bar/registration/does-user-exist?userName=foo': No scheme supplied. Perhaps you meant https://bar/registration/does-user-exist?userName=foo?">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_does_user_with_email_already_exist_200_status&gt;
+
+    def test_does_user_with_email_already_exist_200_status(self):
+        """
+        Checks the existence of the user function
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 200,
+            text = "true"
+        )
+        with unittest.mock.patch(
+                'requests.get',
+                new_callable=lambda: lambda url, timeout: mock_response):
+            self.assertTrue(
+&gt;               api_connection.does_user_with_email_already_exist(
+                    "foo",
+                    "bar"
+                )
+            )
+
+src/coguard_cli/tests/api_connection_test.py:257: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:263: in does_user_with_email_already_exist
+    resp = future.result()
+           ^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:575: in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:484: in prepare_request
+    p.prepare(
+.venv/lib/python3.14/site-packages/requests/models.py:367: in prepare
+    self.prepare_url(url, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;PreparedRequest [GET]&gt;
+url = 'bar/registration/does-user-exist?userName=foo', params = OrderedDict()
+
+    def prepare_url(self, url, params):
+        """Prepares the given HTTP URL."""
+        #: Accept objects that have string representations.
+        #: We're unable to blindly call unicode/str functions
+        #: as this will include the bytestring indicator (b'')
+        #: on python 3.x.
+        #: https://github.com/psf/requests/pull/2238
+        if isinstance(url, bytes):
+            url = url.decode("utf8")
+        else:
+            url = str(url)
+    
+        # Remove leading whitespaces from url
+        url = url.lstrip()
+    
+        # Don't do any URL preparation for non-HTTP schemes like `mailto`,
+        # `data` etc to work around exceptions from `url_parse`, which
+        # handles RFC 3986 only.
+        if ":" in url and not url.lower().startswith("http"):
+            self.url = url
+            return
+    
+        # Support for unicode domain names and paths.
+        try:
+            scheme, auth, host, port, path, query, fragment = parse_url(url)
+        except LocationParseError as e:
+            raise InvalidURL(*e.args)
+    
+        if not scheme:
+&gt;           raise MissingSchema(
+                f"Invalid URL {url!r}: No scheme supplied. "
+                f"Perhaps you meant https://{url}?"
+            )
+E           requests.exceptions.MissingSchema: Invalid URL 'bar/registration/does-user-exist?userName=foo': No scheme supplied. Perhaps you meant https://bar/registration/does-user-exist?userName=foo?
+
+.venv/lib/python3.14/site-packages/requests/models.py:438: MissingSchema</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_does_user_with_email_already_exist_400_status" time="0.001"><failure message="requests.exceptions.MissingSchema: Invalid URL 'bar/registration/does-user-exist?userName=foo': No scheme supplied. Perhaps you meant https://bar/registration/does-user-exist?userName=foo?">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_does_user_with_email_already_exist_400_status&gt;
+
+    def test_does_user_with_email_already_exist_400_status(self):
+        """
+        Checks the existence of the user function
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 400,
+            text = "true"
+        )
+        with unittest.mock.patch(
+                'requests.get',
+                new_callable=lambda: lambda url, timeout: mock_response):
+            self.assertFalse(
+&gt;               api_connection.does_user_with_email_already_exist(
+                    "foo",
+                    "bar"
+                )
+            )
+
+src/coguard_cli/tests/api_connection_test.py:275: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:263: in does_user_with_email_already_exist
+    resp = future.result()
+           ^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:575: in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:484: in prepare_request
+    p.prepare(
+.venv/lib/python3.14/site-packages/requests/models.py:367: in prepare
+    self.prepare_url(url, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;PreparedRequest [GET]&gt;
+url = 'bar/registration/does-user-exist?userName=foo', params = OrderedDict()
+
+    def prepare_url(self, url, params):
+        """Prepares the given HTTP URL."""
+        #: Accept objects that have string representations.
+        #: We're unable to blindly call unicode/str functions
+        #: as this will include the bytestring indicator (b'')
+        #: on python 3.x.
+        #: https://github.com/psf/requests/pull/2238
+        if isinstance(url, bytes):
+            url = url.decode("utf8")
+        else:
+            url = str(url)
+    
+        # Remove leading whitespaces from url
+        url = url.lstrip()
+    
+        # Don't do any URL preparation for non-HTTP schemes like `mailto`,
+        # `data` etc to work around exceptions from `url_parse`, which
+        # handles RFC 3986 only.
+        if ":" in url and not url.lower().startswith("http"):
+            self.url = url
+            return
+    
+        # Support for unicode domain names and paths.
+        try:
+            scheme, auth, host, port, path, query, fragment = parse_url(url)
+        except LocationParseError as e:
+            raise InvalidURL(*e.args)
+    
+        if not scheme:
+&gt;           raise MissingSchema(
+                f"Invalid URL {url!r}: No scheme supplied. "
+                f"Perhaps you meant https://{url}?"
+            )
+E           requests.exceptions.MissingSchema: Invalid URL 'bar/registration/does-user-exist?userName=foo': No scheme supplied. Perhaps you meant https://bar/registration/does-user-exist?userName=foo?
+
+.venv/lib/python3.14/site-packages/requests/models.py:438: MissingSchema</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_download_report_good_response_organization" time="1.222" /><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_download_report_good_response_user" time="0.198" /><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_download_report_report_bad_response" time="0.195"><failure message="AssertionError: Exception not raised">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_download_report_report_bad_response&gt;
+
+    def test_download_report_report_bad_response(self):
+        """
+        Checks the retrieval of the latest report with bad response.
+        """
+        def mock_raise():
+            raise Exception("foo")
+        mock_response = unittest.mock.Mock(
+            status_code = 420,
+            raise_for_status = lambda: None,
+            __enter__ = lambda x: unittest.mock.Mock(
+                raise_for_status = mock_raise(),
+                iter_content = lambda chunk_size: ["foo"]
+            ),
+            __exit__ = lambda w, x, y, z: None
+        )
+        with unittest.mock.patch(
+                'requests.get',
+                new_callable=lambda: lambda url, headers, timeout: mock_response):
+&gt;           with self.assertRaises(Exception):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Exception not raised
+
+src/coguard_cli/tests/api_connection_test.py:565: AssertionError</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_get_fixable_rule_list_bad_response_ogranization" time="0.194"><failure message="requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+&gt;           return complexjson.loads(self.text, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/requests/models.py:976: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x103a1af90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;meta charset="utf-8"/&gt;&lt;link rel="icon" href="/favicon.ico"/&gt;&lt;meta name="viewpor...t"&gt;&lt;/head&gt;&lt;body&gt;&lt;noscript&gt;You need to enable JavaScript to run this app.&lt;/noscript&gt;&lt;div id="root"&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_get_fixable_rule_list_bad_response_ogranization&gt;
+
+    def test_get_fixable_rule_list_bad_response_ogranization(self):
+        """
+        Checks the retrieval of the latest report with bad response.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 420,
+            json = lambda: []
+        )
+        with unittest.mock.patch(
+                'requests.get',
+                new_callable=lambda: lambda url, headers, timeout: mock_response):
+&gt;           result = api_connection.get_fixable_rule_list(
+                unittest.mock.Mock(
+                    return_value = lambda: "token"),
+                "https://portal.coguard.io",
+                None,
+                'organization'
+            )
+
+src/coguard_cli/tests/api_connection_test.py:448: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:341: in get_fixable_rule_list
+    return resp.json()
+           ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+            return complexjson.loads(self.text, **kwargs)
+        except JSONDecodeError as e:
+            # Catch JSON-related errors and raise as requests.JSONDecodeError
+            # This aliases json.JSONDecodeError and simplejson.JSONDecodeError
+&gt;           raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+E           requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+.venv/lib/python3.14/site-packages/requests/models.py:980: JSONDecodeError</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_get_fixable_rule_list_bad_response_user_name" time="0.195"><failure message="requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+&gt;           return complexjson.loads(self.text, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/requests/models.py:976: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x103a1af90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;meta charset="utf-8"/&gt;&lt;link rel="icon" href="/favicon.ico"/&gt;&lt;meta name="viewpor...t"&gt;&lt;/head&gt;&lt;body&gt;&lt;noscript&gt;You need to enable JavaScript to run this app.&lt;/noscript&gt;&lt;div id="root"&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_get_fixable_rule_list_bad_response_user_name&gt;
+
+    def test_get_fixable_rule_list_bad_response_user_name(self):
+        """
+        Checks the retrieval of the latest report with bad response.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 420,
+            json = lambda: []
+        )
+        with unittest.mock.patch(
+                'requests.get',
+                new_callable=lambda: lambda url, headers, timeout: mock_response):
+&gt;           result = api_connection.get_fixable_rule_list(
+                unittest.mock.Mock(
+                    return_value = lambda: "token"),
+                "https://portal.coguard.io",
+                'user_name',
+                None
+            )
+
+src/coguard_cli/tests/api_connection_test.py:488: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:357: in get_fixable_rule_list
+    return resp.json()
+           ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+            return complexjson.loads(self.text, **kwargs)
+        except JSONDecodeError as e:
+            # Catch JSON-related errors and raise as requests.JSONDecodeError
+            # This aliases json.JSONDecodeError and simplejson.JSONDecodeError
+&gt;           raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+E           requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+.venv/lib/python3.14/site-packages/requests/models.py:980: JSONDecodeError</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_get_fixable_rule_list_ogranization" time="0.194"><failure message="requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+&gt;           return complexjson.loads(self.text, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/requests/models.py:976: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x103a1af90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;meta charset="utf-8"/&gt;&lt;link rel="icon" href="/favicon.ico"/&gt;&lt;meta name="viewpor...t"&gt;&lt;/head&gt;&lt;body&gt;&lt;noscript&gt;You need to enable JavaScript to run this app.&lt;/noscript&gt;&lt;div id="root"&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_get_fixable_rule_list_ogranization&gt;
+
+    def test_get_fixable_rule_list_ogranization(self):
+        """
+        Checks the retrieval of the latest report with bad response.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 200,
+            json = lambda: ["foo"]
+        )
+        with unittest.mock.patch(
+                'requests.get',
+                new_callable=lambda: lambda url, headers, timeout: mock_response):
+&gt;           result = api_connection.get_fixable_rule_list(
+                unittest.mock.Mock(
+                    return_value = lambda: "token"),
+                "https://portal.coguard.io",
+                None,
+                'organization'
+            )
+
+src/coguard_cli/tests/api_connection_test.py:468: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:341: in get_fixable_rule_list
+    return resp.json()
+           ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+            return complexjson.loads(self.text, **kwargs)
+        except JSONDecodeError as e:
+            # Catch JSON-related errors and raise as requests.JSONDecodeError
+            # This aliases json.JSONDecodeError and simplejson.JSONDecodeError
+&gt;           raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+E           requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+.venv/lib/python3.14/site-packages/requests/models.py:980: JSONDecodeError</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_get_fixable_rule_list_user_name" time="0.195"><failure message="requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+&gt;           return complexjson.loads(self.text, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/requests/models.py:976: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x103a1af90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;meta charset="utf-8"/&gt;&lt;link rel="icon" href="/favicon.ico"/&gt;&lt;meta name="viewpor...t"&gt;&lt;/head&gt;&lt;body&gt;&lt;noscript&gt;You need to enable JavaScript to run this app.&lt;/noscript&gt;&lt;div id="root"&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_get_fixable_rule_list_user_name&gt;
+
+    def test_get_fixable_rule_list_user_name(self):
+        """
+        Checks the retrieval of the latest report with bad response.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 200,
+            json = lambda: ["foo"]
+        )
+        with unittest.mock.patch(
+                'requests.get',
+                new_callable=lambda: lambda url, headers, timeout: mock_response):
+&gt;           result = api_connection.get_fixable_rule_list(
+                unittest.mock.Mock(
+                    return_value = lambda: "token"),
+                "https://portal.coguard.io",
+                'user_name',
+                None
+            )
+
+src/coguard_cli/tests/api_connection_test.py:508: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:357: in get_fixable_rule_list
+    return resp.json()
+           ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+            return complexjson.loads(self.text, **kwargs)
+        except JSONDecodeError as e:
+            # Catch JSON-related errors and raise as requests.JSONDecodeError
+            # This aliases json.JSONDecodeError and simplejson.JSONDecodeError
+&gt;           raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+E           requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+.venv/lib/python3.14/site-packages/requests/models.py:980: JSONDecodeError</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_get_latest_report_bad_response" time="0.193"><failure message="requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+&gt;           return complexjson.loads(self.text, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/requests/models.py:976: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x103a1af90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;meta charset="utf-8"/&gt;&lt;link rel="icon" href="/favicon.ico"/&gt;&lt;meta name="viewpor...t"&gt;&lt;/head&gt;&lt;body&gt;&lt;noscript&gt;You need to enable JavaScript to run this app.&lt;/noscript&gt;&lt;div id="root"&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_get_latest_report_bad_response&gt;
+
+    def test_get_latest_report_bad_response(self):
+        """
+        Checks the retrieval of the latest report with bad response.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 420
+        )
+        with unittest.mock.patch(
+                'requests.get',
+                new_callable=lambda: lambda url, headers, timeout: mock_response):
+&gt;           result = api_connection.get_latest_report(
+                unittest.mock.Mock(
+                    return_value = lambda: "token"),
+                "https://portal.coguard.io",
+                "scan_identifier",
+                "organization",
+                "username"
+            )
+
+src/coguard_cli/tests/api_connection_test.py:384: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:98: in get_latest_report
+    lst = resp.json()
+          ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+            return complexjson.loads(self.text, **kwargs)
+        except JSONDecodeError as e:
+            # Catch JSON-related errors and raise as requests.JSONDecodeError
+            # This aliases json.JSONDecodeError and simplejson.JSONDecodeError
+&gt;           raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+E           requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+.venv/lib/python3.14/site-packages/requests/models.py:980: JSONDecodeError</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_get_latest_report_good_response_empty" time="0.194"><failure message="requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+&gt;           return complexjson.loads(self.text, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/requests/models.py:976: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x103a1af90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;meta charset="utf-8"/&gt;&lt;link rel="icon" href="/favicon.ico"/&gt;&lt;meta name="viewpor...t"&gt;&lt;/head&gt;&lt;body&gt;&lt;noscript&gt;You need to enable JavaScript to run this app.&lt;/noscript&gt;&lt;div id="root"&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_get_latest_report_good_response_empty&gt;
+
+    def test_get_latest_report_good_response_empty(self):
+        """
+        Checks the retrieval of the latest report with bad response.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 200,
+            json = lambda: []
+        )
+        with unittest.mock.patch(
+                'requests.get',
+                new_callable=lambda: lambda url, headers, timeout: mock_response):
+&gt;           result = api_connection.get_latest_report(
+                unittest.mock.Mock(
+                    return_value = lambda: "token"),
+                "https://portal.coguard.io",
+                "scan_identifier",
+                "organization",
+                "username"
+            )
+
+src/coguard_cli/tests/api_connection_test.py:405: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:98: in get_latest_report
+    lst = resp.json()
+          ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+            return complexjson.loads(self.text, **kwargs)
+        except JSONDecodeError as e:
+            # Catch JSON-related errors and raise as requests.JSONDecodeError
+            # This aliases json.JSONDecodeError and simplejson.JSONDecodeError
+&gt;           raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+E           requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+.venv/lib/python3.14/site-packages/requests/models.py:980: JSONDecodeError</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_get_latest_report_good_response_non_empty" time="0.194"><failure message="requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+&gt;           return complexjson.loads(self.text, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.14/site-packages/requests/models.py:976: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x103a1af90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;meta charset="utf-8"/&gt;&lt;link rel="icon" href="/favicon.ico"/&gt;&lt;meta name="viewpor...t"&gt;&lt;/head&gt;&lt;body&gt;&lt;noscript&gt;You need to enable JavaScript to run this app.&lt;/noscript&gt;&lt;div id="root"&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_get_latest_report_good_response_non_empty&gt;
+
+    def test_get_latest_report_good_response_non_empty(self):
+        """
+        Checks the retrieval of the latest report with bad response.
+        """
+        mock_result = {"failed": []}
+        mock_response = unittest.mock.Mock(
+            status_code = 200,
+            json = lambda: [mock_result]
+        )
+        with unittest.mock.patch(
+                'requests.get',
+                new_callable=lambda: lambda url, headers, timeout: mock_response):
+&gt;           result = api_connection.get_latest_report(
+                unittest.mock.Mock(
+                    return_value = lambda: "token"),
+                "https://portal.coguard.io",
+                "scan_identifier",
+                "organization",
+                "username"
+            )
+
+src/coguard_cli/tests/api_connection_test.py:427: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:98: in get_latest_report
+    lst = resp.json()
+          ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [200]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+            return complexjson.loads(self.text, **kwargs)
+        except JSONDecodeError as e:
+            # Catch JSON-related errors and raise as requests.JSONDecodeError
+            # This aliases json.JSONDecodeError and simplejson.JSONDecodeError
+&gt;           raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+E           requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+.venv/lib/python3.14/site-packages/requests/models.py:980: JSONDecodeError</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_log" time="0.196" /><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_log_with_error" time="0.195" /><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_mention_referrer_200_status" time="0.001"><failure message="requests.exceptions.MissingSchema: Invalid URL 'baz/registration/referrer-capture': No scheme supplied. Perhaps you meant https://baz/registration/referrer-capture?">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_mention_referrer_200_status&gt;
+
+    def test_mention_referrer_200_status(self):
+        """
+        Checks the sign up with successful api call.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 204,
+            text = "true"
+        )
+        with unittest.mock.patch(
+                'requests.post',
+                new_callable=lambda: lambda url, headers, json, timeout: mock_response):
+&gt;           api_connection.mention_referrer(
+                "foo",
+                "bar",
+                "baz"
+            )
+
+src/coguard_cli/tests/api_connection_test.py:330: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:313: in mention_referrer
+    resp = future.result()
+           ^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:575: in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:484: in prepare_request
+    p.prepare(
+.venv/lib/python3.14/site-packages/requests/models.py:367: in prepare
+    self.prepare_url(url, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;PreparedRequest [POST]&gt;, url = 'baz/registration/referrer-capture'
+params = OrderedDict()
+
+    def prepare_url(self, url, params):
+        """Prepares the given HTTP URL."""
+        #: Accept objects that have string representations.
+        #: We're unable to blindly call unicode/str functions
+        #: as this will include the bytestring indicator (b'')
+        #: on python 3.x.
+        #: https://github.com/psf/requests/pull/2238
+        if isinstance(url, bytes):
+            url = url.decode("utf8")
+        else:
+            url = str(url)
+    
+        # Remove leading whitespaces from url
+        url = url.lstrip()
+    
+        # Don't do any URL preparation for non-HTTP schemes like `mailto`,
+        # `data` etc to work around exceptions from `url_parse`, which
+        # handles RFC 3986 only.
+        if ":" in url and not url.lower().startswith("http"):
+            self.url = url
+            return
+    
+        # Support for unicode domain names and paths.
+        try:
+            scheme, auth, host, port, path, query, fragment = parse_url(url)
+        except LocationParseError as e:
+            raise InvalidURL(*e.args)
+    
+        if not scheme:
+&gt;           raise MissingSchema(
+                f"Invalid URL {url!r}: No scheme supplied. "
+                f"Perhaps you meant https://{url}?"
+            )
+E           requests.exceptions.MissingSchema: Invalid URL 'baz/registration/referrer-capture': No scheme supplied. Perhaps you meant https://baz/registration/referrer-capture?
+
+.venv/lib/python3.14/site-packages/requests/models.py:438: MissingSchema</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_run_report" time="0.196" /><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_run_report_true" time="0.195"><failure message="AssertionError: False is not true">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_run_report_true&gt;
+
+    def test_run_report_true(self):
+        """
+        Checks the running of the latest report with True outcome.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 204
+        )
+        with unittest.mock.patch(
+                'requests.put',
+                new_callable=lambda: lambda url, headers, timeout: mock_response):
+            result = api_connection.run_report(
+                unittest.mock.Mock(
+                    return_value = lambda: "token"),
+                "https://portal.coguard.io",
+                "scan_identifier",
+                "organization"
+            )
+&gt;           self.assertTrue(result)
+E           AssertionError: False is not true
+
+src/coguard_cli/tests/api_connection_test.py:372: AssertionError</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_send_zip_file_for_fixing" time="0.003"><failure message="requests.exceptions.MissingSchema: Invalid URL 'portal.coguard.io/cluster/fix-cluster-zip?organizationName=ma_org': No scheme supplied. Perhaps you meant https://portal.coguard.io/cluster/fix-cluster-zip?organizationName=ma_org?">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_send_zip_file_for_fixing&gt;
+
+    def test_send_zip_file_for_fixing(self):
+        """
+        Testing the function and send a non 200 code.
+        """
+        mock_response = unittest.mock.Mock(status_code = 404)
+        with unittest.mock.patch(
+                'builtins.open',
+                unittest.mock.mock_open()), \
+                unittest.mock.patch(
+                    'requests.post',
+                    new_callable=lambda: lambda url, headers, data, timeout: mock_response
+                ):
+&gt;           self.assertIsNone(api_connection.send_zip_file_for_fixing(
+                "foo",
+                unittest.mock.Mock(
+                    return_value = lambda: "token"),
+                "portal.coguard.io",
+                "ma_org"
+            ))
+
+src/coguard_cli/tests/api_connection_test.py:237: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:230: in send_zip_file_for_fixing
+    resp_upload = future_upload.result()
+                  ^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:575: in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:484: in prepare_request
+    p.prepare(
+.venv/lib/python3.14/site-packages/requests/models.py:367: in prepare
+    self.prepare_url(url, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;PreparedRequest [POST]&gt;
+url = 'portal.coguard.io/cluster/fix-cluster-zip?organizationName=ma_org'
+params = OrderedDict()
+
+    def prepare_url(self, url, params):
+        """Prepares the given HTTP URL."""
+        #: Accept objects that have string representations.
+        #: We're unable to blindly call unicode/str functions
+        #: as this will include the bytestring indicator (b'')
+        #: on python 3.x.
+        #: https://github.com/psf/requests/pull/2238
+        if isinstance(url, bytes):
+            url = url.decode("utf8")
+        else:
+            url = str(url)
+    
+        # Remove leading whitespaces from url
+        url = url.lstrip()
+    
+        # Don't do any URL preparation for non-HTTP schemes like `mailto`,
+        # `data` etc to work around exceptions from `url_parse`, which
+        # handles RFC 3986 only.
+        if ":" in url and not url.lower().startswith("http"):
+            self.url = url
+            return
+    
+        # Support for unicode domain names and paths.
+        try:
+            scheme, auth, host, port, path, query, fragment = parse_url(url)
+        except LocationParseError as e:
+            raise InvalidURL(*e.args)
+    
+        if not scheme:
+&gt;           raise MissingSchema(
+                f"Invalid URL {url!r}: No scheme supplied. "
+                f"Perhaps you meant https://{url}?"
+            )
+E           requests.exceptions.MissingSchema: Invalid URL 'portal.coguard.io/cluster/fix-cluster-zip?organizationName=ma_org': No scheme supplied. Perhaps you meant https://portal.coguard.io/cluster/fix-cluster-zip?organizationName=ma_org?
+
+.venv/lib/python3.14/site-packages/requests/models.py:438: MissingSchema</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_send_zip_file_for_fixing_non_200_status" time="0.002"><failure message="requests.exceptions.MissingSchema: Invalid URL 'portal.coguard.io/cluster/fix-cluster-zip?organizationName=ma_org': No scheme supplied. Perhaps you meant https://portal.coguard.io/cluster/fix-cluster-zip?organizationName=ma_org?">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_send_zip_file_for_fixing_non_200_status&gt;
+
+    def test_send_zip_file_for_fixing_non_200_status(self):
+        """
+        Testing the function and send a non 200 code.
+        """
+        mock_response = unittest.mock.Mock(status_code = 200)
+        with unittest.mock.patch(
+                'builtins.open',
+                unittest.mock.mock_open()), \
+                unittest.mock.patch(
+                    'requests.post',
+                    new_callable=lambda: lambda url, headers, data, timeout: mock_response
+                ), \
+            unittest.mock.patch(
+                'tempfile.mkstemp',
+                new_callable = lambda: lambda prefix, suffix: (0, "temp_zip")
+            ), \
+            unittest.mock.patch(
+                'os.close'
+            ):
+            self.assertEqual(
+&gt;               api_connection.send_zip_file_for_fixing(
+                    "foo",
+                    unittest.mock.Mock(
+                        return_value = lambda: "token"),
+                    "portal.coguard.io",
+                    "ma_org"
+                ),
+                "temp_zip"
+            )
+
+src/coguard_cli/tests/api_connection_test.py:215: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:230: in send_zip_file_for_fixing
+    resp_upload = future_upload.result()
+                  ^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:575: in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:484: in prepare_request
+    p.prepare(
+.venv/lib/python3.14/site-packages/requests/models.py:367: in prepare
+    self.prepare_url(url, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;PreparedRequest [POST]&gt;
+url = 'portal.coguard.io/cluster/fix-cluster-zip?organizationName=ma_org'
+params = OrderedDict()
+
+    def prepare_url(self, url, params):
+        """Prepares the given HTTP URL."""
+        #: Accept objects that have string representations.
+        #: We're unable to blindly call unicode/str functions
+        #: as this will include the bytestring indicator (b'')
+        #: on python 3.x.
+        #: https://github.com/psf/requests/pull/2238
+        if isinstance(url, bytes):
+            url = url.decode("utf8")
+        else:
+            url = str(url)
+    
+        # Remove leading whitespaces from url
+        url = url.lstrip()
+    
+        # Don't do any URL preparation for non-HTTP schemes like `mailto`,
+        # `data` etc to work around exceptions from `url_parse`, which
+        # handles RFC 3986 only.
+        if ":" in url and not url.lower().startswith("http"):
+            self.url = url
+            return
+    
+        # Support for unicode domain names and paths.
+        try:
+            scheme, auth, host, port, path, query, fragment = parse_url(url)
+        except LocationParseError as e:
+            raise InvalidURL(*e.args)
+    
+        if not scheme:
+&gt;           raise MissingSchema(
+                f"Invalid URL {url!r}: No scheme supplied. "
+                f"Perhaps you meant https://{url}?"
+            )
+E           requests.exceptions.MissingSchema: Invalid URL 'portal.coguard.io/cluster/fix-cluster-zip?organizationName=ma_org': No scheme supplied. Perhaps you meant https://portal.coguard.io/cluster/fix-cluster-zip?organizationName=ma_org?
+
+.venv/lib/python3.14/site-packages/requests/models.py:438: MissingSchema</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_send_zip_file_for_scanning_200_status" time="0.002"><failure message="requests.exceptions.MissingSchema: Invalid URL 'biz/coguard-cli/upload-cluster-zip?userName=bar&amp;compliance=': No scheme supplied. Perhaps you meant https://biz/coguard-cli/upload-cluster-zip?userName=bar&amp;compliance=?">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_send_zip_file_for_scanning_200_status&gt;
+
+    def test_send_zip_file_for_scanning_200_status(self):
+        """
+        Testing the function and send a non 200 code.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 200,
+            json = lambda: {"foo": "bar"}
+        )
+        with unittest.mock.patch(
+                'builtins.open',
+                unittest.mock.mock_open()), \
+                unittest.mock.patch(
+                    'requests.post',
+                    new_callable=lambda: lambda url, headers, data, timeout: mock_response
+                ):
+&gt;           self.assertDictEqual(api_connection.send_zip_file_for_scanning(
+                "foo",
+                "bar",
+                unittest.mock.Mock(
+                    return_value = lambda: "baz"),
+                "biz",
+                "zip",
+                None,
+                ''
+            ), {"foo": "bar"})
+
+src/coguard_cli/tests/api_connection_test.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:192: in send_zip_file_for_scanning
+    resp = future.result()
+           ^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:575: in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:484: in prepare_request
+    p.prepare(
+.venv/lib/python3.14/site-packages/requests/models.py:367: in prepare
+    self.prepare_url(url, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;PreparedRequest [POST]&gt;
+url = 'biz/coguard-cli/upload-cluster-zip?userName=bar&amp;compliance='
+params = OrderedDict()
+
+    def prepare_url(self, url, params):
+        """Prepares the given HTTP URL."""
+        #: Accept objects that have string representations.
+        #: We're unable to blindly call unicode/str functions
+        #: as this will include the bytestring indicator (b'')
+        #: on python 3.x.
+        #: https://github.com/psf/requests/pull/2238
+        if isinstance(url, bytes):
+            url = url.decode("utf8")
+        else:
+            url = str(url)
+    
+        # Remove leading whitespaces from url
+        url = url.lstrip()
+    
+        # Don't do any URL preparation for non-HTTP schemes like `mailto`,
+        # `data` etc to work around exceptions from `url_parse`, which
+        # handles RFC 3986 only.
+        if ":" in url and not url.lower().startswith("http"):
+            self.url = url
+            return
+    
+        # Support for unicode domain names and paths.
+        try:
+            scheme, auth, host, port, path, query, fragment = parse_url(url)
+        except LocationParseError as e:
+            raise InvalidURL(*e.args)
+    
+        if not scheme:
+&gt;           raise MissingSchema(
+                f"Invalid URL {url!r}: No scheme supplied. "
+                f"Perhaps you meant https://{url}?"
+            )
+E           requests.exceptions.MissingSchema: Invalid URL 'biz/coguard-cli/upload-cluster-zip?userName=bar&amp;compliance=': No scheme supplied. Perhaps you meant https://biz/coguard-cli/upload-cluster-zip?userName=bar&amp;compliance=?
+
+.venv/lib/python3.14/site-packages/requests/models.py:438: MissingSchema</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_send_zip_file_for_scanning_non_200_status" time="0.001"><failure message="requests.exceptions.MissingSchema: Invalid URL 'biz/coguard-cli/upload-cluster-zip?userName=bar&amp;compliance=': No scheme supplied. Perhaps you meant https://biz/coguard-cli/upload-cluster-zip?userName=bar&amp;compliance=?">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_send_zip_file_for_scanning_non_200_status&gt;
+
+    def test_send_zip_file_for_scanning_non_200_status(self):
+        """
+        Testing the function and send a non 200 code.
+        """
+        mock_response = unittest.mock.Mock(status_code = 404)
+        with unittest.mock.patch(
+                'builtins.open',
+                unittest.mock.mock_open()), \
+                unittest.mock.patch(
+                    'requests.post',
+                    new_callable=lambda: lambda url, headers, data, timeout: mock_response
+                ):
+&gt;           self.assertIsNone(api_connection.send_zip_file_for_scanning(
+                "foo",
+                "bar",
+                unittest.mock.Mock(
+                    return_value = lambda: "baz"),
+                "biz",
+                "zip",
+                None,
+                ''
+            ))
+
+src/coguard_cli/tests/api_connection_test.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:192: in send_zip_file_for_scanning
+    resp = future.result()
+           ^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:575: in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:484: in prepare_request
+    p.prepare(
+.venv/lib/python3.14/site-packages/requests/models.py:367: in prepare
+    self.prepare_url(url, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;PreparedRequest [POST]&gt;
+url = 'biz/coguard-cli/upload-cluster-zip?userName=bar&amp;compliance='
+params = OrderedDict()
+
+    def prepare_url(self, url, params):
+        """Prepares the given HTTP URL."""
+        #: Accept objects that have string representations.
+        #: We're unable to blindly call unicode/str functions
+        #: as this will include the bytestring indicator (b'')
+        #: on python 3.x.
+        #: https://github.com/psf/requests/pull/2238
+        if isinstance(url, bytes):
+            url = url.decode("utf8")
+        else:
+            url = str(url)
+    
+        # Remove leading whitespaces from url
+        url = url.lstrip()
+    
+        # Don't do any URL preparation for non-HTTP schemes like `mailto`,
+        # `data` etc to work around exceptions from `url_parse`, which
+        # handles RFC 3986 only.
+        if ":" in url and not url.lower().startswith("http"):
+            self.url = url
+            return
+    
+        # Support for unicode domain names and paths.
+        try:
+            scheme, auth, host, port, path, query, fragment = parse_url(url)
+        except LocationParseError as e:
+            raise InvalidURL(*e.args)
+    
+        if not scheme:
+&gt;           raise MissingSchema(
+                f"Invalid URL {url!r}: No scheme supplied. "
+                f"Perhaps you meant https://{url}?"
+            )
+E           requests.exceptions.MissingSchema: Invalid URL 'biz/coguard-cli/upload-cluster-zip?userName=bar&amp;compliance=': No scheme supplied. Perhaps you meant https://biz/coguard-cli/upload-cluster-zip?userName=bar&amp;compliance=?
+
+.venv/lib/python3.14/site-packages/requests/models.py:438: MissingSchema</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_send_zip_file_for_scanning_with_org_204_failed_latest_report" time="0.002"><failure message="requests.exceptions.MissingSchema: Invalid URL 'biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=': No scheme supplied. Perhaps you meant https://biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=?">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_send_zip_file_for_scanning_with_org_204_failed_latest_report&gt;
+
+    def test_send_zip_file_for_scanning_with_org_204_failed_latest_report(self):
+        """
+        Testing the function and send a non 200 code.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 204,
+            json = lambda: {"foo": "bar"}
+        )
+        with unittest.mock.patch(
+                'builtins.open',
+                unittest.mock.mock_open()), \
+                unittest.mock.patch(
+                    'requests.post',
+                    new_callable=lambda: lambda url, headers, data, timeout: mock_response
+                ), \
+                unittest.mock.patch(
+                    'coguard_cli.api_connection.run_report',
+                    new_callable=lambda: lambda a, b, c, d: True
+                ), \
+                unittest.mock.patch(
+                    'coguard_cli.api_connection.get_latest_report',
+                    new_callable=lambda: lambda a, b, c, d, e: None
+                ):
+&gt;           self.assertIsNone(api_connection.send_zip_file_for_scanning(
+                "foo",
+                "bar",
+                unittest.mock.Mock(
+                    return_value = lambda: "token"),
+                "biz",
+                "zip",
+                "org",
+                ''
+            ))
+
+src/coguard_cli/tests/api_connection_test.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:139: in send_zip_file_for_scanning
+    resp_upload = future_upload.result()
+                  ^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:575: in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:484: in prepare_request
+    p.prepare(
+.venv/lib/python3.14/site-packages/requests/models.py:367: in prepare
+    self.prepare_url(url, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;PreparedRequest [POST]&gt;
+url = 'biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance='
+params = OrderedDict()
+
+    def prepare_url(self, url, params):
+        """Prepares the given HTTP URL."""
+        #: Accept objects that have string representations.
+        #: We're unable to blindly call unicode/str functions
+        #: as this will include the bytestring indicator (b'')
+        #: on python 3.x.
+        #: https://github.com/psf/requests/pull/2238
+        if isinstance(url, bytes):
+            url = url.decode("utf8")
+        else:
+            url = str(url)
+    
+        # Remove leading whitespaces from url
+        url = url.lstrip()
+    
+        # Don't do any URL preparation for non-HTTP schemes like `mailto`,
+        # `data` etc to work around exceptions from `url_parse`, which
+        # handles RFC 3986 only.
+        if ":" in url and not url.lower().startswith("http"):
+            self.url = url
+            return
+    
+        # Support for unicode domain names and paths.
+        try:
+            scheme, auth, host, port, path, query, fragment = parse_url(url)
+        except LocationParseError as e:
+            raise InvalidURL(*e.args)
+    
+        if not scheme:
+&gt;           raise MissingSchema(
+                f"Invalid URL {url!r}: No scheme supplied. "
+                f"Perhaps you meant https://{url}?"
+            )
+E           requests.exceptions.MissingSchema: Invalid URL 'biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=': No scheme supplied. Perhaps you meant https://biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=?
+
+.venv/lib/python3.14/site-packages/requests/models.py:438: MissingSchema</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_send_zip_file_for_scanning_with_org_204_failed_run" time="0.002"><failure message="requests.exceptions.MissingSchema: Invalid URL 'biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=': No scheme supplied. Perhaps you meant https://biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=?">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_send_zip_file_for_scanning_with_org_204_failed_run&gt;
+
+    def test_send_zip_file_for_scanning_with_org_204_failed_run(self):
+        """
+        Testing the function and send a non 200 code.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 204,
+            json = lambda: {"foo": "bar"}
+        )
+        with unittest.mock.patch(
+                'builtins.open',
+                unittest.mock.mock_open()), \
+                unittest.mock.patch(
+                    'requests.post',
+                    new_callable=lambda: lambda url, headers, data, timeout: mock_response
+                ), \
+                unittest.mock.patch(
+                    'coguard_cli.api_connection.run_report',
+                    new_callable=lambda: lambda a, b, c, d: False
+                ):
+&gt;           self.assertIsNone(api_connection.send_zip_file_for_scanning(
+                "foo",
+                "bar",
+                unittest.mock.Mock(
+                    return_value = lambda: "token"),
+                "biz",
+                "zip",
+                "org",
+                ''
+            ))
+
+src/coguard_cli/tests/api_connection_test.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:139: in send_zip_file_for_scanning
+    resp_upload = future_upload.result()
+                  ^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:575: in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:484: in prepare_request
+    p.prepare(
+.venv/lib/python3.14/site-packages/requests/models.py:367: in prepare
+    self.prepare_url(url, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;PreparedRequest [POST]&gt;
+url = 'biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance='
+params = OrderedDict()
+
+    def prepare_url(self, url, params):
+        """Prepares the given HTTP URL."""
+        #: Accept objects that have string representations.
+        #: We're unable to blindly call unicode/str functions
+        #: as this will include the bytestring indicator (b'')
+        #: on python 3.x.
+        #: https://github.com/psf/requests/pull/2238
+        if isinstance(url, bytes):
+            url = url.decode("utf8")
+        else:
+            url = str(url)
+    
+        # Remove leading whitespaces from url
+        url = url.lstrip()
+    
+        # Don't do any URL preparation for non-HTTP schemes like `mailto`,
+        # `data` etc to work around exceptions from `url_parse`, which
+        # handles RFC 3986 only.
+        if ":" in url and not url.lower().startswith("http"):
+            self.url = url
+            return
+    
+        # Support for unicode domain names and paths.
+        try:
+            scheme, auth, host, port, path, query, fragment = parse_url(url)
+        except LocationParseError as e:
+            raise InvalidURL(*e.args)
+    
+        if not scheme:
+&gt;           raise MissingSchema(
+                f"Invalid URL {url!r}: No scheme supplied. "
+                f"Perhaps you meant https://{url}?"
+            )
+E           requests.exceptions.MissingSchema: Invalid URL 'biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=': No scheme supplied. Perhaps you meant https://biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=?
+
+.venv/lib/python3.14/site-packages/requests/models.py:438: MissingSchema</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_send_zip_file_for_scanning_with_org_204_not_failed_latest_report" time="0.002"><failure message="requests.exceptions.MissingSchema: Invalid URL 'biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=': No scheme supplied. Perhaps you meant https://biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=?">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_send_zip_file_for_scanning_with_org_204_not_failed_latest_report&gt;
+
+    def test_send_zip_file_for_scanning_with_org_204_not_failed_latest_report(self):
+        """
+        Testing the function and send a non 200 code.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 204,
+            json = lambda: {"foo": "bar"}
+        )
+        mock_response_2 = unittest.mock.Mock(
+            status_code = 200,
+            json = lambda: {"foo": "bar"}
+        )
+        with unittest.mock.patch(
+                'builtins.open',
+                unittest.mock.mock_open()), \
+                unittest.mock.patch(
+                    'requests.post',
+                    new_callable=lambda: lambda url, headers, data, timeout: mock_response
+                ), \
+                unittest.mock.patch(
+                    'coguard_cli.api_connection.run_report',
+                    new_callable=lambda: lambda a, b, c, d: True
+                ), \
+                unittest.mock.patch(
+                    'coguard_cli.api_connection.get_latest_report',
+                    new_callable=lambda: lambda a, b, c, d, e: "BOOO"
+                ), \
+                unittest.mock.patch(
+                    'requests.get',
+                    new_callable=lambda: lambda url, headers, timeout: mock_response_2
+                ):
+&gt;           self.assertDictEqual(api_connection.send_zip_file_for_scanning(
+                "foo",
+                "bar",
+                unittest.mock.Mock(
+                    return_value = lambda: "token"),
+                "biz",
+                "zip",
+                "org",
+                ''
+            ), {"foo": "bar"})
+
+src/coguard_cli/tests/api_connection_test.py:184: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:139: in send_zip_file_for_scanning
+    resp_upload = future_upload.result()
+                  ^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:575: in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:484: in prepare_request
+    p.prepare(
+.venv/lib/python3.14/site-packages/requests/models.py:367: in prepare
+    self.prepare_url(url, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;PreparedRequest [POST]&gt;
+url = 'biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance='
+params = OrderedDict()
+
+    def prepare_url(self, url, params):
+        """Prepares the given HTTP URL."""
+        #: Accept objects that have string representations.
+        #: We're unable to blindly call unicode/str functions
+        #: as this will include the bytestring indicator (b'')
+        #: on python 3.x.
+        #: https://github.com/psf/requests/pull/2238
+        if isinstance(url, bytes):
+            url = url.decode("utf8")
+        else:
+            url = str(url)
+    
+        # Remove leading whitespaces from url
+        url = url.lstrip()
+    
+        # Don't do any URL preparation for non-HTTP schemes like `mailto`,
+        # `data` etc to work around exceptions from `url_parse`, which
+        # handles RFC 3986 only.
+        if ":" in url and not url.lower().startswith("http"):
+            self.url = url
+            return
+    
+        # Support for unicode domain names and paths.
+        try:
+            scheme, auth, host, port, path, query, fragment = parse_url(url)
+        except LocationParseError as e:
+            raise InvalidURL(*e.args)
+    
+        if not scheme:
+&gt;           raise MissingSchema(
+                f"Invalid URL {url!r}: No scheme supplied. "
+                f"Perhaps you meant https://{url}?"
+            )
+E           requests.exceptions.MissingSchema: Invalid URL 'biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=': No scheme supplied. Perhaps you meant https://biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=?
+
+.venv/lib/python3.14/site-packages/requests/models.py:438: MissingSchema</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_send_zip_file_for_scanning_with_org_non_204_status" time="0.002"><failure message="requests.exceptions.MissingSchema: Invalid URL 'biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=': No scheme supplied. Perhaps you meant https://biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=?">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_send_zip_file_for_scanning_with_org_non_204_status&gt;
+
+    def test_send_zip_file_for_scanning_with_org_non_204_status(self):
+        """
+        Testing the function and send a non 200 code.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 420,
+            json = lambda: {"foo": "bar"}
+        )
+        with unittest.mock.patch(
+                'builtins.open',
+                unittest.mock.mock_open()), \
+                unittest.mock.patch(
+                    'requests.post',
+                    new_callable=lambda: lambda url, headers, data, timeout: mock_response
+                ):
+&gt;           self.assertIsNone(api_connection.send_zip_file_for_scanning(
+                "foo",
+                "bar",
+                unittest.mock.Mock(
+                    return_value = lambda: "baz"),
+                "biz",
+                "zip",
+                "org",
+                ''
+            ))
+
+src/coguard_cli/tests/api_connection_test.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:139: in send_zip_file_for_scanning
+    resp_upload = future_upload.result()
+                  ^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:575: in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:484: in prepare_request
+    p.prepare(
+.venv/lib/python3.14/site-packages/requests/models.py:367: in prepare
+    self.prepare_url(url, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;PreparedRequest [POST]&gt;
+url = 'biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance='
+params = OrderedDict()
+
+    def prepare_url(self, url, params):
+        """Prepares the given HTTP URL."""
+        #: Accept objects that have string representations.
+        #: We're unable to blindly call unicode/str functions
+        #: as this will include the bytestring indicator (b'')
+        #: on python 3.x.
+        #: https://github.com/psf/requests/pull/2238
+        if isinstance(url, bytes):
+            url = url.decode("utf8")
+        else:
+            url = str(url)
+    
+        # Remove leading whitespaces from url
+        url = url.lstrip()
+    
+        # Don't do any URL preparation for non-HTTP schemes like `mailto`,
+        # `data` etc to work around exceptions from `url_parse`, which
+        # handles RFC 3986 only.
+        if ":" in url and not url.lower().startswith("http"):
+            self.url = url
+            return
+    
+        # Support for unicode domain names and paths.
+        try:
+            scheme, auth, host, port, path, query, fragment = parse_url(url)
+        except LocationParseError as e:
+            raise InvalidURL(*e.args)
+    
+        if not scheme:
+&gt;           raise MissingSchema(
+                f"Invalid URL {url!r}: No scheme supplied. "
+                f"Perhaps you meant https://{url}?"
+            )
+E           requests.exceptions.MissingSchema: Invalid URL 'biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=': No scheme supplied. Perhaps you meant https://biz/cluster/upload-cluster-zip?organizationName=org&amp;overwrite=true&amp;compliance=?
+
+.venv/lib/python3.14/site-packages/requests/models.py:438: MissingSchema</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_sign_up_for_coguard_200_status" time="0.001"><failure message="requests.exceptions.MissingSchema: Invalid URL 'baz/registration/register-user': No scheme supplied. Perhaps you meant https://baz/registration/register-user?">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_sign_up_for_coguard_200_status&gt;
+
+    def test_sign_up_for_coguard_200_status(self):
+        """
+        Checks the sign up with successful api call.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 204,
+            text = "true"
+        )
+        with unittest.mock.patch(
+                'requests.post',
+                new_callable=lambda: lambda url, headers, json, timeout: mock_response):
+            self.assertTrue(
+&gt;               api_connection.sign_up_for_coguard(
+                    "foo",
+                    "bar",
+                    "baz"
+                )
+            )
+
+src/coguard_cli/tests/api_connection_test.py:293: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:289: in sign_up_for_coguard
+    resp = future.result()
+           ^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:575: in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:484: in prepare_request
+    p.prepare(
+.venv/lib/python3.14/site-packages/requests/models.py:367: in prepare
+    self.prepare_url(url, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;PreparedRequest [POST]&gt;, url = 'baz/registration/register-user'
+params = OrderedDict()
+
+    def prepare_url(self, url, params):
+        """Prepares the given HTTP URL."""
+        #: Accept objects that have string representations.
+        #: We're unable to blindly call unicode/str functions
+        #: as this will include the bytestring indicator (b'')
+        #: on python 3.x.
+        #: https://github.com/psf/requests/pull/2238
+        if isinstance(url, bytes):
+            url = url.decode("utf8")
+        else:
+            url = str(url)
+    
+        # Remove leading whitespaces from url
+        url = url.lstrip()
+    
+        # Don't do any URL preparation for non-HTTP schemes like `mailto`,
+        # `data` etc to work around exceptions from `url_parse`, which
+        # handles RFC 3986 only.
+        if ":" in url and not url.lower().startswith("http"):
+            self.url = url
+            return
+    
+        # Support for unicode domain names and paths.
+        try:
+            scheme, auth, host, port, path, query, fragment = parse_url(url)
+        except LocationParseError as e:
+            raise InvalidURL(*e.args)
+    
+        if not scheme:
+&gt;           raise MissingSchema(
+                f"Invalid URL {url!r}: No scheme supplied. "
+                f"Perhaps you meant https://{url}?"
+            )
+E           requests.exceptions.MissingSchema: Invalid URL 'baz/registration/register-user': No scheme supplied. Perhaps you meant https://baz/registration/register-user?
+
+.venv/lib/python3.14/site-packages/requests/models.py:438: MissingSchema</failure></testcase><testcase classname="src.coguard_cli.tests.api_connection_test.TestApiConnection" name="test_sign_up_for_coguard_400_status" time="0.001"><failure message="requests.exceptions.MissingSchema: Invalid URL 'baz/registration/register-user': No scheme supplied. Perhaps you meant https://baz/registration/register-user?">self = &lt;coguard_cli.tests.api_connection_test.TestApiConnection testMethod=test_sign_up_for_coguard_400_status&gt;
+
+    def test_sign_up_for_coguard_400_status(self):
+        """
+        Checks the sign up with not successful api call.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 400,
+            text = "true"
+        )
+        with unittest.mock.patch(
+                'requests.post',
+                new_callable=lambda: lambda url, headers, json, timeout: mock_response):
+            self.assertFalse(
+&gt;               api_connection.sign_up_for_coguard(
+                    "foo",
+                    "bar",
+                    "baz"
+                )
+            )
+
+src/coguard_cli/tests/api_connection_test.py:312: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/coguard_cli/api_connection.py:289: in sign_up_for_coguard
+    resp = future.result()
+           ^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:450: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:575: in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/requests/sessions.py:484: in prepare_request
+    p.prepare(
+.venv/lib/python3.14/site-packages/requests/models.py:367: in prepare
+    self.prepare_url(url, params)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;PreparedRequest [POST]&gt;, url = 'baz/registration/register-user'
+params = OrderedDict()
+
+    def prepare_url(self, url, params):
+        """Prepares the given HTTP URL."""
+        #: Accept objects that have string representations.
+        #: We're unable to blindly call unicode/str functions
+        #: as this will include the bytestring indicator (b'')
+        #: on python 3.x.
+        #: https://github.com/psf/requests/pull/2238
+        if isinstance(url, bytes):
+            url = url.decode("utf8")
+        else:
+            url = str(url)
+    
+        # Remove leading whitespaces from url
+        url = url.lstrip()
+    
+        # Don't do any URL preparation for non-HTTP schemes like `mailto`,
+        # `data` etc to work around exceptions from `url_parse`, which
+        # handles RFC 3986 only.
+        if ":" in url and not url.lower().startswith("http"):
+            self.url = url
+            return
+    
+        # Support for unicode domain names and paths.
+        try:
+            scheme, auth, host, port, path, query, fragment = parse_url(url)
+        except LocationParseError as e:
+            raise InvalidURL(*e.args)
+    
+        if not scheme:
+&gt;           raise MissingSchema(
+                f"Invalid URL {url!r}: No scheme supplied. "
+                f"Perhaps you meant https://{url}?"
+            )
+E           requests.exceptions.MissingSchema: Invalid URL 'baz/registration/register-user': No scheme supplied. Perhaps you meant https://baz/registration/register-user?
+
+.venv/lib/python3.14/site-packages/requests/models.py:438: MissingSchema</failure></testcase><testcase classname="src.coguard_cli.tests.auth.auth_config_test.TestAuthClass" name="test_initialization_and_value_setting" time="0.001" /><testcase classname="src.coguard_cli.tests.auth.common_auth_function_test.TestAuthClass" name="test_get_auth_file_existing_path" time="0.001"><failure message="AssertionError: {} != {'password': 'df28fd0e-58b0-416a-b659-cfea[80 chars].io'}&#10;- {}&#10;+ {'coguard-url': 'https://portal.coguard.io',&#10;+  'password': 'df28fd0e-58b0-416a-b659-cfeafdbef74a',&#10;+  'username': 'email@email.com'}">self = &lt;coguard_cli.tests.auth.common_auth_function_test.TestAuthClass testMethod=test_get_auth_file_existing_path&gt;
+
+    def test_get_auth_file_existing_path(self):
+        """
+        Tests that the return value of get_auth_file represents the contents
+        of the file if the path does exist.
+        """
+        res = coguard_cli.auth.get_auth_file(
+            os.path.join(
+                self.path_to_resources,
+                "sample_config"
+            )
+        )
+&gt;       self.assertDictEqual(res, {
+            "password": "df28fd0e-58b0-416a-b659-cfeafdbef74a",
+            "username": "email@email.com",
+            "coguard-url": "https://portal.coguard.io"
+        })
+E       AssertionError: {} != {'password': 'df28fd0e-58b0-416a-b659-cfea[80 chars].io'}
+E       - {}
+E       + {'coguard-url': 'https://portal.coguard.io',
+E       +  'password': 'df28fd0e-58b0-416a-b659-cfeafdbef74a',
+E       +  'username': 'email@email.com'}
+
+src/coguard_cli/tests/auth/common_auth_function_test.py:46: AssertionError</failure></testcase><testcase classname="src.coguard_cli.tests.auth.common_auth_function_test.TestAuthClass" name="test_get_auth_file_existing_path_not_400" time="0.000" /><testcase classname="src.coguard_cli.tests.auth.common_auth_function_test.TestAuthClass" name="test_get_auth_file_non_existing_path" time="0.000" /><testcase classname="src.coguard_cli.tests.auth.common_auth_function_test.TestAuthClass" name="test_get_config_object_without_json" time="0.000" /><testcase classname="src.coguard_cli.tests.auth.common_auth_function_test.TestAuthClass" name="test_get_file_without_json" time="0.000" /><testcase classname="src.coguard_cli.tests.auth.common_auth_function_test.TestAuthClass" name="test_retrieve_configuration_object_existing_path" time="0.000"><failure message="AssertionError: unexpectedly None">self = &lt;coguard_cli.tests.auth.common_auth_function_test.TestAuthClass testMethod=test_retrieve_configuration_object_existing_path&gt;
+
+    def test_retrieve_configuration_object_existing_path(self):
+        """
+        Tests that the return value of retrieve_configuration_object represents the contents
+        of the file if the path does exist.
+        """
+        with unittest.mock.patch(
+                'os.environ.get',
+                new_callable=lambda: lambda x: None):
+            res = coguard_cli.auth.retrieve_configuration_object(
+                os.path.join(
+                    self.path_to_resources,
+                    "sample_config"
+                )
+            )
+&gt;           self.assertIsNotNone(res)
+E           AssertionError: unexpectedly None
+
+src/coguard_cli/tests/auth/common_auth_function_test.py:107: AssertionError</failure></testcase><testcase classname="src.coguard_cli.tests.auth.common_auth_function_test.TestAuthClass" name="test_retrieve_configuration_object_non_existing_path" time="0.000" /><testcase classname="src.coguard_cli.tests.auth.common_auth_function_test.TestAuthClass" name="test_store_config_object_in_auth_file" time="0.001" /><testcase classname="src.coguard_cli.tests.auth.token_test.TestTokenClass" name="test_authenticate_to_server_empty_config_object" time="0.000" /><testcase classname="src.coguard_cli.tests.auth.token_test.TestTokenClass" name="test_authenticate_to_server_non_empty_config_object_404" time="0.000"><failure message="TypeError: TestTokenClass.test_authenticate_to_server_non_empty_config_object_404.&lt;locals&gt;.new_callable() got multiple values for argument 'data'">self = &lt;coguard_cli.tests.auth.token_test.TestTokenClass testMethod=test_authenticate_to_server_non_empty_config_object_404&gt;
+
+    def test_authenticate_to_server_non_empty_config_object_404(self):
+        """
+        Tests that the authentication returns None if the status code
+        is not 200.
+        """
+        config_obj = CoGuardCliConfig("foo", "bar")
+        def new_callable(url, data, timeout):
+            response = unittest.mock.Mock()
+            setattr(response, 'status_code', 404)
+            return response
+        with unittest.mock.patch('requests_futures.sessions.FuturesSession.post',
+                                 new_callable=lambda: new_callable):
+            token = Token("foo", config_obj)
+&gt;           self.assertIsNone(token.authenticate_to_server())
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/coguard_cli/tests/auth/token_test.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;coguard_cli.auth.token.Token object at 0x108f3de50&gt;
+
+    def authenticate_to_server(self) -&gt; Optional[str]:
+        """
+        This is the function which tries to make the call to the coguard authentication server.
+        Returns None if authentication could not have been done, and the auth token otherwise.
+        """
+        if self._auth_config is None:
+            self._token = None
+            return None
+        # The following check is just for the case if people use a different authentication
+        # server url and forget the auth in the subpath
+        if self._auth_config.get_auth_url().endswith('/auth'):
+            complete_request_url = self._auth_config.get_auth_url() + COGUARD_REALM_TOKEN_URL
+        else:
+            complete_request_url = \
+                f"{self._auth_config.get_auth_url()}/auth{COGUARD_REALM_TOKEN_URL}"
+&gt;       token_request = self.session.post(
+            complete_request_url,
+            data={
+                'client_id': 'client-react-frontend',
+                'username': self._auth_config.get_username(),
+                'password': self._auth_config.get_password(),
+                'grant_type': 'password'
+            },
+            timeout=300
+        )
+E       TypeError: TestTokenClass.test_authenticate_to_server_non_empty_config_object_404.&lt;locals&gt;.new_callable() got multiple values for argument 'data'
+
+src/coguard_cli/auth/token.py:43: TypeError</failure></testcase><testcase classname="src.coguard_cli.tests.auth.token_test.TestTokenClass" name="test_authenticate_to_server_non_empty_config_object_success" time="0.001"><failure message="AttributeError: &lt;class 'unittest.mock.Mock'&gt; does not have the attribute 'json'">self = &lt;coguard_cli.tests.auth.token_test.TestTokenClass testMethod=test_authenticate_to_server_non_empty_config_object_success&gt;
+
+    def test_authenticate_to_server_non_empty_config_object_success(self):
+        """
+        Tests that the authentication returns None if the status code
+        is not 200.
+        """
+        config_obj = CoGuardCliConfig("foo", "bar")
+        def new_callable(url, data, timeout):
+            response = unittest.mock.Mock()
+            setattr(response, 'status_code', 200)
+            return response
+        def new_json(arg):
+            return {
+                "access_token": "foo"
+            }
+        with unittest.mock.patch('requests_futures.sessions.FuturesSession.post',
+                                 new_callable=lambda: new_callable), \
+&gt;            unittest.mock.patch('unittest.mock.Mock.json',
+                                 new_callable=lambda: new_json):
+
+src/coguard_cli/tests/auth/token_test.py:220: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1503: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unittest.mock._patch object at 0x109d1eeb0&gt;
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+&gt;           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: &lt;class 'unittest.mock.Mock'&gt; does not have the attribute 'json'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:1473: AttributeError</failure></testcase><testcase classname="src.coguard_cli.tests.auth.token_test.TestTokenClass" name="test_extract_deal_type_from_token_no_pk" time="0.001" /><testcase classname="src.coguard_cli.tests.auth.token_test.TestTokenClass" name="test_extract_deal_type_from_token_pk_deal_id" time="0.000" /><testcase classname="src.coguard_cli.tests.auth.token_test.TestTokenClass" name="test_extract_deal_type_from_token_pk_no_deal_id" time="0.000" /><testcase classname="src.coguard_cli.tests.auth.token_test.TestTokenClass" name="test_extract_organization_from_token_no_pk" time="0.000" /><testcase classname="src.coguard_cli.tests.auth.token_test.TestTokenClass" name="test_extract_organization_from_token_pk" time="0.000" /><testcase classname="src.coguard_cli.tests.auth.token_test.TestTokenClass" name="test_extract_organization_from_token_pk_empty" time="0.000" /><testcase classname="src.coguard_cli.tests.auth.token_test.TestTokenClass" name="test_get_decoded_jwt_token" time="0.000" /><testcase classname="src.coguard_cli.tests.auth.token_test.TestTokenClass" name="test_get_public_key_status_200_no_public_key" time="0.000"><failure message="TypeError: TestTokenClass.test_get_public_key_status_200_no_public_key.&lt;locals&gt;.&lt;lambda&gt;.&lt;locals&gt;.&lt;lambda&gt;() got multiple values for argument 'timeout'">self = &lt;coguard_cli.tests.auth.token_test.TestTokenClass testMethod=test_get_public_key_status_200_no_public_key&gt;
+
+    def test_get_public_key_status_200_no_public_key(self):
+        """
+        Tests the public key extraction of the authentication server.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 200,
+            json = lambda: {}
+        )
+        mock_config_object = unittest.mock.Mock(
+            get_auth_url = lambda: "https://portal.coguard.io/auth"
+        )
+        token = Token("foo", mock_config_object)
+        with unittest.mock.patch('requests_futures.sessions.FuturesSession.get',
+                                 new_callable=lambda: lambda url, timeout: mock_response):
+&gt;           result = token.get_public_key()
+                     ^^^^^^^^^^^^^^^^^^^^^^
+
+src/coguard_cli/tests/auth/token_test.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;coguard_cli.auth.token.Token object at 0x10a094850&gt;
+
+    def get_public_key(self) -&gt; Optional[str]:
+        """
+        A helper function to retrieve the public key from the authentication server.
+        Returns None if there is no public key.
+        """
+        if self._auth_config.get_auth_url().endswith('/auth'):
+            complete_request_url = self._auth_config.get_auth_url() + "/realms/coguard"
+        else:
+            complete_request_url = f"{self._auth_config.get_auth_url()}/auth/realms/coguard"
+&gt;       public_key_request = self.session.get(complete_request_url, timeout=5)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: TestTokenClass.test_get_public_key_status_200_no_public_key.&lt;locals&gt;.&lt;lambda&gt;.&lt;locals&gt;.&lt;lambda&gt;() got multiple values for argument 'timeout'
+
+src/coguard_cli/auth/token.py:102: TypeError</failure></testcase><testcase classname="src.coguard_cli.tests.auth.token_test.TestTokenClass" name="test_get_public_key_status_200_public_key" time="0.001"><failure message="TypeError: TestTokenClass.test_get_public_key_status_200_public_key.&lt;locals&gt;.&lt;lambda&gt;.&lt;locals&gt;.&lt;lambda&gt;() got multiple values for argument 'timeout'">self = &lt;coguard_cli.tests.auth.token_test.TestTokenClass testMethod=test_get_public_key_status_200_public_key&gt;
+
+    def test_get_public_key_status_200_public_key(self):
+        """
+        Tests the public key extraction of the authentication server.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 200,
+            json = lambda: {"public_key": "123456"}
+        )
+        mock_config_object = unittest.mock.Mock(
+            get_auth_url = lambda: "https://portal.coguard.io/auth"
+        )
+        token = Token("foo", mock_config_object)
+        with unittest.mock.patch('requests_futures.sessions.FuturesSession.get',
+                                 new_callable=lambda: lambda url, timeout: mock_response):
+&gt;           result = token.get_public_key()
+                     ^^^^^^^^^^^^^^^^^^^^^^
+
+src/coguard_cli/tests/auth/token_test.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;coguard_cli.auth.token.Token object at 0x10a2ccd70&gt;
+
+    def get_public_key(self) -&gt; Optional[str]:
+        """
+        A helper function to retrieve the public key from the authentication server.
+        Returns None if there is no public key.
+        """
+        if self._auth_config.get_auth_url().endswith('/auth'):
+            complete_request_url = self._auth_config.get_auth_url() + "/realms/coguard"
+        else:
+            complete_request_url = f"{self._auth_config.get_auth_url()}/auth/realms/coguard"
+&gt;       public_key_request = self.session.get(complete_request_url, timeout=5)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: TestTokenClass.test_get_public_key_status_200_public_key.&lt;locals&gt;.&lt;lambda&gt;.&lt;locals&gt;.&lt;lambda&gt;() got multiple values for argument 'timeout'
+
+src/coguard_cli/auth/token.py:102: TypeError</failure></testcase><testcase classname="src.coguard_cli.tests.auth.token_test.TestTokenClass" name="test_get_public_key_status_not_200" time="0.000"><failure message="TypeError: TestTokenClass.test_get_public_key_status_not_200.&lt;locals&gt;.&lt;lambda&gt;.&lt;locals&gt;.&lt;lambda&gt;() got multiple values for argument 'timeout'">self = &lt;coguard_cli.tests.auth.token_test.TestTokenClass testMethod=test_get_public_key_status_not_200&gt;
+
+    def test_get_public_key_status_not_200(self):
+        """
+        Tests the public key extraction of the authentication server.
+        """
+        mock_response = unittest.mock.Mock(
+            status_code = 420
+        )
+        mock_config_object = unittest.mock.Mock(
+            get_auth_url = lambda: "https://portal.coguard.io"
+        )
+        token = Token("foo", mock_config_object)
+        with unittest.mock.patch('requests_futures.sessions.FuturesSession.get',
+                                 new_callable=lambda: lambda url, timeout: mock_response):
+&gt;           result = token.get_public_key()
+                     ^^^^^^^^^^^^^^^^^^^^^^
+
+src/coguard_cli/tests/auth/token_test.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;coguard_cli.auth.token.Token object at 0x10a2cd7c0&gt;
+
+    def get_public_key(self) -&gt; Optional[str]:
+        """
+        A helper function to retrieve the public key from the authentication server.
+        Returns None if there is no public key.
+        """
+        if self._auth_config.get_auth_url().endswith('/auth'):
+            complete_request_url = self._auth_config.get_auth_url() + "/realms/coguard"
+        else:
+            complete_request_url = f"{self._auth_config.get_auth_url()}/auth/realms/coguard"
+&gt;       public_key_request = self.session.get(complete_request_url, timeout=5)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: TestTokenClass.test_get_public_key_status_not_200.&lt;locals&gt;.&lt;lambda&gt;.&lt;locals&gt;.&lt;lambda&gt;() got multiple values for argument 'timeout'
+
+src/coguard_cli/auth/token.py:102: TypeError</failure></testcase><testcase classname="src.coguard_cli.tests.ci_cd.ci_cd_provider_factory_test.TestCloudProviderFactory" name="test_generator" time="0.000" /><testcase classname="src.coguard_cli.tests.ci_cd.ci_cd_providers.ci_cd_provider_github_test.TestCiCdProviderGitHub" name="test_add_existent" time="0.002" /><testcase classname="src.coguard_cli.tests.ci_cd.ci_cd_providers.ci_cd_provider_github_test.TestCiCdProviderGitHub" name="test_add_not_existent" time="0.001" /><testcase classname="src.coguard_cli.tests.ci_cd.ci_cd_providers.ci_cd_provider_github_test.TestCiCdProviderGitHub" name="test_get_identifier" time="0.000" /><testcase classname="src.coguard_cli.tests.ci_cd.ci_cd_providers.ci_cd_provider_github_test.TestCiCdProviderGitHub" name="test_post_string" time="0.000" /><testcase classname="src.coguard_cli.tests.cluster_rule_fail_util_test.TestClusterRuleFailUtilRoot" name="test_is_ci_cd_there_existing_bitbucket_pipeline" time="0.000" /><testcase classname="src.coguard_cli.tests.cluster_rule_fail_util_test.TestClusterRuleFailUtilRoot" name="test_is_ci_cd_there_existing_circleci_pipeline" time="0.000" /><testcase classname="src.coguard_cli.tests.cluster_rule_fail_util_test.TestClusterRuleFailUtilRoot" name="test_is_ci_cd_there_existing_github_workflows" time="0.000" /><testcase classname="src.coguard_cli.tests.cluster_rule_fail_util_test.TestClusterRuleFailUtilRoot" name="test_is_ci_cd_there_existing_gitlab_pipeline" time="0.000" /><testcase classname="src.coguard_cli.tests.cluster_rule_fail_util_test.TestClusterRuleFailUtilRoot" name="test_is_ci_cd_there_existing_jenkins" time="0.000" /><testcase classname="src.coguard_cli.tests.cluster_rule_fail_util_test.TestClusterRuleFailUtilRoot" name="test_is_ci_cd_there_no_match" time="0.000" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_apply_fixes_to_folder" time="0.001" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_apply_fixes_to_folder_files_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_apply_fixes_to_folder_os_error_copy" time="0.001" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_auth_token_retrieval_auth_config_none" time="0.000" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_auth_token_retrieval_auth_config_not_none" time="0.000" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_perform_folder_fix_folder_scan_none" time="0.000" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_perform_folder_fix_folder_scan_not_enterprise" time="0.000" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_perform_folder_fix_zip_candidate" time="0.001" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_perform_folder_fix_zip_candidate_none" time="0.000" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_print_failed_check" time="0.001" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_print_output_result_json_from_coguard" time="0.001" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_upload_and_evaluate_zip_candidate" time="0.001" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_upload_and_evaluate_zip_candidate_zip_candidate_none" time="0.000" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_upload_zip_candidate_fix" time="0.001" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_upload_zip_candidate_fix_api_call_none" time="0.000" /><testcase classname="src.coguard_cli.tests.common_functions_test.TestCommonFunctions" name="test_upload_zip_candidate_fix_none" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_provider_factory_test.TestCloudProviderFactory" name="test_generator" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_aws_test.TestCloudProviderAWS" name="test_extract_credentials_already_present" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_aws_test.TestCloudProviderAWS" name="test_extract_credentials_multiple_profiles" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_aws_test.TestCloudProviderAWS" name="test_extract_credentials_no_profiles_fond" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_aws_test.TestCloudProviderAWS" name="test_extract_credentials_one_profile" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_aws_test.TestCloudProviderAWS" name="test_extract_iac_files_for_account_docker_dao" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_aws_test.TestCloudProviderAWS" name="test_extract_iac_files_for_account_docker_dao_none" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_aws_test.TestCloudProviderAWS" name="test_extract_iac_files_for_account_no_creds" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_aws_test.TestCloudProviderAWS" name="test_get_all_regions" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_aws_test.TestCloudProviderAWS" name="test_get_all_regions_no_extraction" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_aws_test.TestCloudProviderAWS" name="test_get_cloud_provider_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_aws_test.TestCloudProviderAWS" name="test_get_profile" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_aws_test.TestCloudProviderAWS" name="test_get_profile_assertion_error" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_aws_test.TestCloudProviderAWS" name="test_get_profile_default" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_azure_test.TestCloudProviderAzure" name="test_extract_credentials_existent" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_azure_test.TestCloudProviderAzure" name="test_extract_credentials_gcloud_config_path_not_existent" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_azure_test.TestCloudProviderAzure" name="test_extract_iac_files_for_account_docker_dao" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_azure_test.TestCloudProviderAzure" name="test_extract_iac_files_for_account_docker_dao_none" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_azure_test.TestCloudProviderAzure" name="test_extract_iac_files_for_account_no_creds" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_azure_test.TestCloudProviderAzure" name="test_get_cloud_provider_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_gcp_test.TestCloudProviderGCP" name="test_extract_credentials_gcloud_config_path_not_existent" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_gcp_test.TestCloudProviderGCP" name="test_extract_credentials_no_accounts" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_gcp_test.TestCloudProviderGCP" name="test_extract_credentials_one_account_no_configs" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_gcp_test.TestCloudProviderGCP" name="test_extract_credentials_one_account_with_configs" time="0.002" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_gcp_test.TestCloudProviderGCP" name="test_extract_iac_files_for_account_docker_dao" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_gcp_test.TestCloudProviderGCP" name="test_extract_iac_files_for_account_docker_dao_none" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_gcp_test.TestCloudProviderGCP" name="test_extract_iac_files_for_account_no_creds" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_gcp_test.TestCloudProviderGCP" name="test_get_account_id" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_gcp_test.TestCloudProviderGCP" name="test_get_account_id_assertion_error" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_gcp_test.TestCloudProviderGCP" name="test_get_account_id_default" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_gcp_test.TestCloudProviderGCP" name="test_get_all_regions_no_extraction" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_gcp_test.TestCloudProviderGCP" name="test_get_all_regions_with_extraction" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.cloud_discovery.cloud_providers.cloud_provider_gcp_test.TestCloudProviderGCP" name="test_get_cloud_provider_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finder_abc_test.TestDockerDao" name="test_find_config_files_executable_search" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finder_abc_test.TestDockerDao" name="test_find_config_files_fail_everywhere" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finder_abc_test.TestDockerDao" name="test_find_config_files_file_system_search" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finder_abc_test.TestDockerDao" name="test_find_config_files_standard" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finder_abc_test.TestDockerDao" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finder_factory_test.TestConfigFileFinderFactory" name="test_generator" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_adapt_match_to_actual_finds" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_amalgamate_keys" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_copy_and_populate" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_copy_and_populate_with_includedir" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_create_grouped_temp_locations_and_manifest_entries" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_create_temp_location_and_manifest_entry" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_does_config_yaml_contain_required_keys" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_does_config_yaml_contain_required_keys_proper_kube" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_does_config_yaml_contain_required_keys_proper_not_kube" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_extract_include_directives" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_extract_include_directives_directory_with_quotations" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_extract_include_directives_with_quotations" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_get_path_behind_symlinks_link" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_get_path_behind_symlinks_not_link" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_get_path_behind_symlinks_recursed_too_often" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.common_functions_test.TestCommonFunctionsConfigFileFinders" name="test_group_found_files_by_sub_path" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_ansible_test.TestConfigFileFinderAnsible" name="test_check_call_command_in_container" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_ansible_test.TestConfigFileFinderAnsible" name="test_check_for_config_files_filesystem_search_existing" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_ansible_test.TestConfigFileFinderAnsible" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_ansible_test.TestConfigFileFinderAnsible" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_ansible_test.TestConfigFileFinderAnsible" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_ansible_test.TestConfigFileFinderAnsible" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_ansible_test.TestConfigFileFinderAnsible" name="test_is_cluster_service" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_ansible_test.TestConfigFileFinderAnsible" name="test_is_invalid_ansible_file_actual_playbook" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_ansible_test.TestConfigFileFinderAnsible" name="test_is_valid_ansible_file" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_ansible_test.TestConfigFileFinderAnsible" name="test_is_valid_ansible_file_actual_playbook" time="0.000"><failure message="AssertionError: False is not true">self = &lt;coguard_cli.tests.discovery.config_file_finders.config_file_finder_ansible_test.TestConfigFileFinderAnsible testMethod=test_is_valid_ansible_file_actual_playbook&gt;
+
+    def test_is_valid_ansible_file_actual_playbook(self):
+        """
+        Testing an actual playbook.
+        """
+        config_file_finder_ansible = ConfigFileFinderAnsible()
+&gt;       self.assertTrue(config_file_finder_ansible.is_valid_ansible_file(
+            "./coguard_cli/tests/discovery/config_file_finders/resources/playbook.yaml"
+        ))
+E       AssertionError: False is not true
+
+src/coguard_cli/tests/discovery/config_file_finders/config_file_finder_ansible_test.py:152: AssertionError</failure></testcase><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_ansible_test.TestConfigFileFinderAnsible" name="test_is_valid_ansible_file_with_subpath_match" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_apache_test.TestConfigFileFinderApache" name="test_check_call_command_in_container" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_apache_test.TestConfigFileFinderApache" name="test_check_call_command_in_container_no_entrypoint_or_cmd" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_apache_test.TestConfigFileFinderApache" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_apache_test.TestConfigFileFinderApache" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_apache_test.TestConfigFileFinderApache" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_apache_test.TestConfigFileFinderApache" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_apache_test.TestConfigFileFinderApache" name="test_create_temp_location_and_manifest_entry" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_apache_test.TestConfigFileFinderApache" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_cassandra_test.TestConfigFileFinderCassandra" name="test_check_call_command_in_container" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_cassandra_test.TestConfigFileFinderCassandra" name="test_check_call_command_in_container_no_entrypoint_or_cmd" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_cassandra_test.TestConfigFileFinderCassandra" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_cassandra_test.TestConfigFileFinderCassandra" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_cassandra_test.TestConfigFileFinderCassandra" name="test_check_for_config_files_in_standard_location_existing" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_cassandra_test.TestConfigFileFinderCassandra" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_cassandra_test.TestConfigFileFinderCassandra" name="test_create_temp_location_and_manifest_entry" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_cassandra_test.TestConfigFileFinderCassandra" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_compose_test.TestConfigFileFinderDockerCompose" name="test_check_call_command_in_container" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_compose_test.TestConfigFileFinderDockerCompose" name="test_check_for_config_files_filesystem_search_existing" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_compose_test.TestConfigFileFinderDockerCompose" name="test_check_for_config_files_filesystem_search_existing_alt" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_compose_test.TestConfigFileFinderDockerCompose" name="test_check_for_config_files_filesystem_search_existing_alt2" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_compose_test.TestConfigFileFinderDockerCompose" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_compose_test.TestConfigFileFinderDockerCompose" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_compose_test.TestConfigFileFinderDockerCompose" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_compose_test.TestConfigFileFinderDockerCompose" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_daemon_test.TestConfigFileFinderDockerDaemon" name="test_check_call_command_in_container" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_daemon_test.TestConfigFileFinderDockerDaemon" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_daemon_test.TestConfigFileFinderDockerDaemon" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_daemon_test.TestConfigFileFinderDockerDaemon" name="test_check_for_config_files_in_standard_location" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_daemon_test.TestConfigFileFinderDockerDaemon" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_docker_daemon_test.TestConfigFileFinderDockerDaemon" name="test_is_cluster_service" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_dockerfile_test.TestConfigFileFinderDockerfile" name="test_check_call_command_in_container" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_dockerfile_test.TestConfigFileFinderDockerfile" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_dockerfile_test.TestConfigFileFinderDockerfile" name="test_check_for_config_files_filesystem_search_existing_alt" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_dockerfile_test.TestConfigFileFinderDockerfile" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_dockerfile_test.TestConfigFileFinderDockerfile" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_dockerfile_test.TestConfigFileFinderDockerfile" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_dockerfile_test.TestConfigFileFinderDockerfile" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_elasticsearch_test.TestConfigFileFinderElasticsearch" name="test_check_call_command_in_container" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_elasticsearch_test.TestConfigFileFinderElasticsearch" name="test_check_call_command_in_container_no_entrypoint_or_cmd" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_elasticsearch_test.TestConfigFileFinderElasticsearch" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_elasticsearch_test.TestConfigFileFinderElasticsearch" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_elasticsearch_test.TestConfigFileFinderElasticsearch" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_elasticsearch_test.TestConfigFileFinderElasticsearch" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_elasticsearch_test.TestConfigFileFinderElasticsearch" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_helm_test.TestConfigFileFinderHelm" name="test_check_call_command_in_container" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_helm_test.TestConfigFileFinderHelm" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_helm_test.TestConfigFileFinderHelm" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_helm_test.TestConfigFileFinderHelm" name="test_check_for_config_files_in_standard_location_existing" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_helm_test.TestConfigFileFinderHelm" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_helm_test.TestConfigFileFinderHelm" name="test_find_charts_files_existing" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_helm_test.TestConfigFileFinderHelm" name="test_find_charts_files_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_helm_test.TestConfigFileFinderHelm" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kafka_test.TestConfigFileFinderKafka" name="test_check_call_command_in_container" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kafka_test.TestConfigFileFinderKafka" name="test_check_call_command_in_container_no_entrypoint_or_cmd" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kafka_test.TestConfigFileFinderKafka" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kafka_test.TestConfigFileFinderKafka" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kafka_test.TestConfigFileFinderKafka" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kafka_test.TestConfigFileFinderKafka" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kafka_test.TestConfigFileFinderKafka" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kerberos_test.TestConfigFileFinderKerberos" name="test_check_call_command_in_container" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kerberos_test.TestConfigFileFinderKerberos" name="test_check_call_command_in_container_no_entrypoint_or_cmd" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kerberos_test.TestConfigFileFinderKerberos" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kerberos_test.TestConfigFileFinderKerberos" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kerberos_test.TestConfigFileFinderKerberos" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kerberos_test.TestConfigFileFinderKerberos" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kerberos_test.TestConfigFileFinderKerberos" name="test_create_temp_location_and_manifest_entry" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kerberos_test.TestConfigFileFinderKerberos" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kubernetes_test.TestConfigFileFinderKubernetes" name="test_check_call_command_in_container" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kubernetes_test.TestConfigFileFinderKubernetes" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kubernetes_test.TestConfigFileFinderKubernetes" name="test_check_for_config_files_filesystem_search_existing_alt" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kubernetes_test.TestConfigFileFinderKubernetes" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kubernetes_test.TestConfigFileFinderKubernetes" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kubernetes_test.TestConfigFileFinderKubernetes" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_kubernetes_test.TestConfigFileFinderKubernetes" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mongodb_test.TestConfigFileFinderMongodb" name="test_check_call_command_in_container" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mongodb_test.TestConfigFileFinderMongodb" name="test_check_call_command_in_container_no_entrypoint_or_cmd" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mongodb_test.TestConfigFileFinderMongodb" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mongodb_test.TestConfigFileFinderMongodb" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mongodb_test.TestConfigFileFinderMongodb" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mongodb_test.TestConfigFileFinderMongodb" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mongodb_test.TestConfigFileFinderMongodb" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mysql_test.TestConfigFileFinderMysql" name="test_check_call_command_in_container" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mysql_test.TestConfigFileFinderMysql" name="test_check_call_command_in_container_no_entrypoint_or_cmd" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mysql_test.TestConfigFileFinderMysql" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mysql_test.TestConfigFileFinderMysql" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mysql_test.TestConfigFileFinderMysql" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mysql_test.TestConfigFileFinderMysql" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mysql_test.TestConfigFileFinderMysql" name="test_create_temp_location_and_manifest_entry" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_mysql_test.TestConfigFileFinderMysql" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_nginx_test.TestConfigFileFinderNginx" name="test_check_call_command_in_container" time="0.002" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_nginx_test.TestConfigFileFinderNginx" name="test_check_call_command_in_container_no_entrypoint_or_cmd" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_nginx_test.TestConfigFileFinderNginx" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_nginx_test.TestConfigFileFinderNginx" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_nginx_test.TestConfigFileFinderNginx" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_nginx_test.TestConfigFileFinderNginx" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_nginx_test.TestConfigFileFinderNginx" name="test_create_temp_location_and_manifest_entry" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_nginx_test.TestConfigFileFinderNginx" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_open_api_test.TestConfigFileFinderOpenApi" name="test_check_call_command_in_container" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_open_api_test.TestConfigFileFinderOpenApi" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_open_api_test.TestConfigFileFinderOpenApi" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_open_api_test.TestConfigFileFinderOpenApi" name="test_check_for_config_files_in_standard_location" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_open_api_test.TestConfigFileFinderOpenApi" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_open_api_test.TestConfigFileFinderOpenApi" name="test_is_cluster_service" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_opentelemetry_collector_test.TestConfigFileFinderOpenTelemetryCollector" name="test_check_call_command_in_container" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_opentelemetry_collector_test.TestConfigFileFinderOpenTelemetryCollector" name="test_check_for_config_files_filesystem_search_existing" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_opentelemetry_collector_test.TestConfigFileFinderOpenTelemetryCollector" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_opentelemetry_collector_test.TestConfigFileFinderOpenTelemetryCollector" name="test_check_for_config_files_in_standard_location_existing" time="0.005" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_opentelemetry_collector_test.TestConfigFileFinderOpenTelemetryCollector" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_opentelemetry_collector_test.TestConfigFileFinderOpenTelemetryCollector" name="test_create_temp_location_and_manifest_entry" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_opentelemetry_collector_test.TestConfigFileFinderOpenTelemetryCollector" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_postgres_test.TestConfigFileFinderPostgres" name="test_check_call_command_in_container" time="0.002" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_postgres_test.TestConfigFileFinderPostgres" name="test_check_call_command_in_container_no_entrypoint_or_cmd" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_postgres_test.TestConfigFileFinderPostgres" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_postgres_test.TestConfigFileFinderPostgres" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_postgres_test.TestConfigFileFinderPostgres" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_postgres_test.TestConfigFileFinderPostgres" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_postgres_test.TestConfigFileFinderPostgres" name="test_create_temp_location_and_manifest_entry" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_postgres_test.TestConfigFileFinderPostgres" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rabbit_mq_test.TestConfigFileFinderRabbitmq" name="test_check_call_command_in_container_no_entrypoint_or_cmd" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rabbit_mq_test.TestConfigFileFinderRabbitmq" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rabbit_mq_test.TestConfigFileFinderRabbitmq" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rabbit_mq_test.TestConfigFileFinderRabbitmq" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rabbit_mq_test.TestConfigFileFinderRabbitmq" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rabbit_mq_test.TestConfigFileFinderRabbitmq" name="test_create_temp_location_and_manifest_entry" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rabbit_mq_test.TestConfigFileFinderRabbitmq" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_redis_test.TestConfigFileFinderRedis" name="test_check_call_command_in_container" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_redis_test.TestConfigFileFinderRedis" name="test_check_call_command_in_container_no_entrypoint_or_cmd" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_redis_test.TestConfigFileFinderRedis" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_redis_test.TestConfigFileFinderRedis" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_redis_test.TestConfigFileFinderRedis" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_redis_test.TestConfigFileFinderRedis" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_redis_test.TestConfigFileFinderRedis" name="test_create_temp_location_and_manifest_entry" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_redis_test.TestConfigFileFinderRedis" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rethinkdb_test.TestConfigFileFinderRethinkdb" name="test_check_call_command_in_container" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rethinkdb_test.TestConfigFileFinderRethinkdb" name="test_check_call_command_in_container_no_entrypoint_or_cmd" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rethinkdb_test.TestConfigFileFinderRethinkdb" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rethinkdb_test.TestConfigFileFinderRethinkdb" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rethinkdb_test.TestConfigFileFinderRethinkdb" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rethinkdb_test.TestConfigFileFinderRethinkdb" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rethinkdb_test.TestConfigFileFinderRethinkdb" name="test_create_temp_location_and_manifest_entry" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_rethinkdb_test.TestConfigFileFinderRethinkdb" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_systemd_test.TestConfigFileFinderSystemd" name="test_check_call_command_in_container" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_systemd_test.TestConfigFileFinderSystemd" name="test_check_for_config_files_filesystem_search_existing" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_systemd_test.TestConfigFileFinderSystemd" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_systemd_test.TestConfigFileFinderSystemd" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_systemd_test.TestConfigFileFinderSystemd" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_systemd_test.TestConfigFileFinderSystemd" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_systemd_test.TestConfigFileFinderSystemd" name="test_is_cluster_service" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_terraform_test.TestConfigFileFinderTerraform" name="test_can_parse_tf_file" time="0.006" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_terraform_test.TestConfigFileFinderTerraform" name="test_can_parse_tf_file_proper" time="0.002"><failure message="AssertionError: False is not true">self = &lt;coguard_cli.tests.discovery.config_file_finders.config_file_finder_terraform_test.TestConfigFileFinderTerraform testMethod=test_can_parse_tf_file_proper&gt;
+
+        def test_can_parse_tf_file_proper(self):
+            """
+            Testing the function to see if we can parse a tf file.
+            """
+            with unittest.mock.patch(
+                    'builtins.open',
+                    unittest.mock.mock_open(
+                        read_data="""
+    resource "aws_test" bar {
+        foo = "bar"
+    }
+                        """)):
+                config_file_finder_terraform = ConfigFileFinderTerraform()
+&gt;               self.assertTrue(config_file_finder_terraform._can_parse_tf_file(
+                    "foo.txt"
+                ))
+E               AssertionError: False is not true
+
+src/coguard_cli/tests/discovery/config_file_finders/config_file_finder_terraform_test.py:145: AssertionError</failure></testcase><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_terraform_test.TestConfigFileFinderTerraform" name="test_check_call_command_in_container" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_terraform_test.TestConfigFileFinderTerraform" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_terraform_test.TestConfigFileFinderTerraform" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_terraform_test.TestConfigFileFinderTerraform" name="test_check_for_config_files_in_standard_location_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_terraform_test.TestConfigFileFinderTerraform" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_terraform_test.TestConfigFileFinderTerraform" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_tomcat_test.TestConfigFileFinderTomcat" name="test_check_call_command_in_container" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_tomcat_test.TestConfigFileFinderTomcat" name="test_check_call_command_in_container_no_entrypoint_or_cmd" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_tomcat_test.TestConfigFileFinderTomcat" name="test_check_for_config_files_filesystem_search_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_tomcat_test.TestConfigFileFinderTomcat" name="test_check_for_config_files_filesystem_search_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_tomcat_test.TestConfigFileFinderTomcat" name="test_check_for_config_files_in_standard_location_existing" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_tomcat_test.TestConfigFileFinderTomcat" name="test_check_for_config_files_in_standard_location_not_existing" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_tomcat_test.TestConfigFileFinderTomcat" name="test_create_temp_location_and_manifest_entry" time="0.001" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_tomcat_test.TestConfigFileFinderTomcat" name="test_extract_web_xmls_no_results" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_tomcat_test.TestConfigFileFinderTomcat" name="test_extract_web_xmls_with_results" time="0.000" /><testcase classname="src.coguard_cli.tests.discovery.config_file_finders.config_file_finder_tomcat_test.TestConfigFileFinderTomcat" name="test_get_service_name" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_create_zip_to_upload_folder_collected" time="0.001" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_create_zip_to_upload_folder_none" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_extract_included_docker_images_none_input" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_extract_included_docker_images_valid_input" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_extract_included_docker_images_valid_nontrivial_input" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_extract_included_docker_images_valid_nontrivial_input_cluster_service" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_filter_collected_service_results_none_ignore_list" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_filter_collected_service_results_normal_ignore_list" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_filter_collected_service_results_wildcard_ignore_list" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_filter_config_file_list_empty_list" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_filter_config_file_list_non_empty_no_chagnes" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_filter_config_file_list_non_empty_wildcard" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_find_and_extract_docker_images_from_config_files_empty_list" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_find_and_extract_docker_images_from_config_files_non_empty_list" time="0.001" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_find_and_extract_docker_images_from_config_files_non_trivial" time="0.001" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_find_configuration_files_and_collect" time="0.001" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_find_configuration_files_and_collect_cluster_service" time="0.004" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_find_configuration_files_and_collect_none_result" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_find_images_non_trivial_dict" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_find_images_non_trivial_dict_with_result" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_find_images_non_trivial_dict_with_result_nested_list" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_find_images_non_trivial_list" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_find_images_recursively_empty_dict" time="0.000" /><testcase classname="src.coguard_cli.tests.folder_scan.common_functions_test.TestCommonImageCheckingFunc" name="test_find_images_recursively_empty_list" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.common_functions_test.TestCommonImageCheckingFunc" name="test_create_zip_to_upload_docker_image_collected" time="0.001" /><testcase classname="src.coguard_cli.tests.image_check.common_functions_test.TestCommonImageCheckingFunc" name="test_create_zip_to_upload_docker_image_docker_creation_failed" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.common_functions_test.TestCommonImageCheckingFunc" name="test_extract_docker_file_and_store" time="0.001" /><testcase classname="src.coguard_cli.tests.image_check.common_functions_test.TestCommonImageCheckingFunc" name="test_extract_docker_file_and_store_none" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.common_functions_test.TestCommonImageCheckingFunc" name="test_extract_image_to_filesystem_collected_location_none" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.common_functions_test.TestCommonImageCheckingFunc" name="test_extract_image_to_filesystem_docker_inspect_failed" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.common_functions_test.TestCommonImageCheckingFunc" name="test_extract_image_to_filesystem_get_file_store_failed" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.common_functions_test.TestCommonImageCheckingFunc" name="test_find_configuration_files_and_collect" time="0.001" /><testcase classname="src.coguard_cli.tests.image_check.common_functions_test.TestCommonImageCheckingFunc" name="test_find_configuration_files_and_collect_cluster_service" time="0.001" /><testcase classname="src.coguard_cli.tests.image_check.common_functions_test.TestCommonImageCheckingFunc" name="test_find_configuration_files_and_collect_none_result" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_create_docker_image_allowed" time="0.001" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_create_docker_image_allowed_but_execution_error" time="0.001" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_create_docker_image_forbidden" time="0.016" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_extract_all_existing_docker_images" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_extract_all_existing_docker_images_error" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_extract_all_existing_docker_images_with_nones_in_between" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_extract_docker_file" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_extract_docker_file_call_error" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_get_docker_version" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_get_docker_version_with_error" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_get_inspect_result" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_get_inspect_result_call_process_error" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_get_inspect_result_json_decode_error" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_get_inspect_result_non_dict" time="0.001" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_get_inspect_result_none_container_name" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_image_name_from_custom_repo_false" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_image_name_from_custom_repo_false_more_than_one_line" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_image_name_from_custom_repo_true" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_rm_temporary_container_name" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_rm_temporary_container_name_none_input" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_rm_temporary_container_name_run_exception" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_store_image_file_system_arg_none" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_store_image_not_none_but_docker_image_error" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_store_image_not_none_but_tarfile_not_there" time="0.000" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_store_image_not_none_with_tar_file" time="0.001" /><testcase classname="src.coguard_cli.tests.image_check.docker_dao_test.TestDockerDao" name="test_terraformer_wrapper_location" time="0.000"><failure message="AssertionError: False is not true">self = &lt;coguard_cli.tests.image_check.docker_dao_test.TestDockerDao testMethod=test_terraformer_wrapper_location&gt;
+
+    def test_terraformer_wrapper_location(self):
+        """
+        A bit of an unusual test, but since we are determining the location
+        of the terraformer container relative to the docker_dao.py path,
+        we should ensure that it stays there and that there is a test
+        catching if it moves.
+        """
+&gt;       self.assertTrue(os.path.exists(
+            os.path.join(
+                ".",
+                "coguard_cli",
+                "docker_dao.py"
+            )
+        ))
+E       AssertionError: False is not true
+
+src/coguard_cli/tests/image_check/docker_dao_test.py:366: AssertionError</failure></testcase><testcase classname="src.coguard_cli.tests.output_generators.output_generator_sarif_test.TestTranslateToSarif" name="test_translate_result_to_sarif_empty_path" time="0.001" /><testcase classname="src.coguard_cli.tests.output_generators.output_generator_sarif_test.TestTranslateToSarif" name="test_translate_result_to_sarif_empty_result" time="0.002" /><testcase classname="src.coguard_cli.tests.output_generators.output_generator_sarif_test.TestTranslateToSarif" name="test_translate_result_to_sarif_non_empty_result" time="0.002" /><testcase classname="src.coguard_cli.tests.output_generators.output_generator_sarif_test.TestTranslateToSarif" name="test_translate_result_to_sarif_none_result" time="0.000" /><testcase classname="src.coguard_cli.tests.util_test.TestUtilRoot" name="test_create_service_identifier_already_existent" time="0.000" /><testcase classname="src.coguard_cli.tests.util_test.TestUtilRoot" name="test_create_service_identifier_already_existent_multi_count" time="0.000" /><testcase classname="src.coguard_cli.tests.util_test.TestUtilRoot" name="test_create_service_identifier_common_prefix" time="0.000" /><testcase classname="src.coguard_cli.tests.util_test.TestUtilRoot" name="test_create_service_identifier_no_common_prefix" time="0.000" /><testcase classname="src.coguard_cli.tests.util_test.TestUtilRoot" name="test_merge_coguard_infrastructure_description_folders_cluster" time="0.001" /><testcase classname="src.coguard_cli.tests.util_test.TestUtilRoot" name="test_merge_coguard_infrastructure_description_folders_empty" time="0.001" /><testcase classname="src.coguard_cli.tests.util_test.TestUtilRoot" name="test_merge_coguard_infrastructure_description_folders_machines" time="0.001" /></testsuite></testsuites>

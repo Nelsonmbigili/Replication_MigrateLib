@@ -1,0 +1,190 @@
+## Running premig
+creating venv at /Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/pklauke@pycamunda__fdab7274__requests__requests_futures/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 5 files
+### migrating pycamunda/base.py
+### migrating pycamunda/deployment.py
+### migrating pycamunda/externaltask.py
+### migrating tests/base/test_camundarequest.py
+### migrating tests/mock.py
+### running tests
+- test finished with status 1, cov finished with status 0
+### test diff with round premig
+- `tests/auth/test_check.py::test_check_raises_pycamunda_exception: passed != failed`
+- `tests/auth/test_count.py::test_count_raises_pycamunda_exception: passed != failed`
+- `tests/auth/test_create.py::test_create_raises_pycamunda_exception: passed != failed`
+- `tests/auth/test_delete.py::test_delete_raises_pycamunda_exception: passed != failed`
+- `tests/auth/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/auth/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/auth/test_options.py::test_options_raises_pycamunda_exception: passed != failed`
+- `tests/auth/test_update.py::test_update_raises_pycamunda_exception: passed != failed`
+- `tests/batch/test_activatesuspend.py::test_activate_raises_pycamunda_exception: passed != failed`
+- `tests/batch/test_activatesuspend.py::test_suspend_raises_pycamunda_exception: passed != failed`
+- `tests/batch/test_count.py::test_count_raises_pycamunda_exception: passed != failed`
+- `tests/batch/test_countstats.py::test_countstats_raises_pycamunda_exception: passed != failed`
+- `tests/batch/test_delete.py::test_delete_raises_pycamunda_exception: passed != failed`
+- `tests/batch/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/batch/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/batch/test_getstats.py::test_getstats_raises_pycamunda_exception: passed != failed`
+- `tests/casedef/test_count.py::test_count_raises_pycamunda_exception: passed != failed`
+- `tests/casedef/test_createinstance.py::test_createinstance_raises_pycamunda_exception: passed != failed`
+- `tests/casedef/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/casedef/test_getdiagram.py::test_getdiagram_raises_pycamunda_exception: passed != failed`
+- `tests/casedef/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/casedef/test_getxml.py::test_getxml_raises_pycamunda_exception: passed != failed`
+- `tests/casedef/test_updatehistorytimetolive.py::test_updatehistorytimetolive_raises_pycamunda_exception: passed != failed`
+- `tests/caseinst/test_close.py::test_close_raises_pycamunda_exception: passed != failed`
+- `tests/caseinst/test_complete.py::test_complete_raises_pycamunda_exception: passed != failed`
+- `tests/caseinst/test_count.py::test_count_raises_pycamunda_exception: passed != failed`
+- `tests/caseinst/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/caseinst/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/caseinst/test_terminate.py::test_terminate_raises_pycamunda_exception: passed != failed`
+- `tests/condition/test_correlate.py::test_evaluate_raises_pycamunda_exception: passed != failed`
+- `tests/decisiondef/test_count.py::test_count_raises_pycamunda_exception: passed != failed`
+- `tests/decisiondef/test_evaluate.py::test_evaluate_raises_pycamunda_exception: passed != failed`
+- `tests/decisiondef/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/decisiondef/test_getdiagram.py::test_getdiagram_raises_pycamunda_exception: passed != failed`
+- `tests/decisiondef/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/decisiondef/test_getxml.py::test_getxml_raises_pycamunda_exception: passed != failed`
+- `tests/deployment/test_delete.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/deployment/test_get.py::test_get_raises_for_status: passed != failed`
+- `tests/deployment/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/deployment/test_getlist.py::test_getlist_raises_for_status: passed != failed`
+- `tests/deployment/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/deployment/test_getresource.py::test_getresource_raises_for_status: passed != failed`
+- `tests/deployment/test_getresource.py::test_getresource_raises_pycamunda_exception: passed != failed`
+- `tests/deployment/test_getresources.py::test_getresources_raises_for_status: passed != failed`
+- `tests/deployment/test_getresources.py::test_getresources_raises_pycamunda_exception: passed != failed`
+- `tests/externaltask/test_complete.py::test_complete_raises_pycamunda_exception: passed != failed`
+- `tests/externaltask/test_extendlock.py::test_extendlock_raises_pycamunda_exception: passed != failed`
+- `tests/externaltask/test_fetchandlock.py::test_fetchandlock_raises_pycamunda_exception: passed != failed`
+- `tests/externaltask/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/externaltask/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/externaltask/test_handlebpmnerror.py::test_handlebpmnerror_raises_pycamunda_exception: passed != failed`
+- `tests/externaltask/test_handlefailure.py::test_handlefailure_raises_pycamunda_exception: passed != failed`
+- `tests/externaltask/test_setpriority.py::test_setpriority_raises_pycamunda_exception: passed != failed`
+- `tests/externaltask/test_setretries.py::test_setretries_raises_pycamunda_exception: passed != failed`
+- `tests/externaltask/test_setretriesasync.py::test_setretriesasync_raises_pycamunda_exception: passed != failed`
+- `tests/externaltask/test_setretriessync.py::test_setretriessync_raises_pycamunda_exception: passed != failed`
+- `tests/externaltask/test_unlock.py::test_unlock_raises_pycamunda_exception: passed != failed`
+- `tests/filter/test_count.py::test_count_raises_pycamunda_exception: passed != failed`
+- `tests/filter/test_create.py::test_create_raises_pycamunda_exception: passed != failed`
+- `tests/filter/test_delete.py::test_delete_raises_pycamunda_exception: passed != failed`
+- `tests/filter/test_execute.py::test_execute_raises_pycamunda_exception: passed != failed`
+- `tests/filter/test_executecount.py::test_executecount_raises_pycamunda_exception: passed != failed`
+- `tests/filter/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/filter/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/filter/test_options.py::test_options_raises_pycamunda_exception: passed != failed`
+- `tests/filter/test_update.py::test_update_raises_pycamunda_exception: passed != failed`
+- `tests/group/test_create.py::test_create_raises_pycamunda_exception: passed != failed`
+- `tests/group/test_delete.py::test_delete_raises_pycamunda_exception: passed != failed`
+- `tests/group/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/group/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/group/test_membercreate.py::test_membercreate_raises_pycamunda_exception: passed != failed`
+- `tests/group/test_memberdelete.py::test_memberdelete_raises_pycamunda_exception: passed != failed`
+- `tests/group/test_memberoptions.py::test_memberoptions_raises_pycamunda_exception: passed != failed`
+- `tests/group/test_options.py::test_options_raises_pycamunda_exception: passed != failed`
+- `tests/group/test_update.py::test_update_raises_pycamunda_exception: passed != failed`
+- `tests/identity/test_getgroups.py::test_getgroups_raises_pycamunda_exception: passed != failed`
+- `tests/identity/test_getpasswordpolicy.py::test_getpasswordpolicy_raises_pycamunda_exception: passed != failed`
+- `tests/identity/test_validatepassword.py::test_validatepassword_raises_pycamunda_exception: passed != failed`
+- `tests/identity/test_verifyuser.py::test_verifyuser_raises_pycamunda_exception: passed != failed`
+- `tests/incident/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/incident/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/incident/test_resolve.py::test_resolve_raises_pycamunda_exception: passed != failed`
+- `tests/message/test_correlate.py::test_correlateall_raises_pycamunda_exception: passed != failed`
+- `tests/message/test_correlate.py::test_correlatesingle_raises_pycamunda_exception: passed != failed`
+- `tests/migration/test_execute.py::test_execute_raises_pycamunda_exception: passed != failed`
+- `tests/migration/test_generate.py::test_generate_raises_pycamunda_exception: passed != failed`
+- `tests/migration/test_validate.py::test_validate_raises_pycamunda_exception: passed != failed`
+- `tests/processdef/test_activatesuspend.py::test_activate_raises_pycamunda_exception: passed != failed`
+- `tests/processdef/test_activatesuspend.py::test_suspend_raises_pycamunda_exception: passed != failed`
+- `tests/processdef/test_count.py::test_count_raises_pycamunda_exception: passed != failed`
+- `tests/processdef/test_delete.py::test_delete_raises_pycamunda_exception: passed != failed`
+- `tests/processdef/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/processdef/test_getactivityinstancestats.py::test_getactivityinstancestats_raises_pycamunda_exception: passed != failed`
+- `tests/processdef/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/processdef/test_getprocessdiagram.py::test_getprocessdiagram_raises_pycamunda_exception: passed != failed`
+- `tests/processdef/test_getprocessinstancestats.py::test_getprocessdiagram_raises_pycamunda_exception: passed != failed`
+- `tests/processdef/test_getxml.py::test_getxml_raises_pycamunda_exception: passed != failed`
+- `tests/processdef/test_restartprocessinstance.py::test_restartprocessinstance_raises_pycamunda_exception: passed != failed`
+- `tests/processdef/test_startinstance.py::test_startinstance_raises_pycamunda_exception: passed != failed`
+- `tests/processdef/test_updatehistorytimetolive.py::test_updatehistorytimetolive_raises_pycamunda_exception: passed != failed`
+- `tests/processinst/test_activatesuspend.py::test_activate_raises_pycamunda_exception: passed != failed`
+- `tests/processinst/test_activatesuspend.py::test_suspend_raises_pycamunda_exception: passed != failed`
+- `tests/processinst/test_delete.py::test_delete_raises_pycamunda_exception: passed != failed`
+- `tests/processinst/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/processinst/test_getactivityinstance.py::test_getactivityinstance_raises_pycamunda_exception: passed != failed`
+- `tests/processinst/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/processinst/test_modify.py::test_modify_raises_pycamunda_exception: passed != failed`
+- `tests/processinst/test_variablesdelete.py::test_variablesdelete_raises_pycamunda_exception: passed != failed`
+- `tests/processinst/test_variablesget.py::test_variablesget_raises_pycamunda_exception: passed != failed`
+- `tests/processinst/test_variablesgetlist.py::test_variablesgetlist_raises_pycamunda_exception: passed != failed`
+- `tests/processinst/test_variablesmodify.py::test_variablesmodify_raises_pycamunda_exception: passed != failed`
+- `tests/processinst/test_variablesupdate.py::test_variablesupdate_binary_raises_pycamunda_exception: passed != failed`
+- `tests/processinst/test_variablesupdate.py::test_variablesupdate_raises_pycamunda_exception: passed != failed`
+- `tests/signal/test_event.py::test_eventall_raises_pycamunda_exception: passed != failed`
+- `tests/signal/test_event.py::test_eventsingle_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_claim.py::test_claim_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_commentcreate.py::test_commentcreate_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_commentget.py::test_commentget_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_commentgetlist.py::test_commentgetlist_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_complete.py::test_complete_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_create.py::test_create_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_delegate.py::test_delegate_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_getcountbycandidategroup.py::test_getcountbycandidategroup_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_identitylinksadd.py::test_identitylinksadd_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_identitylinksdelete.py::test_identitylinksdelete_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_identitylinksgetlist.py::test_identitylinksgetlist_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_localvariablesdelete.py::test_localvariablesdelete_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_localvariablesget.py::test_localvariablesget_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_localvariablesgetlist.py::test_localvariablesgetlist_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_localvariablesmodify.py::test_localvariablesmodify_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_localvariablesupdate.py::test_localvariablesupdate_binary_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_localvariablesupdate.py::test_localvariablesupdate_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_resolve.py::test_resolve_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_setassignee.py::test_setassignee_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_unclaim.py::test_unclaim_raises_pycamunda_exception: passed != failed`
+- `tests/task/test_update.py::test_update_raises_pycamunda_exception: passed != failed`
+- `tests/telemetry/test_configure.py::test_configure_raises_pycamunda_exception: passed != failed`
+- `tests/telemetry/test_fetch.py::test_fetch_raises_pycamunda_exception: passed != failed`
+- `tests/tenant/test_count.py::test_count_raises_pycamunda_exception: passed != failed`
+- `tests/tenant/test_create.py::test_create_raises_pycamunda_exception: passed != failed`
+- `tests/tenant/test_delete.py::test_delete_raises_pycamunda_exception: passed != failed`
+- `tests/tenant/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/tenant/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/tenant/test_groupmembercreate.py::test_groupmembercreate_raises_pycamunda_exception: passed != failed`
+- `tests/tenant/test_groupmemberdelete.py::test_groupmemberdelete_raises_pycamunda_exception: passed != failed`
+- `tests/tenant/test_groupmemberoptions.py::test_groupmemberoptions_raises_pycamunda_exception: passed != failed`
+- `tests/tenant/test_options.py::test_options_raises_pycamunda_exception: passed != failed`
+- `tests/tenant/test_update.py::test_update_raises_pycamunda_exception: passed != failed`
+- `tests/tenant/test_usermembercreate.py::test_usermembercreate_raises_pycamunda_exception: passed != failed`
+- `tests/tenant/test_usermemberdelete.py::test_usermemberdelete_raises_pycamunda_exception: passed != failed`
+- `tests/tenant/test_usermemberoptions.py::test_usermemberoptions_raises_pycamunda_exception: passed != failed`
+- `tests/user/test_count.py::test_count_raises_pycamunda_exception: passed != failed`
+- `tests/user/test_create.py::test_create_raises_pycamunda_exception: passed != failed`
+- `tests/user/test_delete.py::test_delete_raises_pycamunda_exception: passed != failed`
+- `tests/user/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/user/test_getprofile.py::test_getprofile_raises_pycamunda_exception: passed != failed`
+- `tests/user/test_options.py::test_options_raises_pycamunda_exception: passed != failed`
+- `tests/user/test_unlock.py::test_unlock_raises_pycamunda_exception: passed != failed`
+- `tests/user/test_update_credentials.py::test_update_credentials_raises_pycamunda_exception: passed != failed`
+- `tests/user/test_update_profile.py::test_update_profile_raises_pycamunda_exception: passed != failed`
+- `tests/variable/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- `tests/variable/test_getlist.py::test_getlist_raises_pycamunda_exception: passed != failed`
+- `tests/version/test_get.py::test_get_raises_pycamunda_exception: passed != failed`
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+### Finding async transforms
+- Found 0 functions to mark async including 0 tests
+- Found 0 calls to await
+- async_transform finished

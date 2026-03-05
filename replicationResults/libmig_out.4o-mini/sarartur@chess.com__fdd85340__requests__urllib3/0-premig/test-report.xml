@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="103" time="2.203" timestamp="2026-03-05T02:31:28.625859+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.client_test" name="test_rate_limit_handler" time="0.002" /><testcase classname="tests.client_test" name="test_do_get_request_sync" time="0.001"><failure message="AttributeError: 'called_once_with' is not a valid assertion. Use a spec for the mock if 'called_once_with' is meant to be an attribute.. Did you mean: 'assert_called_once_with'?">mock_requests = &lt;MagicMock name='requests' id='4465889632'&gt;
+
+    @patch("chessdotcom.client.requests")
+    def test_do_get_request_sync(mock_requests):
+        mock_data = {"name": "fabianocaruana"}
+        mock_requests.get.return_value = MagicMock(
+            status_code=200, text=json.dumps(mock_data)
+        )
+    
+        client = ChessDotComClient()
+        response = client.do_get_request(
+            Resource(
+                uri="/player/fabianocaruana",
+            )
+        )
+    
+        assert mock_requests.get.called_once_with(
+            url="https://api.chess.com/player/fabianocaruana",
+            headers={},
+            timeout=30,
+&gt;       )
+
+tests/client_test.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='requests.get' id='4465890304'&gt;
+name = 'called_once_with'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+                raise AttributeError("Mock object has no attribute %r" % name)
+        elif _is_magic(name):
+            raise AttributeError(name)
+        if not self._mock_unsafe and (not self._mock_methods or name not in self._mock_methods):
+            if name.startswith(('assert', 'assret', 'asert', 'aseert', 'assrt')) or name in _ATTRIB_DENY_LIST:
+&gt;               raise AttributeError(
+                    f"{name!r} is not a valid assertion. Use a spec "
+                    f"for the mock if {name!r} is meant to be an attribute.")
+E               AttributeError: 'called_once_with' is not a valid assertion. Use a spec for the mock if 'called_once_with' is meant to be an attribute.. Did you mean: 'assert_called_once_with'?
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:701: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_do_get_request_sync_error" time="0.001"><failure message="AttributeError: 'called_once_with' is not a valid assertion. Use a spec for the mock if 'called_once_with' is meant to be an attribute.. Did you mean: 'assert_called_once_with'?">mock_requests = &lt;MagicMock name='requests' id='4465891984'&gt;
+
+    @patch("chessdotcom.client.requests")
+    def test_do_get_request_sync_error(mock_requests):
+        mock_data = {"message": "does not exist"}
+        mock_requests.get.return_value = MagicMock(
+            status_code=404,
+            text=json.dumps(mock_data),
+            headers={"Content-Type": "application/json"},
+        )
+    
+        client = ChessDotComClient()
+    
+        with pytest.raises(ChessDotComClientError) as err:
+            client.do_get_request(
+                Resource(
+                    uri="/player/fabianocaruana",
+                )
+            )
+    
+        assert mock_requests.get.called_once_with(
+            url="https://api.chess.com/player/fabianocaruana",
+            headers={},
+            timeout=30,
+&gt;       )
+
+tests/client_test.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='requests.get' id='4465894000'&gt;
+name = 'called_once_with'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+                raise AttributeError("Mock object has no attribute %r" % name)
+        elif _is_magic(name):
+            raise AttributeError(name)
+        if not self._mock_unsafe and (not self._mock_methods or name not in self._mock_methods):
+            if name.startswith(('assert', 'assret', 'asert', 'aseert', 'assrt')) or name in _ATTRIB_DENY_LIST:
+&gt;               raise AttributeError(
+                    f"{name!r} is not a valid assertion. Use a spec "
+                    f"for the mock if {name!r} is meant to be an attribute.")
+E               AttributeError: 'called_once_with' is not a valid assertion. Use a spec for the mock if 'called_once_with' is meant to be an attribute.. Did you mean: 'assert_called_once_with'?
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:701: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_do_get_request_async" time="0.002"><failure message="AttributeError: 'called_once_with' is not a valid assertion. Use a spec for the mock if 'called_once_with' is meant to be an attribute.. Did you mean: 'assert_called_once_with'?">mock_session_get = &lt;MagicMock name='get' id='4465895344'&gt;
+
+    @pytest.mark.asyncio
+    @patch("chessdotcom.client.ClientSession.get")
+    async def test_do_get_request_async(mock_session_get):
+        mock_data = {"name": "fabianocaruana"}
+        mock_session_get.return_value = AioMockResponse(
+            text=json.dumps(mock_data), status=200
+        )
+    
+        client = ChessDotComClient(aio=True)
+        response = await client.do_get_request(
+            Resource(
+                uri="/player/fabianocaruana",
+            )
+        )
+    
+        assert mock_session_get.get.called_once_with(
+            url="https://api.chess.com/player/fabianocaruana",
+            headers={},
+&gt;       )
+
+tests/client_test.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='get.get' id='4465897360'&gt;, name = 'called_once_with'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+                raise AttributeError("Mock object has no attribute %r" % name)
+        elif _is_magic(name):
+            raise AttributeError(name)
+        if not self._mock_unsafe and (not self._mock_methods or name not in self._mock_methods):
+            if name.startswith(('assert', 'assret', 'asert', 'aseert', 'assrt')) or name in _ATTRIB_DENY_LIST:
+&gt;               raise AttributeError(
+                    f"{name!r} is not a valid assertion. Use a spec "
+                    f"for the mock if {name!r} is meant to be an attribute.")
+E               AttributeError: 'called_once_with' is not a valid assertion. Use a spec for the mock if 'called_once_with' is meant to be an attribute.. Did you mean: 'assert_called_once_with'?
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:701: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_do_get_request_async_error" time="0.001" /><testcase classname="tests.client_test" name="test_do_get_request_sync_decoding_error" time="0.001" /><testcase classname="tests.client_test" name="test_do_get_request_sync_combined_headers" time="0.001"><failure message="AttributeError: 'called_once_with' is not a valid assertion. Use a spec for the mock if 'called_once_with' is meant to be an attribute.. Did you mean: 'assert_called_once_with'?">mock_requests = &lt;MagicMock name='requests' id='4465899376'&gt;
+
+    @patch("chessdotcom.client.requests")
+    def test_do_get_request_sync_combined_headers(mock_requests):
+        client = ChessDotComClient(request_config={"headers": {"header": "value"}})
+    
+        mock_requests.get.return_value = MagicMock(status_code=200, text="{}")
+    
+        client.do_get_request(
+            Resource(
+                uri="/player/fabianocaruana",
+                request_options={"headers": {"header": "override_value"}},
+            )
+        )
+    
+        assert mock_requests.get.called_once_with(
+            url="https://api.chess.com/player/fabianocaruana",
+            headers={"headers": {"header": "override_value"}},
+            timeout=30,
+&gt;       )
+
+tests/client_test.py:171: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='requests.get' id='4465900048'&gt;
+name = 'called_once_with'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+                raise AttributeError("Mock object has no attribute %r" % name)
+        elif _is_magic(name):
+            raise AttributeError(name)
+        if not self._mock_unsafe and (not self._mock_methods or name not in self._mock_methods):
+            if name.startswith(('assert', 'assret', 'asert', 'aseert', 'assrt')) or name in _ATTRIB_DENY_LIST:
+&gt;               raise AttributeError(
+                    f"{name!r} is not a valid assertion. Use a spec "
+                    f"for the mock if {name!r} is meant to be an attribute.")
+E               AttributeError: 'called_once_with' is not a valid assertion. Use a spec for the mock if 'called_once_with' is meant to be an attribute.. Did you mean: 'assert_called_once_with'?
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:701: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_do_get_request_sync_top_level_attribute" time="0.001"><failure message="AttributeError: 'called_once_with' is not a valid assertion. Use a spec for the mock if 'called_once_with' is meant to be an attribute.. Did you mean: 'assert_called_once_with'?">mock_requests = &lt;MagicMock name='requests' id='4460120448'&gt;
+
+    @patch("chessdotcom.client.requests")
+    def test_do_get_request_sync_top_level_attribute(mock_requests):
+        client = ChessDotComClient()
+    
+        mock_requests.get.return_value = MagicMock(status_code=200, text='{"key": "value"}')
+    
+        response = client.do_get_request(
+            Resource(
+                uri="/player/fabianocaruana",
+                request_options={"headers": {"header": "override_value"}},
+                top_level_attribute="top_level_attribute",
+            )
+        )
+    
+        assert mock_requests.get.called_once_with(
+            url="https://api.chess.com/player/fabianocaruana",
+            headers={"headers": {"header": "override_value"}},
+            timeout=30,
+&gt;       )
+
+tests/client_test.py:192: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='requests.get' id='4465897696'&gt;
+name = 'called_once_with'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+                raise AttributeError("Mock object has no attribute %r" % name)
+        elif _is_magic(name):
+            raise AttributeError(name)
+        if not self._mock_unsafe and (not self._mock_methods or name not in self._mock_methods):
+            if name.startswith(('assert', 'assret', 'asert', 'aseert', 'assrt')) or name in _ATTRIB_DENY_LIST:
+&gt;               raise AttributeError(
+                    f"{name!r} is not a valid assertion. Use a spec "
+                    f"for the mock if {name!r} is meant to be an attribute.")
+E               AttributeError: 'called_once_with' is not a valid assertion. Use a spec for the mock if 'called_once_with' is meant to be an attribute.. Did you mean: 'assert_called_once_with'?
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:701: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_do_get_request_includes_user_agent_header" time="0.001"><failure message="AttributeError: 'called_once_with' is not a valid assertion. Use a spec for the mock if 'called_once_with' is meant to be an attribute.. Did you mean: 'assert_called_once_with'?">mock_requests = &lt;MagicMock name='requests' id='4465896688'&gt;
+
+    @patch("chessdotcom.client.requests")
+    def test_do_get_request_includes_user_agent_header(mock_requests):
+        client = ChessDotComClient(user_agent="My Python Application. Contact me at...")
+    
+        mock_requests.get.return_value = MagicMock(status_code=200, text='{"key": "value"}')
+    
+        client.do_get_request(
+            Resource(
+                uri="/player/fabianocaruana",
+                request_options={"headers": {"header": "override_value"}},
+            )
+        )
+    
+        assert mock_requests.get.called_once_with(
+            url="https://api.chess.com/player/fabianocaruana",
+            headers={"headers": {"User-Agent": "My Python Application. Contact me at..."}},
+            timeout=30,
+&gt;       )
+
+tests/client_test.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='requests.get' id='4465898704'&gt;
+name = 'called_once_with'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+                raise AttributeError("Mock object has no attribute %r" % name)
+        elif _is_magic(name):
+            raise AttributeError(name)
+        if not self._mock_unsafe and (not self._mock_methods or name not in self._mock_methods):
+            if name.startswith(('assert', 'assret', 'asert', 'aseert', 'assrt')) or name in _ATTRIB_DENY_LIST:
+&gt;               raise AttributeError(
+                    f"{name!r} is not a valid assertion. Use a spec "
+                    f"for the mock if {name!r} is meant to be an attribute.")
+E               AttributeError: 'called_once_with' is not a valid assertion. Use a spec for the mock if 'called_once_with' is meant to be an attribute.. Did you mean: 'assert_called_once_with'?
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:701: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_client_includes_default_config" time="0.000" /><testcase classname="tests.client_test" name="test_client_combines_with_defaults" time="0.000" /><testcase classname="tests.client_test" name="test_verify_ssl_option" time="0.000" /><testcase classname="tests.endpoints.get_club_details_test" name="test_with_endpoints" time="0.011" /><testcase classname="tests.endpoints.get_club_details_test" name="test_with_client" time="0.004" /><testcase classname="tests.endpoints.get_club_details_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.get_club_matches_test" name="test_with_endpoints" time="0.004" /><testcase classname="tests.endpoints.get_club_matches_test" name="test_with_client" time="0.004" /><testcase classname="tests.endpoints.get_club_matches_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.get_club_members_test" name="test_with_endpoints" time="0.181" /><testcase classname="tests.endpoints.get_club_members_test" name="test_with_client" time="0.172" /><testcase classname="tests.endpoints.get_club_members_test" name="test_with_async_client" time="0.167" /><testcase classname="tests.endpoints.get_country_clubs_test" name="test_with_endpoints" time="0.017" /><testcase classname="tests.endpoints.get_country_clubs_test" name="test_with_client" time="0.017" /><testcase classname="tests.endpoints.get_country_clubs_test" name="test_with_async_client" time="0.016" /><testcase classname="tests.endpoints.get_country_details_test" name="test_with_endpoints" time="0.004" /><testcase classname="tests.endpoints.get_country_details_test" name="test_with_client" time="0.004" /><testcase classname="tests.endpoints.get_country_details_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.get_country_players_test" name="test_with_endpoints" time="0.032" /><testcase classname="tests.endpoints.get_country_players_test" name="test_with_client" time="0.035" /><testcase classname="tests.endpoints.get_country_players_test" name="test_with_async_client" time="0.034" /><testcase classname="tests.endpoints.get_current_daily_puzzle_test" name="test_with_endpoints" time="0.005" /><testcase classname="tests.endpoints.get_current_daily_puzzle_test" name="test_with_client" time="0.004" /><testcase classname="tests.endpoints.get_current_daily_puzzle_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.get_leaderboards_test" name="test_with_endpoints" time="0.081" /><testcase classname="tests.endpoints.get_leaderboards_test" name="test_with_client" time="0.080" /><testcase classname="tests.endpoints.get_leaderboards_test" name="test_with_async_client" time="0.078" /><testcase classname="tests.endpoints.get_player_team_matches_test" name="test_with_endpoints" time="0.004" /><testcase classname="tests.endpoints.get_player_team_matches_test" name="test_with_client" time="0.003" /><testcase classname="tests.endpoints.get_player_team_matches_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.get_random_daily_puzzle_test" name="test_with_endpoints" time="0.005" /><testcase classname="tests.endpoints.get_random_daily_puzzle_test" name="test_with_client" time="0.004" /><testcase classname="tests.endpoints.get_random_daily_puzzle_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.get_streamers_test" name="test_with_endpoints" time="0.040" /><testcase classname="tests.endpoints.get_streamers_test" name="test_with_client" time="0.039" /><testcase classname="tests.endpoints.get_streamers_test" name="test_with_async_client" time="0.039" /><testcase classname="tests.endpoints.get_team_match_board_test" name="test_with_endpoints" time="0.005" /><testcase classname="tests.endpoints.get_team_match_board_test" name="test_with_client" time="0.005" /><testcase classname="tests.endpoints.get_team_match_board_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.get_team_match_live_board_test" name="test_with_endpoints" time="0.006" /><testcase classname="tests.endpoints.get_team_match_live_board_test" name="test_with_client" time="0.007" /><testcase classname="tests.endpoints.get_team_match_live_board_test" name="test_with_async_client" time="0.005" /><testcase classname="tests.endpoints.get_team_match_live_test" name="test_with_endpoints" time="0.005" /><testcase classname="tests.endpoints.get_team_match_live_test" name="test_with_client" time="0.004" /><testcase classname="tests.endpoints.get_team_match_live_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.get_team_match_test" name="test_with_endpoints" time="0.010" /><testcase classname="tests.endpoints.get_team_match_test" name="test_with_client" time="0.009" /><testcase classname="tests.endpoints.get_team_match_test" name="test_with_async_client" time="0.008" /><testcase classname="tests.endpoints.get_titled_players_test" name="test_with_endpoints" time="0.008" /><testcase classname="tests.endpoints.get_titled_players_test" name="test_with_client" time="0.008" /><testcase classname="tests.endpoints.get_titled_players_test" name="test_with_async_client" time="0.008" /><testcase classname="tests.endpoints.get_tournament_details_test" name="test_with_endpoints" time="0.010" /><testcase classname="tests.endpoints.get_tournament_details_test" name="test_with_client" time="0.010" /><testcase classname="tests.endpoints.get_tournament_details_test" name="test_with_async_client" time="0.008" /><testcase classname="tests.endpoints.get_tournament_round_group_details_test" name="test_with_endpoints" time="0.015" /><testcase classname="tests.endpoints.get_tournament_round_group_details_test" name="test_with_client" time="0.015" /><testcase classname="tests.endpoints.get_tournament_round_group_details_test" name="test_with_async_client" time="0.014" /><testcase classname="tests.endpoints.get_tournament_round_test" name="test_with_endpoints" time="0.010" /><testcase classname="tests.endpoints.get_tournament_round_test" name="test_with_client" time="0.010" /><testcase classname="tests.endpoints.get_tournament_round_test" name="test_with_async_client" time="0.008" /><testcase classname="tests.endpoints.player_clubs_test" name="test_with_endpoints" time="0.009" /><testcase classname="tests.endpoints.player_clubs_test" name="test_with_client" time="0.004" /><testcase classname="tests.endpoints.player_clubs_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.player_clubs_test" name="test_empty_data" time="0.004" /><testcase classname="tests.endpoints.player_current_games_test" name="test_with_endpoints" time="0.005" /><testcase classname="tests.endpoints.player_current_games_test" name="test_with_client" time="0.004" /><testcase classname="tests.endpoints.player_current_games_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.player_current_games_test" name="test_empty_data" time="0.004" /><testcase classname="tests.endpoints.player_game_archives_test" name="test_with_endpoints" time="0.005" /><testcase classname="tests.endpoints.player_game_archives_test" name="test_with_client" time="0.004" /><testcase classname="tests.endpoints.player_game_archives_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.player_game_archives_test" name="test_empty_data" time="0.004" /><testcase classname="tests.endpoints.player_games_by_month_pgn_test" name="test_with_endpoints" time="0.024" /><testcase classname="tests.endpoints.player_games_by_month_pgn_test" name="test_with_client" time="0.022" /><testcase classname="tests.endpoints.player_games_by_month_pgn_test" name="test_with_async_client" time="0.021" /><testcase classname="tests.endpoints.player_games_by_month_test" name="test_with_endpoints" time="0.026" /><testcase classname="tests.endpoints.player_games_by_month_test" name="test_with_client" time="0.024" /><testcase classname="tests.endpoints.player_games_by_month_test" name="test_with_async_client" time="0.024" /><testcase classname="tests.endpoints.player_games_by_month_test" name="test_empty_data" time="0.024" /><testcase classname="tests.endpoints.player_profile_test" name="test_get_with_endpoints" time="0.005" /><testcase classname="tests.endpoints.player_profile_test" name="test_get_with_client" time="0.003" /><testcase classname="tests.endpoints.player_profile_test" name="test_get_with_async_client" time="0.003" /><testcase classname="tests.endpoints.player_profile_test" name="test_empty_data" time="0.005" /><testcase classname="tests.endpoints.player_stats_test" name="test_with_endpoints" time="0.005" /><testcase classname="tests.endpoints.player_stats_test" name="test_with_client" time="0.004" /><testcase classname="tests.endpoints.player_stats_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.player_stats_test" name="test_empty_data" time="0.004" /><testcase classname="tests.endpoints.player_tournaments_test" name="test_with_endpoints" time="0.014" /><testcase classname="tests.endpoints.player_tournaments_test" name="test_with_client" time="0.013" /><testcase classname="tests.endpoints.player_tournaments_test" name="test_with_async_client" time="0.012" /><testcase classname="tests.endpoints.player_tournaments_test" name="test_empty_data" time="0.017" /><testcase classname="tests.package_import_test" name="test_available_imports" time="0.001" /><testcase classname="tests.utils_test" name="test_resolve_date" time="0.000" /><testcase classname="tests.utils_test" name="test_dig" time="0.000" /></testsuite></testsuites>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="11" skipped="0" tests="14" time="3.582" timestamp="2026-03-04T13:21:57.194973+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="common.test_helpers" name="test_write_feeds_file" time="0.004" /><testcase classname="common.test_helpers" name="test_write_podcasts_changelog" time="0.005" /><testcase classname="common.test_helpers" name="test_get_podcasts_config" time="0.001" /><testcase classname="common.test_psapi" name="test_get_podcast_metadata" time="0.001"><failure message="TypeError: 'coroutine' object is not subscriptable">def test_get_podcast_metadata():
+        podcast_id = "kongerekka"
+    
+        metadata = psapi.get_podcast_metadata(podcast_id)
+    
+&gt;       assert "title" in metadata["series"]["titles"]
+E       TypeError: 'coroutine' object is not subscriptable
+
+common/test_psapi.py:10: TypeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_podcast_episodes" time="0.000"><failure message="TypeError: 'coroutine' object is not iterable">def test_get_podcast_episodes():
+        podcast_id = "berrum_beyer_snakker_om_greier"
+    
+        episodes = psapi.get_podcast_episodes(podcast_id)
+    
+&gt;       for episode in episodes:
+E       TypeError: 'coroutine' object is not iterable
+
+common/test_psapi.py:20: TypeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_all_podcast_episodes" time="0.000"><failure message="TypeError: 'coroutine' object is not iterable">def test_get_all_podcast_episodes():
+        podcast_id = "kongerekka"
+    
+        episodes = psapi.get_all_podcast_episodes(podcast_id)
+    
+&gt;       for episode in episodes:
+E       TypeError: 'coroutine' object is not iterable
+
+common/test_psapi.py:34: TypeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_all_podcast_episodes_all_seasons" time="0.000"><failure message="TypeError: 'coroutine' object is not iterable">def test_get_all_podcast_episodes_all_seasons():
+        podcast_id = "klassikere_fra_p3-arkivet"
+    
+        metadata = psapi.get_podcast_metadata(podcast_id)
+        episodes = psapi.get_all_podcast_episodes_all_seasons(podcast_id, metadata)
+    
+&gt;       for episode in episodes:
+E       TypeError: 'coroutine' object is not iterable
+
+common/test_psapi.py:49: TypeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_episode_manifest" time="0.000"><failure message="TypeError: 'coroutine' object is not subscriptable">def test_get_episode_manifest():
+        podcast_id = "kongerekka"
+    
+        episodes = psapi.get_podcast_episodes(podcast_id)
+&gt;       manifest = psapi.get_episode_manifest(podcast_id, episodes[0]["episodeId"])
+E       TypeError: 'coroutine' object is not subscriptable
+
+common/test_psapi.py:62: TypeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_latest_podcast_season" time="0.000"><failure message="TypeError: 'coroutine' object is not subscriptable">def test_get_latest_podcast_season():
+        podcast_id = "kongerekka"
+    
+        metadata = psapi.get_podcast_metadata(podcast_id)
+&gt;       latest_season = metadata["_links"]["seasons"][0]["name"]
+E       TypeError: 'coroutine' object is not subscriptable
+
+common/test_psapi.py:71: TypeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_podcast_episodes_by_season" time="0.000"><failure message="TypeError: object of type 'coroutine' has no len()">def test_get_podcast_episodes_by_season():
+        podcast_id = "kongerekka"
+        season_id = "2020"
+    
+        episodes = psapi.get_podcast_episodes(podcast_id, season_id)
+    
+&gt;       assert len(episodes) == 10
+E       TypeError: object of type 'coroutine' has no len()
+
+common/test_psapi.py:81: TypeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_all_podcasts" time="0.000"><failure message="AttributeError: 'coroutine' object has no attribute 'items'">def test_get_all_podcasts():
+        podcasts = psapi.get_all_podcasts()
+    
+&gt;       for podcast_k, podcast in podcasts.items():
+E       AttributeError: 'coroutine' object has no attribute 'items'
+
+common/test_psapi.py:86: AttributeError</failure></testcase><testcase classname="test_discover_feeds" name="test_update_podcasts_config" time="0.000"><failure message="TypeError: 'coroutine' object is not subscriptable">def test_update_podcasts_config():
+        configured = [
+            {
+                "id": "abels_taarn",
+                "title": "De 10 siste fra Abels Tårn",
+                "season": None,
+                "enabled": True,
+            },
+            {
+                "id": "berrum_beyer_snakker_om_greier",
+                "title": "De 10 siste fra Foo og Bar",
+                "season": None,
+                "enabled": False,
+                "ignore": True,
+            },
+        ]
+        discovered = {
+            "hele_historien" : {
+                "seriesId": "hele_historien",
+                "title": "De 10 siste fra Hele Historien",
+            },
+            "abels_taarn" : {
+                "seriesId": "abels_taarn",
+                "title": "De 10 siste fra Abels Tårn",
+            },
+            "berrum_beyer_snakker_om_greier" : {
+                "seriesId": "berrum_beyer_snakker_om_greier",
+                "title": "De 10 siste fra Foo og Bar",
+            },
+            "dagsnytt_atten" : {
+                "seriesId": "dagsnytt_atten",
+                "title": "De 10 siste fra dagsnytt_atten",
+            }
+        }
+    
+&gt;       updated, changes = update_podcasts_config(configured, discovered)
+
+test_discover_feeds.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+configured = [{'enabled': True, 'id': 'abels_taarn', 'season': None, 'title': 'De 10 siste fra Abels Tårn'}, {'enabled': False, 'id': 'berrum_beyer_snakker_om_greier', 'ignore': True, 'season': None, ...}]
+discovered = {'abels_taarn': {'seriesId': 'abels_taarn', 'title': 'De 10 siste fra Abels Tårn'}, 'berrum_beyer_snakker_om_greier': ...iste fra dagsnytt_atten'}, 'hele_historien': {'seriesId': 'hele_historien', 'title': 'De 10 siste fra Hele Historien'}}
+
+    def update_podcasts_config(configured, discovered):
+        updated_c = 0
+        added_c = 0
+        changes = []
+    
+        today = datetime.now()
+    
+        for podcast_k, podcast in discovered.items():
+            exists = False
+            exists_i = None
+            for i, c in enumerate(configured):
+                if c['id'] == podcast['seriesId']:
+                    exists = True
+                    exists_i = i
+    
+            if exists and ("ignore" in configured[exists_i] and configured[exists_i]['ignore']):
+                logging.debug(f"Ignoring podcast {podcast['seriesId']}")
+                continue
+    
+            metadata = psapi.get_podcast_metadata(podcast['seriesId'])
+    
+            if not metadata:
+                logging.warning(f"No metadata was found for podcast {podcast['seriesId']}")
+                continue
+    
+&gt;           if "category" in metadata['series'] and metadata['series']['category']['id'] in ignored_categories:
+E           TypeError: 'coroutine' object is not subscriptable
+
+discover_feeds.py:60: TypeError</failure></testcase><testcase classname="test_generate_feeds" name="test_get_podcast" time="0.001"><failure message="TypeError: 'coroutine' object is not subscriptable">def test_get_podcast():
+        feeds_dir = "tests/rss"
+        os.makedirs(feeds_dir, exist_ok=True)
+    
+        podcast_id = "kongerekka"
+        season_id = "2020"
+    
+&gt;       podcast = get_podcast(podcast_id, season_id, feeds_dir, 10)
+
+test_generate_feeds.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+podcast_id = 'kongerekka', season = '2020', feeds_dir = 'tests/rss'
+ep_count = 10
+
+    def get_podcast(podcast_id, season, feeds_dir, ep_count = 10):
+        existing_feed = get_last_feed(feeds_dir, podcast_id)
+    
+        last_feed_update = parser.parse("1970-01-01 00:00:01+00:00")
+        if existing_feed:
+            for channel in existing_feed.findall('channel'):
+                last_build_date = channel.find('lastBuildDate').text
+                last_feed_update = parser.parse(last_build_date)
+                logging.debug(f"Feed was last built {last_feed_update}")
+    
+        metadata = get_podcast_metadata(podcast_id)
+        if not metadata:
+            return None
+    
+&gt;       original_title = metadata["series"]["titles"]["title"]
+E       TypeError: 'coroutine' object is not subscriptable
+
+generate_feeds.py:29: TypeError</failure></testcase><testcase classname="test_generate_feeds" name="test_get_podcast_void" time="0.000"><failure message="TypeError: 'coroutine' object is not subscriptable">def test_get_podcast_void():
+        feeds_dir = "tests/rss"
+    
+        podcast_id = "kongerdekka"
+        season_id = "2020"
+    
+&gt;       podcast = get_podcast(podcast_id, season_id, feeds_dir, 10)
+
+test_generate_feeds.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+podcast_id = 'kongerdekka', season = '2020', feeds_dir = 'tests/rss'
+ep_count = 10
+
+    def get_podcast(podcast_id, season, feeds_dir, ep_count = 10):
+        existing_feed = get_last_feed(feeds_dir, podcast_id)
+    
+        last_feed_update = parser.parse("1970-01-01 00:00:01+00:00")
+        if existing_feed:
+            for channel in existing_feed.findall('channel'):
+                last_build_date = channel.find('lastBuildDate').text
+                last_feed_update = parser.parse(last_build_date)
+                logging.debug(f"Feed was last built {last_feed_update}")
+    
+        metadata = get_podcast_metadata(podcast_id)
+        if not metadata:
+            return None
+    
+&gt;       original_title = metadata["series"]["titles"]["title"]
+E       TypeError: 'coroutine' object is not subscriptable
+
+generate_feeds.py:29: TypeError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,77 @@
+mig: cronitorio@cronitor-python__cdbae557__requests__pycurl__cdbae557__requests__pycurl
+repo: cronitorio@cronitor-python__cdbae557__requests__pycurl
+commit: cdbae5575578236a4146544063377297e57e8874
+source: requests
+target: pycurl
+premig:
+  name: premig
+  status: finished
+  source_version: 2.31.0
+  target_version: 7.45.7
+  finished_at: '2026-03-05 00:02:42'
+  project_coverage: 88.88888888888889
+  total_tests: 18
+  passed_tests: 18
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 56.89655172413793
+  files:
+  - path: cronitor/monitor.py
+    file_change_coverage: 56.89655172413793
+    covered_changed_lines: 6-7,111-112,114,117,124,143,171-179,181,185,187,190-191,193-195,197-202,204,206
+    uncovered_changed_lines: 16-17,31-33,84-87,89,134,144,146,180,182-184,186,188-189,192,196,203,205,207
+  test_diffs:
+  - test_id: cronitor/tests/test_monitor.py::MonitorTests::test_create_monitor_fails
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: type object ''Monitor'' has no attribute ''_req'''
+  - test_id: cronitor/tests/test_monitor.py::MonitorTests::test_delete_no_id
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: APIError
+    error_message: 'cronitor.APIError: An unexpected error occurred when deleting
+      ''a-test_key'''
+  - test_id: cronitor/tests/test_monitor.py::MonitorTests::test_get_monitor_invalid_code
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: error
+    error_message: 'pycurl.error: (3, ''URL rejected: Malformed input to a URL function'')'
+  - test_id: cronitor/tests/test_monitor.py::MonitorTests::test_update_monitor_fails_validation
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: type object ''Monitor'' has no attribute ''_req'''
+  - test_id: cronitor/tests/test_pings.py::MonitorPingTests::test_endpoints
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: '''' is not true'
+  - test_id: cronitor/tests/test_pings.py::MonitorPingTests::test_with_all_params
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: type object ''Monitor'' has no attribute ''_req'''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

@@ -1,0 +1,36 @@
+## Running premig
+creating venv at /Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/bellshade@openseries__59b7a6d7__colorama__rich/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 1 files
+### migrating OpenSeries/util/constant.py
+### running tests
+- test finished with status 0, cov finished with status 0
+- no test diff
+### test diff with round premig
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+- async_transform finished
+## Running premig
+creating venv at /Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/bellshade@openseries__59b7a6d7__colorama__rich/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 1 files
+### migrating OpenSeries/util/constant.py
+### running tests
+- test finished with status 0, cov finished with status 0
+- no test diff
+### test diff with round premig
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+- async_transform finished

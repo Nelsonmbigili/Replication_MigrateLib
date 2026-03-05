@@ -1,0 +1,206 @@
+## Running premig
+creating venv at /Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/segmentio@analytics-python__603632f3__requests__treq/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 4 files
+### migrating segment/analytics/oauth_manager.py
+### migrating segment/analytics/request.py
+### migrating segment/analytics/test/test_oauth.py
+### migrating segment/analytics/test/test_request.py
+### running tests
+- test finished with status -9, cov finished with status 1
+### test diff with round premig
+- `segment/analytics/test/test_client.py::TestClient::test_advanced_group: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_advanced_identify: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_advanced_page: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_advanced_screen: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_advanced_track: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_basic_alias: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_basic_group: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_basic_identify: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_basic_page: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_basic_screen: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_basic_track: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_debug: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_default_timeout_15: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_empty_flush: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_flush: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_gzip: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_identify_with_date_object: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_numeric_user_id: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_overflow: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_proxies: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_requires_write_key: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_shutdown: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_stringifies_anonymous_id: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_stringifies_user_id: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_success_on_invalid_write_key: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_synchronous: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_unicode: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_user_defined_timeout: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_user_defined_upload_size: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_dropping_oversize_msg: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_max_batch_size: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_multiple_uploads_per_interval: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_next: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_next_limit: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_pause: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_proxies: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_request: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_request_retry: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_upload: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_upload_interval: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_debug: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_gzip: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_host: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_max_queue_size: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_max_retries: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_sync_mode: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_timeout: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_writeKey: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_alias: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_flush: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_group: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_identify: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_no_host: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_no_write_key: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_page: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_screen: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_track: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthIntegration::test_oauth_integration_fail_bad_key: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthIntegration::test_oauth_integration_failure: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthIntegration::test_oauth_integration_recovery: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthIntegration::test_oauth_integration_success: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthManager::test_oauth_fail_unrecoverably: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthManager::test_oauth_fail_with_retries: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthManager::test_oauth_rate_limit_delay: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthManager::test_oauth_success: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_date_serialization: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_datetime_serialization: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_invalid_host: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_invalid_request_error: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_proxies: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_should_not_timeout: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_should_timeout: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_valid_request: passed != not found`
+- `segment/analytics/test/test_utils.py::TestUtils::test_bytes: passed != not found`
+- `segment/analytics/test/test_utils.py::TestUtils::test_clean: passed != not found`
+- `segment/analytics/test/test_utils.py::TestUtils::test_clean_fn: passed != not found`
+- `segment/analytics/test/test_utils.py::TestUtils::test_clean_with_dates: passed != not found`
+- `segment/analytics/test/test_utils.py::TestUtils::test_remove_slash: passed != not found`
+- `segment/analytics/test/test_utils.py::TestUtils::test_timezone_utils: passed != not found`
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+### Finding async transforms
+- Found 0 functions to mark async including 0 tests
+- Found 0 calls to await
+- async_transform finished
+## Running premig
+creating venv at /Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/segmentio@analytics-python__603632f3__requests__treq/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 4 files
+### migrating segment/analytics/oauth_manager.py
+### migrating segment/analytics/request.py
+### migrating segment/analytics/test/test_oauth.py
+### migrating segment/analytics/test/test_request.py
+### running tests
+- test finished with status -9, cov finished with status 1
+### test diff with round premig
+- `segment/analytics/test/test_client.py::TestClient::test_advanced_group: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_advanced_identify: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_advanced_page: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_advanced_screen: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_advanced_track: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_basic_alias: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_basic_group: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_basic_identify: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_basic_page: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_basic_screen: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_basic_track: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_debug: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_default_timeout_15: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_empty_flush: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_flush: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_gzip: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_identify_with_date_object: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_numeric_user_id: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_overflow: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_proxies: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_requires_write_key: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_shutdown: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_stringifies_anonymous_id: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_stringifies_user_id: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_success_on_invalid_write_key: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_synchronous: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_unicode: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_user_defined_timeout: passed != not found`
+- `segment/analytics/test/test_client.py::TestClient::test_user_defined_upload_size: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_dropping_oversize_msg: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_max_batch_size: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_multiple_uploads_per_interval: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_next: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_next_limit: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_pause: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_proxies: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_request: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_request_retry: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_upload: passed != not found`
+- `segment/analytics/test/test_consumer.py::TestConsumer::test_upload_interval: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_debug: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_gzip: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_host: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_max_queue_size: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_max_retries: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_sync_mode: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_timeout: passed != not found`
+- `segment/analytics/test/test_init.py::TestInit::test_writeKey: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_alias: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_flush: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_group: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_identify: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_no_host: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_no_write_key: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_page: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_screen: passed != not found`
+- `segment/analytics/test/test_module.py::TestModule::test_track: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthIntegration::test_oauth_integration_fail_bad_key: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthIntegration::test_oauth_integration_failure: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthIntegration::test_oauth_integration_recovery: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthIntegration::test_oauth_integration_success: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthManager::test_oauth_fail_unrecoverably: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthManager::test_oauth_fail_with_retries: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthManager::test_oauth_rate_limit_delay: passed != not found`
+- `segment/analytics/test/test_oauth.py::TestOauthManager::test_oauth_success: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_date_serialization: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_datetime_serialization: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_invalid_host: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_invalid_request_error: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_proxies: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_should_not_timeout: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_should_timeout: passed != not found`
+- `segment/analytics/test/test_request.py::TestRequests::test_valid_request: passed != not found`
+- `segment/analytics/test/test_utils.py::TestUtils::test_bytes: passed != not found`
+- `segment/analytics/test/test_utils.py::TestUtils::test_clean: passed != not found`
+- `segment/analytics/test/test_utils.py::TestUtils::test_clean_fn: passed != not found`
+- `segment/analytics/test/test_utils.py::TestUtils::test_clean_with_dates: passed != not found`
+- `segment/analytics/test/test_utils.py::TestUtils::test_remove_slash: passed != not found`
+- `segment/analytics/test/test_utils.py::TestUtils::test_timezone_utils: passed != not found`
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+### Finding async transforms
+- Found 0 functions to mark async including 0 tests
+- Found 0 calls to await
+- async_transform finished

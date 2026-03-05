@@ -1,0 +1,211 @@
+## Running premig
+creating venv at /Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/lmcinnes@glasbey__37cd1125__matplotlib__altair/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 4 files
+### migrating glasbey/_converters.py
+### migrating glasbey/_glasbey.py
+### migrating glasbey/tests/test_converters.py
+### migrating glasbey/tests/test_glasbey.py
+### running tests
+- test finished with status 2, cov finished with status 1
+### test diff with round premig
+- `glasbey/tests/test_converters.py::test_palette_conversion[Accent]: passed != not found`
+- `glasbey/tests/test_converters.py::test_palette_conversion[Set1]: passed != not found`
+- `glasbey/tests/test_converters.py::test_palette_conversion[tab10]: passed != not found`
+- `glasbey/tests/test_converters.py::test_srgb1_conversion[#836fa9]: passed != not found`
+- `glasbey/tests/test_converters.py::test_srgb1_conversion[Set1]: passed != not found`
+- `glasbey/tests/test_converters.py::test_srgb1_conversion[palette3]: passed != not found`
+- `glasbey/tests/test_converters.py::test_srgb1_conversion[palette4]: passed != not found`
+- `glasbey/tests/test_converters.py::test_srgb1_conversion[palette5]: passed != not found`
+- `glasbey/tests/test_converters.py::test_srgb1_conversion[tab10]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_bad_params: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_colorblind: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_sizing[JCh-block_sizes0]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_sizing[JCh-block_sizes1]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_sizing[JCh-block_sizes2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_sizing[RGB-block_sizes0]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_sizing[RGB-block_sizes1]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_sizing[RGB-block_sizes2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_colorblind_safe: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_distances[JCh-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_distances[JCh-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_distances[JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_distances[RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_distances[RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_distances[RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_colorblind_safe[Pastel1]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_colorblind_safe[Set1]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_colorblind_safe[tab10]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[#3264c8-JCh-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[#3264c8-JCh-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[#3264c8-JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[#3264c8-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[#3264c8-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[#3264c8-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Accent-JCh-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Accent-JCh-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Accent-JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Accent-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Accent-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Accent-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Set1-JCh-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Set1-JCh-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Set1-JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Set1-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Set1-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Set1-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[tab10-JCh-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[tab10-JCh-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[tab10-JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[tab10-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[tab10-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[tab10-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[Accent-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[Accent-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[Accent-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[Set1-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[Set1-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[Set1-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[tab10-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[tab10-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[tab10-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_theme_palette_bounds: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_theme_palette_distances_small: passed != not found`
+- `glasbey/tests/test_grids.py::test_bad_params: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[JCh-128]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[JCh-64]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[JCh-grid_size3]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[RGB-128]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[RGB-64]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[RGB-grid_size3]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_jch_bounds: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[JCh-128]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[JCh-64]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[JCh-grid_size3]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[RGB-128]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[RGB-64]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[RGB-grid_size3]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_rgb256: passed != not found`
+- `glasbey/tests/test_grids.py::test_jch_bounding_matches: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_next_color_consistency[128]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_next_color_consistency[16]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_next_color_consistency[32]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_next_color_consistency[64]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_palette_distance_order[128]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_palette_distance_order[16]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_palette_distance_order[32]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_palette_distance_order[64]: passed != not found`
+- `glasbey/tests/test_internals.py::test_get_next_color_color_choice: passed != not found`
+- `glasbey/tests/test_internals.py::test_get_next_color_distances: passed != not found`
+- llmmig finished
+## Running merge_skipped
+### running tests
+- test finished with status 2, cov finished with status 1
+### test diff with round premig
+- `glasbey/tests/test_converters.py::test_palette_conversion[Accent]: passed != not found`
+- `glasbey/tests/test_converters.py::test_palette_conversion[Set1]: passed != not found`
+- `glasbey/tests/test_converters.py::test_palette_conversion[tab10]: passed != not found`
+- `glasbey/tests/test_converters.py::test_srgb1_conversion[#836fa9]: passed != not found`
+- `glasbey/tests/test_converters.py::test_srgb1_conversion[Set1]: passed != not found`
+- `glasbey/tests/test_converters.py::test_srgb1_conversion[palette3]: passed != not found`
+- `glasbey/tests/test_converters.py::test_srgb1_conversion[palette4]: passed != not found`
+- `glasbey/tests/test_converters.py::test_srgb1_conversion[palette5]: passed != not found`
+- `glasbey/tests/test_converters.py::test_srgb1_conversion[tab10]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_bad_params: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_colorblind: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_sizing[JCh-block_sizes0]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_sizing[JCh-block_sizes1]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_sizing[JCh-block_sizes2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_sizing[RGB-block_sizes0]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_sizing[RGB-block_sizes1]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_block_palette_sizing[RGB-block_sizes2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_colorblind_safe: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_distances[JCh-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_distances[JCh-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_distances[JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_distances[RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_distances[RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_create_palette_distances[RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_colorblind_safe[Pastel1]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_colorblind_safe[Set1]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_colorblind_safe[tab10]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[#3264c8-JCh-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[#3264c8-JCh-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[#3264c8-JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[#3264c8-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[#3264c8-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[#3264c8-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Accent-JCh-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Accent-JCh-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Accent-JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Accent-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Accent-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Accent-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Set1-JCh-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Set1-JCh-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Set1-JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Set1-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Set1-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[Set1-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[tab10-JCh-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[tab10-JCh-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[tab10-JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[tab10-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[tab10-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_distances[tab10-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[Accent-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[Accent-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[Accent-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[Set1-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[Set1-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[Set1-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[tab10-RGB-32]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[tab10-RGB-64]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_extend_palette_inferred_bounds[tab10-RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_theme_palette_bounds: passed != not found`
+- `glasbey/tests/test_glasbey.py::test_theme_palette_distances_small: passed != not found`
+- `glasbey/tests/test_grids.py::test_bad_params: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[JCh-128]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[JCh-64]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[JCh-grid_size3]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[RGB-128]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[RGB-64]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_dim[RGB-grid_size3]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_jch_bounds: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[JCh-128]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[JCh-64]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[JCh-grid_size2]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[JCh-grid_size3]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[RGB-128]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[RGB-64]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[RGB-grid_size2]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_length[RGB-grid_size3]: passed != not found`
+- `glasbey/tests/test_grids.py::test_grid_rgb256: passed != not found`
+- `glasbey/tests/test_grids.py::test_jch_bounding_matches: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_next_color_consistency[128]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_next_color_consistency[16]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_next_color_consistency[32]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_next_color_consistency[64]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_palette_distance_order[128]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_palette_distance_order[16]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_palette_distance_order[32]: passed != not found`
+- `glasbey/tests/test_internals.py::test_generate_palette_distance_order[64]: passed != not found`
+- `glasbey/tests/test_internals.py::test_get_next_color_color_choice: passed != not found`
+- `glasbey/tests/test_internals.py::test_get_next_color_distances: passed != not found`
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+### Finding async transforms
+- Found 0 functions to mark async including 0 tests
+- Found 0 calls to await
+- async_transform finished

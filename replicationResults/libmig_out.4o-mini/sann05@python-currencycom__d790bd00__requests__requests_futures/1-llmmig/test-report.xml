@@ -1,0 +1,1155 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="3" failures="18" skipped="1" tests="47" time="0.379" timestamp="2026-03-05T02:13:44.994322+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="integration_tests.rest.test_account.TestAccount" name="test_base" time="0.001"><error message="failed on setup with &quot;OSError: Missing required environmental variables: API_KEY, API_SECRET&quot;">@pytest.fixture(scope="session", autouse=True)
+    def check_env_variables():
+        required_vars = [API_KEY_VAR, API_SECRET_VAR]
+        missing_vars = []
+        for var in required_vars:
+            if var not in os.environ:
+                missing_vars.append(var)
+    
+        if len(missing_vars) &gt; 0:
+&gt;           raise EnvironmentError("Missing required environmental variables: "
+                                   f"{', '.join(missing_vars)}")
+E           OSError: Missing required environmental variables: API_KEY, API_SECRET
+
+integration_tests/rest/conftest.py:20: OSError</error></testcase><testcase classname="integration_tests.rest.test_account.TestAccount" name="test_show_balances_without_0" time="0.000"><error message="failed on setup with &quot;OSError: Missing required environmental variables: API_KEY, API_SECRET&quot;">@pytest.fixture(scope="session", autouse=True)
+    def check_env_variables():
+        required_vars = [API_KEY_VAR, API_SECRET_VAR]
+        missing_vars = []
+        for var in required_vars:
+            if var not in os.environ:
+                missing_vars.append(var)
+    
+        if len(missing_vars) &gt; 0:
+&gt;           raise EnvironmentError("Missing required environmental variables: "
+                                   f"{', '.join(missing_vars)}")
+E           OSError: Missing required environmental variables: API_KEY, API_SECRET
+
+integration_tests/rest/conftest.py:20: OSError</error></testcase><testcase classname="integration_tests.rest.test_account.TestAccount" name="test_show_balances_with_0" time="0.000"><error message="failed on setup with &quot;OSError: Missing required environmental variables: API_KEY, API_SECRET&quot;">@pytest.fixture(scope="session", autouse=True)
+    def check_env_variables():
+        required_vars = [API_KEY_VAR, API_SECRET_VAR]
+        missing_vars = []
+        for var in required_vars:
+            if var not in os.environ:
+                missing_vars.append(var)
+    
+        if len(missing_vars) &gt; 0:
+&gt;           raise EnvironmentError("Missing required environmental variables: "
+                                   f"{', '.join(missing_vars)}")
+E           OSError: Missing required environmental variables: API_KEY, API_SECRET
+
+integration_tests/rest/conftest.py:20: OSError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_not_called" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_server_time" time="0.001"><failure message="NameError: name 'self' is not defined">self = &lt;tests.test_client.TestClient object at 0x12224dbd0&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x12225a8b0&gt;
+
+    def test_get_server_time(self, monkeypatch):
+&gt;       self.client.get_server_time()
+
+tests/test_client.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @staticmethod
+    def get_server_time():
+        """
+        Test connectivity to the API and get the current server time.
+    
+        :return: dict object
+        Response:
+        {
+          "serverTime": 1499827319559
+        }
+        """
+&gt;       r = self.session.get(CurrencyComConstants.SERVER_TIME_ENDPOINT)
+            ^^^^
+E       NameError: name 'self' is not defined
+
+currencycom/client.py:790: NameError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_exchange_info" time="0.001"><failure message="NameError: name 'self' is not defined">self = &lt;tests.test_client.TestClient object at 0x122259940&gt;
+
+    def test_get_exchange_info(self):
+&gt;       self.client.get_exchange_info()
+
+tests/test_client.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @staticmethod
+    def get_exchange_info():
+        """
+        Current exchange trading rules and symbol information.
+    
+        :return: dict object
+        Response:
+        {
+          "timezone": "UTC",
+          "serverTime": 1577178958852,
+          "rateLimits": [
+            {
+              //These are defined in the `ENUM definitions`
+              // section under `Rate Limiters (rateLimitType)`.
+              //All limits are optional
+            }
+          ],
+            "symbols": [
+                {
+                    "symbol": "DPW",
+                    "name":"Deutsche Post",
+                    "status": "TRADING",
+                    "baseAsset": "DPW",
+                    "baseAssetPrecision": 3,
+                    "quoteAsset": "EUR",
+                    "quotePrecision": 3,
+                    "orderTypes": [
+                        "LIMIT",
+                        "MARKET"
+                    ],
+                    "icebergAllowed": false,
+                    "filters": [],
+                    "marginTradingAllowed": true,
+                    "spotTradingAllowed": true
+                },
+          ]
+        }
+        """
+&gt;       r = self.session.get(CurrencyComConstants.EXCHANGE_INFORMATION_ENDPOINT)
+            ^^^^
+E       NameError: name 'self' is not defined
+
+currencycom/client.py:378: NameError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_order_book_default" time="0.001"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x122259ba0&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x1222d7680&gt;
+
+    def test_get_order_book_default(self, monkeypatch):
+        val_lim_mock = MagicMock()
+        monkeypatch.setattr(self.client, '_validate_limit', val_lim_mock)
+        symbol = 'TEST'
+&gt;       self.client.get_order_book(symbol)
+
+tests/test_client.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x122470050&gt;, symbol = 'TEST'
+limit = 100
+
+    def get_order_book(self, symbol, limit=100):
+        """
+        Order book
+    
+        :param symbol:
+        :param limit: Default 100; max 1000.
+          Valid limits:[5, 10, 20, 50, 100, 500, 1000, 5000]
+        :return: dict object
+        Response:
+        {
+          "lastUpdateId": 1027024,
+          "asks": [
+            [
+              "4.00000200",  // PRICE
+              "12.00000000"  // QTY
+            ]
+          ],
+          "bids": [
+            [
+              "4.00000000",   // PRICE
+              "431.00000000"  // QTY
+            ]
+          ]
+          }
+        """
+        self._validate_limit(limit)
+        r = self.session.get(CurrencyComConstants.ORDER_BOOK_ENDPOINT,
+                             params={'symbol': symbol, 'limit': limit})
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:338: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_order_book_with_limit" time="0.002"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x12225d370&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x1224689e0&gt;
+
+    def test_get_order_book_with_limit(self, monkeypatch):
+        val_lim_mock = MagicMock()
+        limit = 500
+        monkeypatch.setattr(self.client, '_validate_limit', val_lim_mock)
+        symbol = 'TEST'
+&gt;       self.client.get_order_book(symbol, limit)
+
+tests/test_client.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x122470c30&gt;, symbol = 'TEST'
+limit = 500
+
+    def get_order_book(self, symbol, limit=100):
+        """
+        Order book
+    
+        :param symbol:
+        :param limit: Default 100; max 1000.
+          Valid limits:[5, 10, 20, 50, 100, 500, 1000, 5000]
+        :return: dict object
+        Response:
+        {
+          "lastUpdateId": 1027024,
+          "asks": [
+            [
+              "4.00000200",  // PRICE
+              "12.00000000"  // QTY
+            ]
+          ],
+          "bids": [
+            [
+              "4.00000000",   // PRICE
+              "431.00000000"  // QTY
+            ]
+          ]
+          }
+        """
+        self._validate_limit(limit)
+        r = self.session.get(CurrencyComConstants.ORDER_BOOK_ENDPOINT,
+                             params={'symbol': symbol, 'limit': limit})
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:338: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_default" time="0.001"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x12220ff00&gt;
+
+    def test_get_agg_trades_default(self):
+        symbol = 'TEST'
+&gt;       self.client.get_agg_trades(symbol)
+
+tests/test_client.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x12225eb10&gt;, symbol = 'TEST'
+start_time = None, end_time = None, limit = 500
+
+    def get_agg_trades(self, symbol,
+                       start_time: datetime = None,
+                       end_time: datetime = None,
+                       limit=500):
+        """
+        Get compressed, aggregate trades. Trades that fill at the same time,
+        from the same order, with the same price will have the quantity
+        aggregated. If both startTime and endTime are sent, time between
+        startTime and endTime must be less than 1 hour.
+    
+        :param symbol:
+        :param start_time: Timestamp in ms to get aggregate trades from
+        INCLUSIVE.
+        :param end_time: Timestamp in ms to get aggregate trades from INCLUSIVE
+        :param limit: Default 500; max 1000.
+        :return: dict object
+    
+        Response:
+        [
+          {
+            "a":1582595833, // Aggregate tradeId
+            "p":"8980.4", // Price
+            "q":"0.0", // Quantity (should be ignored)
+            "T":1580204505793, // Timestamp
+            "m":false, // Was the buyer the maker
+          }
+        ]
+        """
+        if limit &gt; CurrencyComConstants.AGG_TRADES_MAX_LIMIT:
+            raise ValueError('Limit should not exceed {}'.format(
+                CurrencyComConstants.AGG_TRADES_MAX_LIMIT
+            ))
+    
+        if start_time and end_time \
+                and end_time - start_time &gt; timedelta(hours=1):
+            raise ValueError(
+                'If both startTime and endTime are sent,'
+                ' time between startTime and endTime must be less than 1 hour.'
+            )
+    
+        params = {'symbol': symbol, 'limit': limit}
+    
+        if start_time:
+            params['startTime'] = self._to_epoch_miliseconds(start_time)
+    
+        if end_time:
+            params['endTime'] = self._to_epoch_miliseconds(end_time)
+    
+        r = self.session.get(CurrencyComConstants.AGGREGATE_TRADE_LIST_ENDPOINT,
+                             params=params)
+    
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:276: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_limit_set" time="0.001"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x1222d4050&gt;
+
+    def test_get_agg_trades_limit_set(self):
+        symbol = 'TEST'
+        limit = 20
+&gt;       self.client.get_agg_trades(symbol, limit=limit)
+
+tests/test_client.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x12246a030&gt;, symbol = 'TEST'
+start_time = None, end_time = None, limit = 20
+
+    def get_agg_trades(self, symbol,
+                       start_time: datetime = None,
+                       end_time: datetime = None,
+                       limit=500):
+        """
+        Get compressed, aggregate trades. Trades that fill at the same time,
+        from the same order, with the same price will have the quantity
+        aggregated. If both startTime and endTime are sent, time between
+        startTime and endTime must be less than 1 hour.
+    
+        :param symbol:
+        :param start_time: Timestamp in ms to get aggregate trades from
+        INCLUSIVE.
+        :param end_time: Timestamp in ms to get aggregate trades from INCLUSIVE
+        :param limit: Default 500; max 1000.
+        :return: dict object
+    
+        Response:
+        [
+          {
+            "a":1582595833, // Aggregate tradeId
+            "p":"8980.4", // Price
+            "q":"0.0", // Quantity (should be ignored)
+            "T":1580204505793, // Timestamp
+            "m":false, // Was the buyer the maker
+          }
+        ]
+        """
+        if limit &gt; CurrencyComConstants.AGG_TRADES_MAX_LIMIT:
+            raise ValueError('Limit should not exceed {}'.format(
+                CurrencyComConstants.AGG_TRADES_MAX_LIMIT
+            ))
+    
+        if start_time and end_time \
+                and end_time - start_time &gt; timedelta(hours=1):
+            raise ValueError(
+                'If both startTime and endTime are sent,'
+                ' time between startTime and endTime must be less than 1 hour.'
+            )
+    
+        params = {'symbol': symbol, 'limit': limit}
+    
+        if start_time:
+            params['startTime'] = self._to_epoch_miliseconds(start_time)
+    
+        if end_time:
+            params['endTime'] = self._to_epoch_miliseconds(end_time)
+    
+        r = self.session.get(CurrencyComConstants.AGGREGATE_TRADE_LIST_ENDPOINT,
+                             params=params)
+    
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:276: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_max_limit" time="0.001"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x1222c8050&gt;
+
+    def test_get_agg_trades_max_limit(self):
+        symbol = 'TEST'
+        limit = CurrencyComConstants.AGG_TRADES_MAX_LIMIT
+&gt;       self.client.get_agg_trades(symbol, limit=limit)
+
+tests/test_client.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x12246a7a0&gt;, symbol = 'TEST'
+start_time = None, end_time = None, limit = 1000
+
+    def get_agg_trades(self, symbol,
+                       start_time: datetime = None,
+                       end_time: datetime = None,
+                       limit=500):
+        """
+        Get compressed, aggregate trades. Trades that fill at the same time,
+        from the same order, with the same price will have the quantity
+        aggregated. If both startTime and endTime are sent, time between
+        startTime and endTime must be less than 1 hour.
+    
+        :param symbol:
+        :param start_time: Timestamp in ms to get aggregate trades from
+        INCLUSIVE.
+        :param end_time: Timestamp in ms to get aggregate trades from INCLUSIVE
+        :param limit: Default 500; max 1000.
+        :return: dict object
+    
+        Response:
+        [
+          {
+            "a":1582595833, // Aggregate tradeId
+            "p":"8980.4", // Price
+            "q":"0.0", // Quantity (should be ignored)
+            "T":1580204505793, // Timestamp
+            "m":false, // Was the buyer the maker
+          }
+        ]
+        """
+        if limit &gt; CurrencyComConstants.AGG_TRADES_MAX_LIMIT:
+            raise ValueError('Limit should not exceed {}'.format(
+                CurrencyComConstants.AGG_TRADES_MAX_LIMIT
+            ))
+    
+        if start_time and end_time \
+                and end_time - start_time &gt; timedelta(hours=1):
+            raise ValueError(
+                'If both startTime and endTime are sent,'
+                ' time between startTime and endTime must be less than 1 hour.'
+            )
+    
+        params = {'symbol': symbol, 'limit': limit}
+    
+        if start_time:
+            params['startTime'] = self._to_epoch_miliseconds(start_time)
+    
+        if end_time:
+            params['endTime'] = self._to_epoch_miliseconds(end_time)
+    
+        r = self.session.get(CurrencyComConstants.AGGREGATE_TRADE_LIST_ENDPOINT,
+                             params=params)
+    
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:276: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_exceed_limit" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_only_start_time_set" time="0.001"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x12220b6b0&gt;
+
+    def test_get_agg_trades_only_start_time_set(self):
+        symbol = 'TEST'
+        start_time = datetime(2019, 1, 1, 1, 1, 1)
+&gt;       self.client.get_agg_trades(symbol, start_time=start_time)
+
+tests/test_client.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x1224ec050&gt;, symbol = 'TEST'
+start_time = datetime.datetime(2019, 1, 1, 1, 1, 1), end_time = None
+limit = 500
+
+    def get_agg_trades(self, symbol,
+                       start_time: datetime = None,
+                       end_time: datetime = None,
+                       limit=500):
+        """
+        Get compressed, aggregate trades. Trades that fill at the same time,
+        from the same order, with the same price will have the quantity
+        aggregated. If both startTime and endTime are sent, time between
+        startTime and endTime must be less than 1 hour.
+    
+        :param symbol:
+        :param start_time: Timestamp in ms to get aggregate trades from
+        INCLUSIVE.
+        :param end_time: Timestamp in ms to get aggregate trades from INCLUSIVE
+        :param limit: Default 500; max 1000.
+        :return: dict object
+    
+        Response:
+        [
+          {
+            "a":1582595833, // Aggregate tradeId
+            "p":"8980.4", // Price
+            "q":"0.0", // Quantity (should be ignored)
+            "T":1580204505793, // Timestamp
+            "m":false, // Was the buyer the maker
+          }
+        ]
+        """
+        if limit &gt; CurrencyComConstants.AGG_TRADES_MAX_LIMIT:
+            raise ValueError('Limit should not exceed {}'.format(
+                CurrencyComConstants.AGG_TRADES_MAX_LIMIT
+            ))
+    
+        if start_time and end_time \
+                and end_time - start_time &gt; timedelta(hours=1):
+            raise ValueError(
+                'If both startTime and endTime are sent,'
+                ' time between startTime and endTime must be less than 1 hour.'
+            )
+    
+        params = {'symbol': symbol, 'limit': limit}
+    
+        if start_time:
+            params['startTime'] = self._to_epoch_miliseconds(start_time)
+    
+        if end_time:
+            params['endTime'] = self._to_epoch_miliseconds(end_time)
+    
+        r = self.session.get(CurrencyComConstants.AGGREGATE_TRADE_LIST_ENDPOINT,
+                             params=params)
+    
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:276: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_only_end_time_set" time="0.001"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x12220b7a0&gt;
+
+    def test_get_agg_trades_only_end_time_set(self):
+        symbol = 'TEST'
+        end_time = datetime(2019, 1, 1, 1, 1, 1)
+&gt;       self.client.get_agg_trades(symbol, end_time=end_time)
+
+tests/test_client.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x122492b70&gt;, symbol = 'TEST'
+start_time = None, end_time = datetime.datetime(2019, 1, 1, 1, 1, 1)
+limit = 500
+
+    def get_agg_trades(self, symbol,
+                       start_time: datetime = None,
+                       end_time: datetime = None,
+                       limit=500):
+        """
+        Get compressed, aggregate trades. Trades that fill at the same time,
+        from the same order, with the same price will have the quantity
+        aggregated. If both startTime and endTime are sent, time between
+        startTime and endTime must be less than 1 hour.
+    
+        :param symbol:
+        :param start_time: Timestamp in ms to get aggregate trades from
+        INCLUSIVE.
+        :param end_time: Timestamp in ms to get aggregate trades from INCLUSIVE
+        :param limit: Default 500; max 1000.
+        :return: dict object
+    
+        Response:
+        [
+          {
+            "a":1582595833, // Aggregate tradeId
+            "p":"8980.4", // Price
+            "q":"0.0", // Quantity (should be ignored)
+            "T":1580204505793, // Timestamp
+            "m":false, // Was the buyer the maker
+          }
+        ]
+        """
+        if limit &gt; CurrencyComConstants.AGG_TRADES_MAX_LIMIT:
+            raise ValueError('Limit should not exceed {}'.format(
+                CurrencyComConstants.AGG_TRADES_MAX_LIMIT
+            ))
+    
+        if start_time and end_time \
+                and end_time - start_time &gt; timedelta(hours=1):
+            raise ValueError(
+                'If both startTime and endTime are sent,'
+                ' time between startTime and endTime must be less than 1 hour.'
+            )
+    
+        params = {'symbol': symbol, 'limit': limit}
+    
+        if start_time:
+            params['startTime'] = self._to_epoch_miliseconds(start_time)
+    
+        if end_time:
+            params['endTime'] = self._to_epoch_miliseconds(end_time)
+    
+        r = self.session.get(CurrencyComConstants.AGGREGATE_TRADE_LIST_ENDPOINT,
+                             params=params)
+    
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:276: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_both_time_set" time="0.001"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x1222973f0&gt;
+
+    def test_get_agg_trades_both_time_set(self):
+        symbol = 'TEST'
+        start_time = datetime(2019, 1, 1, 1, 1, 1)
+        end_time = datetime(2019, 1, 1, 1, 1, 20)
+&gt;       self.client.get_agg_trades(symbol,
+                                   start_time=start_time,
+                                   end_time=end_time)
+
+tests/test_client.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x122578aa0&gt;, symbol = 'TEST'
+start_time = datetime.datetime(2019, 1, 1, 1, 1, 1)
+end_time = datetime.datetime(2019, 1, 1, 1, 1, 20), limit = 500
+
+    def get_agg_trades(self, symbol,
+                       start_time: datetime = None,
+                       end_time: datetime = None,
+                       limit=500):
+        """
+        Get compressed, aggregate trades. Trades that fill at the same time,
+        from the same order, with the same price will have the quantity
+        aggregated. If both startTime and endTime are sent, time between
+        startTime and endTime must be less than 1 hour.
+    
+        :param symbol:
+        :param start_time: Timestamp in ms to get aggregate trades from
+        INCLUSIVE.
+        :param end_time: Timestamp in ms to get aggregate trades from INCLUSIVE
+        :param limit: Default 500; max 1000.
+        :return: dict object
+    
+        Response:
+        [
+          {
+            "a":1582595833, // Aggregate tradeId
+            "p":"8980.4", // Price
+            "q":"0.0", // Quantity (should be ignored)
+            "T":1580204505793, // Timestamp
+            "m":false, // Was the buyer the maker
+          }
+        ]
+        """
+        if limit &gt; CurrencyComConstants.AGG_TRADES_MAX_LIMIT:
+            raise ValueError('Limit should not exceed {}'.format(
+                CurrencyComConstants.AGG_TRADES_MAX_LIMIT
+            ))
+    
+        if start_time and end_time \
+                and end_time - start_time &gt; timedelta(hours=1):
+            raise ValueError(
+                'If both startTime and endTime are sent,'
+                ' time between startTime and endTime must be less than 1 hour.'
+            )
+    
+        params = {'symbol': symbol, 'limit': limit}
+    
+        if start_time:
+            params['startTime'] = self._to_epoch_miliseconds(start_time)
+    
+        if end_time:
+            params['endTime'] = self._to_epoch_miliseconds(end_time)
+    
+        r = self.session.get(CurrencyComConstants.AGGREGATE_TRADE_LIST_ENDPOINT,
+                             params=params)
+    
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:276: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_both_time_set_exceed_max_range" time="0.000" /><testcase classname="tests.test_client.TestClient" name="test_get_klines_default" time="0.001"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x122193790&gt;
+
+    def test_get_klines_default(self):
+        symbol = 'TEST'
+&gt;       self.client.get_klines(symbol, CandlesticksChartInervals.DAY)
+
+tests/test_client.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x1224d7690&gt;, symbol = 'TEST'
+interval = &lt;CandlesticksChartInervals.DAY: '1d'&gt;, start_time = None
+end_time = None, limit = 500
+
+    def get_klines(self, symbol,
+                   interval: CandlesticksChartInervals,
+                   start_time: datetime = None,
+                   end_time: datetime = None,
+                   limit=500):
+        """
+        Kline/candlestick bars for a symbol. Klines are uniquely identified
+        by their open time.
+    
+        If startTime and endTime are not sent, the most recent klines are
+        returned.
+        :param symbol:
+        :param interval:
+        :param start_time:
+        :param end_time:
+        :param limit:Default 500; max 1000.
+        :return: dict object
+    
+        Response:
+        [
+          [
+            1499040000000,      // Open time
+            "0.01634790",       // Open
+            "0.80000000",       // High
+            "0.01575800",       // Low
+            "0.01577100",       // Close
+            "148976.11427815"   // Volume.
+          ]
+        ]
+        """
+        if limit &gt; CurrencyComConstants.KLINES_MAX_LIMIT:
+            raise ValueError('Limit should not exceed {}'.format(
+                CurrencyComConstants.KLINES_MAX_LIMIT
+            ))
+    
+        params = {'symbol': symbol,
+                  'interval': interval.value,
+                  'limit': limit}
+    
+        if start_time:
+            params['startTime'] = self._to_epoch_miliseconds(start_time)
+        if end_time:
+            params['endTime'] = self._to_epoch_miliseconds(end_time)
+        r = self.session.get(CurrencyComConstants.KLINES_DATA_ENDPOINT,
+                             params=params)
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:426: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_with_limit" time="0.001"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x1222604d0&gt;
+
+    def test_get_klines_with_limit(self):
+        symbol = 'TEST'
+        limit = 123
+&gt;       self.client.get_klines(symbol, CandlesticksChartInervals.DAY,
+                               limit=limit)
+
+tests/test_client.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x122550940&gt;, symbol = 'TEST'
+interval = &lt;CandlesticksChartInervals.DAY: '1d'&gt;, start_time = None
+end_time = None, limit = 123
+
+    def get_klines(self, symbol,
+                   interval: CandlesticksChartInervals,
+                   start_time: datetime = None,
+                   end_time: datetime = None,
+                   limit=500):
+        """
+        Kline/candlestick bars for a symbol. Klines are uniquely identified
+        by their open time.
+    
+        If startTime and endTime are not sent, the most recent klines are
+        returned.
+        :param symbol:
+        :param interval:
+        :param start_time:
+        :param end_time:
+        :param limit:Default 500; max 1000.
+        :return: dict object
+    
+        Response:
+        [
+          [
+            1499040000000,      // Open time
+            "0.01634790",       // Open
+            "0.80000000",       // High
+            "0.01575800",       // Low
+            "0.01577100",       // Close
+            "148976.11427815"   // Volume.
+          ]
+        ]
+        """
+        if limit &gt; CurrencyComConstants.KLINES_MAX_LIMIT:
+            raise ValueError('Limit should not exceed {}'.format(
+                CurrencyComConstants.KLINES_MAX_LIMIT
+            ))
+    
+        params = {'symbol': symbol,
+                  'interval': interval.value,
+                  'limit': limit}
+    
+        if start_time:
+            params['startTime'] = self._to_epoch_miliseconds(start_time)
+        if end_time:
+            params['endTime'] = self._to_epoch_miliseconds(end_time)
+        r = self.session.get(CurrencyComConstants.KLINES_DATA_ENDPOINT,
+                             params=params)
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:426: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_max_limit" time="0.001"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x122260710&gt;
+
+    def test_get_klines_max_limit(self):
+        symbol = 'TEST'
+        limit = CurrencyComConstants.KLINES_MAX_LIMIT
+&gt;       self.client.get_klines(symbol, CandlesticksChartInervals.DAY,
+                               limit=limit)
+
+tests/test_client.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x12252c890&gt;, symbol = 'TEST'
+interval = &lt;CandlesticksChartInervals.DAY: '1d'&gt;, start_time = None
+end_time = None, limit = 1000
+
+    def get_klines(self, symbol,
+                   interval: CandlesticksChartInervals,
+                   start_time: datetime = None,
+                   end_time: datetime = None,
+                   limit=500):
+        """
+        Kline/candlestick bars for a symbol. Klines are uniquely identified
+        by their open time.
+    
+        If startTime and endTime are not sent, the most recent klines are
+        returned.
+        :param symbol:
+        :param interval:
+        :param start_time:
+        :param end_time:
+        :param limit:Default 500; max 1000.
+        :return: dict object
+    
+        Response:
+        [
+          [
+            1499040000000,      // Open time
+            "0.01634790",       // Open
+            "0.80000000",       // High
+            "0.01575800",       // Low
+            "0.01577100",       // Close
+            "148976.11427815"   // Volume.
+          ]
+        ]
+        """
+        if limit &gt; CurrencyComConstants.KLINES_MAX_LIMIT:
+            raise ValueError('Limit should not exceed {}'.format(
+                CurrencyComConstants.KLINES_MAX_LIMIT
+            ))
+    
+        params = {'symbol': symbol,
+                  'interval': interval.value,
+                  'limit': limit}
+    
+        if start_time:
+            params['startTime'] = self._to_epoch_miliseconds(start_time)
+        if end_time:
+            params['endTime'] = self._to_epoch_miliseconds(end_time)
+        r = self.session.get(CurrencyComConstants.KLINES_DATA_ENDPOINT,
+                             params=params)
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:426: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_exceed_max_limit" time="0.000" /><testcase classname="tests.test_client.TestClient" name="test_get_klines_with_startTime" time="0.001"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x1222d12e0&gt;
+
+    def test_get_klines_with_startTime(self):
+        symbol = 'TEST'
+        start_date = datetime(2020, 1, 1)
+&gt;       self.client.get_klines(symbol,
+                               CandlesticksChartInervals.DAY,
+                               start_time=start_date)
+
+tests/test_client.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x12255cb50&gt;, symbol = 'TEST'
+interval = &lt;CandlesticksChartInervals.DAY: '1d'&gt;
+start_time = datetime.datetime(2020, 1, 1, 0, 0), end_time = None, limit = 500
+
+    def get_klines(self, symbol,
+                   interval: CandlesticksChartInervals,
+                   start_time: datetime = None,
+                   end_time: datetime = None,
+                   limit=500):
+        """
+        Kline/candlestick bars for a symbol. Klines are uniquely identified
+        by their open time.
+    
+        If startTime and endTime are not sent, the most recent klines are
+        returned.
+        :param symbol:
+        :param interval:
+        :param start_time:
+        :param end_time:
+        :param limit:Default 500; max 1000.
+        :return: dict object
+    
+        Response:
+        [
+          [
+            1499040000000,      // Open time
+            "0.01634790",       // Open
+            "0.80000000",       // High
+            "0.01575800",       // Low
+            "0.01577100",       // Close
+            "148976.11427815"   // Volume.
+          ]
+        ]
+        """
+        if limit &gt; CurrencyComConstants.KLINES_MAX_LIMIT:
+            raise ValueError('Limit should not exceed {}'.format(
+                CurrencyComConstants.KLINES_MAX_LIMIT
+            ))
+    
+        params = {'symbol': symbol,
+                  'interval': interval.value,
+                  'limit': limit}
+    
+        if start_time:
+            params['startTime'] = self._to_epoch_miliseconds(start_time)
+        if end_time:
+            params['endTime'] = self._to_epoch_miliseconds(end_time)
+        r = self.session.get(CurrencyComConstants.KLINES_DATA_ENDPOINT,
+                             params=params)
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:426: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_with_endTime" time="0.001"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x1222176b0&gt;
+
+    def test_get_klines_with_endTime(self):
+        symbol = 'TEST'
+        end_time = datetime(2020, 1, 1)
+&gt;       self.client.get_klines(symbol,
+                               CandlesticksChartInervals.DAY,
+                               end_time=end_time)
+
+tests/test_client.py:189: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x12255d5a0&gt;, symbol = 'TEST'
+interval = &lt;CandlesticksChartInervals.DAY: '1d'&gt;, start_time = None
+end_time = datetime.datetime(2020, 1, 1, 0, 0), limit = 500
+
+    def get_klines(self, symbol,
+                   interval: CandlesticksChartInervals,
+                   start_time: datetime = None,
+                   end_time: datetime = None,
+                   limit=500):
+        """
+        Kline/candlestick bars for a symbol. Klines are uniquely identified
+        by their open time.
+    
+        If startTime and endTime are not sent, the most recent klines are
+        returned.
+        :param symbol:
+        :param interval:
+        :param start_time:
+        :param end_time:
+        :param limit:Default 500; max 1000.
+        :return: dict object
+    
+        Response:
+        [
+          [
+            1499040000000,      // Open time
+            "0.01634790",       // Open
+            "0.80000000",       // High
+            "0.01575800",       // Low
+            "0.01577100",       // Close
+            "148976.11427815"   // Volume.
+          ]
+        ]
+        """
+        if limit &gt; CurrencyComConstants.KLINES_MAX_LIMIT:
+            raise ValueError('Limit should not exceed {}'.format(
+                CurrencyComConstants.KLINES_MAX_LIMIT
+            ))
+    
+        params = {'symbol': symbol,
+                  'interval': interval.value,
+                  'limit': limit}
+    
+        if start_time:
+            params['startTime'] = self._to_epoch_miliseconds(start_time)
+        if end_time:
+            params['endTime'] = self._to_epoch_miliseconds(end_time)
+        r = self.session.get(CurrencyComConstants.KLINES_DATA_ENDPOINT,
+                             params=params)
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:426: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_with_startTime_and_endTime" time="0.001"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_client.TestClient object at 0x122217750&gt;
+
+    def test_get_klines_with_startTime_and_endTime(self):
+        symbol = 'TEST'
+        start_time = datetime(2020, 1, 1)
+        end_time = datetime(2021, 1, 1)
+&gt;       self.client.get_klines(symbol,
+                               CandlesticksChartInervals.DAY,
+                               start_time=start_time,
+                               end_time=end_time)
+
+tests/test_client.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x122443d90&gt;, symbol = 'TEST'
+interval = &lt;CandlesticksChartInervals.DAY: '1d'&gt;
+start_time = datetime.datetime(2020, 1, 1, 0, 0)
+end_time = datetime.datetime(2021, 1, 1, 0, 0), limit = 500
+
+    def get_klines(self, symbol,
+                   interval: CandlesticksChartInervals,
+                   start_time: datetime = None,
+                   end_time: datetime = None,
+                   limit=500):
+        """
+        Kline/candlestick bars for a symbol. Klines are uniquely identified
+        by their open time.
+    
+        If startTime and endTime are not sent, the most recent klines are
+        returned.
+        :param symbol:
+        :param interval:
+        :param start_time:
+        :param end_time:
+        :param limit:Default 500; max 1000.
+        :return: dict object
+    
+        Response:
+        [
+          [
+            1499040000000,      // Open time
+            "0.01634790",       // Open
+            "0.80000000",       // High
+            "0.01575800",       // Low
+            "0.01577100",       // Close
+            "148976.11427815"   // Volume.
+          ]
+        ]
+        """
+        if limit &gt; CurrencyComConstants.KLINES_MAX_LIMIT:
+            raise ValueError('Limit should not exceed {}'.format(
+                CurrencyComConstants.KLINES_MAX_LIMIT
+            ))
+    
+        params = {'symbol': symbol,
+                  'interval': interval.value,
+                  'limit': limit}
+    
+        if start_time:
+            params['startTime'] = self._to_epoch_miliseconds(start_time)
+        if end_time:
+            params['endTime'] = self._to_epoch_miliseconds(end_time)
+        r = self.session.get(CurrencyComConstants.KLINES_DATA_ENDPOINT,
+                             params=params)
+&gt;       return r.json()
+               ^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+currencycom/client.py:426: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_24h_price_change_default" time="0.001"><failure message="NameError: name 'self' is not defined">self = &lt;tests.test_client.TestClient object at 0x120859010&gt;
+
+    def test_get_24h_price_change_default(self):
+&gt;       self.client.get_24h_price_change()
+
+tests/test_client.py:218: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+symbol = None
+
+    @staticmethod
+    def get_24h_price_change(symbol=None):
+        """
+        24-hour rolling window price change statistics. Careful when accessing
+        this with no symbol.
+        If the symbol is not sent, tickers for all symbols will be returned in
+        an array.
+        :param symbol:
+        :return: dict object
+    
+        Response:
+        {
+          "symbol": "LTC/USD",
+          "priceChange": "0.88",
+          "priceChangePercent": "1.49",
+          "weightedAvgPrice": "59.29",
+          "prevClosePrice": "58.37",
+          "lastPrice": "59.25",
+          "lastQty": "220.0",
+          "bidPrice": "59.25",
+          "askPrice": "59.32",
+          "openPrice": "58.37",
+          "highPrice": "61.39",
+          "lowPrice": "58.37",
+          "volume": "22632",
+          "quoteVolume": "440.0",
+          "openTime": 1580169600000,
+          "closeTime": 1580205307222,
+          "firstId": 0,
+          "lastId": 0,
+          "count": 0
+        }
+    
+        OR
+    
+        {
+          "symbol": "LTC/USD",
+          "priceChange": null,
+          "priceChangePercent": null,
+          "weightedAvgPrice": "59.29",
+          "prevClosePrice": null,
+          "lastPrice": "59.23",
+          "lastQty": "220.0",
+          "bidPrice": "59.23",
+          "askPrice": "59.35",
+          "openPrice": null,
+          "highPrice": null,
+          "lowPrice": null,
+          "volume": null,
+          "quoteVolume": "432.18",
+          "openTime": 0,
+          "closeTime": 0,
+          "firstId": 0,
+          "lastId": 0,
+          "count": 0
+        }
+        """
+&gt;       r = self.session.get(CurrencyComConstants.PRICE_CHANGE_24H_ENDPOINT,
+            ^^^^
+                             params={'symbol': symbol} if symbol else {})
+E       NameError: name 'self' is not defined
+
+currencycom/client.py:775: NameError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_24h_price_change_with_symbol" time="0.000"><failure message="NameError: name 'self' is not defined">self = &lt;tests.test_client.TestClient object at 0x1222e44d0&gt;
+
+    def test_get_24h_price_change_with_symbol(self):
+        symbol = 'TEST'
+&gt;       self.client.get_24h_price_change(symbol)
+
+tests/test_client.py:226: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+symbol = 'TEST'
+
+    @staticmethod
+    def get_24h_price_change(symbol=None):
+        """
+        24-hour rolling window price change statistics. Careful when accessing
+        this with no symbol.
+        If the symbol is not sent, tickers for all symbols will be returned in
+        an array.
+        :param symbol:
+        :return: dict object
+    
+        Response:
+        {
+          "symbol": "LTC/USD",
+          "priceChange": "0.88",
+          "priceChangePercent": "1.49",
+          "weightedAvgPrice": "59.29",
+          "prevClosePrice": "58.37",
+          "lastPrice": "59.25",
+          "lastQty": "220.0",
+          "bidPrice": "59.25",
+          "askPrice": "59.32",
+          "openPrice": "58.37",
+          "highPrice": "61.39",
+          "lowPrice": "58.37",
+          "volume": "22632",
+          "quoteVolume": "440.0",
+          "openTime": 1580169600000,
+          "closeTime": 1580205307222,
+          "firstId": 0,
+          "lastId": 0,
+          "count": 0
+        }
+    
+        OR
+    
+        {
+          "symbol": "LTC/USD",
+          "priceChange": null,
+          "priceChangePercent": null,
+          "weightedAvgPrice": "59.29",
+          "prevClosePrice": null,
+          "lastPrice": "59.23",
+          "lastQty": "220.0",
+          "bidPrice": "59.23",
+          "askPrice": "59.35",
+          "openPrice": null,
+          "highPrice": null,
+          "lowPrice": null,
+          "volume": null,
+          "quoteVolume": "432.18",
+          "openTime": 0,
+          "closeTime": 0,
+          "firstId": 0,
+          "lastId": 0,
+          "count": 0
+        }
+        """
+&gt;       r = self.session.get(CurrencyComConstants.PRICE_CHANGE_24H_ENDPOINT,
+            ^^^^
+                             params={'symbol': symbol} if symbol else {})
+E       NameError: name 'self' is not defined
+
+currencycom/client.py:775: NameError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_new_order_default_buy" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_new_order_default_sell" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_new_order_invalid_recv_window" time="0.000" /><testcase classname="tests.test_client.TestClient" name="test_new_order_default_limit" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_new_order_incorrect_limit_no_price" time="0.000" /><testcase classname="tests.test_client.TestClient" name="test_new_order_incorrect_limit_no_time_in_force" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_cancel_order_default_order_id" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_cancel_order_default_client_order_id" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_cancel_order_default_no_id" time="0.001"><skipped type="pytest.skip" message="order_id param became mandatory">/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/sann05@python-currencycom__d790bd00__requests__requests_futures/tests/test_client.py:381: order_id param became mandatory</skipped></testcase><testcase classname="tests.test_client.TestClient" name="test_cancel_order_invalid_recv_window" time="0.000" /><testcase classname="tests.test_client.TestClient" name="test_get_open_orders_default" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_open_orders_with_symbol" time="0.000" /><testcase classname="tests.test_client.TestClient" name="test_get_open_orders_invalid_recv_window" time="0.000" /><testcase classname="tests.test_client.TestClient" name="test_get_account_info_default" time="0.000" /><testcase classname="tests.test_client.TestClient" name="test_get_account_info_invalid_recv_window" time="0.000" /><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_default" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_with_start_time" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_with_end_time" time="0.003" /><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_with_start_and_end_times" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_incorrect_recv_window" time="0.000" /><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_incorrect_limit" time="0.000" /><testcase classname="tests.test_client.TestClient" name="test__to_epoch_miliseconds_default" time="0.000" /></testsuite></testsuites>

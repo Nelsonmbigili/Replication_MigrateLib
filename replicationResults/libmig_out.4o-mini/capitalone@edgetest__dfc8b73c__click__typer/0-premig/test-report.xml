@@ -1,0 +1,961 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="20" skipped="0" tests="56" time="2.145" timestamp="2026-03-04T15:14:34.796027+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_core" name="test_init" time="0.004" /><testcase classname="tests.test_core" name="test_basic_setup" time="0.012" /><testcase classname="tests.test_core" name="test_basic_setup_create_environment_error" time="0.013" /><testcase classname="tests.test_core" name="test_basic_setup_upgrade_error" time="0.012" /><testcase classname="tests.test_core" name="test_basic_setup_lower_error" time="0.016" /><testcase classname="tests.test_core" name="test_setup_extras" time="0.012" /><testcase classname="tests.test_core" name="test_setup_pip_deps" time="0.011" /><testcase classname="tests.test_core" name="test_setup_pip_deps_error" time="0.011" /><testcase classname="tests.test_core" name="test_run_tests" time="0.015" /><testcase classname="tests.test_integration_cfg" name="test_toy_package" time="0.260"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code">@pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.integration
+    def test_toy_package():
+        """Test using edgetest with a toy package."""
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG)
+            with open("setup.py", "w") as outfile:
+                outfile.write(SETUP_PY)
+            # Make a directory for the module
+            Path(loc, "toy_package").mkdir()
+            with open(Path(loc, "toy_package", "__init__.py"), "w") as outfile:
+                outfile.write(MODULE_CODE)
+            # Make a directory for the tests
+            Path(loc, "tests").mkdir()
+            with open(Path(loc, "tests", "test_main.py"), "w") as outfile:
+                outfile.write(TEST_CODE)
+    
+            # Run the CLI
+            result = runner.invoke(cli, ["--config=setup.cfg"])
+    
+&gt;           assert result.exit_code == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_integration_cfg.py:145: AssertionError</failure></testcase><testcase classname="tests.test_integration_cfg" name="test_toy_package_lower" time="0.062"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code">@pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.integration
+    def test_toy_package_lower():
+        """Test lower bounds with a toy package."""
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG_LOWER)
+            with open("setup.py", "w") as outfile:
+                outfile.write(SETUP_PY)
+            # Make a directory for the module
+            Path(loc, "toy_package").mkdir()
+            with open(Path(loc, "toy_package", "__init__.py"), "w") as outfile:
+                outfile.write(MODULE_CODE)
+            # Make a directory for the tests
+            Path(loc, "tests").mkdir()
+            with open(Path(loc, "tests", "test_main.py"), "w") as outfile:
+                outfile.write(TEST_CODE)
+    
+            # Run the CLI
+            result = runner.invoke(cli, ["--config=setup.cfg"])
+    
+&gt;           assert result.exit_code == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_integration_cfg.py:179: AssertionError</failure></testcase><testcase classname="tests.test_integration_cfg" name="test_toy_package_extras" time="0.088"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code">@pytest.mark.integration
+    def test_toy_package_extras():
+        """Test using edgetest with a toy package."""
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG_EXTRAS)
+            with open("setup.py", "w") as outfile:
+                outfile.write(SETUP_PY)
+            # Make a directory for the module
+            Path(loc, "toy_package").mkdir()
+            with open(Path(loc, "toy_package", "__init__.py"), "w") as outfile:
+                outfile.write(MODULE_CODE)
+            # Make a directory for the tests
+            Path(loc, "tests").mkdir()
+            with open(Path(loc, "tests", "test_main.py"), "w") as outfile:
+                outfile.write(TEST_CODE)
+    
+            # Run the CLI
+            result = runner.invoke(cli, ["--config=setup.cfg", "--export"])
+    
+&gt;           assert result.exit_code == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_integration_cfg.py:212: AssertionError</failure></testcase><testcase classname="tests.test_integration_toml" name="test_toy_package" time="0.072"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code">@pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.integration
+    def test_toy_package():
+        """Test using edgetest with a toy package."""
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML)
+            with open("setup.py", "w") as outfile:
+                outfile.write(SETUP_PY)
+            # Make a directory for the module
+            Path(loc, "toy_package").mkdir()
+            with open(Path(loc, "toy_package", "__init__.py"), "w") as outfile:
+                outfile.write(MODULE_CODE)
+            # Make a directory for the tests
+            Path(loc, "tests").mkdir()
+            with open(Path(loc, "tests", "test_main.py"), "w") as outfile:
+                outfile.write(TEST_CODE)
+    
+            # Run the CLI
+            result = runner.invoke(cli, ["--config=pyproject.toml"])
+    
+&gt;           assert result.exit_code == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_integration_toml.py:110: AssertionError</failure></testcase><testcase classname="tests.test_integration_toml" name="test_toy_package_lower" time="0.112"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code">@pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.integration
+    def test_toy_package_lower():
+        """Test using edgetest with a toy package."""
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML_LOWER)
+            with open("setup.py", "w") as outfile:
+                outfile.write(SETUP_PY)
+            # Make a directory for the module
+            Path(loc, "toy_package").mkdir()
+            with open(Path(loc, "toy_package", "__init__.py"), "w") as outfile:
+                outfile.write(MODULE_CODE)
+            # Make a directory for the tests
+            Path(loc, "tests").mkdir()
+            with open(Path(loc, "tests", "test_main.py"), "w") as outfile:
+                outfile.write(TEST_CODE)
+    
+            # Run the CLI
+            result = runner.invoke(cli, ["--config=pyproject.toml"])
+    
+&gt;           assert result.exit_code == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_integration_toml.py:144: AssertionError</failure></testcase><testcase classname="tests.test_integration_toml" name="test_toy_package_extras" time="0.084"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code">@pytest.mark.integration
+    def test_toy_package_extras():
+        """Test using edgetest with a toy package."""
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML_EXTRAS)
+            with open("setup.py", "w") as outfile:
+                outfile.write(SETUP_PY)
+            # Make a directory for the module
+            Path(loc, "toy_package").mkdir()
+            with open(Path(loc, "toy_package", "__init__.py"), "w") as outfile:
+                outfile.write(MODULE_CODE)
+            # Make a directory for the tests
+            Path(loc, "tests").mkdir()
+            with open(Path(loc, "tests", "test_main.py"), "w") as outfile:
+                outfile.write(TEST_CODE)
+    
+            # Run the CLI
+            result = runner.invoke(cli, ["--config=pyproject.toml", "--export"])
+    
+&gt;           assert result.exit_code == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_integration_toml.py:177: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_basic" time="0.037"><failure message="AssertionError: expected call not found.&#10;Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpdg8jlzyo/.edgetest/myenv'))&#10;  Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpdg8jlzyo/.edgetest/myenv'))">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4835162976'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4839026240'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4839515744'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_basic(mock_popen, mock_cpopen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg"])
+    
+        assert result.exit_code == 0
+    
+        env_loc = Path(loc) / ".edgetest" / "myenv"
+        if platform.system() == "Windows":
+            py_loc = env_loc / "Scripts" / "python.exe"
+        else:
+            py_loc = env_loc / "bin" / "python"
+    
+&gt;       mock_builder.return_value.create.assert_called_with(env_loc)
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_cfg.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='EnvBuilder().create' spec='function' id='4839519776'&gt;
+args = (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpdg8jlzyo/.edgetest/myenv'),)
+kwargs = {}
+expected = call('', (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpdg8jlzyo/.edgetest/myenv'),), {})
+actual = call('', (PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpdg8jlzyo/.edgetest/myenv'),), {})
+_error_message = &lt;function NonCallableMock.assert_called_with.&lt;locals&gt;._error_message at 0x1200ca1f0&gt;
+cause = None
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\n  Actual: %s'
+                    % (expected, actual))
+            raise AssertionError(error_message)
+    
+        def _error_message():
+            msg = self._format_mock_failure_message(args, kwargs)
+            return msg
+        expected = self._call_matcher(_Call((args, kwargs), two=True))
+        actual = self._call_matcher(self.call_args)
+        if actual != expected:
+            cause = expected if isinstance(expected, Exception) else None
+&gt;           raise AssertionError(_error_message()) from cause
+E           AssertionError: expected call not found.
+E           Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpdg8jlzyo/.edgetest/myenv'))
+E             Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpdg8jlzyo/.edgetest/myenv'))
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:985: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_basic_lower" time="0.031"><failure message="AssertionError: expected call not found.&#10;Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpghz3nxti/.edgetest/myenv_lower'))&#10;  Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpghz3nxti/.edgetest/myenv_lower'))">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4840047008'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4849088704'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4852855008'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_basic_lower(mock_popen, mock_cpopen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG_LOWER)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg"])
+    
+        assert result.exit_code == 0
+    
+        env_loc = Path(loc) / ".edgetest" / "myenv_lower"
+        if platform.system() == "Windows":
+            py_loc = env_loc / "Scripts" / "python.exe"
+        else:
+            py_loc = env_loc / "bin" / "python"
+    
+&gt;       mock_builder.return_value.create.assert_called_with(env_loc)
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_cfg.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='EnvBuilder().create' spec='function' id='4853072288'&gt;
+args = (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpghz3nxti/.edgetest/myenv_lower'),)
+kwargs = {}
+expected = call('', (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpghz3nxti/.edgetest/myenv_lower'),), {})
+actual = call('', (PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpghz3nxti/.edgetest/myenv_lower'),), {})
+_error_message = &lt;function NonCallableMock.assert_called_with.&lt;locals&gt;._error_message at 0x121468d50&gt;
+cause = None
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\n  Actual: %s'
+                    % (expected, actual))
+            raise AssertionError(error_message)
+    
+        def _error_message():
+            msg = self._format_mock_failure_message(args, kwargs)
+            return msg
+        expected = self._call_matcher(_Call((args, kwargs), two=True))
+        actual = self._call_matcher(self.call_args)
+        if actual != expected:
+            cause = expected if isinstance(expected, Exception) else None
+&gt;           raise AssertionError(_error_message()) from cause
+E           AssertionError: expected call not found.
+E           Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpghz3nxti/.edgetest/myenv_lower'))
+E             Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpghz3nxti/.edgetest/myenv_lower'))
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:985: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_reqs" time="0.033"><failure message="AssertionError: assert [call(env_dir...quirements'))] == [call(env_dir...quirements'))]&#10;  &#10;  At index 0 diff: call(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpltr_hrz2/.edgetest/myupgrade')) != call(env_dir=PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpltr_hrz2/.edgetest/myupgrade'))&#10;  &#10;  Full diff:&#10;  - [&#10;  -     call(env_dir=PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpltr_hrz2/.edgetest/myupgrade')),&#10;  ? ^^^^...&#10;  &#10;  ...Full output truncated (7 lines hidden), use '-vv' to show">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4853419040'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4849698192'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4850089136'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_reqs(mock_popen, mock_cpopen, mock_builder):
+        """Test running tests based on the requirements file."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("requirements.txt", "w") as outfile:
+                outfile.write(REQS)
+    
+            result = runner.invoke(cli)
+    
+        if platform.system() == "Windows":
+            py_myupgrade_loc = (
+                Path(loc) / ".edgetest" / "myupgrade" / "Scripts" / "python.exe"
+            )
+            py_allreq_loc = (
+                Path(loc) / ".edgetest" / "all-requirements" / "Scripts" / "python.exe"
+            )
+        else:
+            py_myupgrade_loc = Path(loc) / ".edgetest" / "myupgrade" / "bin" / "python"
+            py_allreq_loc = Path(loc) / ".edgetest" / "all-requirements" / "bin" / "python"
+    
+        assert result.exit_code == 0
+    
+&gt;       assert mock_builder.return_value.create.call_args_list == [
+            call(env_dir=Path(loc) / ".edgetest" / "myupgrade"),
+            call(env_dir=Path(loc) / ".edgetest" / "all-requirements"),
+        ]
+E       AssertionError: assert [call(env_dir...quirements'))] == [call(env_dir...quirements'))]
+E         
+E         At index 0 diff: call(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpltr_hrz2/.edgetest/myupgrade')) != call(env_dir=PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpltr_hrz2/.edgetest/myupgrade'))
+E         
+E         Full diff:
+E         - [
+E         -     call(env_dir=PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpltr_hrz2/.edgetest/myupgrade')),
+E         ? ^^^^...
+E         
+E         ...Full output truncated (7 lines hidden), use '-vv' to show
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_cfg.py:275: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_setup_reqs_update" time="0.033" /><testcase classname="tests.test_interface_cfg" name="test_cli_setup_extras_update" time="0.032" /><testcase classname="tests.test_interface_cfg" name="test_cli_nosetup" time="0.033"><failure message="AssertionError: assert [call(('uv', ...ewlines=True)] == [call(('uv', ...ewlines=True)]&#10;  &#10;  At index 0 diff: call(('uv', 'pip', 'list', '--python=/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpxd1t9acv/.edgetest/myenv/bin/python', '--format', 'json'), stdout=-1, stderr=-1, universal_newlines=True) != call(('uv', 'pip', 'list', '--python=/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpxd1t9acv/.edgetest/myenv/bin/python', '--format', 'json'), stdout=-1, stderr=-1, universal_newlines=True)&#10;  &#10;  Full diff:&#10;  - [&#10;  -     call(('uv', 'pip', 'list', '--python=/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpxd1t9acv/.edgetest/myenv/bin/python', '--format', '...&#10;  &#10;  ...Full output truncated (5 lines hidden), use '-vv' to show">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4857687280'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4853421728'&gt;
+
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_nosetup(mock_popen, mock_cpopen):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg", "--nosetup"])
+    
+        assert result.exit_code == 0
+    
+        env_loc = str(Path(loc) / ".edgetest" / "myenv")
+        if platform.system() == "Windows":
+            py_loc = Path(env_loc) / "Scripts" / "python.exe"
+        else:
+            py_loc = Path(env_loc) / "bin" / "python"
+    
+&gt;       assert mock_popen.call_args_list == [
+            call(
+                ("uv", "pip", "list", f"--python={py_loc}", "--format", "json"),
+                stdout=-1,
+                stderr=-1,
+                universal_newlines=True,
+            ),
+        ]
+E       AssertionError: assert [call(('uv', ...ewlines=True)] == [call(('uv', ...ewlines=True)]
+E         
+E         At index 0 diff: call(('uv', 'pip', 'list', '--python=/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpxd1t9acv/.edgetest/myenv/bin/python', '--format', 'json'), stdout=-1, stderr=-1, universal_newlines=True) != call(('uv', 'pip', 'list', '--python=/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpxd1t9acv/.edgetest/myenv/bin/python', '--format', 'json'), stdout=-1, stderr=-1, universal_newlines=True)
+E         
+E         Full diff:
+E         - [
+E         -     call(('uv', 'pip', 'list', '--python=/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpxd1t9acv/.edgetest/myenv/bin/python', '--format', '...
+E         
+E         ...Full output truncated (5 lines hidden), use '-vv' to show
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_cfg.py:437: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_nosetup_lower" time="0.060"><failure message="AssertionError: assert [call(('/priv...ewlines=True)] == [call(('/var/...ewlines=True)]&#10;  &#10;  At index 0 diff: call(('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp1orhn_yi/.edgetest/myenv_lower/bin/python', '-m', 'pytest', 'tests', '-m', 'not integration'), universal_newlines=True) != call(('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp1orhn_yi/.edgetest/myenv_lower/bin/python', '-m', 'pytest', 'tests', '-m', 'not integration'), universal_newlines=True)&#10;  &#10;  Full diff:&#10;  - [&#10;  -     call(('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp1orhn_yi/.edgetest/myenv_lower/bin/python', '-m', 'pytest', 'tests', '-m', 'not integration'), universal_newlines...&#10;  &#10;  ...Full output truncated (5 lines hidden), use '-vv' to show">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4857263648'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4848987712'&gt;
+
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_nosetup_lower(mock_popen, mock_cpopen):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG_LOWER)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg", "--nosetup"])
+    
+        assert result.exit_code == 0
+    
+        env_loc = str(Path(loc) / ".edgetest" / "myenv_lower")
+        if platform.system() == "Windows":
+            py_loc = Path(env_loc) / "Scripts" / "python.exe"
+        else:
+            py_loc = Path(env_loc) / "bin" / "python"
+    
+&gt;       assert mock_cpopen.call_args_list == [
+            call(
+                (f"{py_loc}", "-m", "pytest", "tests", "-m", "not integration"),
+                universal_newlines=True,
+            )
+        ]
+E       AssertionError: assert [call(('/priv...ewlines=True)] == [call(('/var/...ewlines=True)]
+E         
+E         At index 0 diff: call(('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp1orhn_yi/.edgetest/myenv_lower/bin/python', '-m', 'pytest', 'tests', '-m', 'not integration'), universal_newlines=True) != call(('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp1orhn_yi/.edgetest/myenv_lower/bin/python', '-m', 'pytest', 'tests', '-m', 'not integration'), universal_newlines=True)
+E         
+E         Full diff:
+E         - [
+E         -     call(('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp1orhn_yi/.edgetest/myenv_lower/bin/python', '-m', 'pytest', 'tests', '-m', 'not integration'), universal_newlines...
+E         
+E         ...Full output truncated (5 lines hidden), use '-vv' to show
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_cfg.py:482: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_notest" time="0.131"><failure message="AssertionError: expected call not found.&#10;Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmptn1cwifs/.edgetest/myenv'))&#10;  Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmptn1cwifs/.edgetest/myenv'))">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4851570000'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4851753248'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_notest(mock_popen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg", "--notest"])
+    
+        assert result.exit_code == 0
+    
+        env_loc = Path(loc) / ".edgetest" / "myenv"
+        if platform.system() == "Windows":
+            py_loc = env_loc / "Scripts" / "python.exe"
+        else:
+            py_loc = env_loc / "bin" / "python"
+    
+&gt;       mock_builder.return_value.create.assert_called_with(env_loc)
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_cfg.py:518: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='EnvBuilder().create' spec='function' id='4851757280'&gt;
+args = (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmptn1cwifs/.edgetest/myenv'),)
+kwargs = {}
+expected = call('', (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmptn1cwifs/.edgetest/myenv'),), {})
+actual = call('', (PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmptn1cwifs/.edgetest/myenv'),), {})
+_error_message = &lt;function NonCallableMock.assert_called_with.&lt;locals&gt;._error_message at 0x1218666c0&gt;
+cause = None
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\n  Actual: %s'
+                    % (expected, actual))
+            raise AssertionError(error_message)
+    
+        def _error_message():
+            msg = self._format_mock_failure_message(args, kwargs)
+            return msg
+        expected = self._call_matcher(_Call((args, kwargs), two=True))
+        actual = self._call_matcher(self.call_args)
+        if actual != expected:
+            cause = expected if isinstance(expected, Exception) else None
+&gt;           raise AssertionError(_error_message()) from cause
+E           AssertionError: expected call not found.
+E           Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmptn1cwifs/.edgetest/myenv'))
+E             Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmptn1cwifs/.edgetest/myenv'))
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:985: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_notest_lower" time="0.025"><failure message="AssertionError: expected call not found.&#10;Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp_e7z1gkw/.edgetest/myenv_lower'))&#10;  Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp_e7z1gkw/.edgetest/myenv_lower'))">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4851537904'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4857264320'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_notest_lower(mock_popen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG_LOWER)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg", "--notest"])
+    
+        assert result.exit_code == 0
+    
+        env_loc = Path(loc) / ".edgetest" / "myenv_lower"
+        if platform.system() == "Windows":
+            py_loc = env_loc / "Scripts" / "python.exe"
+        else:
+            py_loc = env_loc / "bin" / "python"
+    
+&gt;       mock_builder.return_value.create.assert_called_with(env_loc)
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_cfg.py:573: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='EnvBuilder().create' spec='function' id='4857258608'&gt;
+args = (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp_e7z1gkw/.edgetest/myenv_lower'),)
+kwargs = {}
+expected = call('', (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp_e7z1gkw/.edgetest/myenv_lower'),), {})
+actual = call('', (PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp_e7z1gkw/.edgetest/myenv_lower'),), {})
+_error_message = &lt;function NonCallableMock.assert_called_with.&lt;locals&gt;._error_message at 0x12047f740&gt;
+cause = None
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\n  Actual: %s'
+                    % (expected, actual))
+            raise AssertionError(error_message)
+    
+        def _error_message():
+            msg = self._format_mock_failure_message(args, kwargs)
+            return msg
+        expected = self._call_matcher(_Call((args, kwargs), two=True))
+        actual = self._call_matcher(self.call_args)
+        if actual != expected:
+            cause = expected if isinstance(expected, Exception) else None
+&gt;           raise AssertionError(_error_message()) from cause
+E           AssertionError: expected call not found.
+E           Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp_e7z1gkw/.edgetest/myenv_lower'))
+E             Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp_e7z1gkw/.edgetest/myenv_lower'))
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:985: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_basic" time="0.038"><failure message="AssertionError: expected call not found.&#10;Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp3d6rzkld/.edgetest/myenv'))&#10;  Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp3d6rzkld/.edgetest/myenv'))">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4402456496'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4857568896'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4838200320'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_basic(mock_popen, mock_cpopen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml"])
+    
+        assert result.exit_code == 0
+    
+        env_loc = Path(loc) / ".edgetest" / "myenv"
+        if platform.system() == "Windows":
+            py_loc = env_loc / "Scripts" / "python.exe"
+        else:
+            py_loc = env_loc / "bin" / "python"
+    
+&gt;       mock_builder.return_value.create.assert_called_with(env_loc)
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_toml.py:140: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='EnvBuilder().create' spec='function' id='4838195952'&gt;
+args = (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp3d6rzkld/.edgetest/myenv'),)
+kwargs = {}
+expected = call('', (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp3d6rzkld/.edgetest/myenv'),), {})
+actual = call('', (PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp3d6rzkld/.edgetest/myenv'),), {})
+_error_message = &lt;function NonCallableMock.assert_called_with.&lt;locals&gt;._error_message at 0x12128ada0&gt;
+cause = None
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\n  Actual: %s'
+                    % (expected, actual))
+            raise AssertionError(error_message)
+    
+        def _error_message():
+            msg = self._format_mock_failure_message(args, kwargs)
+            return msg
+        expected = self._call_matcher(_Call((args, kwargs), two=True))
+        actual = self._call_matcher(self.call_args)
+        if actual != expected:
+            cause = expected if isinstance(expected, Exception) else None
+&gt;           raise AssertionError(_error_message()) from cause
+E           AssertionError: expected call not found.
+E           Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp3d6rzkld/.edgetest/myenv'))
+E             Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp3d6rzkld/.edgetest/myenv'))
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:985: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_basic_lower" time="0.039"><failure message="AssertionError: expected call not found.&#10;Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpsm0yzgpz/.edgetest/myenv_lower'))&#10;  Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpsm0yzgpz/.edgetest/myenv_lower'))">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4839267632'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4848905120'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4853228480'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_basic_lower(mock_popen, mock_cpopen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML_LOWER)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml"])
+    
+        assert result.exit_code == 0
+    
+        env_loc = Path(loc) / ".edgetest" / "myenv_lower"
+        if platform.system() == "Windows":
+            py_loc = env_loc / "Scripts" / "python.exe"
+        else:
+            py_loc = env_loc / "bin" / "python"
+    
+&gt;       mock_builder.return_value.create.assert_called_with(env_loc)
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_toml.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='EnvBuilder().create' spec='function' id='4853232512'&gt;
+args = (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpsm0yzgpz/.edgetest/myenv_lower'),)
+kwargs = {}
+expected = call('', (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpsm0yzgpz/.edgetest/myenv_lower'),), {})
+actual = call('', (PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpsm0yzgpz/.edgetest/myenv_lower'),), {})
+_error_message = &lt;function NonCallableMock.assert_called_with.&lt;locals&gt;._error_message at 0x121867ed0&gt;
+cause = None
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\n  Actual: %s'
+                    % (expected, actual))
+            raise AssertionError(error_message)
+    
+        def _error_message():
+            msg = self._format_mock_failure_message(args, kwargs)
+            return msg
+        expected = self._call_matcher(_Call((args, kwargs), two=True))
+        actual = self._call_matcher(self.call_args)
+        if actual != expected:
+            cause = expected if isinstance(expected, Exception) else None
+&gt;           raise AssertionError(_error_message()) from cause
+E           AssertionError: expected call not found.
+E           Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpsm0yzgpz/.edgetest/myenv_lower'))
+E             Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpsm0yzgpz/.edgetest/myenv_lower'))
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:985: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_reqs" time="0.051"><failure message="AssertionError: assert [call(env_dir...quirements'))] == [call(env_dir...quirements'))]&#10;  &#10;  At index 0 diff: call(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp_f2j_fz6/.edgetest/myupgrade')) != call(env_dir=PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp_f2j_fz6/.edgetest/myupgrade'))&#10;  &#10;  Full diff:&#10;  - [&#10;  -     call(env_dir=PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp_f2j_fz6/.edgetest/myupgrade')),&#10;  ? ^^^^...&#10;  &#10;  ...Full output truncated (7 lines hidden), use '-vv' to show">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4853153280'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4855773040'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4850397072'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_reqs(mock_popen, mock_cpopen, mock_builder):
+        """Test running tests based on the requirements file."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("requirements.txt", "w") as outfile:
+                outfile.write(REQS)
+    
+            result = runner.invoke(cli)
+    
+        if platform.system() == "Windows":
+            py_myupgrade_loc = (
+                Path(loc) / ".edgetest" / "myupgrade" / "Scripts" / "python.exe"
+            )
+            py_allreq_loc = (
+                Path(loc) / ".edgetest" / "all-requirements" / "Scripts" / "python.exe"
+            )
+        else:
+            py_myupgrade_loc = Path(loc) / ".edgetest" / "myupgrade" / "bin" / "python"
+            py_allreq_loc = Path(loc) / ".edgetest" / "all-requirements" / "bin" / "python"
+    
+        assert result.exit_code == 0
+    
+&gt;       assert mock_builder.return_value.create.call_args_list == [
+            call(env_dir=Path(loc) / ".edgetest" / "myupgrade"),
+            call(env_dir=Path(loc) / ".edgetest" / "all-requirements"),
+        ]
+E       AssertionError: assert [call(env_dir...quirements'))] == [call(env_dir...quirements'))]
+E         
+E         At index 0 diff: call(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp_f2j_fz6/.edgetest/myupgrade')) != call(env_dir=PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp_f2j_fz6/.edgetest/myupgrade'))
+E         
+E         Full diff:
+E         - [
+E         -     call(env_dir=PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmp_f2j_fz6/.edgetest/myupgrade')),
+E         ? ^^^^...
+E         
+E         ...Full output truncated (7 lines hidden), use '-vv' to show
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_toml.py:280: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_setup_reqs_update" time="0.033" /><testcase classname="tests.test_interface_toml" name="test_cli_setup_extras_update" time="0.040" /><testcase classname="tests.test_interface_toml" name="test_cli_nosetup" time="0.024"><failure message="AssertionError: assert [call(('uv', ...ewlines=True)] == [call(('uv', ...ewlines=True)]&#10;  &#10;  At index 0 diff: call(('uv', 'pip', 'list', '--python=/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpyxepwgwh/.edgetest/myenv/bin/python', '--format', 'json'), stdout=-1, stderr=-1, universal_newlines=True) != call(('uv', 'pip', 'list', '--python=/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpyxepwgwh/.edgetest/myenv/bin/python', '--format', 'json'), stdout=-1, stderr=-1, universal_newlines=True)&#10;  &#10;  Full diff:&#10;  - [&#10;  -     call(('uv', 'pip', 'list', '--python=/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpyxepwgwh/.edgetest/myenv/bin/python', '--format', '...&#10;  &#10;  ...Full output truncated (5 lines hidden), use '-vv' to show">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4855029712'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4860195040'&gt;
+
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_nosetup(mock_popen, mock_cpopen):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml", "--nosetup"])
+    
+        assert result.exit_code == 0
+    
+        env_loc = str(Path(loc) / ".edgetest" / "myenv")
+        if platform.system() == "Windows":
+            py_loc = Path(env_loc) / "Scripts" / "python.exe"
+        else:
+            py_loc = Path(env_loc) / "bin" / "python"
+    
+&gt;       assert mock_popen.call_args_list == [
+            call(
+                ("uv", "pip", "list", f"--python={py_loc}", "--format", "json"),
+                stdout=-1,
+                stderr=-1,
+                universal_newlines=True,
+            ),
+        ]
+E       AssertionError: assert [call(('uv', ...ewlines=True)] == [call(('uv', ...ewlines=True)]
+E         
+E         At index 0 diff: call(('uv', 'pip', 'list', '--python=/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpyxepwgwh/.edgetest/myenv/bin/python', '--format', 'json'), stdout=-1, stderr=-1, universal_newlines=True) != call(('uv', 'pip', 'list', '--python=/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpyxepwgwh/.edgetest/myenv/bin/python', '--format', 'json'), stdout=-1, stderr=-1, universal_newlines=True)
+E         
+E         Full diff:
+E         - [
+E         -     call(('uv', 'pip', 'list', '--python=/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpyxepwgwh/.edgetest/myenv/bin/python', '--format', '...
+E         
+E         ...Full output truncated (5 lines hidden), use '-vv' to show
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_toml.py:448: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_nosetup_lower" time="0.024"><failure message="AssertionError: assert [call(('/priv...ewlines=True)] == [call(('/var/...ewlines=True)]&#10;  &#10;  At index 0 diff: call(('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmppjpe8bvu/.edgetest/myenv_lower/bin/python', '-m', 'pytest', 'tests', '-m', 'not integration'), universal_newlines=True) != call(('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmppjpe8bvu/.edgetest/myenv_lower/bin/python', '-m', 'pytest', 'tests', '-m', 'not integration'), universal_newlines=True)&#10;  &#10;  Full diff:&#10;  - [&#10;  -     call(('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmppjpe8bvu/.edgetest/myenv_lower/bin/python', '-m', 'pytest', 'tests', '-m', 'not integration'), universal_newlines...&#10;  &#10;  ...Full output truncated (5 lines hidden), use '-vv' to show">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4853050608'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4855899408'&gt;
+
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_nosetup_lower(mock_popen, mock_cpopen):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML_LOWER)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml", "--nosetup"])
+    
+        assert result.exit_code == 0
+    
+        env_loc = str(Path(loc) / ".edgetest" / "myenv_lower")
+        if platform.system() == "Windows":
+            py_loc = Path(env_loc) / "Scripts" / "python.exe"
+        else:
+            py_loc = Path(env_loc) / "bin" / "python"
+    
+&gt;       assert mock_cpopen.call_args_list == [
+            call(
+                (f"{py_loc}", "-m", "pytest", "tests", "-m", "not integration"),
+                universal_newlines=True,
+            )
+        ]
+E       AssertionError: assert [call(('/priv...ewlines=True)] == [call(('/var/...ewlines=True)]
+E         
+E         At index 0 diff: call(('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmppjpe8bvu/.edgetest/myenv_lower/bin/python', '-m', 'pytest', 'tests', '-m', 'not integration'), universal_newlines=True) != call(('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmppjpe8bvu/.edgetest/myenv_lower/bin/python', '-m', 'pytest', 'tests', '-m', 'not integration'), universal_newlines=True)
+E         
+E         Full diff:
+E         - [
+E         -     call(('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmppjpe8bvu/.edgetest/myenv_lower/bin/python', '-m', 'pytest', 'tests', '-m', 'not integration'), universal_newlines...
+E         
+E         ...Full output truncated (5 lines hidden), use '-vv' to show
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_toml.py:493: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_notest" time="0.027"><failure message="AssertionError: expected call not found.&#10;Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmprpcozdyq/.edgetest/myenv'))&#10;  Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmprpcozdyq/.edgetest/myenv'))">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4855632896'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4855025008'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_notest(mock_popen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml", "--notest"])
+    
+        assert result.exit_code == 0
+    
+        env_loc = Path(loc) / ".edgetest" / "myenv"
+        if platform.system() == "Windows":
+            py_loc = env_loc / "Scripts" / "python.exe"
+        else:
+            py_loc = env_loc / "bin" / "python"
+    
+&gt;       mock_builder.return_value.create.assert_called_with(env_loc)
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_toml.py:529: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='EnvBuilder().create' spec='function' id='4855029040'&gt;
+args = (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmprpcozdyq/.edgetest/myenv'),)
+kwargs = {}
+expected = call('', (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmprpcozdyq/.edgetest/myenv'),), {})
+actual = call('', (PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmprpcozdyq/.edgetest/myenv'),), {})
+_error_message = &lt;function NonCallableMock.assert_called_with.&lt;locals&gt;._error_message at 0x121c58720&gt;
+cause = None
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\n  Actual: %s'
+                    % (expected, actual))
+            raise AssertionError(error_message)
+    
+        def _error_message():
+            msg = self._format_mock_failure_message(args, kwargs)
+            return msg
+        expected = self._call_matcher(_Call((args, kwargs), two=True))
+        actual = self._call_matcher(self.call_args)
+        if actual != expected:
+            cause = expected if isinstance(expected, Exception) else None
+&gt;           raise AssertionError(_error_message()) from cause
+E           AssertionError: expected call not found.
+E           Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmprpcozdyq/.edgetest/myenv'))
+E             Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmprpcozdyq/.edgetest/myenv'))
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:985: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_notest_lower" time="0.023"><failure message="AssertionError: expected call not found.&#10;Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpni1v19_y/.edgetest/myenv_lower'))&#10;  Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpni1v19_y/.edgetest/myenv_lower'))">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4853142864'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4861948464'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_notest_lower(mock_popen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML_LOWER)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml", "--notest"])
+    
+        assert result.exit_code == 0
+    
+        env_loc = Path(loc) / ".edgetest" / "myenv_lower"
+        if platform.system() == "Windows":
+            py_loc = env_loc / "Scripts" / "python.exe"
+        else:
+            py_loc = env_loc / "bin" / "python"
+    
+&gt;       mock_builder.return_value.create.assert_called_with(env_loc)
+
+/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/capitalone@edgetest__dfc8b73c__click__typer/tests/test_interface_toml.py:584: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='EnvBuilder().create' spec='function' id='4861248240'&gt;
+args = (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpni1v19_y/.edgetest/myenv_lower'),)
+kwargs = {}
+expected = call('', (PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpni1v19_y/.edgetest/myenv_lower'),), {})
+actual = call('', (PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpni1v19_y/.edgetest/myenv_lower'),), {})
+_error_message = &lt;function NonCallableMock.assert_called_with.&lt;locals&gt;._error_message at 0x121663c10&gt;
+cause = None
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\n  Actual: %s'
+                    % (expected, actual))
+            raise AssertionError(error_message)
+    
+        def _error_message():
+            msg = self._format_mock_failure_message(args, kwargs)
+            return msg
+        expected = self._call_matcher(_Call((args, kwargs), two=True))
+        actual = self._call_matcher(self.call_args)
+        if actual != expected:
+            cause = expected if isinstance(expected, Exception) else None
+&gt;           raise AssertionError(_error_message()) from cause
+E           AssertionError: expected call not found.
+E           Expected: create(PosixPath('/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpni1v19_y/.edgetest/myenv_lower'))
+E             Actual: create(env_dir=PosixPath('/private/var/folders/h0/jlvd527n7kv9n50q8557my5c0000gn/T/tmpni1v19_y/.edgetest/myenv_lower'))
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:985: AssertionError</failure></testcase><testcase classname="tests.test_lib" name="test_path_to_python" time="0.012" /><testcase classname="tests.test_lib" name="test_create_environment" time="0.007" /><testcase classname="tests.test_lib" name="test_run_update" time="0.001" /><testcase classname="tests.test_lib" name="test_run_install_lower" time="0.001" /><testcase classname="tests.test_report" name="test_report" time="0.002" /><testcase classname="tests.test_schema" name="test_add_envoption" time="0.006" /><testcase classname="tests.test_schema" name="test_add_global_option" time="0.002" /><testcase classname="tests.test_utils" name="test_get_lower_bounds" time="0.001" /><testcase classname="tests.test_utils" name="test_parse_reqs" time="0.002" /><testcase classname="tests.test_utils" name="test_parse_cfg" time="0.003" /><testcase classname="tests.test_utils" name="test_parse_cfg_default" time="0.003" /><testcase classname="tests.test_utils" name="test_parse_cfg_reqs" time="0.002" /><testcase classname="tests.test_utils" name="test_parse_cfg_reqs_default" time="0.002" /><testcase classname="tests.test_utils" name="test_parse_custom_cfg" time="0.004" /><testcase classname="tests.test_utils" name="test_parse_toml" time="0.004" /><testcase classname="tests.test_utils" name="test_parse_toml_default" time="0.004" /><testcase classname="tests.test_utils" name="test_parse_toml_reqs" time="0.003" /><testcase classname="tests.test_utils" name="test_parse_toml_reqs_default" time="0.004" /><testcase classname="tests.test_utils" name="test_parse_custom_toml" time="0.005" /><testcase classname="tests.test_utils" name="test_convert_toml_array_to_string" time="0.000" /><testcase classname="tests.test_utils" name="test_upgrade_setup_cfg" time="0.003" /><testcase classname="tests.test_utils" name="test_upgrade_pyproject_toml" time="0.003" /><testcase classname="tests.test_utils" name="test_isin_case_dashhyphen_ins" time="0.000" /></testsuite></testsuites>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="10" skipped="0" tests="21" time="0.359" timestamp="2026-03-05T00:53:53.558273+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming" name="test_perform_stream_request_failure" time="0.001"><failure message="NameError: name 'Response' is not defined">self = &lt;tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming testMethod=test_perform_stream_request_failure&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4357431584'&gt;
+mock_post = &lt;MagicMock name='post' id='4357430912'&gt;
+
+    @patch("tinychat.llms.anthropic.FuturesSession.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_failure(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking the response with an error status code
+&gt;       mock_response = Mock(spec=Response)
+                                  ^^^^^^^^
+E       NameError: name 'Response' is not defined
+
+tests/llms/test_anthropic_client.py:57: NameError</failure></testcase><testcase classname="tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming" name="test_perform_stream_request_success" time="0.001"><failure message="NameError: name 'Response' is not defined">self = &lt;tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming testMethod=test_perform_stream_request_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4357433264'&gt;
+mock_post = &lt;MagicMock name='post' id='4357435280'&gt;
+
+    @patch("tinychat.llms.anthropic.FuturesSession.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_success(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking the response
+&gt;       mock_response = Mock(spec=Response)
+                                  ^^^^^^^^
+E       NameError: name 'Response' is not defined
+
+tests/llms/test_anthropic_client.py:17: NameError</failure></testcase><testcase classname="tests.llms.test_anthropic_handler.TestAnthropicAIHandlerStreaming" name="test_stream_response_success" time="0.001" /><testcase classname="tests.llms.test_cohere_client.TestCohereClientStreaming" name="test_perform_stream_request_failure" time="0.001"><failure message="AttributeError: Mock object has no attribute 'result'">self = &lt;tests.llms.test_cohere_client.TestCohereClientStreaming testMethod=test_perform_stream_request_failure&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4357437968'&gt;
+mock_post = &lt;MagicMock name='post' id='4357438304'&gt;
+
+    @patch("tinychat.llms.cohere.FuturesSession.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_failure(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        mock_response = Mock(spec=Mock)
+        mock_response.status_code = 400
+        mock_post.return_value = mock_response
+        client = CohereClient(temperature=0.0)
+        chat_history = [
+            {"role": "User", "message": "hello"},
+            {"role": "Chatbot", "message": "hello!"},
+        ]
+        with self.assertRaises(ValueError) as context:
+&gt;           client.perform_stream_request("how are you?", chat_history)
+
+tests/llms/test_cohere_client.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tinychat/llms/cohere.py:37: in perform_stream_request
+    response = future_response.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+&gt;               raise AttributeError("Mock object has no attribute %r" % name)
+E               AttributeError: Mock object has no attribute 'result'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:696: AttributeError</failure></testcase><testcase classname="tests.llms.test_cohere_client.TestCohereClientStreaming" name="test_perform_stream_request_success" time="0.001"><failure message="AttributeError: Mock object has no attribute 'result'">self = &lt;tests.llms.test_cohere_client.TestCohereClientStreaming testMethod=test_perform_stream_request_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4357431248'&gt;
+mock_post = &lt;MagicMock name='post' id='4357435280'&gt;
+
+    @patch("tinychat.llms.cohere.FuturesSession.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_success(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        mock_response = Mock(spec=Mock)
+        mock_response.status_code = 200
+        mock_post.return_value = mock_response
+        client = CohereClient(temperature=0.0)
+        chat_history = [
+            {"role": "User", "message": "hello"},
+            {"role": "Chatbot", "message": "hello!"},
+        ]
+&gt;       response = client.perform_stream_request("how are you?", chat_history)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/llms/test_cohere_client.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tinychat/llms/cohere.py:37: in perform_stream_request
+    response = future_response.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Mock name='post()' spec='Mock' id='4357433264'&gt;, name = 'result'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+&gt;               raise AttributeError("Mock object has no attribute %r" % name)
+E               AttributeError: Mock object has no attribute 'result'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:696: AttributeError</failure></testcase><testcase classname="tests.llms.test_cohere_handler.TestCohereHandlerStreaming" name="test_stream_response_success" time="0.001" /><testcase classname="tests.llms.test_google_client.TestGoogleAIClientStreaming" name="test_perform_stream_request_failure" time="0.001" /><testcase classname="tests.llms.test_google_client.TestGoogleAIClientStreaming" name="test_perform_stream_request_success" time="0.001" /><testcase classname="tests.llms.test_google_handler.TestGoogleGeminiHandlerStreaming" name="test_stream_response" time="0.001" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_api_key_setter_invalid_key" time="0.000" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_api_key_setter_valid_key" time="0.000" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_default_headers" time="0.000" /><testcase classname="tests.llms.test_mistral_client.TestMistralClientStreaming" name="test_perform_stream_request_failure" time="0.001"><failure message="AttributeError: Mock object has no attribute 'result'">self = &lt;tests.llms.test_mistral_client.TestMistralClientStreaming testMethod=test_perform_stream_request_failure&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4357438976'&gt;
+mock_post = &lt;MagicMock name='post' id='4357430576'&gt;
+
+    @patch("tinychat.llms.mistral.FuturesSession.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_failure(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Setup: Mocking the response with an error status code
+        mock_response = Mock(spec=Response)
+        mock_response.status_code = 400
+        mock_post.return_value = mock_response
+    
+        # Execution
+        client = MistralClient(model_name="test_model", temperature = 0.0)
+        messages = [{"role": "user", "content": "hello"}]
+    
+        # Verification: Expecting a ValueError on error response
+        with self.assertRaises(ValueError) as context:
+&gt;           next(client.perform_stream_request(messages))  # type: ignore
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/llms/test_mistral_client.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tinychat/llms/mistral.py:37: in perform_stream_request
+    response = future_response.result()  # Wait for the response
+               ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+&gt;               raise AttributeError("Mock object has no attribute %r" % name)
+E               AttributeError: Mock object has no attribute 'result'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:696: AttributeError</failure></testcase><testcase classname="tests.llms.test_mistral_client.TestMistralClientStreaming" name="test_perform_stream_request_success" time="0.001"><failure message="AttributeError: Mock object has no attribute 'result'">self = &lt;tests.llms.test_mistral_client.TestMistralClientStreaming testMethod=test_perform_stream_request_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4360981200'&gt;
+mock_sse_client = &lt;MagicMock name='SSEClient' id='4360980528'&gt;
+mock_post = &lt;MagicMock name='post' id='4360980864'&gt;
+
+    @patch("tinychat.llms.mistral.FuturesSession.post")
+    @patch("tinychat.llms.mistral.SSEClient")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_success(self, mock_api_key, mock_sse_client, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Setup: Mocking SSEClient and the response
+        mock_response = Mock(spec=Response)
+        mock_response.status_code = 200
+        mock_post.return_value = mock_response
+    
+        # Creating mock events
+        mock_event1 = MagicMock()
+        mock_event1.data = json.dumps({"choices": [{"delta": {"content": "part1"}}]})
+        mock_event2 = MagicMock()
+        mock_event2.data = json.dumps({"choices": [{"delta": {"content": "part2"}}]})
+        mock_event_done = MagicMock()
+        mock_event_done.data = "[DONE]"
+    
+        # Setting up a test stream
+        test_stream = [mock_event1, mock_event2, mock_event_done]
+        mock_sse_client.return_value.events = MagicMock(return_value=iter(test_stream))
+    
+        # Execution
+        client = MistralClient(model_name="test_model", temperature = 0.0)
+        messages = [{"role": "user", "content": "hello"}]
+&gt;       stream = client.perform_stream_request(messages)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/llms/test_mistral_client.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tinychat/llms/mistral.py:37: in perform_stream_request
+    response = future_response.result()  # Wait for the response
+               ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Mock name='post()' spec='Response' id='4360980192'&gt;, name = 'result'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+&gt;               raise AttributeError("Mock object has no attribute %r" % name)
+E               AttributeError: Mock object has no attribute 'result'
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/unittest/mock.py:696: AttributeError</failure></testcase><testcase classname="tests.llms.test_mistral_handler.TestMistralHandlerStreaming" name="test_stream_response" time="0.001" /><testcase classname="tests.llms.test_openai_client.TestOpenAIClientStreaming" name="test_perform_stream_request_failure" time="0.001"><failure message="NameError: name 'Response' is not defined">self = &lt;tests.llms.test_openai_client.TestOpenAIClientStreaming testMethod=test_perform_stream_request_failure&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4360984560'&gt;
+mock_post = &lt;MagicMock name='post' id='4360983888'&gt;
+
+    @patch("tinychat.llms.openai.FuturesSession.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_failure(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking the response with an error status code
+&gt;       mock_response = Mock(spec=Response)
+                                  ^^^^^^^^
+E       NameError: name 'Response' is not defined
+
+tests/llms/test_openai_client.py:60: NameError</failure></testcase><testcase classname="tests.llms.test_openai_client.TestOpenAIClientStreaming" name="test_perform_stream_request_success" time="0.001"><failure message="NameError: name 'Response' is not defined">self = &lt;tests.llms.test_openai_client.TestOpenAIClientStreaming testMethod=test_perform_stream_request_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4360983216'&gt;
+mock_sse_client = &lt;MagicMock name='SSEClient' id='4360983552'&gt;
+mock_post = &lt;MagicMock name='post' id='4360984896'&gt;
+
+    @patch("tinychat.llms.openai.FuturesSession.post")
+    @patch("tinychat.llms.openai.SSEClient")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_success(
+        self, mock_api_key, mock_sse_client, mock_post
+    ):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking SSEClient and the response
+&gt;       mock_response = Mock(spec=Response)
+                                  ^^^^^^^^
+E       NameError: name 'Response' is not defined
+
+tests/llms/test_openai_client.py:21: NameError</failure></testcase><testcase classname="tests.llms.test_openai_handler.TestOpenAIHandlerStreaming" name="test_stream_response" time="0.001" /><testcase classname="tests.llms.test_together_client.TestTogetherClientStreaming" name="test_perform_stream_request_failure" time="0.000"><failure message="NameError: name 'Response' is not defined">self = &lt;tests.llms.test_together_client.TestTogetherClientStreaming testMethod=test_perform_stream_request_failure&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4360987584'&gt;
+mock_post = &lt;MagicMock name='post' id='4360987920'&gt;
+
+    @patch("tinychat.llms.together.FuturesSession.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_failure(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking the response with an error status code
+&gt;       mock_response = Mock(spec=Response)
+                                  ^^^^^^^^
+E       NameError: name 'Response' is not defined
+
+tests/llms/test_together_client.py:60: NameError</failure></testcase><testcase classname="tests.llms.test_together_client.TestTogetherClientStreaming" name="test_perform_stream_request_success" time="0.001"><failure message="NameError: name 'Response' is not defined">self = &lt;tests.llms.test_together_client.TestTogetherClientStreaming testMethod=test_perform_stream_request_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4360986912'&gt;
+mock_sse_client = &lt;MagicMock name='SSEClient' id='4360986240'&gt;
+mock_post = &lt;MagicMock name='post' id='4360986576'&gt;
+
+    @patch("tinychat.llms.together.FuturesSession.post")
+    @patch("tinychat.llms.together.SSEClient")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_success(
+        self, mock_api_key, mock_sse_client, mock_post
+    ):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking SSEClient and the response
+&gt;       mock_response = Mock(spec=Response)
+                                  ^^^^^^^^
+E       NameError: name 'Response' is not defined
+
+tests/llms/test_together_client.py:21: NameError</failure></testcase><testcase classname="tests.llms.test_together_handler.TestTogetherHandlerStreaming" name="test_stream_response" time="0.001" /></testsuite></testsuites>

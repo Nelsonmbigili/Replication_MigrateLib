@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="7" time="0.193" timestamp="2026-03-04T14:32:46.691144+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_connection_error" time="0.002" /><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_defaults" time="0.001"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_defaults&gt;
+mock = &lt;MagicMock name='get' id='4399375968'&gt;
+
+    @patch('requests_futures.sessions.FuturesSession.get')  # Changed patch target
+    def test_defaults(self, mock):
+        a_value = '1.2.3.4'
+        aaaa_value = '2001:db8:85a3::8a2e:370:7334'
+        mock.side_effect = [MockResponse(a_value), MockResponse(aaaa_value)]
+    
+        zone = Zone('example.com.', [])
+&gt;       DdnsSource('dynamic').populate(zone)
+
+tests/test_octodns_source_ddns.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+octodns_ddns/__init__.py:70: in populate
+    addr = self._get_addr(_type)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = DdnsSource, _type = 'A'
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+            future = self._sess.get(self.urls[_type])
+&gt;           resp = future.result()  # Get the actual response
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'MockResponse' object has no attribute 'result'
+
+octodns_ddns/__init__.py:55: AttributeError</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_empty_response" time="0.000"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_empty_response&gt;
+mock = &lt;MagicMock name='get' id='4399378992'&gt;
+
+    @patch('requests_futures.sessions.FuturesSession.get')  # Changed patch target
+    def test_empty_response(self, mock):
+        mock.side_effect = [MockResponse(content=''), MockResponse(content='')]
+        zone = Zone('example.com.', [])
+    
+&gt;       DdnsSource('dynamic').populate(zone)
+
+tests/test_octodns_source_ddns.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+octodns_ddns/__init__.py:70: in populate
+    addr = self._get_addr(_type)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = DdnsSource, _type = 'A'
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+            future = self._sess.get(self.urls[_type])
+&gt;           resp = future.result()  # Get the actual response
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'MockResponse' object has no attribute 'result'
+
+octodns_ddns/__init__.py:55: AttributeError</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_error" time="0.001"><failure message="AssertionError: 'boom' != &quot;'MockResponse' object has no attribute 'result'&quot;&#10;- boom&#10;+ 'MockResponse' object has no attribute 'result'">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_error&gt;
+mock = &lt;MagicMock name='get' id='4399381008'&gt;
+
+    @patch('requests_futures.sessions.FuturesSession.get')  # Changed patch target
+    def test_error(self, mock):
+        mock.side_effect = [MockResponse(raise_for_status='boom')]
+        zone = Zone('example.com.', [])
+    
+        with self.assertRaises(Exception) as ctx:
+            DdnsSource('dynamic').populate(zone)
+&gt;       self.assertEqual('boom', str(ctx.exception))
+E       AssertionError: 'boom' != "'MockResponse' object has no attribute 'result'"
+E       - boom
+E       + 'MockResponse' object has no attribute 'result'
+
+tests/test_octodns_source_ddns.py:53: AssertionError</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_types_a" time="0.000"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_types_a&gt;
+mock = &lt;MagicMock name='get' id='4399381344'&gt;
+
+    @patch('requests_futures.sessions.FuturesSession.get')  # Changed patch target
+    def test_types_a(self, mock):
+        a_value = '1.2.3.4'
+        mock.side_effect = [MockResponse(a_value)]
+    
+        zone = Zone('example.com.', [])
+&gt;       DdnsSource('dynamic', types=('A',)).populate(zone)
+
+tests/test_octodns_source_ddns.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+octodns_ddns/__init__.py:70: in populate
+    addr = self._get_addr(_type)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = DdnsSource, _type = 'A'
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+            future = self._sess.get(self.urls[_type])
+&gt;           resp = future.result()  # Get the actual response
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'MockResponse' object has no attribute 'result'
+
+octodns_ddns/__init__.py:55: AttributeError</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_types_aaaa" time="0.000"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_types_aaaa&gt;
+mock = &lt;MagicMock name='get' id='4399381008'&gt;
+
+    @patch('requests_futures.sessions.FuturesSession.get')  # Changed patch target
+    def test_types_aaaa(self, mock):
+        aaaa_value = '2001:db8:85a3::8a2e:370:7334'
+        mock.side_effect = [MockResponse(aaaa_value)]
+    
+        zone = Zone('example.com.', [])
+&gt;       DdnsSource('dynamic', types=('AAAA',)).populate(zone)
+
+tests/test_octodns_source_ddns.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+octodns_ddns/__init__.py:70: in populate
+    addr = self._get_addr(_type)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = DdnsSource, _type = 'AAAA'
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+            future = self._sess.get(self.urls[_type])
+&gt;           resp = future.result()  # Get the actual response
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'MockResponse' object has no attribute 'result'
+
+octodns_ddns/__init__.py:55: AttributeError</failure></testcase><testcase classname="tests.test_octodns_source_ddns.TestDdnsSource" name="test_urls" time="0.000"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">self = &lt;test_octodns_source_ddns.TestDdnsSource testMethod=test_urls&gt;
+mock = &lt;MagicMock name='get' id='4399381680'&gt;
+
+    @patch('requests_futures.sessions.FuturesSession.get')  # Changed patch target
+    def test_urls(self, mock):
+        a_value = '1.2.3.4'
+        aaaa_value = '2001:db8:85a3::8a2e:370:7334'
+        mock.side_effect = [MockResponse(a_value), MockResponse(aaaa_value)]
+    
+        zone = Zone('example.com.', [])
+        DdnsSource(
+            'dynamic',
+            urls={'A': 'https://foo.bar/v4', 'AAAA': 'https://foo.bar/v6'},
+&gt;       ).populate(zone)
+          ^^^^^^^^^^^^^^
+
+tests/test_octodns_source_ddns.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+octodns_ddns/__init__.py:70: in populate
+    addr = self._get_addr(_type)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = DdnsSource, _type = 'A'
+
+    def _get_addr(self, _type):
+        self.log.debug('_get_addr: type=%s', _type)
+        try:
+            future = self._sess.get(self.urls[_type])
+&gt;           resp = future.result()  # Get the actual response
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'MockResponse' object has no attribute 'result'
+
+octodns_ddns/__init__.py:55: AttributeError</failure></testcase></testsuite></testsuites>

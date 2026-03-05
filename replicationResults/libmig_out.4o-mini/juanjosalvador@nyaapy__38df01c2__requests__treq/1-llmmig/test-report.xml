@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="4" time="2.255" timestamp="2026-03-05T01:39:36.207030+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.integration.test_nyaasi" name="test_nyaa_last_uploads" time="0.027"><failure message="AttributeError: 'Deferred' object has no attribute 'raise_for_status'">def test_nyaa_last_uploads():
+&gt;       request = Nyaa.last_uploads(number_of_results=10)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_nyaasi.py:6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;class 'nyaapy.nyaasi.nyaa.Nyaa'&gt;, number_of_results = 10
+
+    @classmethod
+    def last_uploads(self, number_of_results: int):
+        r = treq.get(self.URL)
+    
+        # If anything up with nyaa servers let the user know.
+&gt;       r.raise_for_status()
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'raise_for_status'
+
+nyaapy/anime_site.py:15: AttributeError</failure></testcase><testcase classname="tests.integration.test_nyaasi" name="test_nyaa_search" time="0.014"><failure message="AttributeError: 'Deferred' object has no attribute 'raise_for_status'">def test_nyaa_search():
+&gt;       request = Nyaa.search(keyword="koe no katachi")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_nyaasi.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;class 'nyaapy.nyaasi.nyaa.Nyaa'&gt;, keyword = 'koe no katachi'
+kwargs = {}, base_url = 'https://nyaa.si', user = None, category = 0
+subcategory = 0, filters = 0, page = 0, sorting = 'id'
+
+    @classmethod
+    def search(self, keyword: str, **kwargs):
+        base_url = self.URL
+    
+        user = kwargs.get("user", None)
+        category = kwargs.get("category", 0)
+        subcategory = kwargs.get("subcategory", 0)
+        filters = kwargs.get("filters", 0)
+        page = kwargs.get("page", 0)
+        sorting = kwargs.get(
+            "sort", "id"
+        )  # Sorting by id = sorting by date, this is the default.
+        order = kwargs.get("order", "desc")
+    
+        user_uri = f"user/{user}" if user else ""
+    
+        if page &gt; 0:
+            search_uri = "{}/{}?f={}&amp;c={}_{}&amp;q={}&amp;p={}&amp;s={}&amp;o={}".format(
+                base_url,
+                user_uri,
+                filters,
+                category,
+                subcategory,
+                keyword,
+                page,
+                sorting,
+                order,
+            )
+        else:
+            search_uri = "{}/{}?f={}&amp;c={}_{}&amp;q={}&amp;s={}&amp;o={}".format(
+                base_url,
+                user_uri,
+                filters,
+                category,
+                subcategory,
+                keyword,
+                sorting,
+                order,
+            )
+    
+        if not user:
+            search_uri += "&amp;page=rss"
+    
+        http_response = treq.get(search_uri)
+&gt;       http_response.raise_for_status()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'raise_for_status'
+
+nyaapy/anime_site.py:67: AttributeError</failure></testcase><testcase classname="tests.integration.test_nyaasi" name="test_nyaa_get_single" time="0.012"><failure message="AttributeError: 'Deferred' object has no attribute 'raise_for_status'">def test_nyaa_get_single():
+&gt;       request = Nyaa.get(view_id="1847113")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_nyaasi.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;class 'nyaapy.nyaasi.nyaa.Nyaa'&gt;, view_id = '1847113'
+
+    @classmethod
+    def get(self, view_id: int):
+        r = treq.get(f"{self.URL}/view/{view_id}")
+&gt;       r.raise_for_status()
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'raise_for_status'
+
+nyaapy/anime_site.py:84: AttributeError</failure></testcase><testcase classname="tests.integration.test_nyaasi" name="test_nyaa_get_from_user" time="0.013"><failure message="AttributeError: 'Deferred' object has no attribute 'raise_for_status'">def test_nyaa_get_from_user():
+&gt;       request = Nyaa.get_from_user(username="Erai-raws")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/test_nyaasi.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;class 'nyaapy.nyaasi.nyaa.Nyaa'&gt;, username = 'Erai-raws'
+
+    @classmethod
+    def get_from_user(self, username):
+        r = treq.get(f"{self.URL}/user/{username}")
+&gt;       r.raise_for_status()
+        ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'raise_for_status'
+
+nyaapy/anime_site.py:93: AttributeError</failure></testcase></testsuite></testsuites>

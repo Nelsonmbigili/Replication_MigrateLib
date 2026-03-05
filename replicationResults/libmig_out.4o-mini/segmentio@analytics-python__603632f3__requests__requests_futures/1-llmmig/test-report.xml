@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="11" skipped="0" tests="79" time="937.865" timestamp="2026-03-04T21:19:05.630553+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="segment.analytics.test.test_client.TestClient" name="test_advanced_group" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_advanced_identify" time="0.000" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_advanced_page" time="0.000" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_advanced_screen" time="0.000" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_advanced_track" time="0.000" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_basic_alias" time="1.360" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_basic_group" time="0.783" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_basic_identify" time="1.048" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_basic_page" time="0.792" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_basic_screen" time="0.783" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_basic_track" time="0.787" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_debug" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_default_timeout_15" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_empty_flush" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_flush" time="3.211" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_gzip" time="0.783" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_identify_with_date_object" time="0.788" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_numeric_user_id" time="0.813" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_overflow" time="0.504" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_proxies" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_requires_write_key" time="0.002" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_shutdown" time="3.656" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_stringifies_anonymous_id" time="0.847" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_stringifies_user_id" time="0.834" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_success_on_invalid_write_key" time="0.781" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_synchronous" time="0.280" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_unicode" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_user_defined_timeout" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_user_defined_upload_size" time="1.012" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_dropping_oversize_msg" time="0.504" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_max_batch_size" time="890.953"><failure message="AssertionError: 22 != 2">self = &lt;analytics.test.test_consumer.TestConsumer testMethod=test_max_batch_size&gt;
+
+    def test_max_batch_size(self):
+        q = Queue()
+        consumer = Consumer(
+            q, 'testsecret', upload_size=100000, upload_interval=3)
+        track = {
+            'type': 'track',
+            'event': 'python event',
+            'userId': 'userId'
+        }
+        msg_size = len(json.dumps(track).encode())
+        # number of messages in a maximum-size batch
+        n_msgs = int(475000 / msg_size)
+    
+        def mock_post_fn(_, data, **kwargs):
+            res = mock.Mock()
+            res.status_code = 200
+            self.assertTrue(len(data.encode()) &lt; 500000,
+                            'batch size (%d) exceeds 500KB limit'
+                            % len(data.encode()))
+            return res
+    
+        with mock.patch('segment.analytics.request._session.post',
+                        side_effect=mock_post_fn) as mock_post:
+            consumer.start()
+            for _ in range(0, n_msgs + 2):
+                q.put(track)
+            q.join()
+&gt;           self.assertEqual(mock_post.call_count, 2)
+E           AssertionError: 22 != 2
+
+segment/analytics/test/test_consumer.py:199: AssertionError</failure></testcase><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_multiple_uploads_per_interval" time="0.561" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_next" time="0.511" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_next_limit" time="0.008" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_pause" time="0.000" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_proxies" time="0.789" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_request" time="0.261" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_request_retry" time="8.850" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_upload" time="0.773" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_upload_interval" time="1.009" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_debug" time="0.002" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_gzip" time="0.001" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_host" time="0.001" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_max_queue_size" time="0.000" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_max_retries" time="0.000" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_sync_mode" time="0.000" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_timeout" time="0.000" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_writeKey" time="0.001" /><testcase classname="segment.analytics.test.test_module.TestModule" name="test_alias" time="0.769" /><testcase classname="segment.analytics.test.test_module.TestModule" name="test_flush" time="0.001" /><testcase classname="segment.analytics.test.test_module.TestModule" name="test_group" time="0.764" /><testcase classname="segment.analytics.test.test_module.TestModule" name="test_identify" time="0.768" /><testcase classname="segment.analytics.test.test_module.TestModule" name="test_no_host" time="0.001" /><testcase classname="segment.analytics.test.test_module.TestModule" name="test_no_write_key" time="0.001" /><testcase classname="segment.analytics.test.test_module.TestModule" name="test_page" time="0.764" /><testcase classname="segment.analytics.test.test_module.TestModule" name="test_screen" time="0.763" /><testcase classname="segment.analytics.test.test_module.TestModule" name="test_track" time="0.764" /><testcase classname="segment.analytics.test.test_oauth.TestOauthManager" name="test_oauth_fail_unrecoverably" time="0.289"><failure message="AssertionError: 3 != 1">self = &lt;analytics.test.test_oauth.TestOauthManager testMethod=test_oauth_fail_unrecoverably&gt;
+mock_post = &lt;MagicMock name='post' id='4395961712'&gt;
+
+    @mock.patch.object(FuturesSession, 'post', side_effect=mocked_requests_get)  # Changed to FuturesSession
+    def test_oauth_fail_unrecoverably(self, mock_post):
+        manager = segment.analytics.oauth_manager.OauthManager("id", privatekey, "keyid", "http://127.0.0.1:400")
+        with self.assertRaises(Exception) as context:
+            manager.get_token()
+        self.assertTrue(manager.thread.is_alive)
+&gt;       self.assertEqual(mock_post.call_count, 1)
+E       AssertionError: 3 != 1
+
+segment/analytics/test/test_oauth.py:92: AssertionError</failure></testcase><testcase classname="segment.analytics.test.test_oauth.TestOauthManager" name="test_oauth_fail_with_retries" time="0.278" /><testcase classname="segment.analytics.test.test_oauth.TestOauthManager" name="test_oauth_rate_limit_delay" time="0.070"><failure message="AssertionError: Expected call: sleep(234)&#10;Not called">self = &lt;analytics.test.test_oauth.TestOauthManager testMethod=test_oauth_rate_limit_delay&gt;
+mock_sleep = &lt;MagicMock name='sleep' spec='builtin_function_or_method' id='4395962720'&gt;
+mock_post = &lt;MagicMock name='post' id='4395963056'&gt;
+
+    @mock.patch.object(FuturesSession, 'post', side_effect=mocked_requests_get)  # Changed to FuturesSession
+    @mock.patch('time.sleep', spec=time.sleep) # 429 uses sleep so it won't be interrupted
+    def test_oauth_rate_limit_delay(self, mock_sleep, mock_post):
+        manager = segment.analytics.oauth_manager.OauthManager("id", privatekey, "keyid", "http://127.0.0.1:429")
+        manager._poller_loop()
+&gt;       mock_sleep.assert_called_with(234)
+
+segment/analytics/test/test_oauth.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+_mock_self = &lt;MagicMock name='sleep' spec='builtin_function_or_method' id='4395962720'&gt;
+args = (234,), kwargs = {}, expected = 'sleep(234)'
+
+    def assert_called_with(_mock_self, *args, **kwargs):
+        """assert that the mock was called with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        self = _mock_self
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+&gt;           raise AssertionError('Expected call: %s\nNot called' % (expected,))
+E           AssertionError: Expected call: sleep(234)
+E           Not called
+
+.venv/lib/python3.14/site-packages/mock/mock.py:925: AssertionError</failure></testcase><testcase classname="segment.analytics.test.test_oauth.TestOauthManager" name="test_oauth_success" time="0.139"><failure message="RuntimeError: cannot join thread before it is started">self = &lt;analytics.test.test_oauth.TestOauthManager testMethod=test_oauth_success&gt;
+mock_post = &lt;MagicMock name='post' id='4395963392'&gt;
+
+    @mock.patch.object(FuturesSession, 'post', side_effect=mocked_requests_get)  # Changed to FuturesSession
+    def test_oauth_success(self, mock_post):
+        manager = segment.analytics.oauth_manager.OauthManager("id", privatekey, "keyid", "http://127.0.0.1:80")
+&gt;       self.assertEqual(manager.get_token(), "test_token")
+                         ^^^^^^^^^^^^^^^^^^^
+
+segment/analytics/test/test_oauth.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+segment/analytics/oauth_manager.py:64: in get_token
+    self.thread.join(1)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Timer(Thread-72, started daemon 13742239744)&gt;, timeout = 1
+
+    def join(self, timeout=None):
+        """Wait until the thread terminates.
+    
+        This blocks the calling thread until the thread whose join() method is
+        called terminates -- either normally or through an unhandled exception
+        or until the optional timeout occurs.
+    
+        When the timeout argument is present and not None, it should be a
+        floating-point number specifying a timeout for the operation in seconds
+        (or fractions thereof). As join() always returns None, you must call
+        is_alive() after join() to decide whether a timeout happened -- if the
+        thread is still alive, the join() call timed out.
+    
+        When the timeout argument is not present or None, the operation will
+        block until the thread terminates.
+    
+        A thread can be join()ed many times.
+    
+        join() raises a RuntimeError if an attempt is made to join the current
+        thread as that would cause a deadlock. It is also an error to join() a
+        thread before it has been started and attempts to do so raises the same
+        exception.
+    
+        """
+        if not self._initialized:
+            raise RuntimeError("Thread.__init__() not called")
+        if not self._started.is_set():
+&gt;           raise RuntimeError("cannot join thread before it is started")
+E           RuntimeError: cannot join thread before it is started
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/threading.py:1124: RuntimeError</failure></testcase><testcase classname="segment.analytics.test.test_oauth.TestOauthIntegration" name="test_oauth_integration_fail_bad_key" time="0.770" /><testcase classname="segment.analytics.test.test_oauth.TestOauthIntegration" name="test_oauth_integration_failure" time="1.482"><failure message="AssertionError: 10 != 1">self = &lt;analytics.test.test_oauth.TestOauthIntegration testMethod=test_oauth_integration_failure&gt;
+mock_post = &lt;MagicMock name='post' id='4395964736'&gt;
+
+    @mock.patch.object(FuturesSession, 'post', side_effect=mocked_requests_get)  # Changed to FuturesSession
+    def test_oauth_integration_failure(self, mock_post):
+        client = Client("write_key", on_error=self.fail, oauth_auth_server="http://127.0.0.1:400",
+                        oauth_client_id="id",oauth_client_key=privatekey, oauth_key_id="keyid")
+        client.track("user", "event")
+        client.flush()
+        self.assertTrue(self.failed)
+&gt;       self.assertEqual(mock_post.call_count, 1)
+E       AssertionError: 10 != 1
+
+segment/analytics/test/test_oauth.py:134: AssertionError</failure></testcase><testcase classname="segment.analytics.test.test_oauth.TestOauthIntegration" name="test_oauth_integration_recovery" time="1.508"><failure message="AssertionError: True is not false">self = &lt;analytics.test.test_oauth.TestOauthIntegration testMethod=test_oauth_integration_recovery&gt;
+mock_post = &lt;MagicMock name='post' id='4395965408'&gt;
+
+    @mock.patch.object(FuturesSession, 'post', side_effect=mocked_requests_get)  # Changed to FuturesSession
+    def test_oauth_integration_recovery(self, mock_post):
+        mocked_requests_get.error_count = 2 # 2 errors and then success
+        client = Client("write_key", on_error=self.fail, oauth_auth_server="http://127.0.0.1:501",
+                        oauth_client_id="id",oauth_client_key=privatekey, oauth_key_id="keyid")
+        client.track("user", "event")
+        client.flush()
+&gt;       self.assertFalse(self.failed)
+E       AssertionError: True is not false
+
+segment/analytics/test/test_oauth.py:143: AssertionError</failure></testcase><testcase classname="segment.analytics.test.test_oauth.TestOauthIntegration" name="test_oauth_integration_success" time="1.502"><failure message="AssertionError: True is not false">self = &lt;analytics.test.test_oauth.TestOauthIntegration testMethod=test_oauth_integration_success&gt;
+mock_post = &lt;MagicMock name='post' id='4395965744'&gt;
+
+    @mock.patch.object(FuturesSession, 'post', side_effect=mocked_requests_get)  # Changed to FuturesSession
+    def test_oauth_integration_success(self, mock_post):
+        client = Client("write_key", on_error=self.fail, oauth_auth_server="http://127.0.0.1:80",
+                        oauth_client_id="id",oauth_client_key=privatekey, oauth_key_id="keyid")
+        client.track("user", "event")
+        client.flush()
+&gt;       self.assertFalse(self.failed)
+E       AssertionError: True is not false
+
+segment/analytics/test/test_oauth.py:124: AssertionError</failure></testcase><testcase classname="segment.analytics.test.test_request.TestRequests" name="test_date_serialization" time="0.001" /><testcase classname="segment.analytics.test.test_request.TestRequests" name="test_datetime_serialization" time="0.000" /><testcase classname="segment.analytics.test.test_request.TestRequests" name="test_invalid_host" time="0.001" /><testcase classname="segment.analytics.test.test_request.TestRequests" name="test_invalid_request_error" time="0.001" /><testcase classname="segment.analytics.test.test_request.TestRequests" name="test_proxies" time="1.960"><failure message="AssertionError: 404 != 200">self = &lt;analytics.test.test_request.TestRequests testMethod=test_proxies&gt;
+
+    def test_proxies(self):
+        future = self.session.post('https://api.segment.io', json={
+            'userId': 'userId',
+            'event': 'python event',
+            'type': 'track',
+            'proxies': '203.243.63.16:80'
+        }, headers={'Authorization': 'Bearer testsecret'})
+        res = future.result()
+&gt;       self.assertEqual(res.status_code, 200)
+E       AssertionError: 404 != 200
+
+segment/analytics/test/test_request.py:67: AssertionError</failure></testcase><testcase classname="segment.analytics.test.test_request.TestRequests" name="test_should_not_timeout" time="0.781"><failure message="AssertionError: 404 != 200">self = &lt;analytics.test.test_request.TestRequests testMethod=test_should_not_timeout&gt;
+
+    def test_should_not_timeout(self):
+        future = self.session.post('https://api.segment.io', json={
+            'userId': 'userId',
+            'event': 'python event',
+            'type': 'track'
+        }, headers={'Authorization': 'Bearer testsecret'}, timeout=15)
+        res = future.result()
+&gt;       self.assertEqual(res.status_code, 200)
+E       AssertionError: 404 != 200
+
+segment/analytics/test/test_request.py:48: AssertionError</failure></testcase><testcase classname="segment.analytics.test.test_request.TestRequests" name="test_should_timeout" time="0.001"><failure message="NameError: name 'requests' is not defined">self = &lt;analytics.test.test_request.TestRequests testMethod=test_should_timeout&gt;
+
+    def test_should_timeout(self):
+&gt;       with self.assertRaises(requests.ReadTimeout):
+                               ^^^^^^^^
+E       NameError: name 'requests' is not defined
+
+segment/analytics/test/test_request.py:51: NameError</failure></testcase><testcase classname="segment.analytics.test.test_request.TestRequests" name="test_valid_request" time="0.779"><failure message="AssertionError: 404 != 200">self = &lt;analytics.test.test_request.TestRequests testMethod=test_valid_request&gt;
+
+    def test_valid_request(self):
+        future = self.session.post('https://api.segment.io', json={
+            'userId': 'userId',
+            'event': 'python event',
+            'type': 'track'
+        }, headers={'Authorization': 'Bearer testsecret'})
+        res = future.result()
+&gt;       self.assertEqual(res.status_code, 200)
+E       AssertionError: 404 != 200
+
+segment/analytics/test/test_request.py:19: AssertionError</failure></testcase><testcase classname="segment.analytics.test.test_utils.TestUtils" name="test_bytes" time="0.001" /><testcase classname="segment.analytics.test.test_utils.TestUtils" name="test_clean" time="0.001" /><testcase classname="segment.analytics.test.test_utils.TestUtils" name="test_clean_fn" time="0.000" /><testcase classname="segment.analytics.test.test_utils.TestUtils" name="test_clean_with_dates" time="0.000" /><testcase classname="segment.analytics.test.test_utils.TestUtils" name="test_remove_slash" time="0.000" /><testcase classname="segment.analytics.test.test_utils.TestUtils" name="test_timezone_utils" time="0.000" /></testsuite></testsuites>

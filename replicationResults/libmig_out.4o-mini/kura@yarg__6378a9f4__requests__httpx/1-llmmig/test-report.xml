@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="11" skipped="0" tests="58" time="4.972" timestamp="2026-03-04T12:19:40.006287+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_client.TestClient" name="test_end_slash" time="0.430"><failure message="httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known">@contextlib.contextmanager
+    def map_httpcore_exceptions() -&gt; typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+&gt;           yield
+
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:250: in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection_pool.py:256: in handle_request
+    raise exc from None
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection_pool.py:236: in handle_request
+    response = connection.handle_request(
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:101: in handle_request
+    raise exc
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:78: in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_sync/connection.py:124: in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpcore/_backends/sync.py:207: in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:162: in __exit__
+    self.gen.throw(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+map = {&lt;class 'TimeoutError'&gt;: &lt;class 'httpcore.ConnectTimeout'&gt;, &lt;class 'OSError'&gt;: &lt;class 'httpcore.ConnectError'&gt;}
+
+    @contextlib.contextmanager
+    def map_exceptions(map: ExceptionMapping) -&gt; typing.Iterator[None]:
+        try:
+            yield
+        except Exception as exc:  # noqa: PIE786
+            for from_exc, to_exc in map.items():
+                if isinstance(exc, from_exc):
+&gt;                   raise to_exc(exc) from exc
+E                   httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+.venv/lib/python3.14/site-packages/httpcore/_exceptions.py:14: ConnectError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;tests.test_client.TestClient testMethod=test_end_slash&gt;
+get_mock = &lt;MagicMock name='get' id='4376485168'&gt;
+
+    @patch('requests.Session.get', return_value=GoodResponse)
+    def test_end_slash(self, get_mock):
+&gt;       get("test", pypi_server="https://mock.test.mock/test")
+
+tests/test_client.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/client.py:46: in get
+    response = httpx.get("{0}{1}/json".format(pypi_server,
+.venv/lib/python3.14/site-packages/httpx/_api.py:195: in get
+    return request(
+.venv/lib/python3.14/site-packages/httpx/_api.py:109: in request
+    return client.request(
+.venv/lib/python3.14/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+.venv/lib/python3.14/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv/lib/python3.14/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:249: in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/contextlib.py:162: in __exit__
+    self.gen.throw(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @contextlib.contextmanager
+    def map_httpcore_exceptions() -&gt; typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+            yield
+        except Exception as exc:
+            mapped_exc = None
+    
+            for from_exc, to_exc in HTTPCORE_EXC_MAP.items():
+                if not isinstance(exc, from_exc):
+                    continue
+                # We want to map to the most specific exception we can find.
+                # Eg if `exc` is an `httpcore.ReadTimeout`, we want to map to
+                # `httpx.ReadTimeout`, not just `httpx.TimeoutException`.
+                if mapped_exc is None or issubclass(to_exc, mapped_exc):
+                    mapped_exc = to_exc
+    
+            if mapped_exc is None:  # pragma: no cover
+                raise
+    
+            message = str(exc)
+&gt;           raise mapped_exc(message) from exc
+E           httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+.venv/lib/python3.14/site-packages/httpx/_transports/default.py:118: ConnectError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get" time="0.406"><failure message="AttributeError: 'Response' object has no attribute 'reason'">self = &lt;tests.test_client.TestClient testMethod=test_get&gt;
+get_mock = &lt;MagicMock name='get' id='4377934352'&gt;
+
+    @patch('requests.Session.get', return_value=BadResponse)
+    def test_get(self, get_mock):
+        # Python 2.6....
+        try:
+&gt;           get("test")
+
+tests/test_client.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+package_name = 'test', pypi_server = 'https://pypi.python.org/pypi/'
+
+    def get(package_name, pypi_server="https://pypi.python.org/pypi/"):
+        """
+        Construct a request to the PyPI server and returns an instance of
+        :class:`yarg.package.Package`.
+    
+        :param package_name: case sensitive name of the package on the PyPI server.
+        :param pypi_server: (option) URL to the PyPI server.
+    
+            &gt;&gt;&gt; import yarg
+            &gt;&gt;&gt; package = yarg.get('yarg')
+            &lt;Package yarg&gt;
+        """
+        if not pypi_server.endswith("/"):
+            pypi_server = pypi_server + "/"
+        response = httpx.get("{0}{1}/json".format(pypi_server,
+                                                    package_name))
+        if response.status_code &gt;= 300:
+            raise HTTPError(status_code=response.status_code,
+&gt;                           reason=response.reason)
+                                   ^^^^^^^^^^^^^^^
+E           AttributeError: 'Response' object has no attribute 'reason'
+
+yarg/client.py:50: AttributeError</failure></testcase><testcase classname="tests.test_exceptions.TestHTTPErrorWithReason" name="test_repr" time="0.001" /><testcase classname="tests.test_exceptions.TestHTTPErrorWithReason" name="test_str" time="0.001" /><testcase classname="tests.test_exceptions.TestHTTPErrorNoReason" name="test_repr" time="0.001" /><testcase classname="tests.test_exceptions.TestHTTPErrorNoReason" name="test_str" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_author" time="0.002" /><testcase classname="tests.test_package.TestPackage" name="test_bugtracker" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_classifiers" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_description" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_docs" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_downloads" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_has_egg" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_has_source" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_has_wheel" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_homepage" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_latest_release_id" time="0.001" /><testcase classname="tests.test_package.TestPackage" name="test_license" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_license_from_classifiers" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_maintainer" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_name" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_pypi_url" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_python_implementations" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_python_versions" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_release_ids" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_repr" time="0.000" /><testcase classname="tests.test_package.TestPackage" name="test_summary" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_bugtracker" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_docs" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_has_egg" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_has_source" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_has_wheel" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_homepage" time="0.000" /><testcase classname="tests.test_package.TestPackageMissingData" name="test_latest_release_id" time="0.000" /><testcase classname="tests.test_parse.TestParse" name="test_newest_package" time="0.409"><failure message="httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=packages_rss'&#10;Redirect location: 'https://pypi.org/pypi?%3Aaction=packages_rss'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301">self = &lt;tests.test_parse.TestParse testMethod=test_newest_package&gt;
+get_mock = &lt;MagicMock name='get' id='4373898848'&gt;
+
+    @patch('requests.get', return_value=GoodNewestResponse)
+    def test_newest_package(self, get_mock):
+&gt;       p = newest_packages()
+            ^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:60: in newest_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+yarg/parse.py:39: in _get
+    response.raise_for_status()  # Raise an error for bad responses
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [301 Redirect to Primary Domain]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=packages_rss'
+E       Redirect location: 'https://pypi.org/pypi?%3Aaction=packages_rss'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_newest_package_repr" time="0.384"><failure message="httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=packages_rss'&#10;Redirect location: 'https://pypi.org/pypi?%3Aaction=packages_rss'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301">self = &lt;tests.test_parse.TestParse testMethod=test_newest_package_repr&gt;
+get_mock = &lt;MagicMock name='get' id='4383626912'&gt;
+
+    @patch('requests.get', return_value=GoodNewestResponse)
+    def test_newest_package_repr(self, get_mock):
+&gt;       p = newest_packages()
+            ^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:60: in newest_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+yarg/parse.py:39: in _get
+    response.raise_for_status()  # Raise an error for bad responses
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [301 Redirect to Primary Domain]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=packages_rss'
+E       Redirect location: 'https://pypi.org/pypi?%3Aaction=packages_rss'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_newest_package_version" time="0.468"><failure message="httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=packages_rss'&#10;Redirect location: 'https://pypi.org/pypi?%3Aaction=packages_rss'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301">self = &lt;tests.test_parse.TestParse testMethod=test_newest_package_version&gt;
+get_mock = &lt;MagicMock name='get' id='4383627584'&gt;
+
+    @patch('requests.get', return_value=GoodNewestResponse)
+    def test_newest_package_version(self, get_mock):
+&gt;       p = newest_packages()
+            ^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:60: in newest_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+yarg/parse.py:39: in _get
+    response.raise_for_status()  # Raise an error for bad responses
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [301 Redirect to Primary Domain]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=packages_rss'
+E       Redirect location: 'https://pypi.org/pypi?%3Aaction=packages_rss'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_newest_packages" time="0.389"><failure message="httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=packages_rss'&#10;Redirect location: 'https://pypi.org/pypi?%3Aaction=packages_rss'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301">self = &lt;tests.test_parse.TestParse testMethod=test_newest_packages&gt;
+get_mock = &lt;MagicMock name='get' id='4383628256'&gt;
+
+    @patch('requests.get', return_value=GoodNewestResponse)
+    def test_newest_packages(self, get_mock):
+&gt;       p = newest_packages()
+            ^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:60: in newest_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+yarg/parse.py:39: in _get
+    response.raise_for_status()  # Raise an error for bad responses
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [301 Redirect to Primary Domain]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=packages_rss'
+E       Redirect location: 'https://pypi.org/pypi?%3Aaction=packages_rss'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_newest_packages_bad_get" time="0.390"><failure message="httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=packages_rss'&#10;Redirect location: 'https://pypi.org/pypi?%3Aaction=packages_rss'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301">self = &lt;tests.test_parse.TestParse testMethod=test_newest_packages_bad_get&gt;
+get_mock = &lt;MagicMock name='get' id='4383628928'&gt;
+
+    @patch('requests.get', return_value=BadResponse)
+    def test_newest_packages_bad_get(self, get_mock):
+        # Python 2.6....
+        try:
+&gt;           newest_packages()
+
+tests/test_parse.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:60: in newest_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+yarg/parse.py:39: in _get
+    response.raise_for_status()  # Raise an error for bad responses
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [301 Redirect to Primary Domain]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=packages_rss'
+E       Redirect location: 'https://pypi.org/pypi?%3Aaction=packages_rss'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_updated_package" time="0.383"><failure message="httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=rss'&#10;Redirect location: 'https://pypi.org/pypi?%3Aaction=rss'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301">self = &lt;tests.test_parse.TestParse testMethod=test_updated_package&gt;
+get_mock = &lt;MagicMock name='get' id='4383629600'&gt;
+
+    @patch('requests.get', return_value=GoodUpdatedResponse)
+    def test_updated_package(self, get_mock):
+&gt;       p = latest_updated_packages()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:83: in latest_updated_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+yarg/parse.py:39: in _get
+    response.raise_for_status()  # Raise an error for bad responses
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [301 Redirect to Primary Domain]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=rss'
+E       Redirect location: 'https://pypi.org/pypi?%3Aaction=rss'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_updated_package_repr" time="0.385"><failure message="httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=rss'&#10;Redirect location: 'https://pypi.org/pypi?%3Aaction=rss'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301">self = &lt;tests.test_parse.TestParse testMethod=test_updated_package_repr&gt;
+get_mock = &lt;MagicMock name='get' id='4373903888'&gt;
+
+    @patch('requests.get', return_value=GoodUpdatedResponse)
+    def test_updated_package_repr(self, get_mock):
+&gt;       p = latest_updated_packages()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:153: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:83: in latest_updated_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+yarg/parse.py:39: in _get
+    response.raise_for_status()  # Raise an error for bad responses
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [301 Redirect to Primary Domain]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=rss'
+E       Redirect location: 'https://pypi.org/pypi?%3Aaction=rss'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_updated_packages" time="0.379"><failure message="httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=rss'&#10;Redirect location: 'https://pypi.org/pypi?%3Aaction=rss'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301">self = &lt;tests.test_parse.TestParse testMethod=test_updated_packages&gt;
+get_mock = &lt;MagicMock name='get' id='4373903216'&gt;
+
+    @patch('requests.get', return_value=GoodUpdatedResponse)
+    def test_updated_packages(self, get_mock):
+&gt;       p = latest_updated_packages()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_parse.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:83: in latest_updated_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+yarg/parse.py:39: in _get
+    response.raise_for_status()  # Raise an error for bad responses
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [301 Redirect to Primary Domain]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=rss'
+E       Redirect location: 'https://pypi.org/pypi?%3Aaction=rss'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_parse.TestParse" name="test_updated_packages_bad_get" time="0.388"><failure message="httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=rss'&#10;Redirect location: 'https://pypi.org/pypi?%3Aaction=rss'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301">self = &lt;tests.test_parse.TestParse testMethod=test_updated_packages_bad_get&gt;
+get_mock = &lt;MagicMock name='get' id='4373898848'&gt;
+
+    @patch('requests.get', return_value=BadResponse)
+    def test_updated_packages_bad_get(self, get_mock):
+        # Python 2.6....
+        try:
+&gt;           latest_updated_packages()
+
+tests/test_parse.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+yarg/parse.py:83: in latest_updated_packages
+    items = _get(pypi_server)
+            ^^^^^^^^^^^^^^^^^
+yarg/parse.py:39: in _get
+    response.raise_for_status()  # Raise an error for bad responses
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [301 Redirect to Primary Domain]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Redirect response '301 Redirect to Primary Domain' for url 'https://pypi.python.org/pypi?%3Aaction=rss'
+E       Redirect location: 'https://pypi.org/pypi?%3Aaction=rss'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301
+
+.venv/lib/python3.14/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="tests.test_release.TestRelease" name="test_latest_release" time="0.001" /><testcase classname="tests.test_release.TestRelease" name="test_latest_release_id" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_filename" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_has_sig" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_id" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_ids" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_md5" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_package_type" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_python_version" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_size" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_unknown_package_type" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_release_uploaded" time="0.002" /><testcase classname="tests.test_release.TestRelease" name="test_release_url" time="0.000" /><testcase classname="tests.test_release.TestRelease" name="test_repr" time="0.000" /></testsuite></testsuites>

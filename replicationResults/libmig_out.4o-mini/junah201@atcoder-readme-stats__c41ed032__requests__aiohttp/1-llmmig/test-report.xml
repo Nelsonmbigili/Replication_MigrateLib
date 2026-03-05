@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="7" time="2.148" timestamp="2026-03-04T03:07:23.080043+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_utils" name="test_get_user_data[tourist-True]" time="0.001"><failure message="AttributeError: 'coroutine' object has no attribute 'username'">username = 'tourist', is_valid = True
+
+    @pytest.mark.parametrize(
+        "username, is_valid",
+        [
+            (
+                "tourist",
+                True
+            ),
+            (
+                "junah",
+                True
+            ),
+            (
+                "invalid_username_20240701",
+                False
+            )
+        ]
+    )
+    def test_get_user_data(username, is_valid):
+        user_data = get_user_data(username)
+        assert (user_data is not None) == is_valid
+&gt;       assert user_data == None or user_data.username == username
+                                    ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'username'
+
+tests/test_utils.py:26: AttributeError</failure></testcase><testcase classname="tests.test_utils" name="test_get_user_data[junah-True]" time="0.000"><failure message="AttributeError: 'coroutine' object has no attribute 'username'">username = 'junah', is_valid = True
+
+    @pytest.mark.parametrize(
+        "username, is_valid",
+        [
+            (
+                "tourist",
+                True
+            ),
+            (
+                "junah",
+                True
+            ),
+            (
+                "invalid_username_20240701",
+                False
+            )
+        ]
+    )
+    def test_get_user_data(username, is_valid):
+        user_data = get_user_data(username)
+        assert (user_data is not None) == is_valid
+&gt;       assert user_data == None or user_data.username == username
+                                    ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'username'
+
+tests/test_utils.py:26: AttributeError</failure></testcase><testcase classname="tests.test_utils" name="test_get_user_data[invalid_username_20240701-False]" time="0.001"><failure message="assert (&lt;coroutine object get_user_data at 0x10b1666c0&gt; is not None) == False">username = 'invalid_username_20240701', is_valid = False
+
+    @pytest.mark.parametrize(
+        "username, is_valid",
+        [
+            (
+                "tourist",
+                True
+            ),
+            (
+                "junah",
+                True
+            ),
+            (
+                "invalid_username_20240701",
+                False
+            )
+        ]
+    )
+    def test_get_user_data(username, is_valid):
+        user_data = get_user_data(username)
+&gt;       assert (user_data is not None) == is_valid
+E       assert (&lt;coroutine object get_user_data at 0x10b1666c0&gt; is not None) == False
+
+tests/test_utils.py:25: AssertionError</failure></testcase><testcase classname="tests.test_v1_generate_badge" name="test_v1_generate_badge[tourist]" time="0.000"><failure message="AttributeError: 'coroutine' object has no attribute 'tier'">username = 'tourist'
+
+    @pytest.mark.parametrize(
+        "username",
+        [
+            (
+                "tourist"
+            ),
+            (
+                "junah"
+            )
+        ]
+    )
+    def test_v1_generate_badge(username):
+&gt;       response = lambda_handler(
+            {
+                "queryStringParameters": {
+                    "name": username
+                }
+            },
+            {}
+        )
+
+tests/test_v1_generate_badge.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+event = {'queryStringParameters': {'name': 'tourist'}}, context = {}
+
+    def lambda_handler(event, context):
+        query_string_parameters = event.get("queryStringParameters", {})
+    
+        if not query_string_parameters:
+            return {
+                'statusCode': 400,
+                'body': "name parameter is required"
+            }
+    
+        username = event.get("queryStringParameters", {}).get("name", None)
+    
+        if not username:
+            return {
+                'statusCode': 400,
+                'body': "name parameter is required"
+            }
+    
+        user_data = utils.get_user_data(username)
+    
+        if not user_data:
+            return {
+                'statusCode': 404,
+                'body': f"user({username}) not found"
+            }
+    
+&gt;       tier = user_data.tier
+               ^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'tier'
+
+lambdas/v1/generate_badge/main.py:200: AttributeError</failure></testcase><testcase classname="tests.test_v1_generate_badge" name="test_v1_generate_badge[junah]" time="0.000"><failure message="AttributeError: 'coroutine' object has no attribute 'tier'">username = 'junah'
+
+    @pytest.mark.parametrize(
+        "username",
+        [
+            (
+                "tourist"
+            ),
+            (
+                "junah"
+            )
+        ]
+    )
+    def test_v1_generate_badge(username):
+&gt;       response = lambda_handler(
+            {
+                "queryStringParameters": {
+                    "name": username
+                }
+            },
+            {}
+        )
+
+tests/test_v1_generate_badge.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+event = {'queryStringParameters': {'name': 'junah'}}, context = {}
+
+    def lambda_handler(event, context):
+        query_string_parameters = event.get("queryStringParameters", {})
+    
+        if not query_string_parameters:
+            return {
+                'statusCode': 400,
+                'body': "name parameter is required"
+            }
+    
+        username = event.get("queryStringParameters", {}).get("name", None)
+    
+        if not username:
+            return {
+                'statusCode': 400,
+                'body': "name parameter is required"
+            }
+    
+        user_data = utils.get_user_data(username)
+    
+        if not user_data:
+            return {
+                'statusCode': 404,
+                'body': f"user({username}) not found"
+            }
+    
+&gt;       tier = user_data.tier
+               ^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'tier'
+
+lambdas/v1/generate_badge/main.py:200: AttributeError</failure></testcase><testcase classname="tests.test_v2_generate_badge" name="test_v2_generate_badge[tourist]" time="0.000"><failure message="AttributeError: 'coroutine' object has no attribute 'tier'">username = 'tourist'
+
+    @pytest.mark.parametrize(
+        "username",
+        [
+            (
+                "tourist"
+            ),
+            (
+                "junah"
+            )
+        ]
+    )
+    def test_v2_generate_badge(username):
+&gt;       response = lambda_handler(
+            {
+                "queryStringParameters": {
+                    "name": username
+                }
+            },
+            {}
+        )
+
+tests/test_v2_generate_badge.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+event = {'queryStringParameters': {'name': 'tourist'}}, context = {}
+
+    def lambda_handler(event, context):
+        query_string_parameters = event.get("queryStringParameters", {})
+    
+        if not query_string_parameters:
+            return {
+                'statusCode': 400,
+                'body': "name parameter is required"
+            }
+    
+        username = event.get("queryStringParameters", {}).get("name", None)
+    
+        if not username:
+            return {
+                'statusCode': 400,
+                'body': "name parameter is required"
+            }
+    
+        user_data = utils.get_user_data(username)
+    
+        if not user_data:
+            return {
+                'statusCode': 404,
+                'body': f"user({username}) not found"
+            }
+    
+&gt;       tier = user_data.tier
+               ^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'tier'
+
+lambdas/v2/generate_badge/main.py:170: AttributeError</failure></testcase><testcase classname="tests.test_v2_generate_badge" name="test_v2_generate_badge[junah]" time="0.000"><failure message="AttributeError: 'coroutine' object has no attribute 'tier'">username = 'junah'
+
+    @pytest.mark.parametrize(
+        "username",
+        [
+            (
+                "tourist"
+            ),
+            (
+                "junah"
+            )
+        ]
+    )
+    def test_v2_generate_badge(username):
+&gt;       response = lambda_handler(
+            {
+                "queryStringParameters": {
+                    "name": username
+                }
+            },
+            {}
+        )
+
+tests/test_v2_generate_badge.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+event = {'queryStringParameters': {'name': 'junah'}}, context = {}
+
+    def lambda_handler(event, context):
+        query_string_parameters = event.get("queryStringParameters", {})
+    
+        if not query_string_parameters:
+            return {
+                'statusCode': 400,
+                'body': "name parameter is required"
+            }
+    
+        username = event.get("queryStringParameters", {}).get("name", None)
+    
+        if not username:
+            return {
+                'statusCode': 400,
+                'body': "name parameter is required"
+            }
+    
+        user_data = utils.get_user_data(username)
+    
+        if not user_data:
+            return {
+                'statusCode': 404,
+                'body': f"user({username}) not found"
+            }
+    
+&gt;       tier = user_data.tier
+               ^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'tier'
+
+lambdas/v2/generate_badge/main.py:170: AttributeError</failure></testcase></testsuite></testsuites>

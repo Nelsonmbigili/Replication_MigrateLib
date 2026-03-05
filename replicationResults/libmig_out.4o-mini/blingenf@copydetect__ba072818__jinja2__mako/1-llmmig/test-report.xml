@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="38" time="2.087" timestamp="2026-03-04T14:44:05.002047+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_detector.TestTwoFileDetection" name="test_compare" time="0.330"><failure message="assert &quot;data[2] = [&lt;/span&gt;0&lt;span class='highlight-&quot; in '&lt;!DOCTYPE HTML&gt;\n&lt;html&gt;\n&lt;head&gt;\n    &lt;meta charset=&quot;UTF-8&quot;/&gt;\n  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, in...&quot;sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;\n&lt;/body&gt;\n'">self = &lt;test_detector.TestTwoFileDetection object at 0x10abf6210&gt;
+sample_file_metrics = {'file1_len': 2052, 'file2_len': 1257, 'token_overlap': 1155}
+
+    def test_compare(self, sample_file_metrics):
+        config = {
+            "test_directories" : [TESTS_DIR + "/sample_py/code"],
+            "reference_directories" : [TESTS_DIR + "/sample_py/code"],
+            "extensions" : ["py"],
+            "noise_threshold" : 25,
+            "guarantee_threshold" : 25,
+            "display_threshold" : 0,
+            "silent" : True
+        }
+        detector = CopyDetector.from_config(config)
+        detector.run()
+    
+        overlap = sample_file_metrics["token_overlap"]
+        sim1 = overlap / sample_file_metrics["file1_len"]
+        sim2 = overlap / sample_file_metrics["file2_len"]
+    
+        # file order is not guaranteed, so there are two possible
+        # similarity matrices depending on the order of the files
+        possible_mtx_1 = np.array([[[-1, -1], [sim1, sim2]],
+                                  [[sim2, sim1], [-1, -1]]])
+        possible_mtx_2 = np.flip(possible_mtx_1, 2)
+        assert (np.array_equal(possible_mtx_1, detector.similarity_matrix)
+                or np.array_equal(possible_mtx_2, detector.similarity_matrix))
+        assert np.array_equal(np.array([[-1, overlap],[overlap,-1]]),
+                              detector.token_overlap_matrix)
+    
+        html_out = detector.generate_html_report(output_mode="return")
+    
+        # verify highlighting code isn't being escaped
+        test_str1 = "data[2] = [&lt;/span&gt;0&lt;span class='highlight-"
+        test_str2 = "data[2] = [&lt;/span&gt;3&lt;span class='highlight-"
+        # verify input code is being escaped
+        test_str3 = "print(&amp;#34;Incorrect num&amp;#34;"
+&gt;       assert test_str1 in html_out
+E       assert "data[2] = [&lt;/span&gt;0&lt;span class='highlight-" in '&lt;!DOCTYPE HTML&gt;\n&lt;html&gt;\n&lt;head&gt;\n    &lt;meta charset="UTF-8"/&gt;\n  &lt;meta name="viewport" content="width=device-width, in..."sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ" crossorigin="anonymous"&gt;&lt;/script&gt;\n&lt;/body&gt;\n'
+
+tests/test_detector.py:59: AssertionError</failure></testcase><testcase classname="tests.test_detector.TestTwoFileDetection" name="test_compare_manual_config" time="0.024" /><testcase classname="tests.test_detector.TestTwoFileDetection" name="test_compare_saving" time="0.135" /><testcase classname="tests.test_detector.TestTwoFileDetection" name="test_compare_boilerplate" time="0.031" /><testcase classname="tests.test_detector.TestTwoFileDetection" name="test_severalfiles" time="0.217" /><testcase classname="tests.test_detector.TestTwoFileAPIDetection" name="test_compare" time="0.025" /><testcase classname="tests.test_detector.TestTwoFileAPIDetection" name="test_compare_boilerplate" time="0.039" /><testcase classname="tests.test_detector.TestParameters" name="test_ignore_leaf" time="0.034" /><testcase classname="tests.test_detector.TestParameters" name="test_same_name_only" time="0.032" /><testcase classname="tests.test_detector.TestParameters" name="test_disable_filtering" time="0.011" /><testcase classname="tests.test_detector.TestParameters" name="test_force_language" time="0.020" /><testcase classname="tests.test_detector.TestParameters" name="test_truncation" time="0.010" /><testcase classname="tests.test_detector.TestParameters" name="test_out_file" time="0.249" /><testcase classname="tests.test_detector.TestParameters" name="test_encoding_specification" time="0.005" /><testcase classname="tests.test_pywinnowing.TestWinnowOutput" name="test_winnow_empty" time="0.000" /><testcase classname="tests.test_pywinnowing.TestWinnowOutput" name="test_winnow_1" time="0.000" /><testcase classname="tests.test_pywinnowing.TestWinnowOutput" name="test_winnow_2" time="0.000" /><testcase classname="tests.test_pywinnowing.TestWinnowOutput" name="test_winnow_3" time="0.000" /><testcase classname="tests.test_pywinnowing.TestWinnowOutput" name="test_winnow_inf" time="0.000" /><testcase classname="tests.test_pywinnowing.TestWinnowDensity" name="test_winnow_density" time="0.089" /><testcase classname="tests.test_sanity_checks" name="test_rot_c" time="0.007" /><testcase classname="tests.test_sanity_checks" name="test_sample_xml" time="0.004" /><testcase classname="tests.test_utils.TestSmallDoc" name="test_doc_overlap" time="0.000" /><testcase classname="tests.test_utils.TestSmallDoc" name="test_doc_overlap_boilerplate" time="0.000" /><testcase classname="tests.test_utils.TestSmallDoc" name="test_slice_computation" time="0.000" /><testcase classname="tests.test_utils.TestSmallDoc" name="test_highlighting" time="0.000" /><testcase classname="tests.test_utils.TestTokenizerPythonSample" name="test_tokenization" time="0.002" /><testcase classname="tests.test_utils.TestTokenizerPythonSample" name="test_copydetect" time="0.004" /><testcase classname="tests.test_utils.TestTokenizerOtherSamples" name="test_php_tokenization" time="0.002" /><testcase classname="tests.test_utils.TestTokenizerOtherSamples" name="test_c_tokenization" time="0.002" /><testcase classname="tests.test_utils.TestTokenizerOtherSamples" name="test_java_tokenization" time="0.004" /><testcase classname="tests.test_utils.TestTokenizerOtherSamples" name="test_get_token_coverage" time="0.000" /><testcase classname="tests.test_winnowing.TestWinnowOutput" name="test_winnow_empty" time="0.000" /><testcase classname="tests.test_winnowing.TestWinnowOutput" name="test_winnow_1" time="0.000" /><testcase classname="tests.test_winnowing.TestWinnowOutput" name="test_winnow_2" time="0.000" /><testcase classname="tests.test_winnowing.TestWinnowOutput" name="test_winnow_3" time="0.000" /><testcase classname="tests.test_winnowing.TestWinnowOutput" name="test_winnow_inf" time="0.000" /><testcase classname="tests.test_winnowing.TestWinnowDensity" name="test_winnow_density" time="0.062" /></testsuite></testsuites>

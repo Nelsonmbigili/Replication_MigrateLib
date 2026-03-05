@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="13" failures="8" skipped="0" tests="21" time="0.354" timestamp="2026-03-04T14:46:56.011279+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_kling" name="test_base_gen_init" time="0.002"><error message="failed on setup with &quot;TypeError: 'MockCurl' object is not callable&quot;">mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x10325f4d0&gt;
+
+    @pytest.fixture
+    def base_gen(mock_session):
+&gt;       return BaseGen("mock_cookie")
+               ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</error></testcase><testcase classname="tests.test_kling" name="test_image_gen_init" time="0.001"><error message="failed on setup with &quot;TypeError: 'MockCurl' object is not callable&quot;">mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x1036001a0&gt;
+
+    @pytest.fixture
+    def image_gen(mock_session):
+&gt;       return ImageGen("mock_cookie")
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</error></testcase><testcase classname="tests.test_kling" name="test_video_gen_init" time="0.001"><error message="failed on setup with &quot;TypeError: 'MockCurl' object is not callable&quot;">mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103600590&gt;
+
+    @pytest.fixture
+    def video_gen(mock_session):
+&gt;       return VideoGen("mock_cookie")
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</error></testcase><testcase classname="tests.test_kling" name="test_parse_cookie_string" time="0.001"><failure message="NameError: name 'cookiejar_from_dict' is not defined">def test_parse_cookie_string():
+        cookie_string = "key1=value1; key2=value2; kuaishou_key=value3"
+&gt;       cookiejar, is_cn = BaseGen.parse_cookie_string(cookie_string)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie_string = 'key1=value1; key2=value2; kuaishou_key=value3'
+
+    @staticmethod
+    def parse_cookie_string(cookie_string):
+        cookie = SimpleCookie()
+        cookie.load(cookie_string)
+        cookies_dict = {}
+        cookiejar = None
+        is_cn = False
+        for key, morsel in cookie.items():
+            if key.startswith("kuaishou"):
+                is_cn = True
+            cookies_dict[key] = morsel.value
+&gt;           cookiejar = cookiejar_from_dict(
+                        ^^^^^^^^^^^^^^^^^^^
+                cookies_dict, cookiejar=None, overwrite=True
+            )
+E           NameError: name 'cookiejar_from_dict' is not defined
+
+kling/kling.py:86: NameError</failure></testcase><testcase classname="tests.test_kling" name="test_get_account_point[ImageGen]" time="0.001"><failure message="TypeError: 'MockCurl' object is not callable">gen_class = &lt;class 'kling.kling.ImageGen'&gt;
+mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x1036001a0&gt;
+
+    @pytest.mark.parametrize("gen_class", [ImageGen, VideoGen])
+    def test_get_account_point(gen_class, mock_session):
+&gt;       gen = gen_class("mock_cookie")
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</failure></testcase><testcase classname="tests.test_kling" name="test_get_account_point[VideoGen]" time="0.001"><failure message="TypeError: 'MockCurl' object is not callable">gen_class = &lt;class 'kling.kling.VideoGen'&gt;
+mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x1036006e0&gt;
+
+    @pytest.mark.parametrize("gen_class", [ImageGen, VideoGen])
+    def test_get_account_point(gen_class, mock_session):
+&gt;       gen = gen_class("mock_cookie")
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</failure></testcase><testcase classname="tests.test_kling" name="test_image_uploader" time="0.001"><error message="failed on setup with &quot;TypeError: 'MockCurl' object is not callable&quot;">mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103600c20&gt;
+
+    @pytest.fixture
+    def image_gen(mock_session):
+&gt;       return ImageGen("mock_cookie")
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</error></testcase><testcase classname="tests.test_kling" name="test_fetch_metadata" time="0.001"><error message="failed on setup with &quot;TypeError: 'MockCurl' object is not callable&quot;">mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103600ec0&gt;
+
+    @pytest.fixture
+    def base_gen(mock_session):
+&gt;       return BaseGen("mock_cookie")
+               ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</error></testcase><testcase classname="tests.test_kling" name="test_get_content[ImageGen-get_images]" time="0.001"><failure message="TypeError: 'MockCurl' object is not callable">gen_class = &lt;class 'kling.kling.ImageGen'&gt;, method_name = 'get_images'
+mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103600d70&gt;
+
+    @pytest.mark.parametrize(
+        "gen_class,method_name", [(ImageGen, "get_images"), (VideoGen, "get_video")]
+    )
+    def test_get_content(gen_class, method_name, mock_session):
+&gt;       gen = gen_class("mock_cookie")
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</failure></testcase><testcase classname="tests.test_kling" name="test_get_content[VideoGen-get_video]" time="0.001"><failure message="TypeError: 'MockCurl' object is not callable">gen_class = &lt;class 'kling.kling.VideoGen'&gt;, method_name = 'get_video'
+mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103601010&gt;
+
+    @pytest.mark.parametrize(
+        "gen_class,method_name", [(ImageGen, "get_images"), (VideoGen, "get_video")]
+    )
+    def test_get_content(gen_class, method_name, mock_session):
+&gt;       gen = gen_class("mock_cookie")
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</failure></testcase><testcase classname="tests.test_kling" name="test_save_content[ImageGen-save_images]" time="0.001"><failure message="TypeError: 'MockCurl' object is not callable">mock_mkdir = &lt;MagicMock name='mkdir' id='4351595184'&gt;
+mock_exists = &lt;MagicMock name='exists' id='4351596192'&gt;
+gen_class = &lt;class 'kling.kling.ImageGen'&gt;, method_name = 'save_images'
+mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103601160&gt;
+
+    @pytest.mark.parametrize(
+        "gen_class,method_name", [(ImageGen, "save_images"), (VideoGen, "save_video")]
+    )
+    @patch("os.path.exists", return_value=False)
+    @patch("os.mkdir")
+    def test_save_content(mock_mkdir, mock_exists, gen_class, method_name, mock_session):
+&gt;       gen = gen_class("mock_cookie")
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</failure></testcase><testcase classname="tests.test_kling" name="test_save_content[VideoGen-save_video]" time="0.001"><failure message="TypeError: 'MockCurl' object is not callable">mock_mkdir = &lt;MagicMock name='mkdir' id='4351596864'&gt;
+mock_exists = &lt;MagicMock name='exists' id='4351597536'&gt;
+gen_class = &lt;class 'kling.kling.VideoGen'&gt;, method_name = 'save_video'
+mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103601a90&gt;
+
+    @pytest.mark.parametrize(
+        "gen_class,method_name", [(ImageGen, "save_images"), (VideoGen, "save_video")]
+    )
+    @patch("os.path.exists", return_value=False)
+    @patch("os.mkdir")
+    def test_save_content(mock_mkdir, mock_exists, gen_class, method_name, mock_session):
+&gt;       gen = gen_class("mock_cookie")
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</failure></testcase><testcase classname="tests.test_kling" name="test_call_for_daily_check" time="0.007"><failure message="TypeError: functions are not supported for this option">def test_call_for_daily_check():
+        mock_session = MagicMock()
+        mock_session.perform()
+&gt;       result = call_for_daily_check(mock_session, True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:160: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = &lt;MagicMock id='4351598208'&gt;, is_cn = True
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        if is_cn:
+            c.setopt(c.URL, f"{base_url}api/pay/reward?activity=login_bonus_daily")
+        else:
+            c.setopt(c.URL, f"{base_url_not_cn}api/pay/reward?activity=login_bonus_daily")
+    
+&gt;       c.setopt(c.COOKIE, cookie)
+E       TypeError: functions are not supported for this option
+
+kling/kling.py:27: TypeError</failure></testcase><testcase classname="tests.test_kling" name="test_video_gen_get_video" time="0.001"><error message="failed on setup with &quot;TypeError: 'MockCurl' object is not callable&quot;">mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x1036023c0&gt;
+
+    @pytest.fixture
+    def video_gen(mock_session):
+&gt;       return VideoGen("mock_cookie")
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</error></testcase><testcase classname="tests.test_kling" name="test_video_gen_save_video" time="0.001"><error message="failed on setup with &quot;TypeError: 'MockCurl' object is not callable&quot;">mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103602660&gt;
+
+    @pytest.fixture
+    def video_gen(mock_session):
+&gt;       return VideoGen("mock_cookie")
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</error></testcase><testcase classname="tests.test_kling" name="test_image_gen_get_images" time="0.001"><error message="failed on setup with &quot;TypeError: 'MockCurl' object is not callable&quot;">mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103602900&gt;
+
+    @pytest.fixture
+    def image_gen(mock_session):
+&gt;       return ImageGen("mock_cookie")
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</error></testcase><testcase classname="tests.test_kling" name="test_image_gen_save_images" time="0.001"><error message="failed on setup with &quot;TypeError: 'MockCurl' object is not callable&quot;">mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103602ba0&gt;
+
+    @pytest.fixture
+    def image_gen(mock_session):
+&gt;       return ImageGen("mock_cookie")
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</error></testcase><testcase classname="tests.test_kling" name="test_extend_video_completed" time="0.001"><error message="failed on setup with &quot;TypeError: 'MockCurl' object is not callable&quot;">mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103602e40&gt;
+
+    @pytest.fixture
+    def video_gen(mock_session):
+&gt;       return VideoGen("mock_cookie")
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</error></testcase><testcase classname="tests.test_kling" name="test_extend_video_pending" time="0.001"><error message="failed on setup with &quot;TypeError: 'MockCurl' object is not callable&quot;">mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103602510&gt;
+
+    @pytest.fixture
+    def video_gen(mock_session):
+&gt;       return VideoGen("mock_cookie")
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</error></testcase><testcase classname="tests.test_kling" name="test_extend_video_failed" time="0.001"><error message="failed on setup with &quot;TypeError: 'MockCurl' object is not callable&quot;">mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103602270&gt;
+
+    @pytest.fixture
+    def video_gen(mock_session):
+&gt;       return VideoGen("mock_cookie")
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</error></testcase><testcase classname="tests.test_kling" name="test_extend_video_no_works" time="0.001"><error message="failed on setup with &quot;TypeError: 'MockCurl' object is not callable&quot;">mock_session = &lt;test_kling.mock_session.&lt;locals&gt;.MockCurl object at 0x103602900&gt;
+
+    @pytest.fixture
+    def video_gen(mock_session):
+&gt;       return VideoGen("mock_cookie")
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_kling.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kling/kling.py:54: in __init__
+    call_for_daily_check(self.cookie, self.session_is_cn)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cookie = 'mock_cookie', is_cn = False
+
+    def call_for_daily_check(cookie: str, is_cn: bool) -&gt; bool:
+        buffer = BytesIO()
+&gt;       c = pycurl.Curl()
+            ^^^^^^^^^^^^^
+E       TypeError: 'MockCurl' object is not callable
+
+kling/kling.py:21: TypeError</error></testcase></testsuite></testsuites>

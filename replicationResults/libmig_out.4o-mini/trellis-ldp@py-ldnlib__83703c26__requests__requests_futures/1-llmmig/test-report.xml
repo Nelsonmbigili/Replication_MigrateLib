@@ -1,0 +1,624 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="13" time="1.657" timestamp="2026-03-03T20:52:53.063913+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_base.TestBase" name="test_content_type" time="0.001" /><testcase classname="tests.test_base.TestBase" name="test_discover_get" time="0.449"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/resource">self = &lt;test_base.TestBase testMethod=test_discover_get&gt;
+mock_head = &lt;MagicMock name='head' id='4364683984'&gt;
+mock_get = &lt;MagicMock name='get' id='4364686000'&gt;
+
+    @patch('requests.get')
+    @patch('requests.head')
+    def test_discover_get(self, mock_head, mock_get):
+        inbox = "http://example.org/inbox"
+        links = {"type": {"url": "http://www.w3.org/ns/ldp#Container"}}
+        headers = {"content-type": "application/n-triples"}
+    
+        mock_res1 = Mock()
+        mock_res1.links = links
+        mock_res1.headers = headers
+        mock_head.return_value = mock_res1
+    
+        mock_res2 = Mock()
+        mock_res2.links = links
+        mock_res2.headers = headers
+        mock_res2.text = "&lt;http://example.org/resource&gt; " + \
+                         "&lt;http://www.w3.org/ns/ldp#inbox&gt; " + \
+                         "&lt;http://example.org/inbox&gt; .\n"
+        mock_get.return_value = mock_res2
+    
+        ldn = BaseLDN()
+&gt;       self.assertEqual(ldn.discover("http://example.org/resource"), inbox)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_base.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/base.py:50: in discover
+    inbox = self.__discover_head(target, headers=headers,
+ldnlib/base.py:21: in __discover_head
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/resource
+
+.venv/lib/python3.14/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="tests.test_base.TestBase" name="test_discover_head" time="0.076"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/resource">self = &lt;test_base.TestBase testMethod=test_discover_head&gt;
+mock_head = &lt;MagicMock name='head' id='4364687680'&gt;
+
+    @patch('requests.head')
+    def test_discover_head(self, mock_head):
+        inbox = "http://example.org/inbox"
+        mock_res = Mock()
+        mock_res.links = {"http://www.w3.org/ns/ldp#inbox": {"url": inbox}}
+    
+        mock_head.return_value = mock_res
+    
+        ldn = BaseLDN()
+&gt;       self.assertEqual(ldn.discover("http://example.org/resource"), inbox)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_base.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/base.py:50: in discover
+    inbox = self.__discover_head(target, headers=headers,
+ldnlib/base.py:21: in __discover_head
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/resource
+
+.venv/lib/python3.14/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notification_jsonld" time="0.092"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/inbox/1">self = &lt;test_consumer.TestConsumer testMethod=test_notification_jsonld&gt;
+mock_get = &lt;MagicMock name='get' id='4364683648'&gt;
+
+    @patch('requests.get')
+    def test_notification_jsonld(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/notification1.json", "r") as f:
+            attrs = {'json.return_value': json.loads("[" + f.read() + "]")}
+            mock_res.configure_mock(**attrs)
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notification = Consumer().notification("http://example.org/inbox/1")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/consumer.py:40: in notification
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/inbox/1
+
+.venv/lib/python3.14/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notification_turtle" time="0.058"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/inbox/1">self = &lt;test_consumer.TestConsumer testMethod=test_notification_turtle&gt;
+mock_get = &lt;MagicMock name='get' id='4364694736'&gt;
+
+    @patch('requests.get')
+    def test_notification_turtle(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "text/turtle; charset=utf-8"}
+        with open("tests/notification.ttl", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notification = Consumer().notification("http://example.org/inbox/1")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/consumer.py:40: in notification
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/inbox/1
+
+.venv/lib/python3.14/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_jsonld_compacted" time="0.072"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/inbox">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_jsonld_compacted&gt;
+mock_get = &lt;MagicMock name='get' id='4364695408'&gt;
+
+    @patch('requests.get')
+    def test_notifications_jsonld_compacted(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/inbox.jsonld", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/consumer.py:25: in notifications
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/inbox
+
+.venv/lib/python3.14/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_jsonld_expanded" time="0.114"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/inbox">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_jsonld_expanded&gt;
+mock_get = &lt;MagicMock name='get' id='4364696080'&gt;
+
+    @patch('requests.get')
+    def test_notifications_jsonld_expanded(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/inbox_expanded.jsonld", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/consumer.py:25: in notifications
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/inbox
+
+.venv/lib/python3.14/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_ntriples" time="0.070"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/inbox">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_ntriples&gt;
+mock_get = &lt;MagicMock name='get' id='4364696752'&gt;
+
+    @patch('requests.get')
+    def test_notifications_ntriples(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/n-triples"}
+        with open("tests/inbox.nt", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/consumer.py:25: in notifications
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/inbox
+
+.venv/lib/python3.14/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_turtle" time="0.075"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/inbox">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_turtle&gt;
+mock_get = &lt;MagicMock name='get' id='4365910096'&gt;
+
+    @patch('requests.get')
+    def test_notifications_turtle(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "text/turtle; charset=utf-8"}
+        with open("tests/inbox.ttl", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/consumer.py:25: in notifications
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://example.org/inbox
+
+.venv/lib/python3.14/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_dict" time="0.074"><failure message="requests.exceptions.HTTPError: 405 Client Error: Not Allowed for url: http://example.org/inbox">self = &lt;test_sender.TestSender testMethod=test_send_dict&gt;
+mock_post = &lt;MagicMock name='post' id='4365910768'&gt;
+
+    @patch('requests.post')
+    def test_send_dict(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = json.loads(f.read())
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:46: in send
+    self.__post_message(inbox, json.dumps(data), self.JSON_LD,
+ldnlib/sender.py:39: in __post_message
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [405]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 405 Client Error: Not Allowed for url: http://example.org/inbox
+
+.venv/lib/python3.14/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_graph" time="0.085"><failure message="AttributeError: 'FuturesSession' object has no attribute 'codes'">self = &lt;test_sender.TestSender testMethod=test_send_graph&gt;
+mock_post = &lt;MagicMock name='post' id='4365911440'&gt;
+
+    @patch('requests.post')
+    def test_send_graph(self, mock_post):
+        data = Graph().parse("tests/notification.nt", format="ntriples")
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:51: in send
+    ct = self.__accept_post_options(inbox, **kwargs) or self.JSON_LD
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.sender.Sender object at 0x1043196d0&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+future = &lt;Future at 0x1043bf250 state=finished returned Response&gt;
+r = &lt;Response [405]&gt;
+
+    def __accept_post_options(self, inbox, **kwargs):
+        future = self.session.options(inbox, **kwargs)  # Use FuturesSession
+        r = future.result()  # Get the response
+&gt;       if r.status_code == self.session.codes.ok and 'accept-post' in r.headers:
+                            ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'FuturesSession' object has no attribute 'codes'
+
+ldnlib/sender.py:22: AttributeError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_list" time="0.067"><failure message="requests.exceptions.HTTPError: 405 Client Error: Not Allowed for url: http://example.org/inbox">self = &lt;test_sender.TestSender testMethod=test_send_list&gt;
+mock_post = &lt;MagicMock name='post' id='4365913456'&gt;
+
+    @patch('requests.post')
+    def test_send_list(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = json.loads("[" + f.read() + "]")
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:46: in send
+    self.__post_message(inbox, json.dumps(data), self.JSON_LD,
+ldnlib/sender.py:39: in __post_message
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [405]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 405 Client Error: Not Allowed for url: http://example.org/inbox
+
+.venv/lib/python3.14/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_string" time="0.072"><failure message="requests.exceptions.HTTPError: 405 Client Error: Not Allowed for url: http://example.org/inbox">self = &lt;test_sender.TestSender testMethod=test_send_string&gt;
+mock_post = &lt;MagicMock name='post' id='4365913792'&gt;
+
+    @patch('requests.post')
+    def test_send_string(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = f.read()
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:49: in send
+    self.__post_message(inbox, data, self.JSON_LD, **kwargs)
+ldnlib/sender.py:39: in __post_message
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [405]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 405 Client Error: Not Allowed for url: http://example.org/inbox
+
+.venv/lib/python3.14/site-packages/requests/models.py:1026: HTTPError</failure></testcase></testsuite></testsuites>

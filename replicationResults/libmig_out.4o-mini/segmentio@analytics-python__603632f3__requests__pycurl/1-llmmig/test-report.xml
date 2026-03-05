@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="51" time="1761.724" timestamp="2026-03-05T03:22:38.920658+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="segment.analytics.test.test_client.TestClient" name="test_advanced_group" time="0.002" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_advanced_identify" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_advanced_page" time="0.000" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_advanced_screen" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_advanced_track" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_basic_alias" time="1.340" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_basic_group" time="1.326" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_basic_identify" time="1.289" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_basic_page" time="1.289" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_basic_screen" time="1.344" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_basic_track" time="1.421" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_debug" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_default_timeout_15" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_empty_flush" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_flush" time="10.893" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_gzip" time="1.282" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_identify_with_date_object" time="1.278" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_numeric_user_id" time="1.286" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_overflow" time="0.511" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_proxies" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_requires_write_key" time="0.002" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_shutdown" time="11.539" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_stringifies_anonymous_id" time="1.332" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_stringifies_user_id" time="1.307" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_success_on_invalid_write_key" time="1.331" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_synchronous" time="0.849" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_unicode" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_user_defined_timeout" time="0.001" /><testcase classname="segment.analytics.test.test_client.TestClient" name="test_user_defined_upload_size" time="1.005" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_dropping_oversize_msg" time="0.505" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_max_batch_size" time="0.001"><failure message="ModuleNotFoundError: No module named 'segment.analytics.request._session'; 'segment.analytics.request' is not a package">self = &lt;analytics.test.test_consumer.TestConsumer testMethod=test_max_batch_size&gt;
+
+    def test_max_batch_size(self):
+        q = Queue()
+        consumer = Consumer(
+            q, 'testsecret', upload_size=100000, upload_interval=3)
+        track = {
+            'type': 'track',
+            'event': 'python event',
+            'userId': 'userId'
+        }
+        msg_size = len(json.dumps(track).encode())
+        # number of messages in a maximum-size batch
+        n_msgs = int(475000 / msg_size)
+    
+        def mock_post_fn(_, data, **kwargs):
+            res = mock.Mock()
+            res.status_code = 200
+            self.assertTrue(len(data.encode()) &lt; 500000,
+                            'batch size (%d) exceeds 500KB limit'
+                            % len(data.encode()))
+            return res
+    
+&gt;       with mock.patch('segment.analytics.request._session.post',
+                        side_effect=mock_post_fn) as mock_post:
+
+segment/analytics/test/test_consumer.py:193: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.14/site-packages/mock/mock.py:1353: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/mock/mock.py:1523: in &lt;lambda&gt;
+    getter = lambda: _importer(target)
+                     ^^^^^^^^^^^^^^^^^
+.venv/lib/python3.14/site-packages/mock/mock.py:1210: in _importer
+    thing = _dot_lookup(thing, comp, import_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+thing = &lt;module 'segment.analytics.request' from '/Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Anal...on 2/Replication_MigrateLib/repos/segmentio@analytics-python__603632f3__requests__pycurl/segment/analytics/request.py'&gt;
+comp = '_session', import_path = 'segment.analytics.request._session'
+
+    def _dot_lookup(thing, comp, import_path):
+        try:
+            return getattr(thing, comp)
+        except AttributeError:
+&gt;           __import__(import_path)
+E           ModuleNotFoundError: No module named 'segment.analytics.request._session'; 'segment.analytics.request' is not a package
+
+.venv/lib/python3.14/site-packages/mock/mock.py:1199: ModuleNotFoundError</failure></testcase><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_multiple_uploads_per_interval" time="0.561" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_next" time="0.505" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_next_limit" time="0.009" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_pause" time="0.001" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_proxies" time="525.229"><failure message="pycurl.error: (28, 'Connection timed out after 15003 milliseconds')">cls = &lt;class 'analytics.test.test_consumer.TestConsumer'&gt;
+
+    @classmethod
+    def test_proxies(cls):
+        consumer = Consumer(None, 'testsecret', proxies='203.243.63.16:80')
+        track = {
+            'type': 'track',
+            'event': 'python event',
+            'userId': 'userId'
+        }
+&gt;       consumer.request([track])
+
+segment/analytics/test/test_consumer.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+segment/analytics/consumer.py:145: in request
+    send_request()
+.venv/lib/python3.14/site-packages/backoff/_sync.py:105: in retry
+    ret = target(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+segment/analytics/consumer.py:141: in send_request
+    post(self.write_key, self.host, gzip=self.gzip,
+segment/analytics/request.py:57: in post
+    raise e
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+write_key = 'testsecret', host = None, gzip = False, timeout = 15
+proxies = '203.243.63.16:80', oauth_manager = None
+kwargs = {'batch': [{'event': 'python event', 'type': 'track', 'userId': 'userId'}], 'sentAt': '2026-03-04T23:31:53.206245+00:00', 'writeKey': 'testsecret'}
+log = &lt;Logger segment (WARNING)&gt;
+body = {'batch': [{'event': 'python event', 'type': 'track', 'userId': 'userId'}], 'sentAt': '2026-03-04T23:31:53.206245+00:00', 'writeKey': 'testsecret'}
+url = 'https://api.segment.io/v1/batch', auth = None
+data = b'{"batch": [{"type": "track", "event": "python event", "userId": "userId"}], "sentAt": "2026-03-04T23:31:53.206245+00:00", "writeKey": "testsecret"}'
+headers = ['Content-Type: application/json', 'User-Agent: analytics-python/2.3.3']
+
+    def post(write_key, host=None, gzip=False, timeout=15, proxies=None, oauth_manager=None, **kwargs):
+        """Post the `kwargs` to the API"""
+        log = logging.getLogger('segment')
+        body = kwargs
+        if not "sentAt" in body.keys():
+            body["sentAt"] = datetime.now(tz=tzutc()).isoformat()
+        body["writeKey"] = write_key
+        url = remove_trailing_slash(host or 'https://api.segment.io') + '/v1/batch'
+        auth = None
+        if oauth_manager:
+            auth = oauth_manager.get_token()
+        data = json.dumps(body, cls=DatetimeSerializer)
+        log.debug('making request: %s', data)
+        headers = [
+            'Content-Type: application/json',
+            'User-Agent: analytics-python/' + VERSION
+        ]
+        if auth:
+            headers.append('Authorization: Bearer {}'.format(auth))
+    
+        if gzip:
+            headers.append('Content-Encoding: gzip')
+            buf = BytesIO()
+            with GzipFile(fileobj=buf, mode='w') as gz:
+                gz.write(data.encode('utf-8'))
+            data = buf.getvalue()
+        else:
+            data = data.encode('utf-8')
+    
+        response_buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, url)
+        c.setopt(c.POSTFIELDS, data)
+        c.setopt(c.HTTPHEADER, headers)
+        c.setopt(c.WRITEDATA, response_buffer)
+        c.setopt(c.TIMEOUT, timeout)
+    
+        if proxies:
+            c.setopt(c.PROXY, proxies)
+    
+        res = None
+        try:
+&gt;           c.perform()
+E           pycurl.error: (28, 'Connection timed out after 15003 milliseconds')
+
+segment/analytics/request.py:53: error</failure></testcase><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_request" time="0.803" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_request_retry" time="9.293" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_upload" time="1.357" /><testcase classname="segment.analytics.test.test_consumer.TestConsumer" name="test_upload_interval" time="1.013" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_debug" time="0.003" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_gzip" time="0.001" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_host" time="0.001" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_max_queue_size" time="0.001" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_max_retries" time="0.001" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_sync_mode" time="0.001" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_timeout" time="0.001" /><testcase classname="segment.analytics.test.test_init.TestInit" name="test_writeKey" time="0.001" /><testcase classname="segment.analytics.test.test_module.TestModule" name="test_alias" time="534.293" /><testcase classname="segment.analytics.test.test_module.TestModule" name="test_flush" time="0.001" /><testcase classname="segment.analytics.test.test_module.TestModule" name="test_group" time="479.286" /><testcase time="0.001" /></testsuite></testsuites>

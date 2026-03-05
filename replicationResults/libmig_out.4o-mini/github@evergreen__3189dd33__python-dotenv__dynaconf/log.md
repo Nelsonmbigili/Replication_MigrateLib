@@ -1,0 +1,135 @@
+## Running premig
+creating venv at /Users/namugo/Desktop/대학대학/1. Spring 2026/CS-UH 3260 004 Software Analytics/Assignments/Replication 2/Replication_MigrateLib/repos/github@evergreen__3189dd33__python-dotenv__dynaconf/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 1 files
+### migrating env.py
+### running tests
+- test finished with status 2, cov finished with status 1
+### test diff with round premig
+- `test_auth.py::TestAuth::test_auth_to_github_invalid_credentials: passed != not found`
+- `test_auth.py::TestAuth::test_auth_to_github_with_app: passed != not found`
+- `test_auth.py::TestAuth::test_auth_to_github_with_ghe: passed != not found`
+- `test_auth.py::TestAuth::test_auth_to_github_with_ghe_and_ghe_app: passed != not found`
+- `test_auth.py::TestAuth::test_auth_to_github_with_token: passed != not found`
+- `test_auth.py::TestAuth::test_auth_to_github_without_token: passed != not found`
+- `test_auth.py::TestAuth::test_get_github_app_installation_token: passed != not found`
+- `test_auth.py::TestAuth::test_get_github_app_installation_token_request_failure: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_add_existing_ecosystem_to_exempt_list: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_for_multiple_repos_with_few_existing_config: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_2_space_indent_existing_config_bundler_with_update: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_bundler: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_cargo: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_composer: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_devcontainers: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_docker: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_exempt_ecosystems: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_existing_config_bundler_no_update: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_extra_dependabot_config_file: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_github_actions: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_github_actions_without_files: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_gomod: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_gradle: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_groups: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_hex: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_incorrect_indentation_in_extra_dependabot_config_file: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_label: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_labels: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_maven: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_npm: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_nuget: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_pip: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_repo_specific_exempt_ecosystems: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_schedule_day: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_terraform_with_files: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_terraform_without_files: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_build_dependabot_file_with_weird_space_indent_existing_config_bundler_with_update: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_check_multiple_repos_with_no_dependabot_config: passed != not found`
+- `test_dependabot_file.py::TestDependabotFile::test_not_found_error: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_auth_with_github_app_installation: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_auth_with_github_app_installation_missing_inputs: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_commit_message_too_long: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_missing_at_least_one_auth: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_missing_org_or_repo: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_optional_values: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_pr_body_too_long: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_project_id_not_a_number: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_repo_specific_exemptions_improper_format: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_repo_specific_exemptions_unsupported_ecosystem: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_a_valid_label: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_bad_schedule_choice: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_bad_schedule_day_choice: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_badly_formatted_created_after_date: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_batch_size: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_dependabot_config_file_set_but_not_found: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_incorrect_type: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_invalid_batch_size_int: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_invalid_batch_size_str: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_long_title: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_no_batch_size: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_org: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_org_and_repo_specific_exemptions: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_repos: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_repos_disabled_security_updates: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_repos_exempt_ecosystems: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_repos_filter_visibility_invalid_multiple_value: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_repos_filter_visibility_invalid_single_value: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_repos_filter_visibility_multiple_values: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_repos_filter_visibility_no_duplicates: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_repos_filter_visibility_single_value: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_repos_no_dry_run: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_schedule_day_error_when_schedule_not_set: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_team: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_team_and_repo: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_update_existing: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_valid_labels_containing_spaces: passed != not found`
+- `test_env.py::TestEnv::test_get_env_vars_with_valid_schedule_and_schedule_day: passed != not found`
+- `test_env_get_bool.py::TestEnv::test_get_bool_env_var_that_does_not_exist_and_default_value_returns_false: passed != not found`
+- `test_env_get_bool.py::TestEnv::test_get_bool_env_var_that_does_not_exist_and_default_value_returns_true: passed != not found`
+- `test_env_get_bool.py::TestEnv::test_get_bool_env_var_that_exists_and_is_false: passed != not found`
+- `test_env_get_bool.py::TestEnv::test_get_bool_env_var_that_exists_and_is_false_due_to_invalid_value: passed != not found`
+- `test_env_get_bool.py::TestEnv::test_get_bool_env_var_that_exists_and_is_true: passed != not found`
+- `test_evergreen.py::TestAppendToGithubSummary::test_append_to_github_summary_with_default_file: passed != not found`
+- `test_evergreen.py::TestAppendToGithubSummary::test_append_to_github_summary_with_file: passed != not found`
+- `test_evergreen.py::TestAppendToGithubSummary::test_append_to_github_summary_without_summary_file: passed != not found`
+- `test_evergreen.py::TestCheckExistingConfig::test_check_existing_config_with_existing_config: passed != not found`
+- `test_evergreen.py::TestCheckExistingConfig::test_check_existing_config_without_existing_config: passed != not found`
+- `test_evergreen.py::TestCheckPendingIssuesForDuplicates::test_check_pending_issues_for_duplicates_no_duplicates: passed != not found`
+- `test_evergreen.py::TestCheckPendingIssuesForDuplicates::test_check_pending_issues_for_duplicates_with_duplicates: passed != not found`
+- `test_evergreen.py::TestCheckPendingPullsForDuplicates::test_check_pending_pulls_for_duplicates_no_duplicates: passed != not found`
+- `test_evergreen.py::TestCheckPendingPullsForDuplicates::test_check_pending_pulls_for_duplicates_with_duplicates: passed != not found`
+- `test_evergreen.py::TestCommitChanges::test_commit_changes: passed != not found`
+- `test_evergreen.py::TestDependabotSecurityUpdates::test_enable_dependabot_security_updates: passed != not found`
+- `test_evergreen.py::TestDependabotSecurityUpdates::test_enable_dependabot_security_updates_failed: passed != not found`
+- `test_evergreen.py::TestDependabotSecurityUpdates::test_is_dependabot_security_updates_disabled: passed != not found`
+- `test_evergreen.py::TestDependabotSecurityUpdates::test_is_dependabot_security_updates_enabled: passed != not found`
+- `test_evergreen.py::TestDependabotSecurityUpdates::test_is_dependabot_security_updates_not_found: passed != not found`
+- `test_evergreen.py::TestGetGlobalIssueId::test_get_global_issue_id_parse_response_failed: passed != not found`
+- `test_evergreen.py::TestGetGlobalIssueId::test_get_global_issue_id_request_failed: passed != not found`
+- `test_evergreen.py::TestGetGlobalIssueId::test_get_global_issue_id_success: passed != not found`
+- `test_evergreen.py::TestGetGlobalProjectId::test_get_global_project_id_parse_response_failed: passed != not found`
+- `test_evergreen.py::TestGetGlobalProjectId::test_get_global_project_id_request_failed: passed != not found`
+- `test_evergreen.py::TestGetGlobalProjectId::test_get_global_project_id_success: passed != not found`
+- `test_evergreen.py::TestGetGlobalPullRequestID::test_get_global_pr_id_key_error: passed != not found`
+- `test_evergreen.py::TestGetGlobalPullRequestID::test_get_global_pr_id_request_exception: passed != not found`
+- `test_evergreen.py::TestGetGlobalPullRequestID::test_get_global_pr_id_success: passed != not found`
+- `test_evergreen.py::TestGetReposIterator::test_get_repos_iterator_with_organization: passed != not found`
+- `test_evergreen.py::TestGetReposIterator::test_get_repos_iterator_with_repository_list: passed != not found`
+- `test_evergreen.py::TestGetReposIterator::test_get_repos_iterator_with_team: passed != not found`
+- `test_evergreen.py::TestIsRepoCreateDateBeforeCreatedAfterDate::test_is_created_after_date_is_empty_string: passed != not found`
+- `test_evergreen.py::TestIsRepoCreateDateBeforeCreatedAfterDate::test_is_repo_create_date_before_created_after_date: passed != not found`
+- `test_evergreen.py::TestIsRepoCreateDateBeforeCreatedAfterDate::test_is_repo_create_date_is_after_created_after_date: passed != not found`
+- `test_evergreen.py::TestIsRepoCreateDateBeforeCreatedAfterDate::test_is_repo_created_date_and_created_after_date_is_not_a_date: passed != not found`
+- `test_evergreen.py::TestIsRepoCreateDateBeforeCreatedAfterDate::test_is_repo_created_date_has_no_time_zone: passed != not found`
+- `test_evergreen.py::TestIsRepoCreateDateBeforeCreatedAfterDate::test_is_repo_created_date_is_before_created_after_date_without_timezone_again: passed != not found`
+- `test_evergreen.py::TestLinkItemToProject::test_link_item_to_project_request_exception: passed != not found`
+- `test_evergreen.py::TestLinkItemToProject::test_link_item_to_project_success: passed != not found`
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+- async_transform finished

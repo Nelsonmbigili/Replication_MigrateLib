@@ -1,0 +1,146 @@
+mig: dknowles2@pyschlage__5c48dcd0__requests__urllib3__5c48dcd0__requests__urllib3
+repo: dknowles2@pyschlage__5c48dcd0__requests__urllib3
+commit: 5c48dcd01e5a253a25044155fe03b0411f1105c0
+source: requests
+target: urllib3
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 2.6.3
+  finished_at: '2026-03-04 14:21:52'
+  project_coverage: 99.72972972972973
+  total_tests: 58
+  passed_tests: 54
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 45.90163934426229
+  files:
+  - path: pyschlage/auth.py
+    file_change_coverage: 52.63157894736842
+    covered_changed_lines: 11-12,31,39,59,61,63,103,113,131
+    uncovered_changed_lines: 35,37,55,57,64,66-67,114,120
+  - path: pyschlage/device.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 6-7,62,67-69
+    uncovered_changed_lines: ''
+  - path: tests/test_auth.py
+    file_change_coverage: 33.333333333333336
+    covered_changed_lines: 5-6,11,13,30,45,75,81-83,98,122
+    uncovered_changed_lines: 37,41,67,71,90,94,104-111,115,128-135,139
+  test_diffs:
+  - test_id: tests/test_auth.py::test_authenticate
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: module ''urllib3'' has no attribute ''Request''.
+      Did you mean: ''request''?'
+  - test_id: tests/test_auth.py::test_request
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''>='' not supported between instances of ''MagicMock''
+      and ''int'''
+  - test_id: tests/test_auth.py::test_request_not_authorized
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: expected call not found.\nExpected: request('GET',\
+      \ 'https://api.allegion.yonomi.cloud/v1/foo/bar', timeout=60, headers={'X-Api-Key':\
+      \ 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, fields={'baz': 'bam'})\n  Actual:\
+      \ request('get', 'https://api.allegion.yonomi.cloud/v1/foo/bar', baz='bam',\
+      \ auth=<MagicMock name='RequestsSrpAuth()' spec='RequestsSrpAuth' id='4414951104'>,\
+      \ headers={'X-Api-Key': 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, timeout=60)"
+  - test_id: tests/test_auth.py::test_request_unknown_error
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: expected call not found.\nExpected: request('GET',\
+      \ 'https://api.allegion.yonomi.cloud/v1/foo/bar', timeout=60, headers={'X-Api-Key':\
+      \ 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, fields={'baz': 'bam'})\n  Actual:\
+      \ request('get', 'https://api.allegion.yonomi.cloud/v1/foo/bar', baz='bam',\
+      \ auth=<MagicMock name='RequestsSrpAuth()' spec='RequestsSrpAuth' id='4414953456'>,\
+      \ headers={'X-Api-Key': 'hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9'}, timeout=60)"
+  - test_id: tests/test_auth.py::test_user_id
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''>='' not supported between instances of ''Mock''
+      and ''int'''
+  - test_id: tests/test_auth.py::test_user_id_is_cached
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''>='' not supported between instances of ''Mock''
+      and ''int'''
+  - test_id: tests/test_lock.py::TestLock::test_add_access_code
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: Calls not found.\nExpected: [call('post', 'devices/__wifi_uuid__/commands',\
+      \ json={'data': {'friendlyName': 'Friendly name', 'accessCode': 123, 'accessCodeLength':\
+      \ 4, 'notification': 0, 'notificationEnabled': False, 'disabled': 0, 'activationSecs':\
+      \ 0, 'expirationSecs': 4294967295, 'schedule1': {'daysOfWeek': '7F', 'startHour':\
+      \ 0, 'startMinute': 0, 'endHour': 23, 'endMinute': 59}}, 'name': 'addaccesscode'}),\n\
+      \ call('post', 'notifications/<user-id>___access_code_uuid__', {'notificationId':\
+      \ '<user-id>___access_code_uuid__', 'userId': '<user-id>', 'deviceId': '__wifi_uuid__',\
+      \ 'devicetypeId': 'be489wifi', 'notificationDefinitionId': 'onunlockstateaction',\
+      \ 'filterValue': 'Friendly name', 'active': False})]\n  Actual: [call('POST',\
+      \ 'devices/__wifi_uuid__/commands', body='{\"data\": {\"friendlyName\": \"Friendly\
+      \ name\", \"accessCode\": 123, \"accessCodeLength\": 4, \"notification\": 0,\
+      \ \"notificationEnabled\": false, \"disabled\": 0, \"activationSecs\": 0, \"\
+      expirationSecs\": 4294967295, \"schedule1\": {\"daysOfWeek\": \"7F\", \"startHour\"\
+      : 0, \"startMinute\": 0, \"endHour\": 23, \"endMinute\": 59}}, \"name\": \"\
+      addaccesscode\"}', headers={'Content-Type': 'application/json'}),\n call('post',\
+      \ 'notifications/<user-id>___access_code_uuid__', {'notificationId': '<user-id>___access_code_uuid__',\
+      \ 'userId': '<user-id>', 'deviceId': '__wifi_uuid__', 'devicetypeId': 'be489wifi',\
+      \ 'notificationDefinitionId': 'onunlockstateaction', 'active': False, 'filterValue':\
+      \ 'Friendly name'})]"
+  - test_id: tests/test_lock.py::TestLock::test_lock_ble
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: expected call not found.\nExpected: request('post',\
+      \ 'devices/__ble_uuid__/commands', json={'data': {'CAT': 'abcdef', 'deviceId':\
+      \ '__ble_uuid__', 'state': 1, 'userId': '<user-id>'}, 'name': 'changelockstate'})\n\
+      \  Actual: request('POST', 'devices/__ble_uuid__/commands', body='{\"data\"\
+      : {\"CAT\": \"abcdef\", \"deviceId\": \"__ble_uuid__\", \"state\": 1, \"userId\"\
+      : \"<user-id>\"}, \"name\": \"changelockstate\"}', headers={'Content-Type':\
+      \ 'application/json'})"
+  - test_id: tests/test_lock.py::TestLock::test_unlock_ble
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: expected call not found.\nExpected: request('post',\
+      \ 'devices/__ble_uuid__/commands', json={'data': {'CAT': 'abcdef', 'deviceId':\
+      \ '__ble_uuid__', 'state': 0, 'userId': '<user-id>'}, 'name': 'changelockstate'})\n\
+      \  Actual: request('POST', 'devices/__ble_uuid__/commands', body='{\"data\"\
+      : {\"CAT\": \"abcdef\", \"deviceId\": \"__ble_uuid__\", \"state\": 0, \"userId\"\
+      : \"<user-id>\"}, \"name\": \"changelockstate\"}', headers={'Content-Type':\
+      \ 'application/json'})"
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

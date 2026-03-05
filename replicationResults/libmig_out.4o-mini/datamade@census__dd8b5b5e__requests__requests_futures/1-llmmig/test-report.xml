@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="11" skipped="0" tests="17" time="77.217" timestamp="2026-03-05T02:58:37.651365+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="census.tests.test_census.TestUnsupportedYears" name="test_acs1dp" time="0.001" /><testcase classname="census.tests.test_census.TestUnsupportedYears" name="test_acs5" time="0.000" /><testcase classname="census.tests.test_census.TestUnsupportedYears" name="test_acs5st" time="0.000" /><testcase classname="census.tests.test_census.TestUnsupportedYears" name="test_pl" time="0.000" /><testcase classname="census.tests.test_census.TestUnsupportedYears" name="test_sf1" time="0.000" /><testcase classname="census.tests.test_census.TestEncoding" name="test_la_canada_2015" time="2.514"><failure message="AttributeError: 'list' object has no attribute 'result'">self = &lt;census.tests.test_census.TestEncoding testMethod=test_la_canada_2015&gt;
+
+    def test_la_canada_2015(self):
+        """
+        The 'La Cañada Flintridge city, California' place can be a problem.
+        """
+        geo = {
+            'for': 'place:39003',
+            'in': u'state:06'
+        }
+        self.assertEqual(
+&gt;           self._client.acs5.get('NAME', geo=geo).result()[0]['NAME'],  # Changed to .result()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            u'La Cañada Flintridge city, California'
+        )
+E       AttributeError: 'list' object has no attribute 'result'
+
+census/tests/test_census.py:119: AttributeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_acs1dp" time="1.562"><failure message="AttributeError: 'list' object has no attribute 'result'">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_acs1dp&gt;
+
+    def test_acs1dp(self):
+    
+        tests = (
+            ('us', 'United States'),
+            ('state', 'Maryland'),
+            ('state_congressional_district',
+                'Congressional District 6 (118th Congress), Maryland'),
+        )
+    
+&gt;       self.check_endpoints('acs1dp', tests)
+
+census/tests/test_census.py:231: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;census.tests.test_census.TestEndpoints testMethod=test_acs1dp&gt;
+client_name = 'acs1dp'
+tests = (('us', 'United States'), ('state', 'Maryland'), ('state_congressional_district', 'Congressional District 6 (118th Congress), Maryland'))
+kwargs = {}, client = &lt;census.core.ACS1DpClient object at 0x104a8d040&gt;
+fields = ('NAME',), method_name = 'us', expected = 'United States'
+msg = 'acs1dp.us'
+method = &lt;bound method Client.us of &lt;census.core.ACS1DpClient object at 0x104a8d040&gt;&gt;
+
+    def check_endpoints(self, client_name, tests, **kwargs):
+    
+        client = self.client(client_name)
+        fields = ('NAME',)
+    
+        for method_name, expected in tests:
+    
+            msg = '{}.{}'.format(client_name, method_name)
+    
+            method = getattr(client, method_name)
+&gt;           data = method(fields, **TEST_DATA, **kwargs).result()  # Changed to .result()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'list' object has no attribute 'result'
+
+census/tests/test_census.py:146: AttributeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_acs5" time="2.332"><failure message="AttributeError: 'list' object has no attribute 'result'">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_acs5&gt;
+
+    def test_acs5(self):
+    
+        tests = (
+            ('us', 'United States'),
+            ('state', 'Maryland'),
+            ('state_county', 'Montgomery County, Maryland'),
+            ('state_county_subdivision',
+                'District 9, Montgomery County, Maryland'),
+            ('state_county_tract',
+                'Census Tract 7007.06; Montgomery County; Maryland'),
+            ('state_county_blockgroup',
+                ('Block Group 1; Census Tract 7007.06; '
+                    'Montgomery County; Maryland')),
+            ('state_place', 'Gaithersburg city, Maryland'),
+            ('state_district',
+                'Congressional District 6 (118th Congress), Maryland'),
+            ('state_congressional_district',
+                'Congressional District 6 (118th Congress), Maryland'),
+            ('state_legislative_district_upper',
+                'State Senate District 6 (2022), Maryland'),
+            ('state_legislative_district_lower',
+                'State Legislative District 6 (2022), Maryland'),
+            ('state_zipcode', 'ZCTA5 20877'),
+        )
+    
+&gt;       self.check_endpoints('acs5', tests)
+
+census/tests/test_census.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;census.tests.test_census.TestEndpoints testMethod=test_acs5&gt;
+client_name = 'acs5'
+tests = (('us', 'United States'), ('state', 'Maryland'), ('state_county', 'Montgomery County, Maryland'), ('state_county_subdi...unty; Maryland'), ('state_county_blockgroup', 'Block Group 1; Census Tract 7007.06; Montgomery County; Maryland'), ...)
+kwargs = {}, client = &lt;census.core.ACS5Client object at 0x104f24590&gt;
+fields = ('NAME',), method_name = 'us', expected = 'United States'
+msg = 'acs5.us'
+method = &lt;bound method Client.us of &lt;census.core.ACS5Client object at 0x104f24590&gt;&gt;
+
+    def check_endpoints(self, client_name, tests, **kwargs):
+    
+        client = self.client(client_name)
+        fields = ('NAME',)
+    
+        for method_name, expected in tests:
+    
+            msg = '{}.{}'.format(client_name, method_name)
+    
+            method = getattr(client, method_name)
+&gt;           data = method(fields, **TEST_DATA, **kwargs).result()  # Changed to .result()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'list' object has no attribute 'result'
+
+census/tests/test_census.py:146: AttributeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_acs5_previous_years" time="2.605"><failure message="AttributeError: 'list' object has no attribute 'result'">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_acs5_previous_years&gt;
+
+    def test_acs5_previous_years(self):
+    
+        tests = (
+            ('us', 'United States'),
+            ('state', 'Maryland'),
+            ('state_county', 'Montgomery County, Maryland'),
+            ('state_county_subdivision',
+                'District 9, Montgomery County, Maryland'),
+            ('state_county_tract',
+                'Census Tract 7007.06, Montgomery County, Maryland'),
+            ('state_county_blockgroup',
+                ('Block Group 1, Census Tract 7007.06, '
+                    'Montgomery County, Maryland')),
+            ('state_place', 'Gaithersburg city, Maryland'),
+            ('state_district',
+                'Congressional District 6 (116th Congress), Maryland'),
+            ('state_congressional_district',
+                'Congressional District 6 (116th Congress), Maryland'),
+            ('state_legislative_district_upper',
+                'State Senate District 6 (2018), Maryland'),
+            ('state_legislative_district_lower',
+                'State Legislative District 6 (2018), Maryland'),
+            ('state_zipcode', 'ZCTA5 20877'),
+        )
+    
+&gt;       self.check_endpoints('acs5', tests, year=2019)
+
+census/tests/test_census.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;census.tests.test_census.TestEndpoints testMethod=test_acs5_previous_years&gt;
+client_name = 'acs5'
+tests = (('us', 'United States'), ('state', 'Maryland'), ('state_county', 'Montgomery County, Maryland'), ('state_county_subdi...unty, Maryland'), ('state_county_blockgroup', 'Block Group 1, Census Tract 7007.06, Montgomery County, Maryland'), ...)
+kwargs = {'year': 2019}, client = &lt;census.core.ACS5Client object at 0x104a4c7e0&gt;
+fields = ('NAME',), method_name = 'us', expected = 'United States'
+msg = 'acs5.us'
+method = &lt;bound method Client.us of &lt;census.core.ACS5Client object at 0x104a4c7e0&gt;&gt;
+
+    def check_endpoints(self, client_name, tests, **kwargs):
+    
+        client = self.client(client_name)
+        fields = ('NAME',)
+    
+        for method_name, expected in tests:
+    
+            msg = '{}.{}'.format(client_name, method_name)
+    
+            method = getattr(client, method_name)
+&gt;           data = method(fields, **TEST_DATA, **kwargs).result()  # Changed to .result()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'list' object has no attribute 'result'
+
+census/tests/test_census.py:146: AttributeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_acs5st" time="3.042"><failure message="AttributeError: 'list' object has no attribute 'result'">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_acs5st&gt;
+
+    def test_acs5st(self):
+    
+        tests = (
+            ('us', 'United States'),
+            ('state', 'Maryland'),
+            ('state_congressional_district',
+                'Congressional District 6 (118th Congress), Maryland'),
+        )
+    
+&gt;       self.check_endpoints('acs5st', tests)
+
+census/tests/test_census.py:220: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;census.tests.test_census.TestEndpoints testMethod=test_acs5st&gt;
+client_name = 'acs5st'
+tests = (('us', 'United States'), ('state', 'Maryland'), ('state_congressional_district', 'Congressional District 6 (118th Congress), Maryland'))
+kwargs = {}, client = &lt;census.core.ACS5StClient object at 0x104f28c50&gt;
+fields = ('NAME',), method_name = 'us', expected = 'United States'
+msg = 'acs5st.us'
+method = &lt;bound method Client.us of &lt;census.core.ACS5StClient object at 0x104f28c50&gt;&gt;
+
+    def check_endpoints(self, client_name, tests, **kwargs):
+    
+        client = self.client(client_name)
+        fields = ('NAME',)
+    
+        for method_name, expected in tests:
+    
+            msg = '{}.{}'.format(client_name, method_name)
+    
+            method = getattr(client, method_name)
+&gt;           data = method(fields, **TEST_DATA, **kwargs).result()  # Changed to .result()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'list' object has no attribute 'result'
+
+census/tests/test_census.py:146: AttributeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_more_than_50" time="27.342"><failure message="AttributeError: 'list' object has no attribute 'result'">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_more_than_50&gt;
+
+    def test_more_than_50(self):
+        fields = ['B01001_003E', 'B01001_004E', 'B01001_005E',
+                  'B01001_006E', 'B01001_007E', 'B01001_008E',
+                  'B01001_009E', 'B01001_010E', 'B01001_011E',
+                  'B01001_012E', 'B01001_013E', 'B01001_014E',
+                  'B01001_015E', 'B01001_016E', 'B01001_017E',
+                  'B01001_018E', 'B01001_019E', 'B01001_020E',
+                  'B01001_021E', 'B01001_022E', 'B01001_023E',
+                  'B01001_024E', 'B01001_025E', 'B01001_027E',
+                  'B01001_028E', 'B01001_029E', 'B01001_030E',
+                  'B01001_031E', 'B01001_032E', 'B01001_033E',
+                  'B01001_034E', 'B01001_035E', 'B01001_036E',
+                  'B01001_037E', 'B01001_038E', 'B01001_039E',
+                  'B01001_040E', 'B01001_041E', 'B01001_042E',
+                  'B01001_043E', 'B01001_044E', 'B01001_045E',
+                  'B01001_046E', 'B01001_047E', 'B01001_048E',
+                  'B01001_049E', 'B19001_003E', 'B19001_004E',
+                  'B19001_005E', 'B19001_006E', 'B19001_007E',
+                  'B19001_008E', 'B19001_009E', 'B19001_010E',
+                  'B19001_011E', 'B19001_012E', 'B19001_013E',
+                  'B19001_014E', 'B19001_015E', 'B19001_016E']
+    
+        client = self.client('acs5')
+&gt;       results = client.us(fields).result()  # Changed to .result()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'list' object has no attribute 'result'
+
+census/tests/test_census.py:309: AttributeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_more_than_50_not_out_of_order" time="24.222"><failure message="AttributeError: 'list' object has no attribute 'result'">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_more_than_50_not_out_of_order&gt;
+
+    def test_more_than_50_not_out_of_order(self):
+        fields = ['GEO_ID', 'B01001_001E', 'B01001_003E',
+                  'B01001_006E', 'B01001_007E', 'B01001_008E',
+                  'B01001_009E', 'B01001_010E', 'B01001_011E',
+                  'B01001_012E', 'B01001_013E', 'B01001_014E',
+                  'B01001_015E', 'B01001_016E', 'B01001_017E',
+                  'B01001_018E', 'B01001_019E', 'B01001_020E',
+                  'B01001_021E', 'B01001_022E', 'B01001_023E',
+                  'B01001_024E', 'B01001_025E', 'B01001_027E',
+                  'B01001_028E', 'B01001_029E', 'B01001_030E',
+                  'B01001_031E', 'B01001_032E', 'B01001_033E',
+                  'B01001_034E', 'B01001_035E', 'B01001_036E',
+                  'B01001_037E', 'B01001_038E', 'B01001_039E',
+                  'B01001_040E', 'B01001_041E', 'B01001_042E',
+                  'B01001_043E', 'B01001_044E', 'B01001_045E',
+                  'B01001_046E', 'B01001_047E', 'B01001_048E',
+                  'B01001_049E', 'B19001_003E', 'B19001_004E',
+                  'B19001_005E', 'B19001_006E', 'B19001_007E',
+                  'B19001_008E', 'B19001_009E', 'B19001_010E',
+                  'B19001_011E', 'B19001_012E', 'B19001_013E',
+                  'B19001_014E', 'B19001_015E', 'B19001_016E',
+                  'B03002_001E', ]
+    
+        client = self.client('acs1')
+&gt;       results = client.state_county(fields, '*', '*', year=2018).result()  # Changed to .result()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'list' object has no attribute 'result'
+
+census/tests/test_census.py:336: AttributeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_new_style_endpoints" time="2.920"><failure message="AttributeError: 'list' object has no attribute 'result'">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_new_style_endpoints&gt;
+
+    def test_new_style_endpoints(self):
+        client = Census(KEY, year=2016)
+    
+&gt;       res_2016_2016 = client.acs1.state('B01001_004E', Census.ALL).result()  # Changed to .result()
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'list' object has no attribute 'result'
+
+census/tests/test_census.py:346: AttributeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_older_sf1" time="2.586"><failure message="AttributeError: 'list' object has no attribute 'result'">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_older_sf1&gt;
+
+    def test_older_sf1(self):
+        client = Census(KEY)
+        result_2010 = client.sf1.get(
+            ('P008001',  # total
+             'P008003',  # white
+             'P008004',  # black
+             'P008006',  # asian
+             'P008010',  # latino
+             ),
+            geo={'for': 'place:53476', 'in': 'state:06'},
+&gt;       ).result()  # Changed to .result()
+          ^^^^^^
+E       AttributeError: 'list' object has no attribute 'result'
+
+census/tests/test_census.py:376: AttributeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_pl" time="1.472"><failure message="AttributeError: 'list' object has no attribute 'result'">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_pl&gt;
+
+    def test_pl(self):
+    
+        tests = (
+            ('us', 'United States'),
+            ('state', 'Maryland'),
+            ('state_county', 'Montgomery County, Maryland'),
+            ('state_county_subdivision',
+                'District 9, Montgomery County, Maryland'),
+            ('state_county_tract',
+                'Census Tract 7007.06, Montgomery County, Maryland'),
+            ('state_county_blockgroup',
+                ('Block Group 1, Census Tract 7007.06, '
+                    'Montgomery County, Maryland')),
+            ('state_place', 'Gaithersburg city, Maryland'),
+            ('state_district',
+                'Congressional District 6 (116th Congress), Maryland'),
+            ('state_congressional_district',
+                'Congressional District 6 (116th Congress), Maryland'),
+            ('state_legislative_district_upper',
+                'State Senate District 6 (2018), Maryland'),
+            ('state_legislative_district_lower',
+                'State Legislative District 6 (2018), Maryland'),
+        )
+    
+&gt;       self.check_endpoints('pl', tests)
+
+census/tests/test_census.py:284: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;census.tests.test_census.TestEndpoints testMethod=test_pl&gt;
+client_name = 'pl'
+tests = (('us', 'United States'), ('state', 'Maryland'), ('state_county', 'Montgomery County, Maryland'), ('state_county_subdi...unty, Maryland'), ('state_county_blockgroup', 'Block Group 1, Census Tract 7007.06, Montgomery County, Maryland'), ...)
+kwargs = {}, client = &lt;census.core.PLClient object at 0x104f27410&gt;
+fields = ('NAME',), method_name = 'us', expected = 'United States'
+msg = 'pl.us'
+method = &lt;bound method Client.us of &lt;census.core.PLClient object at 0x104f27410&gt;&gt;
+
+    def check_endpoints(self, client_name, tests, **kwargs):
+    
+        client = self.client(client_name)
+        fields = ('NAME',)
+    
+        for method_name, expected in tests:
+    
+            msg = '{}.{}'.format(client_name, method_name)
+    
+            method = getattr(client, method_name)
+&gt;           data = method(fields, **TEST_DATA, **kwargs).result()  # Changed to .result()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'list' object has no attribute 'result'
+
+census/tests/test_census.py:146: AttributeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_sf1" time="2.748"><failure message="AttributeError: 'list' object has no attribute 'result'">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_sf1&gt;
+
+    def test_sf1(self):
+    
+        tests = (
+            ('state', 'Maryland'),
+            ('state_county', 'Montgomery County, Maryland'),
+            ('state_county_subdivision',
+                ('District 9, Montgomery County, Maryland')),
+            ('state_county_tract',
+                'Census Tract 7007.06, Montgomery County, Maryland'),
+            ('state_county_blockgroup',
+                ('Block Group 1, Census Tract 7007.06, '
+                 'Montgomery County, Maryland')),
+            ('state_place', 'Gaithersburg city, Maryland'),
+            ('state_congressional_district',
+                'Congressional District 6 (111th Congress), Maryland'),
+            ('state_msa',
+                ('Washington-Arlington-Alexandria, '
+                    'DC-VA-MD-WV Metro Area (part); Maryland')),
+            ('state_csa',
+                ('Washington-Baltimore-Northern Virginia, '
+                    'DC-MD-VA-WV CSA (part); Maryland')),
+            # ('state_district_place', 'District 9'),
+            ('state_zipcode', 'ZCTA5 20877, Maryland'),
+        )
+    
+&gt;       self.check_endpoints('sf1', tests)
+
+census/tests/test_census.py:258: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;census.tests.test_census.TestEndpoints testMethod=test_sf1&gt;
+client_name = 'sf1'
+tests = (('state', 'Maryland'), ('state_county', 'Montgomery County, Maryland'), ('state_county_subdivision', 'District 9, Mon...lock Group 1, Census Tract 7007.06, Montgomery County, Maryland'), ('state_place', 'Gaithersburg city, Maryland'), ...)
+kwargs = {}, client = &lt;census.core.SF1Client object at 0x1073319c0&gt;
+fields = ('NAME',), method_name = 'state', expected = 'Maryland'
+msg = 'sf1.state'
+method = &lt;bound method Client.state of &lt;census.core.SF1Client object at 0x1073319c0&gt;&gt;
+
+    def check_endpoints(self, client_name, tests, **kwargs):
+    
+        client = self.client(client_name)
+        fields = ('NAME',)
+    
+        for method_name, expected in tests:
+    
+            msg = '{}.{}'.format(client_name, method_name)
+    
+            method = getattr(client, method_name)
+&gt;           data = method(fields, **TEST_DATA, **kwargs).result()  # Changed to .result()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'list' object has no attribute 'result'
+
+census/tests/test_census.py:146: AttributeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_tables" time="3.507" /></testsuite></testsuites>

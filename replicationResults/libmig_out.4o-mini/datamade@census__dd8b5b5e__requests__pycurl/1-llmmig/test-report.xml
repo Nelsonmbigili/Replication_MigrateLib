@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="11" skipped="0" tests="17" time="19.066" timestamp="2026-03-04T15:28:18.980924+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="census.tests.test_census.TestUnsupportedYears" name="test_acs1dp" time="0.001" /><testcase classname="census.tests.test_census.TestUnsupportedYears" name="test_acs5" time="0.000" /><testcase classname="census.tests.test_census.TestUnsupportedYears" name="test_acs5st" time="0.000" /><testcase classname="census.tests.test_census.TestUnsupportedYears" name="test_pl" time="0.000" /><testcase classname="census.tests.test_census.TestUnsupportedYears" name="test_sf1" time="0.000" /><testcase classname="census.tests.test_census.TestEncoding" name="test_la_canada_2015" time="0.779"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;census.tests.test_census.TestEncoding testMethod=test_la_canada_2015&gt;
+
+    def test_la_canada_2015(self):
+        """
+        The 'La Cañada Flintridge city, California' place can be a problem.
+        """
+        geo = {
+            'for': 'place:39003',
+            'in': u'state:06'
+        }
+        self.assertEqual(
+&gt;           self._client.acs5.get('NAME', geo=geo)[0]['NAME'],
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            u'La Cañada Flintridge city, California'
+        )
+
+census/tests/test_census.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+census/core.py:327: in get
+    return super(ACSClient, self).get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:173: in get
+    merged_results = [merge(result) for result in zip(*all_results)]
+                                                  ^^^^^^^^^^^^^^^^^
+census/core.py:171: in &lt;genexpr&gt;
+    all_results = (self.query(forty_nine_fields, geo, year, sort_by_geoid=sort_by_geoid, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:62: in wrapper
+    result = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:202: in query
+    data = json.loads(resp)
+           ^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x101536f90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 405 – Method Not Allowed&lt;/title&gt;&lt;style type="text/css"&gt;body {...background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 405 – Method Not Allowed&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_acs1dp" time="0.842"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_acs1dp&gt;
+
+    def test_acs1dp(self):
+    
+        tests = (
+            ('us', 'United States'),
+            ('state', 'Maryland'),
+            ('state_congressional_district',
+                'Congressional District 6 (118th Congress), Maryland'),
+        )
+    
+&gt;       self.check_endpoints('acs1dp', tests)
+
+census/tests/test_census.py:231: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+census/tests/test_census.py:146: in check_endpoints
+    data = method(fields, **TEST_DATA, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:52: in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:237: in us
+    return self.get(fields, geo={'for': 'us:1'}, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:327: in get
+    return super(ACSClient, self).get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:173: in get
+    merged_results = [merge(result) for result in zip(*all_results)]
+                                                  ^^^^^^^^^^^^^^^^^
+census/core.py:171: in &lt;genexpr&gt;
+    all_results = (self.query(forty_nine_fields, geo, year, sort_by_geoid=sort_by_geoid, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:62: in wrapper
+    result = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:202: in query
+    data = json.loads(resp)
+           ^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x101536f90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 405 – Method Not Allowed&lt;/title&gt;&lt;style type="text/css"&gt;body {...background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 405 – Method Not Allowed&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_acs5" time="0.786"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_acs5&gt;
+
+    def test_acs5(self):
+    
+        tests = (
+            ('us', 'United States'),
+            ('state', 'Maryland'),
+            ('state_county', 'Montgomery County, Maryland'),
+            ('state_county_subdivision',
+                'District 9, Montgomery County, Maryland'),
+            ('state_county_tract',
+                'Census Tract 7007.06; Montgomery County; Maryland'),
+            ('state_county_blockgroup',
+                ('Block Group 1; Census Tract 7007.06; '
+                    'Montgomery County; Maryland')),
+            ('state_place', 'Gaithersburg city, Maryland'),
+            ('state_district',
+                'Congressional District 6 (118th Congress), Maryland'),
+            ('state_congressional_district',
+                'Congressional District 6 (118th Congress), Maryland'),
+            ('state_legislative_district_upper',
+                'State Senate District 6 (2022), Maryland'),
+            ('state_legislative_district_lower',
+                'State Legislative District 6 (2022), Maryland'),
+            ('state_zipcode', 'ZCTA5 20877'),
+        )
+    
+&gt;       self.check_endpoints('acs5', tests)
+
+census/tests/test_census.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+census/tests/test_census.py:146: in check_endpoints
+    data = method(fields, **TEST_DATA, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:52: in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:237: in us
+    return self.get(fields, geo={'for': 'us:1'}, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:327: in get
+    return super(ACSClient, self).get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:173: in get
+    merged_results = [merge(result) for result in zip(*all_results)]
+                                                  ^^^^^^^^^^^^^^^^^
+census/core.py:171: in &lt;genexpr&gt;
+    all_results = (self.query(forty_nine_fields, geo, year, sort_by_geoid=sort_by_geoid, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:62: in wrapper
+    result = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:202: in query
+    data = json.loads(resp)
+           ^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x101536f90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 405 – Method Not Allowed&lt;/title&gt;&lt;style type="text/css"&gt;body {...background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 405 – Method Not Allowed&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_acs5_previous_years" time="0.813"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_acs5_previous_years&gt;
+
+    def test_acs5_previous_years(self):
+    
+        tests = (
+            ('us', 'United States'),
+            ('state', 'Maryland'),
+            ('state_county', 'Montgomery County, Maryland'),
+            ('state_county_subdivision',
+                'District 9, Montgomery County, Maryland'),
+            ('state_county_tract',
+                'Census Tract 7007.06, Montgomery County, Maryland'),
+            ('state_county_blockgroup',
+                ('Block Group 1, Census Tract 7007.06, '
+                    'Montgomery County, Maryland')),
+            ('state_place', 'Gaithersburg city, Maryland'),
+            ('state_district',
+                'Congressional District 6 (116th Congress), Maryland'),
+            ('state_congressional_district',
+                'Congressional District 6 (116th Congress), Maryland'),
+            ('state_legislative_district_upper',
+                'State Senate District 6 (2018), Maryland'),
+            ('state_legislative_district_lower',
+                'State Legislative District 6 (2018), Maryland'),
+            ('state_zipcode', 'ZCTA5 20877'),
+        )
+    
+&gt;       self.check_endpoints('acs5', tests, year=2019)
+
+census/tests/test_census.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+census/tests/test_census.py:146: in check_endpoints
+    data = method(fields, **TEST_DATA, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:52: in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:237: in us
+    return self.get(fields, geo={'for': 'us:1'}, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:327: in get
+    return super(ACSClient, self).get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:173: in get
+    merged_results = [merge(result) for result in zip(*all_results)]
+                                                  ^^^^^^^^^^^^^^^^^
+census/core.py:171: in &lt;genexpr&gt;
+    all_results = (self.query(forty_nine_fields, geo, year, sort_by_geoid=sort_by_geoid, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:62: in wrapper
+    result = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:202: in query
+    data = json.loads(resp)
+           ^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x101536f90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 405 – Method Not Allowed&lt;/title&gt;&lt;style type="text/css"&gt;body {...background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 405 – Method Not Allowed&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_acs5st" time="0.894"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_acs5st&gt;
+
+    def test_acs5st(self):
+    
+        tests = (
+            ('us', 'United States'),
+            ('state', 'Maryland'),
+            ('state_congressional_district',
+                'Congressional District 6 (118th Congress), Maryland'),
+        )
+    
+&gt;       self.check_endpoints('acs5st', tests)
+
+census/tests/test_census.py:220: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+census/tests/test_census.py:146: in check_endpoints
+    data = method(fields, **TEST_DATA, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:52: in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:237: in us
+    return self.get(fields, geo={'for': 'us:1'}, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:327: in get
+    return super(ACSClient, self).get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:173: in get
+    merged_results = [merge(result) for result in zip(*all_results)]
+                                                  ^^^^^^^^^^^^^^^^^
+census/core.py:171: in &lt;genexpr&gt;
+    all_results = (self.query(forty_nine_fields, geo, year, sort_by_geoid=sort_by_geoid, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:62: in wrapper
+    result = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:202: in query
+    data = json.loads(resp)
+           ^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x101536f90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 405 – Method Not Allowed&lt;/title&gt;&lt;style type="text/css"&gt;body {...background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 405 – Method Not Allowed&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_more_than_50" time="0.832"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_more_than_50&gt;
+
+    def test_more_than_50(self):
+        fields = ['B01001_003E', 'B01001_004E', 'B01001_005E',
+                  'B01001_006E', 'B01001_007E', 'B01001_008E',
+                  'B01001_009E', 'B01001_010E', 'B01001_011E',
+                  'B01001_012E', 'B01001_013E', 'B01001_014E',
+                  'B01001_015E', 'B01001_016E', 'B01001_017E',
+                  'B01001_018E', 'B01001_019E', 'B01001_020E',
+                  'B01001_021E', 'B01001_022E', 'B01001_023E',
+                  'B01001_024E', 'B01001_025E', 'B01001_027E',
+                  'B01001_028E', 'B01001_029E', 'B01001_030E',
+                  'B01001_031E', 'B01001_032E', 'B01001_033E',
+                  'B01001_034E', 'B01001_035E', 'B01001_036E',
+                  'B01001_037E', 'B01001_038E', 'B01001_039E',
+                  'B01001_040E', 'B01001_041E', 'B01001_042E',
+                  'B01001_043E', 'B01001_044E', 'B01001_045E',
+                  'B01001_046E', 'B01001_047E', 'B01001_048E',
+                  'B01001_049E', 'B19001_003E', 'B19001_004E',
+                  'B19001_005E', 'B19001_006E', 'B19001_007E',
+                  'B19001_008E', 'B19001_009E', 'B19001_010E',
+                  'B19001_011E', 'B19001_012E', 'B19001_013E',
+                  'B19001_014E', 'B19001_015E', 'B19001_016E']
+    
+        client = self.client('acs5')
+&gt;       results = client.us(fields)
+                  ^^^^^^^^^^^^^^^^^
+
+census/tests/test_census.py:309: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+census/core.py:52: in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:237: in us
+    return self.get(fields, geo={'for': 'us:1'}, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:327: in get
+    return super(ACSClient, self).get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:173: in get
+    merged_results = [merge(result) for result in zip(*all_results)]
+                                                  ^^^^^^^^^^^^^^^^^
+census/core.py:171: in &lt;genexpr&gt;
+    all_results = (self.query(forty_nine_fields, geo, year, sort_by_geoid=sort_by_geoid, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:62: in wrapper
+    result = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:202: in query
+    data = json.loads(resp)
+           ^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x101536f90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 405 – Method Not Allowed&lt;/title&gt;&lt;style type="text/css"&gt;body {...background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 405 – Method Not Allowed&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_more_than_50_not_out_of_order" time="0.810"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_more_than_50_not_out_of_order&gt;
+
+    def test_more_than_50_not_out_of_order(self):
+        fields = ['GEO_ID', 'B01001_001E', 'B01001_003E',
+                  'B01001_006E', 'B01001_007E', 'B01001_008E',
+                  'B01001_009E', 'B01001_010E', 'B01001_011E',
+                  'B01001_012E', 'B01001_013E', 'B01001_014E',
+                  'B01001_015E', 'B01001_016E', 'B01001_017E',
+                  'B01001_018E', 'B01001_019E', 'B01001_020E',
+                  'B01001_021E', 'B01001_022E', 'B01001_023E',
+                  'B01001_024E', 'B01001_025E', 'B01001_027E',
+                  'B01001_028E', 'B01001_029E', 'B01001_030E',
+                  'B01001_031E', 'B01001_032E', 'B01001_033E',
+                  'B01001_034E', 'B01001_035E', 'B01001_036E',
+                  'B01001_037E', 'B01001_038E', 'B01001_039E',
+                  'B01001_040E', 'B01001_041E', 'B01001_042E',
+                  'B01001_043E', 'B01001_044E', 'B01001_045E',
+                  'B01001_046E', 'B01001_047E', 'B01001_048E',
+                  'B01001_049E', 'B19001_003E', 'B19001_004E',
+                  'B19001_005E', 'B19001_006E', 'B19001_007E',
+                  'B19001_008E', 'B19001_009E', 'B19001_010E',
+                  'B19001_011E', 'B19001_012E', 'B19001_013E',
+                  'B19001_014E', 'B19001_015E', 'B19001_016E',
+                  'B03002_001E', ]
+    
+        client = self.client('acs1')
+&gt;       results = client.state_county(fields, '*', '*', year=2018)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+census/tests/test_census.py:336: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+census/core.py:52: in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:247: in state_county
+    return self.get(fields, geo={
+census/core.py:327: in get
+    return super(ACSClient, self).get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:173: in get
+    merged_results = [merge(result) for result in zip(*all_results)]
+                                                  ^^^^^^^^^^^^^^^^^
+census/core.py:171: in &lt;genexpr&gt;
+    all_results = (self.query(forty_nine_fields, geo, year, sort_by_geoid=sort_by_geoid, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:62: in wrapper
+    result = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:202: in query
+    data = json.loads(resp)
+           ^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x101536f90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 405 – Method Not Allowed&lt;/title&gt;&lt;style type="text/css"&gt;body {...background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 405 – Method Not Allowed&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_new_style_endpoints" time="0.795"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_new_style_endpoints&gt;
+
+    def test_new_style_endpoints(self):
+        client = Census(KEY, year=2016)
+    
+&gt;       res_2016_2016 = client.acs1.state('B01001_004E', Census.ALL)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+census/tests/test_census.py:346: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+census/core.py:52: in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:241: in state
+    return self.get(fields, geo={
+census/core.py:327: in get
+    return super(ACSClient, self).get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:173: in get
+    merged_results = [merge(result) for result in zip(*all_results)]
+                                                  ^^^^^^^^^^^^^^^^^
+census/core.py:171: in &lt;genexpr&gt;
+    all_results = (self.query(forty_nine_fields, geo, year, sort_by_geoid=sort_by_geoid, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:62: in wrapper
+    result = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:202: in query
+    data = json.loads(resp)
+           ^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x101536f90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 405 – Method Not Allowed&lt;/title&gt;&lt;style type="text/css"&gt;body {...background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 405 – Method Not Allowed&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_older_sf1" time="0.787"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_older_sf1&gt;
+
+    def test_older_sf1(self):
+        client = Census(KEY)
+&gt;       result_2010 = client.sf1.get(
+            ('P008001',  # total
+             'P008003',  # white
+             'P008004',  # black
+             'P008006',  # asian
+             'P008010',  # latino
+             ),
+            geo={'for': 'place:53476', 'in': 'state:06'},
+        )
+
+census/tests/test_census.py:368: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+census/core.py:469: in get
+    return super(SF1Client, self).get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:173: in get
+    merged_results = [merge(result) for result in zip(*all_results)]
+                                                  ^^^^^^^^^^^^^^^^^
+census/core.py:171: in &lt;genexpr&gt;
+    all_results = (self.query(forty_nine_fields, geo, year, sort_by_geoid=sort_by_geoid, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:62: in wrapper
+    result = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:202: in query
+    data = json.loads(resp)
+           ^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x101536f90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 405 – Method Not Allowed&lt;/title&gt;&lt;style type="text/css"&gt;body {...background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 405 – Method Not Allowed&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_pl" time="0.901"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_pl&gt;
+
+    def test_pl(self):
+    
+        tests = (
+            ('us', 'United States'),
+            ('state', 'Maryland'),
+            ('state_county', 'Montgomery County, Maryland'),
+            ('state_county_subdivision',
+                'District 9, Montgomery County, Maryland'),
+            ('state_county_tract',
+                'Census Tract 7007.06, Montgomery County, Maryland'),
+            ('state_county_blockgroup',
+                ('Block Group 1, Census Tract 7007.06, '
+                    'Montgomery County, Maryland')),
+            ('state_place', 'Gaithersburg city, Maryland'),
+            ('state_district',
+                'Congressional District 6 (116th Congress), Maryland'),
+            ('state_congressional_district',
+                'Congressional District 6 (116th Congress), Maryland'),
+            ('state_legislative_district_upper',
+                'State Senate District 6 (2018), Maryland'),
+            ('state_legislative_district_lower',
+                'State Legislative District 6 (2018), Maryland'),
+        )
+    
+&gt;       self.check_endpoints('pl', tests)
+
+census/tests/test_census.py:284: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+census/tests/test_census.py:146: in check_endpoints
+    data = method(fields, **TEST_DATA, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:52: in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:237: in us
+    return self.get(fields, geo={'for': 'us:1'}, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:551: in get
+    return super(PLClient, self).get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:173: in get
+    merged_results = [merge(result) for result in zip(*all_results)]
+                                                  ^^^^^^^^^^^^^^^^^
+census/core.py:171: in &lt;genexpr&gt;
+    all_results = (self.query(forty_nine_fields, geo, year, sort_by_geoid=sort_by_geoid, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:62: in wrapper
+    result = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:202: in query
+    data = json.loads(resp)
+           ^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x101536f90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 405 – Method Not Allowed&lt;/title&gt;&lt;style type="text/css"&gt;body {...background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 405 – Method Not Allowed&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_sf1" time="0.819"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;census.tests.test_census.TestEndpoints testMethod=test_sf1&gt;
+
+    def test_sf1(self):
+    
+        tests = (
+            ('state', 'Maryland'),
+            ('state_county', 'Montgomery County, Maryland'),
+            ('state_county_subdivision',
+                ('District 9, Montgomery County, Maryland')),
+            ('state_county_tract',
+                'Census Tract 7007.06, Montgomery County, Maryland'),
+            ('state_county_blockgroup',
+                ('Block Group 1, Census Tract 7007.06, '
+                 'Montgomery County, Maryland')),
+            ('state_place', 'Gaithersburg city, Maryland'),
+            ('state_congressional_district',
+                'Congressional District 6 (111th Congress), Maryland'),
+            ('state_msa',
+                ('Washington-Arlington-Alexandria, '
+                    'DC-VA-MD-WV Metro Area (part); Maryland')),
+            ('state_csa',
+                ('Washington-Baltimore-Northern Virginia, '
+                    'DC-MD-VA-WV CSA (part); Maryland')),
+            # ('state_district_place', 'District 9'),
+            ('state_zipcode', 'ZCTA5 20877, Maryland'),
+        )
+    
+&gt;       self.check_endpoints('sf1', tests)
+
+census/tests/test_census.py:258: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+census/tests/test_census.py:146: in check_endpoints
+    data = method(fields, **TEST_DATA, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:52: in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:241: in state
+    return self.get(fields, geo={
+census/core.py:469: in get
+    return super(SF1Client, self).get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:173: in get
+    merged_results = [merge(result) for result in zip(*all_results)]
+                                                  ^^^^^^^^^^^^^^^^^
+census/core.py:171: in &lt;genexpr&gt;
+    all_results = (self.query(forty_nine_fields, geo, year, sort_by_geoid=sort_by_geoid, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:62: in wrapper
+    result = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+census/core.py:202: in query
+    data = json.loads(resp)
+           ^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x101536f90&gt;
+s = '&lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 405 – Method Not Allowed&lt;/title&gt;&lt;style type="text/css"&gt;body {...background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 405 – Method Not Allowed&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/opt/anaconda3/envs/SWA_Rep2/lib/python3.14/json/decoder.py:363: JSONDecodeError</failure></testcase><testcase classname="census.tests.test_census.TestEndpoints" name="test_tables" time="7.306" /></testsuite></testsuites>

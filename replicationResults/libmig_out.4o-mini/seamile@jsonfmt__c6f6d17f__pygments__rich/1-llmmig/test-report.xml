@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="50" time="0.366" timestamp="2026-03-03T19:59:12.882749+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="test.test_diff.TestDiff" name="test_cmp_by_code" time="0.001" /><testcase classname="test.test_diff.TestDiff" name="test_cmp_by_diff" time="0.003" /><testcase classname="test.test_diff.TestDiff" name="test_cmp_by_fc" time="0.000" /><testcase classname="test.test_diff.TestDiff" name="test_cmp_by_git" time="0.000" /><testcase classname="test.test_diff.TestDiff" name="test_cmp_by_others" time="0.000" /><testcase classname="test.test_diff.TestDiff" name="test_command_not_found" time="0.000" /><testcase classname="test.test_diff.TestDiff" name="test_compare" time="0.043" /><testcase classname="test.test_diff.TestDiff" name="test_has_command_nt" time="0.000" /><testcase classname="test.test_diff.TestDiff" name="test_has_command_posix" time="0.000" /><testcase classname="test.test_diff.TestDiff" name="test_has_command_unsupported_os" time="0.000" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_format_to_text" time="0.002" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_get_overview" time="0.000" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_is_clipboard_available" time="0.000" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_clipboard_unavailable" time="0.001" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_convert" time="0.001"><failure message="TypeError: Syntax.__init__() got an unexpected keyword argument 'language'">self = &lt;test_jsonfmt.JSONFormatToolTestCase testMethod=test_main_convert&gt;
+
+    @patch('sys.stdout', StdOut())
+    def test_main_convert(self):
+        # test json to toml
+        with patch.multiple(sys, argv=['jf', '-f', 'toml', JSON_FILE]):
+&gt;           jsonfmt.main()
+
+test/test_jsonfmt.py:422: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+jsonfmt/jsonfmt.py:339: in main
+    output(output_fp, formated, fmt)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output_fp = &lt;test_jsonfmt.StdOut object at 0x1041c6a70&gt;
+text = 'name = "Bob"\nage = 23\ngender = "纯爷们"\nmoney = 3.1415926\n[[actions]]\nname = "eating"\ncalorie = 1294.9\ndate = "20...ting"\ncalorie = -2375\ndate = "2023-04-27"\n\n[[actions]]\nname = "sleeping"\ncalorie = -420.5\ndate = "2023-05-15"\n'
+fmt = 'toml'
+
+    def output(output_fp: IO, text: str, fmt: str):
+        if hasattr(output_fp, 'name') and output_fp.name == '&lt;stdout&gt;':
+            if output_fp.isatty():
+                # highlight the text when output to TTY device
+&gt;               syntax = Syntax(text, language=fmt)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               TypeError: Syntax.__init__() got an unexpected keyword argument 'language'
+
+jsonfmt/jsonfmt.py:212: TypeError</failure></testcase><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_copy_to_clipboard" time="0.036" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_diff_mode" time="0.019" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_invalid_input" time="0.002" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_modify_and_pop" time="0.001" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_overview" time="0.000" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_overwrite_to_original_file" time="0.002" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_querying" time="0.015" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_with_file" time="0.003"><failure message="TypeError: Syntax.__init__() got an unexpected keyword argument 'language'">self = &lt;test_jsonfmt.JSONFormatToolTestCase testMethod=test_main_with_file&gt;
+
+    @patch.multiple(sys, argv=['jf', '-i', 't', '-p', 'actions[*].name',
+                               JSON_FILE, YAML_FILE])
+    @patch.multiple(sys, stdout=StdOut())
+    def test_main_with_file(self):
+        json_output = color('[\n\t"eating",\n\t"sporting",\n\t"sleeping"\n]', 'json')
+        yaml_output = color('- eating\n- sporting\n- sleeping', 'yaml')
+&gt;       jsonfmt.main()
+
+test/test_jsonfmt.py:377: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+jsonfmt/jsonfmt.py:339: in main
+    output(output_fp, formated, fmt)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output_fp = &lt;test_jsonfmt.StdOut object at 0x1041c6830&gt;
+text = '[\n\t"eating",\n\t"sporting",\n\t"sleeping"\n]\n', fmt = 'json'
+
+    def output(output_fp: IO, text: str, fmt: str):
+        if hasattr(output_fp, 'name') and output_fp.name == '&lt;stdout&gt;':
+            if output_fp.isatty():
+                # highlight the text when output to TTY device
+&gt;               syntax = Syntax(text, language=fmt)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               TypeError: Syntax.__init__() got an unexpected keyword argument 'language'
+
+jsonfmt/jsonfmt.py:212: TypeError</failure></testcase><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_with_stdin" time="0.001"><failure message="TypeError: Syntax.__init__() got an unexpected keyword argument 'language'">self = &lt;test_jsonfmt.JSONFormatToolTestCase testMethod=test_main_with_stdin&gt;
+
+    def test_main_with_stdin(self):
+        with patch.multiple(sys, argv=['jf', '-f', 'yaml'],
+                            stdin=StdIn('["a", "b"]'), stdout=StdOut()):
+            expected_output = color('- a\n- b', 'yaml')
+&gt;           jsonfmt.main()
+
+test/test_jsonfmt.py:386: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+jsonfmt/jsonfmt.py:339: in main
+    output(output_fp, formated, fmt)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output_fp = &lt;test_jsonfmt.StdOut object at 0x1043bab90&gt;, text = '- a\n- b\n'
+fmt = 'yaml'
+
+    def output(output_fp: IO, text: str, fmt: str):
+        if hasattr(output_fp, 'name') and output_fp.name == '&lt;stdout&gt;':
+            if output_fp.isatty():
+                # highlight the text when output to TTY device
+&gt;               syntax = Syntax(text, language=fmt)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               TypeError: Syntax.__init__() got an unexpected keyword argument 'language'
+
+jsonfmt/jsonfmt.py:212: TypeError</failure></testcase><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_modify_pyobj_for_adding" time="0.000" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_modify_pyobj_for_all" time="0.000" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_modify_pyobj_for_modifying" time="0.000" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_modify_pyobj_for_popping" time="0.000" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_output" time="0.001"><failure message="TypeError: Syntax.__init__() got an unexpected keyword argument 'language'">self = &lt;test_jsonfmt.JSONFormatToolTestCase testMethod=test_output&gt;
+
+    def test_output(self):
+        # output JSON to clipboard
+        jsonfmt.TEMP_CLIPBOARD.seek(0)
+        jsonfmt.TEMP_CLIPBOARD.truncate()
+        jsonfmt.output(jsonfmt.TEMP_CLIPBOARD, JSON_TEXT, 'json')
+        jsonfmt.output(jsonfmt.TEMP_CLIPBOARD, XML_TEXT, 'xml')
+        jsonfmt.TEMP_CLIPBOARD.seek(0)
+        self.assertEqual(jsonfmt.TEMP_CLIPBOARD.read(),
+                         JSON_TEXT + '\n\n' + XML_TEXT)
+    
+        # output TOML to file (temp file)
+        with tempfile.NamedTemporaryFile(mode='r+') as tmpfile:
+            jsonfmt.output(tmpfile, TOML_TEXT, 'toml')
+            tmpfile.seek(0)
+            self.assertEqual(tmpfile.read(), TOML_TEXT)
+    
+        # output YAML to stdout (mock)
+        with patch('sys.stdout', StdOut()):
+&gt;           jsonfmt.output(sys.stdout, YAML_TEXT, 'yaml')
+
+test/test_jsonfmt.py:311: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output_fp = &lt;test_jsonfmt.StdOut object at 0x1043bb010&gt;
+text = "name: Bob\nage: 23\ngender: 纯爷们\nmoney: 3.1415926\nactions:\n- name: eating\n  calorie: 1294.9\n  date: '2021-03-02'\n- name: sporting\n  calorie: -2375\n  date: '2023-04-27'\n- name: sleeping\n  calorie: -420.5\n  date: '2023-05-15'\n"
+fmt = 'yaml'
+
+    def output(output_fp: IO, text: str, fmt: str):
+        if hasattr(output_fp, 'name') and output_fp.name == '&lt;stdout&gt;':
+            if output_fp.isatty():
+                # highlight the text when output to TTY device
+&gt;               syntax = Syntax(text, language=fmt)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               TypeError: Syntax.__init__() got an unexpected keyword argument 'language'
+
+jsonfmt/jsonfmt.py:212: TypeError</failure></testcase><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_parse_cmdline_args" time="0.001" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_parse_querypath" time="0.007" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_parse_to_pyobj_with_jmespath" time="0.001" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_parse_to_pyobj_with_jsonpath" time="0.012" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_parse_to_pyobj_with_wrong_fmt" time="0.001" /><testcase classname="test.test_utils.TestFunctions" name="test_exit_with_error" time="0.000" /><testcase classname="test.test_utils.TestFunctions" name="test_print_inf" time="0.000" /><testcase classname="test.test_utils.TestFunctions" name="test_safe_eval" time="0.000" /><testcase classname="test.test_utils.TestFunctions" name="test_sort_dict" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_clone" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_dumps" time="0.001" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_from_py" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_from_xml" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_get_attrs" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_init" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_loads" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_makeelement" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_spawn" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_to_py" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_to_xml_minimal" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_to_xml_pretty" time="0.000" /></testsuite></testsuites>

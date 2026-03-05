@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="13" time="4.613" timestamp="2026-03-05T00:01:18.138705+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_base.TestBase" name="test_content_type" time="0.001" /><testcase classname="tests.test_base.TestBase" name="test_discover_get" time="0.176"><failure message="Exception: HTTP error: 403">self = &lt;test_base.TestBase testMethod=test_discover_get&gt;
+mock_head = &lt;MagicMock name='head' id='4573430512'&gt;
+mock_get = &lt;MagicMock name='get' id='4573431520'&gt;
+
+    @patch('requests.get')
+    @patch('requests.head')
+    def test_discover_get(self, mock_head, mock_get):
+        inbox = "http://example.org/inbox"
+        links = {"type": {"url": "http://www.w3.org/ns/ldp#Container"}}
+        headers = {"content-type": "application/n-triples"}
+    
+        mock_res1 = Mock()
+        mock_res1.links = links
+        mock_res1.headers = headers
+        mock_head.return_value = mock_res1
+    
+        mock_res2 = Mock()
+        mock_res2.links = links
+        mock_res2.headers = headers
+        mock_res2.text = "&lt;http://example.org/resource&gt; " + \
+                         "&lt;http://www.w3.org/ns/ldp#inbox&gt; " + \
+                         "&lt;http://example.org/inbox&gt; .\n"
+        mock_get.return_value = mock_res2
+    
+        ldn = BaseLDN()
+&gt;       self.assertEqual(ldn.discover("http://example.org/resource"), inbox)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_base.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/base.py:83: in discover
+    inbox = self.__discover_head(target, headers=headers,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.base.BaseLDN object at 0x1108be710&gt;
+target = 'http://example.org/resource'
+kwargs = {'allow_redirects': True, 'headers': {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}}
+buffer = &lt;_io.BytesIO object at 0x11098ac00&gt;
+c = &lt;pycurl.Curl object at 0x1048bf580&gt;
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+headers_list = ['Accept: application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5']
+response_code = 403
+
+    def __discover_head(self, target, **kwargs):
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, target)
+        c.setopt(c.NOBODY, True)
+        headers = kwargs.get('headers', {})
+        if 'accept' in headers:
+            headers_list = [f'Accept: {headers["accept"]}']
+        else:
+            headers_list = [f'Accept: {self.accept_headers}']
+        c.setopt(c.HTTPHEADER, headers_list)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.perform()
+        response_code = c.getinfo(c.RESPONSE_CODE)
+        c.close()
+    
+        if response_code != 200:
+&gt;           raise Exception(f"HTTP error: {response_code}")
+E           Exception: HTTP error: 403
+
+ldnlib/base.py:35: Exception</failure></testcase><testcase classname="tests.test_base.TestBase" name="test_discover_head" time="0.060"><failure message="Exception: HTTP error: 403">self = &lt;test_base.TestBase testMethod=test_discover_head&gt;
+mock_head = &lt;MagicMock name='head' id='4573433200'&gt;
+
+    @patch('requests.head')
+    def test_discover_head(self, mock_head):
+        inbox = "http://example.org/inbox"
+        mock_res = Mock()
+        mock_res.links = {"http://www.w3.org/ns/ldp#inbox": {"url": inbox}}
+    
+        mock_head.return_value = mock_res
+    
+        ldn = BaseLDN()
+&gt;       self.assertEqual(ldn.discover("http://example.org/resource"), inbox)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_base.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/base.py:83: in discover
+    inbox = self.__discover_head(target, headers=headers,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.base.BaseLDN object at 0x1108bf110&gt;
+target = 'http://example.org/resource'
+kwargs = {'allow_redirects': True, 'headers': {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}}
+buffer = &lt;_io.BytesIO object at 0x11098b600&gt;
+c = &lt;pycurl.Curl object at 0x1048c52a0&gt;
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+headers_list = ['Accept: application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5']
+response_code = 403
+
+    def __discover_head(self, target, **kwargs):
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, target)
+        c.setopt(c.NOBODY, True)
+        headers = kwargs.get('headers', {})
+        if 'accept' in headers:
+            headers_list = [f'Accept: {headers["accept"]}']
+        else:
+            headers_list = [f'Accept: {self.accept_headers}']
+        c.setopt(c.HTTPHEADER, headers_list)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.perform()
+        response_code = c.getinfo(c.RESPONSE_CODE)
+        c.close()
+    
+        if response_code != 200:
+&gt;           raise Exception(f"HTTP error: {response_code}")
+E           Exception: HTTP error: 403
+
+ldnlib/base.py:35: Exception</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notification_jsonld" time="0.054"><failure message="Exception: HTTP error: 403">self = &lt;test_consumer.TestConsumer testMethod=test_notification_jsonld&gt;
+mock_get = &lt;MagicMock name='get' id='4423404912'&gt;
+
+    @patch('requests.get')
+    def test_notification_jsonld(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/notification1.json", "r") as f:
+            attrs = {'json.return_value': json.loads("[" + f.read() + "]")}
+            mock_res.configure_mock(**attrs)
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notification = Consumer().notification("http://example.org/inbox/1")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x1109917f0&gt;
+iri = 'http://example.org/inbox/1', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+buffer = &lt;_io.BytesIO object at 0x1109d8860&gt;
+c = &lt;pycurl.Curl object at 0x121653950&gt;, response_code = 403
+
+    def notification(self, iri, **kwargs):
+        """
+        Retrieve a single LDN notification and decode into a Python object.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, iri)
+        c.setopt(c.WRITEDATA, buffer)
+        c.setopt(c.HTTPHEADER, [f"{key}: {value}" for key, value in headers.items()])
+    
+        try:
+            c.perform()
+            response_code = c.getinfo(c.RESPONSE_CODE)
+            if response_code != 200:
+&gt;               raise Exception(f"HTTP error: {response_code}")
+E               Exception: HTTP error: 403
+
+ldnlib/consumer.py:59: Exception</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notification_turtle" time="0.051"><failure message="Exception: HTTP error: 403">self = &lt;test_consumer.TestConsumer testMethod=test_notification_turtle&gt;
+mock_get = &lt;MagicMock name='get' id='4573433200'&gt;
+
+    @patch('requests.get')
+    def test_notification_turtle(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "text/turtle; charset=utf-8"}
+        with open("tests/notification.ttl", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notification = Consumer().notification("http://example.org/inbox/1")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x1108bf9d0&gt;
+iri = 'http://example.org/inbox/1', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+buffer = &lt;_io.BytesIO object at 0x1109d9c60&gt;
+c = &lt;pycurl.Curl object at 0x105e08a20&gt;, response_code = 403
+
+    def notification(self, iri, **kwargs):
+        """
+        Retrieve a single LDN notification and decode into a Python object.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, iri)
+        c.setopt(c.WRITEDATA, buffer)
+        c.setopt(c.HTTPHEADER, [f"{key}: {value}" for key, value in headers.items()])
+    
+        try:
+            c.perform()
+            response_code = c.getinfo(c.RESPONSE_CODE)
+            if response_code != 200:
+&gt;               raise Exception(f"HTTP error: {response_code}")
+E               Exception: HTTP error: 403
+
+ldnlib/consumer.py:59: Exception</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_jsonld_compacted" time="0.056"><failure message="Exception: HTTP error: 403">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_jsonld_compacted&gt;
+mock_get = &lt;MagicMock name='get' id='4573436224'&gt;
+
+    @patch('requests.get')
+    def test_notifications_jsonld_compacted(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/inbox.jsonld", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x1108bf110&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+buffer = &lt;_io.BytesIO object at 0x1109daa20&gt;
+c = &lt;pycurl.Curl object at 0x105c090e0&gt;, response_code = 403
+
+    def notifications(self, inbox, **kwargs):
+        """
+        Retrieve all of the notification IRIs from an ldp:inbox as a list.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, inbox)
+        c.setopt(c.WRITEDATA, buffer)
+        c.setopt(c.HTTPHEADER, [f"{key}: {value}" for key, value in headers.items()])
+    
+        try:
+            c.perform()
+            response_code = c.getinfo(c.RESPONSE_CODE)
+            if response_code != 200:
+&gt;               raise Exception(f"HTTP error: {response_code}")
+E               Exception: HTTP error: 403
+
+ldnlib/consumer.py:32: Exception</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_jsonld_expanded" time="0.082"><failure message="Exception: HTTP error: 403">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_jsonld_expanded&gt;
+mock_get = &lt;MagicMock name='get' id='4573436896'&gt;
+
+    @patch('requests.get')
+    def test_notifications_jsonld_expanded(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/inbox_expanded.jsonld", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x1109762c0&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+buffer = &lt;_io.BytesIO object at 0x1109db150&gt;
+c = &lt;pycurl.Curl object at 0x105c099f0&gt;, response_code = 403
+
+    def notifications(self, inbox, **kwargs):
+        """
+        Retrieve all of the notification IRIs from an ldp:inbox as a list.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, inbox)
+        c.setopt(c.WRITEDATA, buffer)
+        c.setopt(c.HTTPHEADER, [f"{key}: {value}" for key, value in headers.items()])
+    
+        try:
+            c.perform()
+            response_code = c.getinfo(c.RESPONSE_CODE)
+            if response_code != 200:
+&gt;               raise Exception(f"HTTP error: {response_code}")
+E               Exception: HTTP error: 403
+
+ldnlib/consumer.py:32: Exception</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_ntriples" time="0.069"><failure message="Exception: HTTP error: 403">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_ntriples&gt;
+mock_get = &lt;MagicMock name='get' id='4573437568'&gt;
+
+    @patch('requests.get')
+    def test_notifications_ntriples(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/n-triples"}
+        with open("tests/inbox.nt", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x110976780&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+buffer = &lt;_io.BytesIO object at 0x1109db9c0&gt;
+c = &lt;pycurl.Curl object at 0x107e06160&gt;, response_code = 403
+
+    def notifications(self, inbox, **kwargs):
+        """
+        Retrieve all of the notification IRIs from an ldp:inbox as a list.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, inbox)
+        c.setopt(c.WRITEDATA, buffer)
+        c.setopt(c.HTTPHEADER, [f"{key}: {value}" for key, value in headers.items()])
+    
+        try:
+            c.perform()
+            response_code = c.getinfo(c.RESPONSE_CODE)
+            if response_code != 200:
+&gt;               raise Exception(f"HTTP error: {response_code}")
+E               Exception: HTTP error: 403
+
+ldnlib/consumer.py:32: Exception</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_turtle" time="0.101"><failure message="Exception: HTTP error: 403">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_turtle&gt;
+mock_get = &lt;MagicMock name='get' id='4573438240'&gt;
+
+    @patch('requests.get')
+    def test_notifications_turtle(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "text/turtle; charset=utf-8"}
+        with open("tests/inbox.ttl", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+&gt;       notifications = Consumer().notifications("http://example.org/inbox")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_consumer.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.consumer.Consumer object at 0x1109fdb50&gt;
+inbox = 'http://example.org/inbox', kwargs = {}
+headers = {'accept': 'application/ld+json; q=1.0,text/turtle; q=0.9,application/xml+rdf; q=0.5'}
+buffer = &lt;_io.BytesIO object at 0x110a4c0e0&gt;
+c = &lt;pycurl.Curl object at 0x107e07550&gt;, response_code = 403
+
+    def notifications(self, inbox, **kwargs):
+        """
+        Retrieve all of the notification IRIs from an ldp:inbox as a list.
+        """
+        headers = kwargs.pop("headers", dict())
+        if 'accept' not in headers:
+            headers['accept'] = kwargs.pop("accept", self.accept_headers)
+    
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, inbox)
+        c.setopt(c.WRITEDATA, buffer)
+        c.setopt(c.HTTPHEADER, [f"{key}: {value}" for key, value in headers.items()])
+    
+        try:
+            c.perform()
+            response_code = c.getinfo(c.RESPONSE_CODE)
+            if response_code != 200:
+&gt;               raise Exception(f"HTTP error: {response_code}")
+E               Exception: HTTP error: 403
+
+ldnlib/consumer.py:32: Exception</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_dict" time="0.092"><failure message="ValueError: Request failed with status code 405">self = &lt;test_sender.TestSender testMethod=test_send_dict&gt;
+mock_post = &lt;MagicMock name='post' id='4573438912'&gt;
+
+    @patch('requests.post')
+    def test_send_dict(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = json.loads(f.read())
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:67: in send
+    self.__post_message(inbox, json.dumps(data), self.JSON_LD,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.sender.Sender object at 0x110992510&gt;
+inbox = 'http://example.org/inbox'
+data = '{"@context": {"schema": "http://schema.org/", "creator": {"@id": "schema:creator", "@type": "@id"}}, "creator": "http://example.org/user"}'
+content_type = 'application/ld+json', kwargs = {}
+buffer = &lt;_io.BytesIO object at 0x110a4c9f0&gt;
+c = &lt;pycurl.Curl object at 0x105c09c30&gt;
+headers = {'content-type': 'application/ld+json'}, response_code = 405
+
+    def __post_message(self, inbox, data, content_type, **kwargs):
+        if self.allow_localhost or not self.__is_localhost(inbox):
+            buffer = io.BytesIO()
+            c = pycurl.Curl()
+            c.setopt(c.URL, inbox)
+            c.setopt(c.POSTFIELDS, data)
+            headers = kwargs.pop("headers", dict())
+            headers['content-type'] = content_type
+            c.setopt(c.HTTPHEADER, [f"{key}: {value}" for key, value in headers.items()])
+    
+            c.perform()
+            response_code = c.getinfo(c.RESPONSE_CODE)
+            if response_code != 200:
+&gt;               raise ValueError(f"Request failed with status code {response_code}")
+E               ValueError: Request failed with status code 405
+
+ldnlib/sender.py:59: ValueError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_graph" time="0.173"><failure message="ValueError: Request failed with status code 405">self = &lt;test_sender.TestSender testMethod=test_send_graph&gt;
+mock_post = &lt;MagicMock name='post' id='4573440256'&gt;
+
+    @patch('requests.post')
+    def test_send_graph(self, mock_post):
+        data = Graph().parse("tests/notification.nt", format="ntriples")
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:73: in send
+    self.__post_message(inbox, data.serialize(format=ct), ct,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.sender.Sender object at 0x110a00550&gt;
+inbox = 'http://example.org/inbox'
+data = '[\n  {\n    "@id": "ex:notification",\n    "http://schema.org/creator": [\n      {\n        "@id": "http://example.org/user"\n      }\n    ]\n  }\n]'
+content_type = 'application/ld+json', kwargs = {}
+buffer = &lt;_io.BytesIO object at 0x110ab2930&gt;
+c = &lt;pycurl.Curl object at 0x105d07c60&gt;
+headers = {'content-type': 'application/ld+json'}, response_code = 405
+
+    def __post_message(self, inbox, data, content_type, **kwargs):
+        if self.allow_localhost or not self.__is_localhost(inbox):
+            buffer = io.BytesIO()
+            c = pycurl.Curl()
+            c.setopt(c.URL, inbox)
+            c.setopt(c.POSTFIELDS, data)
+            headers = kwargs.pop("headers", dict())
+            headers['content-type'] = content_type
+            c.setopt(c.HTTPHEADER, [f"{key}: {value}" for key, value in headers.items()])
+    
+            c.perform()
+            response_code = c.getinfo(c.RESPONSE_CODE)
+            if response_code != 200:
+&gt;               raise ValueError(f"Request failed with status code {response_code}")
+E               ValueError: Request failed with status code 405
+
+ldnlib/sender.py:59: ValueError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_list" time="0.064"><failure message="ValueError: Request failed with status code 405">self = &lt;test_sender.TestSender testMethod=test_send_list&gt;
+mock_post = &lt;MagicMock name='post' id='4574626544'&gt;
+
+    @patch('requests.post')
+    def test_send_list(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = json.loads("[" + f.read() + "]")
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:67: in send
+    self.__post_message(inbox, json.dumps(data), self.JSON_LD,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.sender.Sender object at 0x110a01090&gt;
+inbox = 'http://example.org/inbox'
+data = '[{"@context": {"schema": "http://schema.org/", "creator": {"@id": "schema:creator", "@type": "@id"}}, "creator": "http://example.org/user"}]'
+content_type = 'application/ld+json', kwargs = {}
+buffer = &lt;_io.BytesIO object at 0x110ab2b60&gt;
+c = &lt;pycurl.Curl object at 0x107e0ce70&gt;
+headers = {'content-type': 'application/ld+json'}, response_code = 405
+
+    def __post_message(self, inbox, data, content_type, **kwargs):
+        if self.allow_localhost or not self.__is_localhost(inbox):
+            buffer = io.BytesIO()
+            c = pycurl.Curl()
+            c.setopt(c.URL, inbox)
+            c.setopt(c.POSTFIELDS, data)
+            headers = kwargs.pop("headers", dict())
+            headers['content-type'] = content_type
+            c.setopt(c.HTTPHEADER, [f"{key}: {value}" for key, value in headers.items()])
+    
+            c.perform()
+            response_code = c.getinfo(c.RESPONSE_CODE)
+            if response_code != 200:
+&gt;               raise ValueError(f"Request failed with status code {response_code}")
+E               ValueError: Request failed with status code 405
+
+ldnlib/sender.py:59: ValueError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_string" time="0.067"><failure message="ValueError: Request failed with status code 405">self = &lt;test_sender.TestSender testMethod=test_send_string&gt;
+mock_post = &lt;MagicMock name='post' id='4574627216'&gt;
+
+    @patch('requests.post')
+    def test_send_string(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = f.read()
+    
+&gt;       Sender().send(self.INBOX, data)
+
+tests/test_sender.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ldnlib/sender.py:70: in send
+    self.__post_message(inbox, data, self.JSON_LD, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ldnlib.sender.Sender object at 0x110977ce0&gt;
+inbox = 'http://example.org/inbox'
+data = '{\n    "@context" : {\n        "schema" : "http://schema.org/",\n        "creator" : { "@id" : "schema:creator", "@type" : "@id" }\n    },\n    "creator" : "http://example.org/user"\n}\n'
+content_type = 'application/ld+json', kwargs = {}
+buffer = &lt;_io.BytesIO object at 0x110ab3420&gt;
+c = &lt;pycurl.Curl object at 0x105e0afd0&gt;
+headers = {'content-type': 'application/ld+json'}, response_code = 405
+
+    def __post_message(self, inbox, data, content_type, **kwargs):
+        if self.allow_localhost or not self.__is_localhost(inbox):
+            buffer = io.BytesIO()
+            c = pycurl.Curl()
+            c.setopt(c.URL, inbox)
+            c.setopt(c.POSTFIELDS, data)
+            headers = kwargs.pop("headers", dict())
+            headers['content-type'] = content_type
+            c.setopt(c.HTTPHEADER, [f"{key}: {value}" for key, value in headers.items()])
+    
+            c.perform()
+            response_code = c.getinfo(c.RESPONSE_CODE)
+            if response_code != 200:
+&gt;               raise ValueError(f"Request failed with status code {response_code}")
+E               ValueError: Request failed with status code 405
+
+ldnlib/sender.py:59: ValueError</failure></testcase></testsuite></testsuites>

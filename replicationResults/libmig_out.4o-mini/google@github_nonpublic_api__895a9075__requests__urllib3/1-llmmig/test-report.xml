@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="12" time="0.188" timestamp="2026-03-04T13:31:02.173369" hostname="gonam-uui-MacBookPro.local"><testcase classname="tests.test_api.TestApi" name="test_create_business_org" time="0.002"><failure message="Exception: Error fetching URL https://github.com/account/organizations/new?plan=free: &lt;MagicMock name='mock.request().status' id='4381156960'&gt;">self = &lt;tests.test_api.TestApi testMethod=test_create_business_org&gt;
+
+    def test_create_business_org(self):
+        self._seed_session_with_file(NEW_ORG_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+&gt;       gh.create_organization(org_name='test', contact_email='nobody@google.com',
+                               org_usage=api.OrganizationUsage.BUSINESS,
+                               business_name='A Fake Business')
+
+tests/test_api.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+github_nonpublic_api/api.py:202: in create_organization
+    return _get_and_submit_form(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;MagicMock id='4381153264'&gt;
+url = 'https://github.com/account/organizations/new?plan=free'
+data_callback = &lt;function Api.create_organization.&lt;locals&gt;._create_org_callback at 0x105259e80&gt;
+form_matcher = &lt;function Api.create_organization.&lt;locals&gt;.&lt;lambda&gt; at 0x105259f30&gt;
+
+    def _get_and_submit_form(
+        session, url: str, data_callback=None, form_matcher=lambda form: True
+    ):
+        logging.info("Fetching URL %s", url)
+        response = session.request('GET', url)
+        if response.status != 200:
+&gt;           raise Exception(f"Error fetching URL {url}: {response.status}")
+E           Exception: Error fetching URL https://github.com/account/organizations/new?plan=free: &lt;MagicMock name='mock.request().status' id='4381156960'&gt;
+
+github_nonpublic_api/api.py:37: Exception</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_create_personal_org" time="0.001"><failure message="Exception: Error fetching URL https://github.com/account/organizations/new?plan=free: &lt;MagicMock name='mock.request().status' id='4381162672'&gt;">self = &lt;tests.test_api.TestApi testMethod=test_create_personal_org&gt;
+
+    def test_create_personal_org(self):
+        self._seed_session_with_file(NEW_ORG_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+&gt;       gh.create_organization(org_name='test', contact_email='nobody@google.com',
+                               org_usage=api.OrganizationUsage.PERSONAL)
+
+tests/test_api.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+github_nonpublic_api/api.py:202: in create_organization
+    return _get_and_submit_form(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;MagicMock id='4381158976'&gt;
+url = 'https://github.com/account/organizations/new?plan=free'
+data_callback = &lt;function Api.create_organization.&lt;locals&gt;._create_org_callback at 0x10525a400&gt;
+form_matcher = &lt;function Api.create_organization.&lt;locals&gt;.&lt;lambda&gt; at 0x10525a610&gt;
+
+    def _get_and_submit_form(
+        session, url: str, data_callback=None, form_matcher=lambda form: True
+    ):
+        logging.info("Fetching URL %s", url)
+        response = session.request('GET', url)
+        if response.status != 200:
+&gt;           raise Exception(f"Error fetching URL {url}: {response.status}")
+E           Exception: Error fetching URL https://github.com/account/organizations/new?plan=free: &lt;MagicMock name='mock.request().status' id='4381162672'&gt;
+
+github_nonpublic_api/api.py:37: Exception</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_download_usage_report" time="0.001"><failure message="Exception: Error fetching URL https://github.com/enterprises/test-enterprise/settings/metered_exports/1: &lt;MagicMock name='mock.request().status' id='4381156624'&gt;">self = &lt;tests.test_api.TestApi testMethod=test_download_usage_report&gt;
+
+    def test_download_usage_report(self):
+        self._seed_session_with_file(DOWNLOAD_USAGE_REPORT_CSV)
+        gh = api.Api(username='user', password='pass', session=self.session)
+&gt;       gh.download_usage_report(enterprise_name='test-enterprise', report_id=1)
+
+tests/test_api.py:141: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+github_nonpublic_api/api.py:244: in download_usage_report
+    return _get_url_with_session(session=self._session, url=url)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;MagicMock id='4381158304'&gt;
+url = 'https://github.com/enterprises/test-enterprise/settings/metered_exports/1'
+
+    def _get_url_with_session(session, url: str):
+        logging.info("Fetching URL %s", url)
+        response = session.request('GET', url)
+        if response.status != 200:
+&gt;           raise Exception(f"Error fetching URL {url}: {response.status}")
+E           Exception: Error fetching URL https://github.com/enterprises/test-enterprise/settings/metered_exports/1: &lt;MagicMock name='mock.request().status' id='4381156624'&gt;
+
+github_nonpublic_api/api.py:83: Exception</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_get_and_submit_form" time="0.001"><failure message="Exception: Error fetching URL http://github.com: &lt;MagicMock name='mock.request().status' id='4381154272'&gt;">self = &lt;tests.test_api.TestApi testMethod=test_get_and_submit_form&gt;
+
+    def test_get_and_submit_form(self):
+        self._seed_session_with_file(GITHUB_FORM_HTML)
+    
+        def _data_callback(data):
+            data['add'] = 'yes'
+    
+&gt;       api._get_and_submit_form(
+            session=self.session, url='http://github.com', data_callback=_data_callback)
+
+tests/test_api.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;MagicMock id='4381156288'&gt;, url = 'http://github.com'
+data_callback = &lt;function TestApi.test_get_and_submit_form.&lt;locals&gt;._data_callback at 0x10525a1f0&gt;
+form_matcher = &lt;function &lt;lambda&gt; at 0x104e62610&gt;
+
+    def _get_and_submit_form(
+        session, url: str, data_callback=None, form_matcher=lambda form: True
+    ):
+        logging.info("Fetching URL %s", url)
+        response = session.request('GET', url)
+        if response.status != 200:
+&gt;           raise Exception(f"Error fetching URL {url}: {response.status}")
+E           Exception: Error fetching URL http://github.com: &lt;MagicMock name='mock.request().status' id='4381154272'&gt;
+
+github_nonpublic_api/api.py:37: Exception</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_get_and_submit_form_by_id" time="0.001"><failure message="Exception: Error fetching URL http://github.com: &lt;MagicMock name='mock.request().status' id='4382052032'&gt;">self = &lt;tests.test_api.TestApi testMethod=test_get_and_submit_form_by_id&gt;
+
+    def test_get_and_submit_form_by_id(self):
+        self._seed_session_with_file(GITHUB_FORM_HTML)
+    
+&gt;       api._get_and_submit_form(
+            session=self.session, url='http://github.com',
+            form_matcher=lambda form: form.attrib.get('id') == 'form2')
+
+tests/test_api.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;MagicMock id='4382050688'&gt;, url = 'http://github.com'
+data_callback = None
+form_matcher = &lt;function TestApi.test_get_and_submit_form_by_id.&lt;locals&gt;.&lt;lambda&gt; at 0x105259d20&gt;
+
+    def _get_and_submit_form(
+        session, url: str, data_callback=None, form_matcher=lambda form: True
+    ):
+        logging.info("Fetching URL %s", url)
+        response = session.request('GET', url)
+        if response.status != 200:
+&gt;           raise Exception(f"Error fetching URL {url}: {response.status}")
+E           Exception: Error fetching URL http://github.com: &lt;MagicMock name='mock.request().status' id='4382052032'&gt;
+
+github_nonpublic_api/api.py:37: Exception</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_get_and_submit_form_by_id_error" time="0.001"><failure message="Exception: Error fetching URL http://github.com: &lt;MagicMock name='mock.request().status' id='4382055728'&gt;">self = &lt;tests.test_api.TestApi testMethod=test_get_and_submit_form_by_id_error&gt;
+
+    def test_get_and_submit_form_by_id_error(self):
+        self._seed_session_with_file(GITHUB_FORM_HTML)
+    
+        with self.assertRaises(ValueError):
+&gt;           api._get_and_submit_form(
+                session=self.session, url='http://github.com',
+                form_matcher=lambda form: False)
+
+tests/test_api.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _get_and_submit_form(
+        session, url: str, data_callback=None, form_matcher=lambda form: True
+    ):
+        logging.info("Fetching URL %s", url)
+        response = session.request('GET', url)
+        if response.status != 200:
+&gt;           raise Exception(f"Error fetching URL {url}: {response.status}")
+E           Exception: Error fetching URL http://github.com: &lt;MagicMock name='mock.request().status' id='4382055728'&gt;
+
+github_nonpublic_api/api.py:37: Exception</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_install_app_on_org" time="0.001"><failure message="Exception: Error fetching URL https://github.com/apps/test-app/installations/new/permissions?target_id=42: &lt;MagicMock name='mock.request().status' id='4382059088'&gt;">self = &lt;tests.test_api.TestApi testMethod=test_install_app_on_org&gt;
+
+    def test_install_app_on_org(self):
+        self._seed_session_with_file(ADD_APP_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+&gt;       gh.install_application_in_organization(app_name='test-app', org_id=42)
+
+tests/test_api.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+github_nonpublic_api/api.py:218: in install_application_in_organization
+    return _get_and_submit_form(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;MagicMock id='4382057408'&gt;
+url = 'https://github.com/apps/test-app/installations/new/permissions?target_id=42'
+data_callback = &lt;function Api.install_application_in_organization.&lt;locals&gt;._install_app_callback at 0x10525af00&gt;
+form_matcher = &lt;function Api.install_application_in_organization.&lt;locals&gt;.&lt;lambda&gt; at 0x10525ae50&gt;
+
+    def _get_and_submit_form(
+        session, url: str, data_callback=None, form_matcher=lambda form: True
+    ):
+        logging.info("Fetching URL %s", url)
+        response = session.request('GET', url)
+        if response.status != 200:
+&gt;           raise Exception(f"Error fetching URL {url}: {response.status}")
+E           Exception: Error fetching URL https://github.com/apps/test-app/installations/new/permissions?target_id=42: &lt;MagicMock name='mock.request().status' id='4382059088'&gt;
+
+github_nonpublic_api/api.py:37: Exception</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_request_usage_report" time="0.001"><failure message="Exception: Error fetching URL https://github.com/enterprises/test-enterprise/settings/billing: &lt;MagicMock name='mock.request().status' id='4382062784'&gt;">self = &lt;tests.test_api.TestApi testMethod=test_request_usage_report&gt;
+
+    def test_request_usage_report(self):
+        self._seed_session_with_file(REQUEST_REPORT_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+&gt;       gh.request_usage(enterprise_name='test-enterprise', days=7)
+
+tests/test_api.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+github_nonpublic_api/api.py:174: in request_usage
+    return _get_and_submit_form(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;MagicMock id='4382061104'&gt;
+url = 'https://github.com/enterprises/test-enterprise/settings/billing'
+data_callback = &lt;function Api.request_usage.&lt;locals&gt;._request_usage_callback at 0x10525b270&gt;
+form_matcher = &lt;function Api.request_usage.&lt;locals&gt;.&lt;lambda&gt; at 0x10525b320&gt;
+
+    def _get_and_submit_form(
+        session, url: str, data_callback=None, form_matcher=lambda form: True
+    ):
+        logging.info("Fetching URL %s", url)
+        response = session.request('GET', url)
+        if response.status != 200:
+&gt;           raise Exception(f"Error fetching URL {url}: {response.status}")
+E           Exception: Error fetching URL https://github.com/enterprises/test-enterprise/settings/billing: &lt;MagicMock name='mock.request().status' id='4382062784'&gt;
+
+github_nonpublic_api/api.py:37: Exception</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_suspend_app_toggle" time="0.001"><failure message="Exception: Error fetching URL https://github.com/organizations/test-org/settings/installations/42: &lt;MagicMock name='mock.request().status' id='4383131696'&gt;">self = &lt;tests.test_api.TestApi testMethod=test_suspend_app_toggle&gt;
+
+    def test_suspend_app_toggle(self):
+        self._seed_session_with_file(SUSPEND_APP_FORM)
+        gh = api.Api(username='user', password='pass', session=self.session)
+&gt;       gh.toggle_app_suspended(org_name='test-org', app_install_id=42)
+
+tests/test_api.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+github_nonpublic_api/api.py:231: in toggle_app_suspended
+    return _get_and_submit_form(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;MagicMock id='4383129680'&gt;
+url = 'https://github.com/organizations/test-org/settings/installations/42'
+data_callback = None
+form_matcher = &lt;function Api.toggle_app_suspended.&lt;locals&gt;.&lt;lambda&gt; at 0x10525b690&gt;
+
+    def _get_and_submit_form(
+        session, url: str, data_callback=None, form_matcher=lambda form: True
+    ):
+        logging.info("Fetching URL %s", url)
+        response = session.request('GET', url)
+        if response.status != 200:
+&gt;           raise Exception(f"Error fetching URL {url}: {response.status}")
+E           Exception: Error fetching URL https://github.com/organizations/test-org/settings/installations/42: &lt;MagicMock name='mock.request().status' id='4383131696'&gt;
+
+github_nonpublic_api/api.py:37: Exception</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_update_app_permissions" time="0.001"><failure message="Exception: Error fetching URL https://github.com/organizations/test-org/settings/installations/42/permissions/update: &lt;MagicMock name='mock.request().status' id='4383135392'&gt;">self = &lt;tests.test_api.TestApi testMethod=test_update_app_permissions&gt;
+
+    def test_update_app_permissions(self):
+        self._seed_session_with_file(UPDATE_APP_PERMISSIONS_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+&gt;       gh.approve_updated_app_permissions(org_name='test-org', app_install_id='42')
+
+tests/test_api.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+github_nonpublic_api/api.py:279: in approve_updated_app_permissions
+    return _get_and_submit_form(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;MagicMock id='4383133712'&gt;
+url = 'https://github.com/organizations/test-org/settings/installations/42/permissions/update'
+data_callback = None
+form_matcher = &lt;function Api.approve_updated_app_permissions.&lt;locals&gt;.&lt;lambda&gt; at 0x10525ba00&gt;
+
+    def _get_and_submit_form(
+        session, url: str, data_callback=None, form_matcher=lambda form: True
+    ):
+        logging.info("Fetching URL %s", url)
+        response = session.request('GET', url)
+        if response.status != 200:
+&gt;           raise Exception(f"Error fetching URL {url}: {response.status}")
+E           Exception: Error fetching URL https://github.com/organizations/test-org/settings/installations/42/permissions/update: &lt;MagicMock name='mock.request().status' id='4383135392'&gt;
+
+github_nonpublic_api/api.py:37: Exception</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_update_security_analysis_settings_code_scanning" time="0.001"><failure message="Exception: Error fetching URL https://github.com/organizations/test-org/settings/security_analysis/ghas_settings: &lt;MagicMock name='mock.request().status' id='4383139424'&gt;">self = &lt;tests.test_api.TestApi testMethod=test_update_security_analysis_settings_code_scanning&gt;
+
+    def test_update_security_analysis_settings_code_scanning(self):
+        self._seed_session_with_file(SECURITY_ANALYSIS_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+&gt;       gh.update_security_analysis_settings(org_name='test-org', code_scanning_autofix=False)
+
+tests/test_api.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+github_nonpublic_api/api.py:301: in update_security_analysis_settings
+    _get_and_submit_form(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;MagicMock id='4383137408'&gt;
+url = 'https://github.com/organizations/test-org/settings/security_analysis/ghas_settings'
+data_callback = &lt;function Api.update_security_analysis_settings.&lt;locals&gt;._data_callback at 0x10525be20&gt;
+form_matcher = functools.partial(&lt;function Api.update_security_analysis_settings.&lt;locals&gt;._form_matcher at 0x10525bd70&gt;, name='code_scanning_autofix')
+
+    def _get_and_submit_form(
+        session, url: str, data_callback=None, form_matcher=lambda form: True
+    ):
+        logging.info("Fetching URL %s", url)
+        response = session.request('GET', url)
+        if response.status != 200:
+&gt;           raise Exception(f"Error fetching URL {url}: {response.status}")
+E           Exception: Error fetching URL https://github.com/organizations/test-org/settings/security_analysis/ghas_settings: &lt;MagicMock name='mock.request().status' id='4383139424'&gt;
+
+github_nonpublic_api/api.py:37: Exception</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_update_security_analysis_settings_code_scanning_3p" time="0.001"><failure message="Exception: Error fetching URL https://github.com/organizations/test-org/settings/security_analysis/ghas_settings: &lt;MagicMock name='mock.request().status' id='4383143120'&gt;">self = &lt;tests.test_api.TestApi testMethod=test_update_security_analysis_settings_code_scanning_3p&gt;
+
+    def test_update_security_analysis_settings_code_scanning_3p(self):
+        self._seed_session_with_file(SECURITY_ANALYSIS_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+&gt;       gh.update_security_analysis_settings(org_name='test-org', code_scanning_autofix_third_party_tools=True)
+
+tests/test_api.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+github_nonpublic_api/api.py:312: in update_security_analysis_settings
+    _get_and_submit_form(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;MagicMock id='4383141440'&gt;
+url = 'https://github.com/organizations/test-org/settings/security_analysis/ghas_settings'
+data_callback = &lt;function Api.update_security_analysis_settings.&lt;locals&gt;._data_callback at 0x105444250&gt;
+form_matcher = functools.partial(&lt;function Api.update_security_analysis_settings.&lt;locals&gt;._form_matcher at 0x1054441a0&gt;, name='code_scanning_autofix_third_party_tools')
+
+    def _get_and_submit_form(
+        session, url: str, data_callback=None, form_matcher=lambda form: True
+    ):
+        logging.info("Fetching URL %s", url)
+        response = session.request('GET', url)
+        if response.status != 200:
+&gt;           raise Exception(f"Error fetching URL {url}: {response.status}")
+E           Exception: Error fetching URL https://github.com/organizations/test-org/settings/security_analysis/ghas_settings: &lt;MagicMock name='mock.request().status' id='4383143120'&gt;
+
+github_nonpublic_api/api.py:37: Exception</failure></testcase></testsuite></testsuites>

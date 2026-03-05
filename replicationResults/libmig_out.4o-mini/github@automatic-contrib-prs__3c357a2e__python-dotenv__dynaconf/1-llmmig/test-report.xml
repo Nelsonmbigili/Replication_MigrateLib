@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="22" time="0.415" timestamp="2026-03-04T20:22:01.559598+04:00" hostname="gonam-uui-MacBookPro.local"><testcase classname="test_auth.TestAuth" name="test_auth_to_github_invalid_credentials" time="0.001" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_app" time="0.001" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_ghe" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_ghe_and_ghe_app" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_token" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_without_token" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_get_github_app_installation_token" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_get_github_app_installation_token_request_failure" time="0.000" /><testcase classname="test_env.TestEnv" name="test_get_env_vars_auth_with_github_app_installation_missing_inputs" time="0.075"><failure message="AssertionError: 'GH_TOKEN environment variable not set' != 'GH_APP_ID set and GH_APP_INSTALLATION_ID or [31 chars] set'&#10;- GH_TOKEN environment variable not set&#10;+ GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_auth_with_github_app_installation_missing_inputs&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "my_organization",
+            "GH_APP_ID": "12345",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_auth_with_github_app_installation_missing_inputs(self):
+        """Test that an error is raised when there are missing inputs for the gh app"""
+        with self.assertRaises(ValueError) as context_manager:
+            get_env_vars(True)
+        the_exception = context_manager.exception
+&gt;       self.assertEqual(
+            str(the_exception),
+            "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set",
+        )
+E       AssertionError: 'GH_TOKEN environment variable not set' != 'GH_APP_ID set and GH_APP_INSTALLATION_ID or [31 chars] set'
+E       - GH_TOKEN environment variable not set
+E       + GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set
+
+test_env.py:183: AssertionError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_missing_all_authentication" time="0.001" /><testcase classname="test_env.TestEnv" name="test_get_env_vars_missing_organization" time="0.001"><failure message="AssertionError: 'GH_TOKEN environment variable not set' != 'ORGANIZATION environment variable not set'&#10;- GH_TOKEN environment variable not set&#10;?  ^^  --&#10;+ ORGANIZATION environment variable not set&#10;? ++ ^^^^^ +">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_missing_organization&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_TOKEN": TOKEN,
+        },
+    )
+    def test_get_env_vars_missing_organization(self):
+        """Test that an error is raised if required organization environment variables is not set"""
+        with self.assertRaises(ValueError) as context_manager:
+            get_env_vars()
+        the_exception = context_manager.exception
+&gt;       self.assertEqual(
+            str(the_exception),
+            "ORGANIZATION environment variable not set",
+        )
+E       AssertionError: 'GH_TOKEN environment variable not set' != 'ORGANIZATION environment variable not set'
+E       - GH_TOKEN environment variable not set
+E       ?  ^^  --
+E       + ORGANIZATION environment variable not set
+E       ? ++ ^^^^^ +
+
+test_env.py:162: AssertionError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_no_organization_set" time="0.001"><failure message="AssertionError: 'GH_TOKEN environment variable not set' != 'ORGANIZATION environment variable not set'&#10;- GH_TOKEN environment variable not set&#10;?  ^^  --&#10;+ ORGANIZATION environment variable not set&#10;? ++ ^^^^^ +">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_no_organization_set&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "",
+            "GH_TOKEN": "test",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_no_organization_set(self):
+        """Test that an error is raised whenthere are missing inputs for the gh app"""
+        with self.assertRaises(ValueError) as context_manager:
+            get_env_vars(True)
+        the_exception = context_manager.exception
+&gt;       self.assertEqual(
+            str(the_exception),
+            "ORGANIZATION environment variable not set",
+        )
+E       AssertionError: 'GH_TOKEN environment variable not set' != 'ORGANIZATION environment variable not set'
+E       - GH_TOKEN environment variable not set
+E       ?  ^^  --
+E       + ORGANIZATION environment variable not set
+E       ? ++ ^^^^^ +
+
+test_env.py:201: AssertionError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_optional_values" time="0.000"><failure message="ValueError: GH_TOKEN environment variable not set">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_optional_values&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_ACTOR": "testactor",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GITHUB_APP_ENTERPRISE_ONLY": "",
+            "GH_ENTERPRISE_URL": "testghe",
+            "GH_TOKEN": TOKEN,
+            "ORGANIZATION": ORGANIZATION,
+            "PR_BODY": BODY,
+            "PR_TITLE": TITLE,
+            "REPOS_JSON_LOCATION": "test/repos.json",
+        },
+    )
+    def test_get_env_vars_optional_values(self):
+        """Test that optional values are set to their default values if not provided"""
+        expected_result = EnvVars(
+            "testactor",
+            None,
+            None,
+            b"",
+            False,
+            "testghe",
+            TOKEN,
+            ORGANIZATION,
+            BODY,
+            TITLE,
+            "test/repos.json",
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_env.py:137: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = True
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the action.
+    
+        Args:
+            test (bool): Whether or not to load the environment variables from a .env file (default: False)
+    
+        Returns:
+            gh_actor (str): The GitHub actor to use for authentication
+            gh_app_id (int | None): The GitHub App ID to use for authentication
+            gh_app_installation_id (int | None): The GitHub App Installation ID to use for authentication
+            gh_app_private_key_bytes (bytes): The GitHub App Private Key as bytes to use for authentication
+            gh_app_enterprise_only (bool): Set this to true if the GH APP is created on GHE and needs to communicate with GHE api only
+            gh_enterprise_url (str): The GitHub Enterprise URL to use for authentication
+            gh_token (str | None): The GitHub token to use for authentication
+            organization (str): The GitHub organization to use for the PR
+            pr_body (str): The PR body to use for the PR
+            pr_title (str): The PR title to use for the PR
+            repos_json_location (str): The location of the repos.json file
+        """
+        gh_actor = settings.get("GH_ACTOR", "nobody")
+        gh_app_id = get_int_env_var("GH_APP_ID")
+        gh_app_private_key_bytes = settings.get("GH_APP_PRIVATE_KEY", "").encode("utf8")
+        gh_app_installation_id = get_int_env_var("GH_APP_INSTALLATION_ID")
+        gh_app_enterprise_only = get_bool_env_var("GITHUB_APP_ENTERPRISE_ONLY")
+    
+        if gh_app_id and (not gh_app_private_key_bytes or not gh_app_installation_id):
+            raise ValueError(
+                "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set"
+            )
+    
+        gh_token = settings.get("GH_TOKEN")
+        if (
+            not gh_app_id
+            and not gh_app_private_key_bytes
+            and not gh_app_installation_id
+            and not gh_token
+        ):
+&gt;           raise ValueError("GH_TOKEN environment variable not set")
+E           ValueError: GH_TOKEN environment variable not set
+
+env.py:149: ValueError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_pr_body_too_long" time="0.001"><failure message="AssertionError: 'GH_TOKEN environment variable not set' != 'BODY environment variable is too long. Max 65536 characters'&#10;- GH_TOKEN environment variable not set&#10;+ BODY environment variable is too long. Max 65536 characters">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_pr_body_too_long&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "my_organization",
+            "GH_TOKEN": "test",
+            "PR_BODY": "".join(
+                random.choices(string.ascii_letters, k=MAX_BODY_LENGTH + 1)
+            ),
+        },
+        clear=True,
+    )
+    def test_get_env_vars_pr_body_too_long(self):
+        """Test that an error is raised when the PR_BODY env variable has more than MAX_BODY_LENGTH characters"""
+        with self.assertRaises(ValueError) as context_manager:
+            get_env_vars(True)
+        the_exception = context_manager.exception
+&gt;       self.assertEqual(
+            str(the_exception),
+            f"BODY environment variable is too long. Max {MAX_BODY_LENGTH} characters",
+        )
+E       AssertionError: 'GH_TOKEN environment variable not set' != 'BODY environment variable is too long. Max 65536 characters'
+E       - GH_TOKEN environment variable not set
+E       + BODY environment variable is too long. Max 65536 characters
+
+test_env.py:243: AssertionError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_pr_title_too_long" time="0.000"><failure message="AssertionError: 'GH_TOKEN environment variable not set' != 'PR_TITLE environment variable is too long. Max 70 characters'&#10;- GH_TOKEN environment variable not set&#10;+ PR_TITLE environment variable is too long. Max 70 characters">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_pr_title_too_long&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "my_organization",
+            "GH_TOKEN": "test",
+            "PR_TITLE": "".join(
+                random.choices(string.ascii_letters, k=MAX_TITLE_LENGTH + 1)
+            ),
+        },
+        clear=True,
+    )
+    def test_get_env_vars_pr_title_too_long(self):
+        """Test that an error is raised when the PR_TITLE env variable has more than MAX_TITLE_LENGTH characters"""
+        with self.assertRaises(ValueError) as context_manager:
+            get_env_vars(True)
+        the_exception = context_manager.exception
+&gt;       self.assertEqual(
+            str(the_exception),
+            f"PR_TITLE environment variable is too long. Max {MAX_TITLE_LENGTH} characters",
+        )
+E       AssertionError: 'GH_TOKEN environment variable not set' != 'PR_TITLE environment variable is too long. Max 70 characters'
+E       - GH_TOKEN environment variable not set
+E       + PR_TITLE environment variable is too long. Max 70 characters
+
+test_env.py:222: AssertionError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_with_github_app" time="0.000"><failure message="ValueError: GH_TOKEN environment variable not set">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_with_github_app&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_ACTOR": "",
+            "GH_APP_ID": "12345",
+            "GH_APP_INSTALLATION_ID": "678910",
+            "GH_APP_PRIVATE_KEY": "hello",
+            "GITHUB_APP_ENTERPRISE_ONLY": "",
+            "GH_ENTERPRISE_URL": "",
+            "GH_TOKEN": "",
+            "ORGANIZATION": ORGANIZATION,
+            "PR_BODY": BODY,
+            "PR_TITLE": TITLE,
+        },
+        clear=True,
+    )
+    def test_get_env_vars_with_github_app(self):
+        """Test that all environment variables are set correctly using github app authentication"""
+        expected_result = EnvVars(
+            "",
+            12345,
+            678910,
+            b"hello",
+            False,
+            "",
+            "",
+            ORGANIZATION,
+            BODY,
+            TITLE,
+            REPOS_JSON_LOCATION,
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_env.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = True
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the action.
+    
+        Args:
+            test (bool): Whether or not to load the environment variables from a .env file (default: False)
+    
+        Returns:
+            gh_actor (str): The GitHub actor to use for authentication
+            gh_app_id (int | None): The GitHub App ID to use for authentication
+            gh_app_installation_id (int | None): The GitHub App Installation ID to use for authentication
+            gh_app_private_key_bytes (bytes): The GitHub App Private Key as bytes to use for authentication
+            gh_app_enterprise_only (bool): Set this to true if the GH APP is created on GHE and needs to communicate with GHE api only
+            gh_enterprise_url (str): The GitHub Enterprise URL to use for authentication
+            gh_token (str | None): The GitHub token to use for authentication
+            organization (str): The GitHub organization to use for the PR
+            pr_body (str): The PR body to use for the PR
+            pr_title (str): The PR title to use for the PR
+            repos_json_location (str): The location of the repos.json file
+        """
+        gh_actor = settings.get("GH_ACTOR", "nobody")
+        gh_app_id = get_int_env_var("GH_APP_ID")
+        gh_app_private_key_bytes = settings.get("GH_APP_PRIVATE_KEY", "").encode("utf8")
+        gh_app_installation_id = get_int_env_var("GH_APP_INSTALLATION_ID")
+        gh_app_enterprise_only = get_bool_env_var("GITHUB_APP_ENTERPRISE_ONLY")
+    
+        if gh_app_id and (not gh_app_private_key_bytes or not gh_app_installation_id):
+            raise ValueError(
+                "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set"
+            )
+    
+        gh_token = settings.get("GH_TOKEN")
+        if (
+            not gh_app_id
+            and not gh_app_private_key_bytes
+            and not gh_app_installation_id
+            and not gh_token
+        ):
+&gt;           raise ValueError("GH_TOKEN environment variable not set")
+E           ValueError: GH_TOKEN environment variable not set
+
+env.py:149: ValueError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_with_token" time="0.000"><failure message="ValueError: GH_TOKEN environment variable not set">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_with_token&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_ACTOR": "",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GITHUB_APP_ENTERPRISE_ONLY": "",
+            "GH_ENTERPRISE_URL": "",
+            "GH_TOKEN": TOKEN,
+            "ORGANIZATION": ORGANIZATION,
+            "PR_BODY": BODY,
+            "PR_TITLE": TITLE,
+        },
+    )
+    def test_get_env_vars_with_token(self):
+        """Test that all environment variables are set correctly using a token"""
+        expected_result = EnvVars(
+            "",
+            None,
+            None,
+            b"",
+            False,
+            "",
+            TOKEN,
+            ORGANIZATION,
+            BODY,
+            TITLE,
+            REPOS_JSON_LOCATION,
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_env.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = True
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the action.
+    
+        Args:
+            test (bool): Whether or not to load the environment variables from a .env file (default: False)
+    
+        Returns:
+            gh_actor (str): The GitHub actor to use for authentication
+            gh_app_id (int | None): The GitHub App ID to use for authentication
+            gh_app_installation_id (int | None): The GitHub App Installation ID to use for authentication
+            gh_app_private_key_bytes (bytes): The GitHub App Private Key as bytes to use for authentication
+            gh_app_enterprise_only (bool): Set this to true if the GH APP is created on GHE and needs to communicate with GHE api only
+            gh_enterprise_url (str): The GitHub Enterprise URL to use for authentication
+            gh_token (str | None): The GitHub token to use for authentication
+            organization (str): The GitHub organization to use for the PR
+            pr_body (str): The PR body to use for the PR
+            pr_title (str): The PR title to use for the PR
+            repos_json_location (str): The location of the repos.json file
+        """
+        gh_actor = settings.get("GH_ACTOR", "nobody")
+        gh_app_id = get_int_env_var("GH_APP_ID")
+        gh_app_private_key_bytes = settings.get("GH_APP_PRIVATE_KEY", "").encode("utf8")
+        gh_app_installation_id = get_int_env_var("GH_APP_INSTALLATION_ID")
+        gh_app_enterprise_only = get_bool_env_var("GITHUB_APP_ENTERPRISE_ONLY")
+    
+        if gh_app_id and (not gh_app_private_key_bytes or not gh_app_installation_id):
+            raise ValueError(
+                "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set"
+            )
+    
+        gh_token = settings.get("GH_TOKEN")
+        if (
+            not gh_app_id
+            and not gh_app_private_key_bytes
+            and not gh_app_installation_id
+            and not gh_token
+        ):
+&gt;           raise ValueError("GH_TOKEN environment variable not set")
+E           ValueError: GH_TOKEN environment variable not set
+
+env.py:149: ValueError</failure></testcase><testcase classname="test_open_contrib_pr.TestOpenContribPR" name="test_get_repos_json" time="0.001" /><testcase classname="test_open_contrib_pr.TestCloneRepository" name="test_clone_repository_failure" time="0.000" /><testcase classname="test_open_contrib_pr.TestCloneRepository" name="test_clone_repository_success" time="0.000" /><testcase classname="test_open_contrib_pr.TestCreatePullRequest" name="test_create_pull_exceptions" time="0.002" /><testcase classname="test_open_contrib_pr.TestCreatePullRequest" name="test_create_pull_request_success" time="0.000" /></testsuite></testsuites>
