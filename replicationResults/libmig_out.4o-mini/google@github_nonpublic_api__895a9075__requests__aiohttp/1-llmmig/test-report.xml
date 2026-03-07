@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="12" time="3.474" timestamp="2026-03-07T09:27:55.934486" hostname="nelsonmbigili.local"><testcase classname="tests.test_api.TestApi" name="test_create_business_org" time="0.003"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;tests.test_api.TestApi testMethod=test_create_business_org&gt;
+
+    def test_create_business_org(self):
+        self._seed_session_with_file(NEW_ORG_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+        gh.create_organization(org_name='test', contact_email='nobody@google.com',
+                               org_usage=api.OrganizationUsage.BUSINESS,
+                               business_name='A Fake Business')
+&gt;       self.session.post.assert_called_once_with(
+            'https://github.com/account/organizations/new_org', data={
+                'authenticity_token': 'value',
+                'agreed_to_terms': 'yes',
+                'terms_of_service_type': 'corporate',
+                'organization[billing_email]': 'nobody@google.com',
+                'organization[profile_name]': 'test',
+                'organization[login]': 'test',
+                'organization[company_name]': 'A Fake Business',
+            })
+
+tests/test_api.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.post' id='4387400656'&gt;
+args = ('https://github.com/account/organizations/new_org',)
+kwargs = {'data': {'agreed_to_terms': 'yes', 'authenticity_token': 'value', 'organization[billing_email]': 'nobody@google.com', 'organization[company_name]': 'A Fake Business', ...}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_create_personal_org" time="0.001"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;tests.test_api.TestApi testMethod=test_create_personal_org&gt;
+
+    def test_create_personal_org(self):
+        self._seed_session_with_file(NEW_ORG_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+        gh.create_organization(org_name='test', contact_email='nobody@google.com',
+                               org_usage=api.OrganizationUsage.PERSONAL)
+&gt;       self.session.post.assert_called_once_with(
+            'https://github.com/account/organizations/new_org', data={
+                'authenticity_token': 'value',
+                'agreed_to_terms': 'yes',
+                'terms_of_service_type': 'standard',
+                'organization[billing_email]': 'nobody@google.com',
+                'organization[profile_name]': 'test',
+                'organization[login]': 'test',
+            })
+
+tests/test_api.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.post' id='4387741008'&gt;
+args = ('https://github.com/account/organizations/new_org',)
+kwargs = {'data': {'agreed_to_terms': 'yes', 'authenticity_token': 'value', 'organization[billing_email]': 'nobody@google.com', 'organization[login]': 'test', ...}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_download_usage_report" time="0.001"><failure message="AssertionError: Expected 'get' to be called once. Called 0 times.">self = &lt;tests.test_api.TestApi testMethod=test_download_usage_report&gt;
+
+    def test_download_usage_report(self):
+        self._seed_session_with_file(DOWNLOAD_USAGE_REPORT_CSV)
+        gh = api.Api(username='user', password='pass', session=self.session)
+        gh.download_usage_report(enterprise_name='test-enterprise', report_id=1)
+&gt;       self.session.get.assert_called_once_with('https://github.com/enterprises/test-enterprise/settings/metered_exports/1')
+
+tests/test_api.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.get' id='4387485520'&gt;
+args = ('https://github.com/enterprises/test-enterprise/settings/metered_exports/1',)
+kwargs = {}, msg = "Expected 'get' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'get' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_get_and_submit_form" time="0.001"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;tests.test_api.TestApi testMethod=test_get_and_submit_form&gt;
+
+    def test_get_and_submit_form(self):
+        self._seed_session_with_file(GITHUB_FORM_HTML)
+    
+        def _data_callback(data):
+            data['add'] = 'yes'
+    
+        api._get_and_submit_form(
+            session=self.session, url='http://github.com', data_callback=_data_callback)
+    
+&gt;       self.session.post.assert_called_once_with(
+            'http://github.com/foo', data=dict(add='yes', key='value'))
+
+tests/test_api.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.post' id='4388122960'&gt;
+args = ('http://github.com/foo',)
+kwargs = {'data': {'add': 'yes', 'key': 'value'}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_get_and_submit_form_by_id" time="0.001"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;tests.test_api.TestApi testMethod=test_get_and_submit_form_by_id&gt;
+
+    def test_get_and_submit_form_by_id(self):
+        self._seed_session_with_file(GITHUB_FORM_HTML)
+    
+        api._get_and_submit_form(
+            session=self.session, url='http://github.com',
+            form_matcher=lambda form: form.attrib.get('id') == 'form2')
+    
+&gt;       self.session.post.assert_called_once_with(
+            'http://github.com/form2', data=dict(key='value2'))
+
+tests/test_api.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.post' id='4351166160'&gt;
+args = ('http://github.com/form2',), kwargs = {'data': {'key': 'value2'}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_get_and_submit_form_by_id_error" time="0.001"><failure message="AssertionError: ValueError not raised">self = &lt;tests.test_api.TestApi testMethod=test_get_and_submit_form_by_id_error&gt;
+
+    def test_get_and_submit_form_by_id_error(self):
+        self._seed_session_with_file(GITHUB_FORM_HTML)
+    
+&gt;       with self.assertRaises(ValueError):
+E       AssertionError: ValueError not raised
+
+tests/test_api.py:72: AssertionError</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_install_app_on_org" time="0.001"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;tests.test_api.TestApi testMethod=test_install_app_on_org&gt;
+
+    def test_install_app_on_org(self):
+        self._seed_session_with_file(ADD_APP_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+        gh.install_application_in_organization(app_name='test-app', org_id=42)
+&gt;       self.session.post.assert_called_once_with(
+            'https://github.com/apps/test-app/installations', data={
+                'authenticity_token': 'value',
+                'install_target': 'all',
+            })
+
+tests/test_api.py:123: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.post' id='4338422032'&gt;
+args = ('https://github.com/apps/test-app/installations',)
+kwargs = {'data': {'authenticity_token': 'value', 'install_target': 'all'}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_request_usage_report" time="0.001"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;tests.test_api.TestApi testMethod=test_request_usage_report&gt;
+
+    def test_request_usage_report(self):
+        self._seed_session_with_file(REQUEST_REPORT_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+        gh.request_usage(enterprise_name='test-enterprise', days=7)
+&gt;       self.session.post.assert_called_once_with(
+            'https://github.com/enterprises/test-enterprise/settings/metered_exports', data={
+                'authenticity_token': 'value',
+                'days': 7,
+            })
+
+tests/test_api.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.post' id='4387675600'&gt;
+args = ('https://github.com/enterprises/test-enterprise/settings/metered_exports',)
+kwargs = {'data': {'authenticity_token': 'value', 'days': 7}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_suspend_app_toggle" time="0.001"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;tests.test_api.TestApi testMethod=test_suspend_app_toggle&gt;
+
+    def test_suspend_app_toggle(self):
+        self._seed_session_with_file(SUSPEND_APP_FORM)
+        gh = api.Api(username='user', password='pass', session=self.session)
+        gh.toggle_app_suspended(org_name='test-org', app_install_id=42)
+&gt;       self.session.post.assert_called_once_with(
+            'https://github.com/long/url/suspended', data={
+                'authenticity_token': 'value',
+            })
+
+tests/test_api.py:133: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.post' id='4387837200'&gt;
+args = ('https://github.com/long/url/suspended',)
+kwargs = {'data': {'authenticity_token': 'value'}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_update_app_permissions" time="0.001"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;tests.test_api.TestApi testMethod=test_update_app_permissions&gt;
+
+    def test_update_app_permissions(self):
+        self._seed_session_with_file(UPDATE_APP_PERMISSIONS_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+        gh.approve_updated_app_permissions(org_name='test-org', app_install_id='42')
+&gt;       self.session.post.assert_called_once_with(
+            'https://github.com/organizations/test-org/settings/installations/42/permissions/update',
+            data={
+                '_method': 'put',
+                'authenticity_token': 'value',
+                'version_id': '112233',
+                'integration_fingerprint': 'value',
+            },
+        )
+
+tests/test_api.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.post' id='4390049616'&gt;
+args = ('https://github.com/organizations/test-org/settings/installations/42/permissions/update',)
+kwargs = {'data': {'_method': 'put', 'authenticity_token': 'value', 'integration_fingerprint': 'value', 'version_id': '112233'}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_update_security_analysis_settings_code_scanning" time="0.001"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;tests.test_api.TestApi testMethod=test_update_security_analysis_settings_code_scanning&gt;
+
+    def test_update_security_analysis_settings_code_scanning(self):
+        self._seed_session_with_file(SECURITY_ANALYSIS_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+        gh.update_security_analysis_settings(org_name='test-org', code_scanning_autofix=False)
+&gt;       self.session.post.assert_called_once_with(
+            'https://github.com/organizations/test-org/settings/security_analysis/update?owner=test-org',
+            data={
+                '_method': 'put',
+                'authenticity_token': 'sekr3t_2',
+                'code_scanning_autofix': 'disabled',
+            },
+        )
+
+tests/test_api.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.post' id='4387771984'&gt;
+args = ('https://github.com/organizations/test-org/settings/security_analysis/update?owner=test-org',)
+kwargs = {'data': {'_method': 'put', 'authenticity_token': 'sekr3t_2', 'code_scanning_autofix': 'disabled'}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_api.TestApi" name="test_update_security_analysis_settings_code_scanning_3p" time="0.001"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;tests.test_api.TestApi testMethod=test_update_security_analysis_settings_code_scanning_3p&gt;
+
+    def test_update_security_analysis_settings_code_scanning_3p(self):
+        self._seed_session_with_file(SECURITY_ANALYSIS_FORM_HTML)
+        gh = api.Api(username='user', password='pass', session=self.session)
+        gh.update_security_analysis_settings(org_name='test-org', code_scanning_autofix_third_party_tools=True)
+&gt;       self.session.post.assert_called_once_with(
+            'https://github.com/organizations/test-org/settings/security_analysis/update?owner=test-org',
+            data={
+                '_method': 'put',
+                'authenticity_token': 'sekr3t_3',
+                'code_scanning_autofix_third_party_tools': 'enabled',
+            },
+        )
+
+tests/test_api.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.post' id='4389575504'&gt;
+args = ('https://github.com/organizations/test-org/settings/security_analysis/update?owner=test-org',)
+kwargs = {'data': {'_method': 'put', 'authenticity_token': 'sekr3t_3', 'code_scanning_autofix_third_party_tools': 'enabled'}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase></testsuite></testsuites>

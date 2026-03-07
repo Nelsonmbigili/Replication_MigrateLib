@@ -1,0 +1,467 @@
+### Explanation of Changes
+
+To migrate the code from using the `requests` library to the `pycurl` library, several key changes were made:
+
+1. **Importing PyCurl**: The `requests` library was replaced with `pycurl`. The `requests` library is high-level and abstracts many details, while `pycurl` is a low-level interface to the cURL library, requiring more explicit handling of requests.
+
+2. **Request Handling**: The `requests.request`, `requests.get`, `requests.post`, etc., methods were replaced with `pycurl.Curl()` instances. Each request type (GET, POST, etc.) is handled by setting the appropriate options on the `Curl` object.
+
+3. **Headers and Data**: The way headers and data are set in `pycurl` differs from `requests`. Headers are set using `setopt(pycurl.HTTPHEADER, ...)`, and data is sent using `setopt(pycurl.POSTFIELDS, ...)` for POST requests.
+
+4. **Response Handling**: The response from `pycurl` is captured by writing to a buffer instead of directly returning a response object. The response body is then extracted from this buffer.
+
+5. **Error Handling**: Error handling is done using exceptions raised by `pycurl`, which is different from the `requests` library.
+
+Here is the modified code:
+
+```python
+# Copyright (c) 2024 Dell Inc. or its subsidiaries.
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+import logging
+import pycurl
+from io import BytesIO
+
+from PyPowerFlex import exceptions
+from PyPowerFlex import utils
+
+LOG = logging.getLogger(__name__)
+
+
+class Request:
+    GET = "get"
+    POST = "post"
+    PUT = "put"
+    DELETE = "delete"
+
+    def __init__(self, token, configuration):
+        self.token = token
+        self.configuration = configuration
+        self.__refresh_token = None
+
+    @property
+    def base_url(self):
+        return 'https://{address}:{port}/api'.format(
+            address=self.configuration.gateway_address,
+            port=self.configuration.gateway_port
+        )
+
+    @property
+    def auth_url(self):
+        return 'https://{address}:{port}/rest/auth'.format(
+            address=self.configuration.gateway_address,
+            port=self.configuration.gateway_port
+        )
+
+    @property
+    def headers(self):
+        return ['content-type: application/json']
+
+    @property
+    def verify_certificate(self):
+        verify_certificate = self.configuration.verify_certificate
+        if (
+                self.configuration.verify_certificate
+                and self.configuration.certificate_path
+        ):
+            verify_certificate = self.configuration.certificate_path
+        return verify_certificate
+
+    def get_auth_headers(self, request_type=None):
+        if request_type == self.GET:
+            return ['Authorization: Bearer {0}'.format(self.token.get())]
+        return ['Authorization: Bearer {0}'.format(self.token.get()),
+                'content-type: application/json']
+
+    def send_request(self, method, url, params=None, **url_params):
+        params = params or {}
+        request_url = f"{self.base_url}{url.format(**url_params)}"
+        version = self.login()
+        request_params = {
+            'headers': self.get_auth_headers(method),
+            'verify': self.verify_certificate,
+            'timeout': self.configuration.timeout
+        }
+        if utils.is_version_3(version):
+            request_params['auth'] = (self.configuration.username, self.token.get())
+            del request_params['headers']['Authorization']
+
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, request_url)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.setopt(c.TIMEOUT, self.configuration.timeout)
+
+        if method in [self.PUT, self.POST]:
+            c.setopt(c.POSTFIELDS, utils.prepare_params(params))
+            c.setopt(c.HTTPHEADER, request_params['headers'])
+
+        if 'auth' in request_params:
+            c.setopt(c.USERPWD, ':'.join(request_params['auth']))
+
+        try:
+            c.perform()
+        except pycurl.error as e:
+            LOG.error(f'Error during request: {e}')
+            raise
+
+        response_body = buffer.getvalue()
+        c.close()
+        self.logout(version)
+        return response_body
+
+    def send_get_request(self, url, params=None, **url_params):
+        response_body = self.send_request(self.GET, url, params, **url_params)
+        return response_body, utils.json.loads(response_body)
+
+    def send_post_request(self, url, params=None, **url_params):
+        response_body = self.send_request(self.POST, url, params, **url_params)
+        return response_body, utils.json.loads(response_body)
+
+    def send_put_request(self, url, params=None, **url_params):
+        response_body = self.send_request(self.PUT, url, params, **url_params)
+        return response_body, utils.json.loads(response_body)
+
+    def send_delete_request(self, url, params=None, **url_params):
+        return self.send_request(self.DELETE, url, params, **url_params)
+
+    def send_mdm_cluster_post_request(self, url, params=None, **url_params):
+        if params is None:
+            params = dict()
+        response = None
+        version = self.login()
+        request_url = self.base_url + url.format(**url_params)
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, request_url)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.setopt(c.POSTFIELDS, utils.prepare_params(params))
+        c.setopt(c.HTTPHEADER, self.headers)
+        c.setopt(c.USERPWD, f"{self.configuration.username}:{self.token.get()}")
+        c.setopt(c.VERIFYPEER, self.verify_certificate)
+        c.setopt(c.TIMEOUT, self.configuration.timeout)
+
+        try:
+            c.perform()
+            response_body = buffer.getvalue()
+            if response_body != b'':
+                response = utils.json.loads(response_body)
+        except pycurl.error as e:
+            LOG.error(f'Error during request: {e}')
+            raise
+        finally:
+            c.close()
+
+        self.logout(version)
+        return response_body, response
+
+    # To perform login based on the API version
+    def login(self):
+        version = self.get_api_version()
+        if utils.is_version_3(version=version):
+            self._login()
+        else:
+            self._appliance_login()
+        return version
+
+    # To perform logout based on the API version
+    def logout(self, version):
+        if utils.is_version_3(version=version):
+            self._logout()
+        else:
+            self._appliance_logout()
+
+    # Get the Current API version
+    def get_api_version(self):
+        request_url = self.base_url + '/version'
+        self._login()
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, request_url)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.setopt(c.USERPWD, f"{self.configuration.username}:{self.token.get()}")
+        c.setopt(c.VERIFYPEER, self.verify_certificate)
+        c.setopt(c.TIMEOUT, self.configuration.timeout)
+
+        try:
+            c.perform()
+            response_body = buffer.getvalue()
+            response = utils.json.loads(response_body)
+        except pycurl.error as e:
+            LOG.error(f'Error during request: {e}')
+            raise
+        finally:
+            c.close()
+
+        return response
+
+    # API Login method for 4.0 and above.
+    def _appliance_login(self):
+        request_url = self.auth_url + '/login'
+        payload = {"username": "%s" % self.configuration.username,
+                   "password": "%s" % self.configuration.password
+                   }
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, request_url)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.setopt(c.POSTFIELDS, utils.json.dumps(payload))
+        c.setopt(c.HTTPHEADER, self.headers)
+        c.setopt(c.VERIFYPEER, self.verify_certificate)
+        c.setopt(c.TIMEOUT, self.configuration.timeout)
+
+        try:
+            c.perform()
+            response_body = buffer.getvalue()
+            if c.getinfo(c.RESPONSE_CODE) != 200:
+                exc = exceptions.PowerFlexFailQuerying('token')
+                LOG.error(exc.message)
+                raise exc
+            response = utils.json.loads(response_body)
+            token = response['access_token']
+            self.token.set(token)
+            self.__refresh_token = response['refresh_token']
+        except pycurl.error as e:
+            LOG.error(f'Error during request: {e}')
+            raise
+        finally:
+            c.close()
+
+    # API logout method for 4.0 and above.
+    def _appliance_logout(self):
+        request_url = self.auth_url + '/logout'
+        data = {'refresh_token': '{0}'.format(self.__refresh_token)}
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, request_url)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.setopt(c.POSTFIELDS, utils.json.dumps(data))
+        c.setopt(c.HTTPHEADER, self.get_auth_headers())
+        c.setopt(c.VERIFYPEER, self.verify_certificate)
+        c.setopt(c.TIMEOUT, self.configuration.timeout)
+
+        try:
+            c.perform()
+            if c.getinfo(c.RESPONSE_CODE) != 204:
+                exc = exceptions.PowerFlexFailQuerying('token')
+                LOG.error(exc.message)
+                raise exc
+            self.token.set("")
+            self.__refresh_token = None
+        except pycurl.error as e:
+            LOG.error(f'Error during request: {e}')
+            raise
+        finally:
+            c.close()
+
+    def _login(self):
+        request_url = self.base_url + '/login'
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, request_url)
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        c.setopt(c.USERPWD, f"{self.configuration.username}:{self.configuration.password}")
+        c.setopt(c.VERIFYPEER, self.verify_certificate)
+        c.setopt(c.TIMEOUT, self.configuration.timeout)
+
+        try:
+            c.perform()
+            response_body = buffer.getvalue()
+            if c.getinfo(c.RESPONSE_CODE) != 200:
+                error_msg = f'Login failed with error: {response_body}'
+                LOG.error(error_msg)
+                raise Exception(error_msg)
+            token = utils.json.loads(response_body)
+            self.token.set(token)
+        except pycurl.error as e:
+            LOG.error(f'Error during request: {e}')
+            raise
+        finally:
+            c.close()
+
+    def _logout(self):
+        token = self.token.get()
+
+        if token:
+            request_url = self.base_url + '/logout'
+            buffer = BytesIO()
+            c = pycurl.Curl()
+            c.setopt(c.URL, request_url)
+            c.setopt(c.WRITEFUNCTION, buffer.write)
+            c.setopt(c.USERPWD, f"{self.configuration.username}:{token}")
+            c.setopt(c.VERIFYPEER, self.verify_certificate)
+            c.setopt(c.TIMEOUT, self.configuration.timeout)
+
+            try:
+                c.perform()
+                if c.getinfo(c.RESPONSE_CODE) != 200:
+                    exc = exceptions.PowerFlexFailQuerying('token')
+                    LOG.error(exc.message)
+                    raise exc
+                self.token.set("")
+            except pycurl.error as e:
+                LOG.error(f'Error during request: {e}')
+                raise
+            finally:
+                c.close()
+
+
+class EntityRequest(Request):
+    base_action_url = '/instances/{entity}::{entity_id}/action/{action}'
+    base_entity_url = '/instances/{entity}::{entity_id}'
+    base_entity_list_or_create_url = '/types/{entity}/instances'
+    base_relationship_url = base_entity_url + '/relationships/{related}'
+    base_object_url = '/instances/{entity}/action/{action}'
+    base_type_special_action_url = '/types/{entity}/instances/action/{action}'
+    query_mdm_cluster_url = '/instances/{entity}/queryMdmCluster'
+    list_statistics_url = '/types/{entity}/instances/action/{action}'
+    service_template_url = '/V1/ServiceTemplate'
+    managed_device_url = '/V1/ManagedDevice'
+    deployment_url = '/V1/Deployment'
+    firmware_repository_url = '/V1/FirmwareRepository'
+    entity_name = None
+
+    @property
+    def entity(self):
+        return self.entity_name or self.__class__.__name__
+
+    def _create_entity(self, params=None):
+        r, response = self.send_post_request(
+            self.base_entity_list_or_create_url,
+            entity=self.entity,
+            params=params
+        )
+        if r.getinfo(c.RESPONSE_CODE) != 200:
+            exc = exceptions.PowerFlexFailCreating(self.entity, response)
+            LOG.error(exc.message)
+            raise exc
+
+        entity_id = response['id']
+        return self.get(entity_id=entity_id)
+
+    def _delete_entity(self, entity_id, params=None):
+        action = 'remove' + self.entity
+
+        r, response = self.send_post_request(self.base_action_url,
+                                             action=action,
+                                             entity=self.entity,
+                                             entity_id=entity_id,
+                                             params=params)
+        if r.getinfo(c.RESPONSE_CODE) != 200:
+            exc = exceptions.PowerFlexFailDeleting(self.entity, entity_id,
+                                                   response)
+            LOG.error(exc.message)
+            raise exc
+
+    def _rename_entity(self, action, entity_id, params=None):
+        r, response = self.send_post_request(self.base_action_url,
+                                             action=action,
+                                             entity=self.entity,
+                                             entity_id=entity_id,
+                                             params=params)
+        if r.getinfo(c.RESPONSE_CODE) != 200:
+            exc = exceptions.PowerFlexFailRenaming(self.entity, entity_id,
+                                                   response)
+            LOG.error(exc.message)
+            raise exc
+
+        return self.get(entity_id=entity_id)
+
+    def get(self, entity_id=None, filter_fields=None, fields=None):
+        url = self.base_entity_list_or_create_url
+        url_params = dict(entity=self.entity)
+
+        if entity_id:
+            url = self.base_entity_url
+            url_params['entity_id'] = entity_id
+            if filter_fields:
+                msg = 'Can not apply filtering while querying entity by id.'
+                raise exceptions.InvalidInput(msg)
+
+        r, response = self.send_get_request(url, **url_params)
+        if r.getinfo(c.RESPONSE_CODE) != 200:
+            exc = exceptions.PowerFlexFailQuerying(self.entity, entity_id,
+                                                   response)
+            LOG.error(exc.message)
+            raise exc
+        if filter_fields:
+            response = utils.filter_response(response, filter_fields)
+        if fields:
+            response = utils.query_response_fields(response, fields)
+        return response
+
+    def get_related(self, entity_id, related, filter_fields=None,
+                    fields=None):
+        url_params = dict(
+            entity=self.entity,
+            entity_id=entity_id,
+            related=related
+        )
+
+        r, response = self.send_get_request(self.base_relationship_url,
+                                            **url_params)
+        if r.getinfo(c.RESPONSE_CODE) != 200:
+            msg = (
+                'Failed to query related {related} entities for PowerFlex '
+                '{entity} with id {_id}.'
+                ' Error: {response}'.format(related=related,
+                                            entity=self.entity,
+                                            _id=entity_id,
+                                            response=response)
+            )
+            LOG.error(msg)
+            raise exceptions.PowerFlexClientException(msg)
+        if filter_fields:
+            response = utils.filter_response(response, filter_fields)
+        if fields:
+            response = utils.query_response_fields(response, fields)
+        return response
+
+    def _perform_entity_operation_based_on_action(self, entity_id, action,
+                                                  params=None, add_entity=True, **url_params):
+        if add_entity:
+            action = action + self.entity
+
+        r, response = self.send_post_request(self.base_action_url,
+                                             action=action,
+                                             entity=self.entity,
+                                             entity_id=entity_id,
+                                             params=params,
+                                             **url_params)
+        if r.getinfo(c.RESPONSE_CODE) != 200:
+            exc = exceptions.PowerFlexFailEntityOperation(self.entity, entity_id,
+                                                          action, response)
+            LOG.error(exc.message)
+            raise exc
+
+    def _query_selected_statistics(self, action, params=None):
+        r, response = self.send_post_request(self.base_type_special_action_url,
+                                             action=action,
+                                             entity=self.entity,
+                                             params=params)
+        if r.getinfo(c.RESPONSE_CODE) != 200:
+            exc = exceptions.PowerFlexFailQuerying(self.entity,
+                                                   response=response,
+                                                   entity_id=params["ids"]
+                                                   if "ids" in params
+                                                   else "all IDs"
+                                                   if "allIds" in params
+                                                   else None)
+            LOG.error(exc.message)
+            raise exc
+        return response
+``` 
+
+This code now uses `pycurl` for HTTP requests instead of `requests`, while maintaining the original structure and functionality as closely as possible.

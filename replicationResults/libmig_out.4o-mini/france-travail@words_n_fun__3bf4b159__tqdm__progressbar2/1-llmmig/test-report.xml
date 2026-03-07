@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="70" time="20.044" timestamp="2026-03-07T05:25:01.765328" hostname="nelsonmbigili.local"><testcase classname="tests.test_1_utils.UtilsTests" name="test_data_agnostic" time="0.030" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_data_agnostic_input" time="0.005" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_get_column_to_be_processed" time="0.001" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_get_columns_to_use" time="0.011" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_get_df_generator_from_csv" time="0.039" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_get_docs_length" time="0.001" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_get_docs_type" time="0.001" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_get_file_length" time="0.200" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_get_generator" time="0.004" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_get_new_column_name" time="0.000" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_get_new_csv_name" time="0.001" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_get_regex_match_words" time="0.001" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_regroup_data_df" time="12.281" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_regroup_data_series" time="0.159" /><testcase classname="tests.test_1_utils.UtilsTests" name="test_timer" time="0.002" /><testcase classname="tests.test_2_basic.BasicTests" name="test_add_point" time="0.001" /><testcase classname="tests.test_2_basic.BasicTests" name="test_deal_with_specific_characters" time="0.001" /><testcase classname="tests.test_2_basic.BasicTests" name="test_fix_text" time="0.001" /><testcase classname="tests.test_2_basic.BasicTests" name="test_get_true_spaces" time="0.001" /><testcase classname="tests.test_2_basic.BasicTests" name="test_lemmatize" time="0.001"><failure message="AttributeError: module 'words_n_fun.preprocessing.basic' has no attribute 'lemmatizer'">self = &lt;test_2_basic.BasicTests testMethod=test_lemmatize&gt;
+
+    @unittest.skipIf('spacy' not in sys.modules, "Skipping all lemmatizer tests as spacy can't be imported.")
+    def test_lemmatize(self):
+        '''Testing function basic.lemmatize'''
+        docs = ["Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.", "Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B", "^Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.", "Coordinateur d'Equipe d'Action Territoriale ", 5, None]
+        docs_lemmatized = ['chauffeur se accompagnateur trice pers à mob 5 an de expérience', 'je maîtrise 12 langage informatique dont le c j avoir le permettre b', 'chauffeur se accompagnateur trice pers à mob 5 an de expérience', 'coordinateur d equipe d action territorial', None, None]
+    
+        # On check seulement si model lemmatizer installé
+        if spacy.util.is_package("fr_core_news_sm"):
+            # Vérification du fonctionnement type
+&gt;           self.assertEqual(list(basic.lemmatizer.lemmatize(pd.Series(docs)).replace({np.nan:None})), docs_lemmatized)
+E           AttributeError: module 'words_n_fun.preprocessing.basic' has no attribute 'lemmatizer'
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/tests/test_2_basic.py:236: AttributeError</failure></testcase><testcase classname="tests.test_2_basic.BasicTests" name="test_notnull" time="0.001" /><testcase classname="tests.test_2_basic.BasicTests" name="test_pe_matching" time="0.001" /><testcase classname="tests.test_2_basic.BasicTests" name="test_remove_accents" time="0.001" /><testcase classname="tests.test_2_basic.BasicTests" name="test_remove_gender_synonyms" time="0.000"><failure message="NameError: name 'synonym_malefemale_replacement' is not defined">self = &lt;test_2_basic.BasicTests testMethod=test_remove_gender_synonyms&gt;
+
+    def test_remove_gender_synonyms(self):
+        '''Testing function basic.remove_gender_synonyms'''
+        docs = ["Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.", "Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B", "Coordinateur d'Equipe d'Action Territoriale ", 5, None, "serveur/serveur(se), agriculteur (trice) blabla ouvrier/ ouvrière blabla aide apprenti boucher /aide apprentie bouchere"]
+        docs_gender_syn_removed = ['Chauffeur   accompagnateur  pers à mob - 5 ans de expérience.', "Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B", "Coordinateur d'Equipe d'Action Territoriale ", None, None, 'serveur , agriculteur  blabla ouvrier blabla aide apprenti boucher']
+    
+        # Vérification du fonctionnement type
+&gt;       self.assertEqual(list(basic.remove_gender_synonyms(pd.Series(docs)).replace({np.nan: None})), docs_gender_syn_removed)
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/tests/test_2_basic.py:224: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/preprocessing/basic.py:404: in remove_gender_synonyms
+    return impl_remove_gender_synonyms(docs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+docs = 0    Chauffeur(se)  accompagnateur(trice) pers à mo...
+1    Je maîtrise 12 langages informatiques dont le ...
+2       ...                                              None
+5    serveur/serveur(se), agriculteur (trice) blabl...
+dtype: object
+
+    def impl_remove_gender_synonyms(docs: pd.Series) -&gt; pd.Series:
+        '''[French] Removes gendered synonyms
+        # Find occurences such as "male version / female version" (eg: Coiffeur / Coiffeuse)
+        # By convention, the male version is kept (in accordance with the lemmatizer)
+    
+        Args:
+            docs (pd.Series): Documents to process
+    
+        Returns:
+            pd.Series: Modified documents
+        '''
+        # synonym_malefemale_replacement.remove_gender_synonyms uses data_agnostic and regroup_data_series wrappers already
+&gt;       return synonym_malefemale_replacement.remove_gender_synonyms(docs)
+E       NameError: name 'synonym_malefemale_replacement' is not defined
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/preprocessing/basic.py:389: NameError</failure></testcase><testcase classname="tests.test_2_basic.BasicTests" name="test_remove_leading_and_ending_spaces" time="0.001" /><testcase classname="tests.test_2_basic.BasicTests" name="test_remove_non_string" time="0.000" /><testcase classname="tests.test_2_basic.BasicTests" name="test_remove_numeric" time="0.001" /><testcase classname="tests.test_2_basic.BasicTests" name="test_remove_punct" time="0.001" /><testcase classname="tests.test_2_basic.BasicTests" name="test_remove_stopwords" time="0.001"><failure message="NameError: name 'stopwords' is not defined">self = &lt;test_2_basic.BasicTests testMethod=test_remove_stopwords&gt;
+RemoveAccentMock = &lt;MagicMock name='remove_accents' id='4803644368'&gt;
+
+    @patch('words_n_fun.preprocessing.basic.remove_accents', side_effect=nominal_remove_accents)
+    def test_remove_stopwords(self, RemoveAccentMock):
+        '''Testing function basic.remove_stopwords'''
+        docs = ["Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.", "Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B", "Coordinateur d'Equipe d'Action Territoriale ", 5, None]
+        docs_stopwords_removed = ["Chauffeur()  accompagnateur(trice) pers  mob - 5 ans  expérience.", "Je maîtrise 12 langages informatiques   C &amp; '  Permis B", "Coordinateur 'Equipe 'Action Territoriale ", None, None]
+        docs_stopwords_removed_default = ["Chauffeur()  accompagnateur(trice) pers  mob - 5 ans  expérience.", "Je maîtrise 12 langages informatiques   C &amp; '  Permis B", "Coordinateur 'Equipe 'Action Territoriale ", None, None]
+        docs_stopwords_removed_custom_add = ["Chauffeur()  accompagnateur(trice) pers  mob - 5 ans  .", "Je maîtrise 12 langages informatiques   C &amp; '  Permis B", "Coordinateur 'Equipe 'Action Territoriale ", None, None]
+        docs_stopwords_none = ["Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.", "Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B", "Coordinateur d'Equipe d'Action Territoriale ", None, None]
+        docs_stopwords_none_custom_add = ["Chauffeur(se)  accompagnateur(trice) pers à  - 5 ans de expérience.", "Je maîtrise 12  informatiques dont le C &amp; j'ai le Permis B", "Coordinateur d'Equipe d' Territoriale ", None, None]
+        docs_stopwords_removed_custom_remove = ["Chauffeur()  accompagnateur(trice) pers à mob - 5 ans  expérience.", "Je maîtrise 12 langages informatiques dont  C &amp; '  Permis B", "Coordinateur 'Equipe 'Action Territoriale ", None, None]
+        docs_stopwords_removed_custom_add_remove = ["Chauffeur(se)  accompagnateur(trice) pers à  - 5 ans de expérience.", "Je maîtrise 12  informatiques dont le C &amp; j'ai le Permis B", "Coordinateur d'Equipe d'Action Territoriale ", None, None]
+        docs_unchanged = ["Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.", "Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B", "Coordinateur d'Equipe d'Action Territoriale ", None, None]
+    
+    
+        # Vérification du fonctionnement type
+&gt;       self.assertEqual(list(basic.remove_stopwords(pd.Series(docs)).replace({np.nan: None})), docs_stopwords_removed)
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/tests/test_2_basic.py:201: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/preprocessing/basic.py:344: in remove_stopwords
+    return impl_remove_stopwords(docs, opt=opt, set_to_add=set_to_add, set_to_remove=set_to_remove)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+docs = 0    Chauffeur(se)  accompagnateur(trice) pers à mo...
+1    Je maîtrise 12 langages informatiques dont le ...
+2       ...                                                 5
+4                                                 None
+dtype: object
+opt = 'all', set_to_add = None, set_to_remove = None
+
+    def impl_remove_stopwords(docs: pd.Series, opt: str = 'all', set_to_add: Union[list, None] = None,
+                         set_to_remove: Union[list, None] = None) -&gt; pd.Series:
+        '''Removes stopwords
+    
+        Args:
+            docs (pd.Series): Documents to process
+        Kwargs:
+            opt (str): Specifies which stopwords set are used, cf stopwords.py (def='all')
+            set_to_add (list): List of words to append to the stopwords list
+            set_to_remove (list): List of words to remove from the stopwords list
+        Returns:
+            pd.Series: Modified documents
+        '''
+        # stopwords.remove_stopwords use data_agnostic and regroup_data_series wrappers already
+&gt;       return stopwords.remove_stopwords(docs, opt=opt, set_to_add=set_to_add, set_to_remove=set_to_remove)
+E       NameError: name 'stopwords' is not defined
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/preprocessing/basic.py:327: NameError</failure></testcase><testcase classname="tests.test_2_basic.BasicTests" name="test_remove_words" time="0.001" /><testcase classname="tests.test_2_basic.BasicTests" name="test_replace_urls" time="0.002" /><testcase classname="tests.test_2_basic.BasicTests" name="test_stemmatize" time="0.001" /><testcase classname="tests.test_2_basic.BasicTests" name="test_to_lower" time="0.001" /><testcase classname="tests.test_2_basic.BasicTests" name="test_trim_string" time="0.001" /><testcase classname="tests.test_3_api.ApiTests" name="test_PreProcessor" time="0.002"><failure message="NameError: name 'synonym_malefemale_replacement' is not defined">self = &lt;test_3_api.ApiTests testMethod=test_PreProcessor&gt;
+
+    def test_PreProcessor(self):
+        '''Test de la classe api.PreProcessor'''
+        docs = ["Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.", "Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B", "Coordinateur d'Equipe d'Action Territoriale ", 5, None]
+        docs_def_pipeline = ['chauffeur accompagn per mob an experient', 'maitris langag informat c permisb', 'coordin equip action territorial', '', '']
+        docs_test_2 = ['chauffeur(se)  (trice) pers à mob - 5 ans de expérience.', "je maîtrise 12 langages informatiques dont le c &amp; j'ai le  b", "coordinateur d'equipe d' territoriale ", None, None]
+        test_file = 'testing_file5.csv'
+        result_file = pd.DataFrame([['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                    ['maitris langag informat c permisb', 'col 2 line 2'],
+                                    ['coordin equip action territorial', 'col 2 line 3']
+                                   ], columns=['col 1', 'col 2'])
+        result_file_col_2 = pd.DataFrame([["Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.", 'col lin'],
+                                          ["Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B", 'col lin'],
+                                          ["Coordinateur d'Equipe d'Action Territoriale ", 'col lin']
+                                         ], columns=['col 1', 'col 2'])
+        result_file_not_modified = pd.DataFrame([["Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.",'col 2 line 1', 'chauffeur accompagn per mob an experient'],
+                                                 ["Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B",'col 2 line 2', 'maitris langag informat c permisb'],
+                                                 ["Coordinateur d'Equipe d'Action Territoriale ",'col 2 line 3', 'coordin equip action territorial']
+                                                ], columns=['col 1', 'col 2', 'col 1_processed'])
+        result_file_data = pd.DataFrame([['col', 'col 2'],
+                                         ['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                         ['maitris langag informat c permisb', 'col 2 line 2'],
+                                         ['coordin equip action territorial', 'col 2 line 3']
+                                        ], columns=['docs', 'tags'])
+        result_file_skip = pd.DataFrame([['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                         ['maitris langag informat c permisb', 'col 2 line 2'],
+                                         ['coordin equip action territorial', 'col 2 line 3']
+                                        ], columns=['docs', 'tags'])
+        result_file_skip_2 = pd.DataFrame([['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                           ['maitris langag informat c permisb', 'col 2 line 2'],
+                                           ['coordin equip action territorial', 'col 2 line 3']
+                                          ], columns=['test', 'test2'])
+        result_file_sep = pd.DataFrame([['chauffeur accompagn per mob an experient col lin'],
+                                        ['maitris langag informat c permisb col lin'],
+                                        ['coordin equip action territorial col lin']
+                                       ], columns=['col 1,col 2'])
+        result_file_nrows = pd.DataFrame([['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                          ['maitris langag informat c permisb', 'col 2 line 2']
+                                         ], columns=['col 1', 'col 2'])
+        result_file_nrows_data = pd.DataFrame([['col', 'col 2'],
+                                               ['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                              ], columns=['docs', 'tags'])
+        result_file_nrows_skip = pd.DataFrame([['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                               ['maitris langag informat c permisb', 'col 2 line 2']
+                                              ], columns=['docs', 'tags'])
+    
+        # Vérification du fonctionnement type
+&gt;       self.assertEqual(api.PreProcessor().transform(docs), docs_def_pipeline)
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/tests/test_3_api.py:228: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/preprocessing/api.py:159: in transform
+    return _preprocess_transform(docs, pipeline=self.pipeline, prefered_column=self.prefered_column, modify_data=self.modify_data,
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/preprocessing/api.py:303: in _preprocess_transform
+    docs_input=process_block_of_data(docs_input, pipeline, max_chunksize)
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/utils.py:151: in wrapper
+    results = function(docs_input, *args, **kwargs)
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/preprocessing/api.py:194: in process_block_of_data
+    chunk = USAGE[item](chunk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+docs = 0    chauffeur(se)  accompagnateur(trice) pers à mo...
+1    je maîtrise 12 langages informatiques dont le ...
+2       ...                                                  
+4                                                     
+dtype: object
+
+    def impl_remove_gender_synonyms(docs: pd.Series) -&gt; pd.Series:
+        '''[French] Removes gendered synonyms
+        # Find occurences such as "male version / female version" (eg: Coiffeur / Coiffeuse)
+        # By convention, the male version is kept (in accordance with the lemmatizer)
+    
+        Args:
+            docs (pd.Series): Documents to process
+    
+        Returns:
+            pd.Series: Modified documents
+        '''
+        # synonym_malefemale_replacement.remove_gender_synonyms uses data_agnostic and regroup_data_series wrappers already
+&gt;       return synonym_malefemale_replacement.remove_gender_synonyms(docs)
+E       NameError: name 'synonym_malefemale_replacement' is not defined
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/preprocessing/basic.py:389: NameError</failure></testcase><testcase classname="tests.test_3_api.ApiTests" name="test_check_pipeline_order" time="0.002" /><testcase classname="tests.test_3_api.ApiTests" name="test_get_preprocessor" time="0.001" /><testcase classname="tests.test_3_api.ApiTests" name="test_list_one_appearance_word" time="0.002" /><testcase classname="tests.test_3_api.ApiTests" name="test_listing_count_words" time="0.001" /><testcase classname="tests.test_3_api.ApiTests" name="test_preprocess_pipeline" time="0.002"><failure message="NameError: name 'synonym_malefemale_replacement' is not defined">self = &lt;test_3_api.ApiTests testMethod=test_preprocess_pipeline&gt;
+
+    def test_preprocess_pipeline(self):
+        '''Testing function api.preprocess_pipeline'''
+        docs = ["Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.", "Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B", "Coordinateur d'Equipe d'Action Territoriale ", 5, None]
+        docs_def_pipeline = ['chauffeur accompagn per mob an experient', 'maitris langag informat c permisb', 'coordin equip action territorial', '', '']
+        docs_series = pd.Series(["Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.", "Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B", "Coordinateur d'Equipe d'Action Territoriale ", 5, None])
+        docs_series_copy = pd.Series(["Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.", "Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B", "Coordinateur d'Equipe d'Action Territoriale ", 5, None])
+        docs_dataframe = pd.DataFrame([["test", "Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience."],
+                                       ["test", "Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B"],
+                                       ["test", "Coordinateur d'Equipe d'Action Territoriale "],
+                                       ["test", 5],
+                                       ["test", None]], columns=['test', 'docs'])
+        docs_dataframe_copy = pd.DataFrame([["test", "Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience."],
+                                            ["test", "Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B"],
+                                            ["test", "Coordinateur d'Equipe d'Action Territoriale "],
+                                            ["test", 5],
+                                            ["test", None]], columns=['test', 'docs'])
+        docs_test_2 = ['chauffeur(se)  (trice) pers à mob - 5 ans de expérience.', "je maîtrise 12 langages informatiques dont le c &amp; j'ai le  b", "coordinateur d'equipe d' territoriale ", None, None]
+        test_file = 'testing_file5.csv'
+        result_file = pd.DataFrame([['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                    ['maitris langag informat c permisb', 'col 2 line 2'],
+                                    ['coordin equip action territorial', 'col 2 line 3']
+                                   ], columns=['col 1', 'col 2'])
+        result_file_col_2 = pd.DataFrame([["Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.", 'col lin'],
+                                          ["Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B", 'col lin'],
+                                          ["Coordinateur d'Equipe d'Action Territoriale ", 'col lin']
+                                         ], columns=['col 1', 'col 2'])
+        result_file_not_modified = pd.DataFrame([["Chauffeur(se)  accompagnateur(trice) pers à mob - 5 ans de expérience.", 'col 2 line 1', 'chauffeur accompagn per mob an experient'],
+                                                 ["Je maîtrise 12 langages informatiques dont le C &amp; j'ai le Permis B", 'col 2 line 2', 'maitris langag informat c permisb'],
+                                                 ["Coordinateur d'Equipe d'Action Territoriale ", 'col 2 line 3', 'coordin equip action territorial']
+                                                ], columns=['col 1', 'col 2', 'col 1_processed'])
+        result_file_data = pd.DataFrame([['col', 'col 2'],
+                                         ['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                         ['maitris langag informat c permisb', 'col 2 line 2'],
+                                         ['coordin equip action territorial', 'col 2 line 3']
+                                        ], columns=['docs', 'tags'])
+        result_file_skip = pd.DataFrame([['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                         ['maitris langag informat c permisb', 'col 2 line 2'],
+                                         ['coordin equip action territorial', 'col 2 line 3']
+                                        ], columns=['docs', 'tags'])
+        result_file_skip_2 = pd.DataFrame([['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                           ['maitris langag informat c permisb', 'col 2 line 2'],
+                                           ['coordin equip action territorial', 'col 2 line 3']
+                                          ], columns=['test', 'test2'])
+        result_file_sep = pd.DataFrame([['chauffeur accompagn per mob an experient col lin'],
+                                        ['maitris langag informat c permisb col lin'],
+                                        ['coordin equip action territorial col lin']
+                                       ], columns=['col 1,col 2'])
+        result_file_nrows = pd.DataFrame([['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                          ['maitris langag informat c permisb', 'col 2 line 2']
+                                         ], columns=['col 1', 'col 2'])
+        result_file_nrows_data = pd.DataFrame([['col', 'col 2'],
+                                               ['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                              ], columns=['docs', 'tags'])
+        result_file_nrows_skip = pd.DataFrame([['chauffeur accompagn per mob an experient', 'col 2 line 1'],
+                                               ['maitris langag informat c permisb', 'col 2 line 2']
+                                              ], columns=['docs', 'tags'])
+    
+        # Vérification du fonctionnement type
+&gt;       self.assertEqual(api.preprocess_pipeline(docs), docs_def_pipeline)
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/tests/test_3_api.py:137: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/preprocessing/api.py:233: in preprocess_pipeline
+    return preprocessor.transform(docs)
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/preprocessing/api.py:159: in transform
+    return _preprocess_transform(docs, pipeline=self.pipeline, prefered_column=self.prefered_column, modify_data=self.modify_data,
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/preprocessing/api.py:303: in _preprocess_transform
+    docs_input=process_block_of_data(docs_input, pipeline, max_chunksize)
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/utils.py:151: in wrapper
+    results = function(docs_input, *args, **kwargs)
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/preprocessing/api.py:194: in process_block_of_data
+    chunk = USAGE[item](chunk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+docs = 0    chauffeur(se)  accompagnateur(trice) pers à mo...
+1    je maîtrise 12 langages informatiques dont le ...
+2       ...                                                  
+4                                                     
+dtype: object
+
+    def impl_remove_gender_synonyms(docs: pd.Series) -&gt; pd.Series:
+        '''[French] Removes gendered synonyms
+        # Find occurences such as "male version / female version" (eg: Coiffeur / Coiffeuse)
+        # By convention, the male version is kept (in accordance with the lemmatizer)
+    
+        Args:
+            docs (pd.Series): Documents to process
+    
+        Returns:
+            pd.Series: Modified documents
+        '''
+        # synonym_malefemale_replacement.remove_gender_synonyms uses data_agnostic and regroup_data_series wrappers already
+&gt;       return synonym_malefemale_replacement.remove_gender_synonyms(docs)
+E       NameError: name 'synonym_malefemale_replacement' is not defined
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/france-travail@words_n_fun__3bf4b159__tqdm__progressbar2/words_n_fun/preprocessing/basic.py:389: NameError</failure></testcase><testcase classname="tests.test_3_api.ApiTests" name="test_preprocessor_pipeline_setter" time="0.001" /><testcase classname="tests.test_3_api.ApiTests" name="test_process_block_of_data" time="0.001" /><testcase classname="tests.test_4_vectorizationTokenization.VectorizationTokenizationTests" name="test_split_text_into_tokens" time="0.001" /><testcase classname="tests.test_5_synonym_malefemale_replacement.SynonymTests" name="test_matching_words" time="0.000" /><testcase classname="tests.test_5_synonym_malefemale_replacement.SynonymTests" name="test_remove_gender_synonyms" time="0.002" /><testcase classname="tests.test_5_synonym_malefemale_replacement.SynonymTests" name="test_update_synonyms_set" time="0.000" /><testcase classname="tests.test_6_lemmatizer.LemmatizerTests" name="test_lemmatize" time="1.284" /><testcase classname="tests.test_7_stopwords.StopwordsTests" name="test_remove_stopwords" time="0.051" /><testcase classname="tests.test_7_stopwords.StopwordsTests" name="test_stopwords_ascii" time="0.000" /><testcase classname="tests.test_7_stopwords.StopwordsTests" name="test_stopwords_nltk" time="0.037" /><testcase classname="tests.test_7_stopwords.StopwordsTests" name="test_stopwords_nltk_ascii" time="0.001" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_extra_split" time="0.000" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_key_to_parenthesis" time="0.000" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_parenthesis_to_key" time="0.000" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_re_lastspace" time="0.000" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_re_multiline" time="0.000" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_acronyms" time="0.000" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_extra_parenthesis" time="0.000" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_sentences_0" time="0.000" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_sentences_1" time="0.001" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_sentences_10" time="0.001" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_sentences_2" time="0.001" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_sentences_3" time="0.001" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_sentences_4" time="0.001" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_sentences_5" time="0.000" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_sentences_6" time="0.001" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_sentences_7" time="0.000" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_sentences_8" time="0.000" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_sentences_9" time="0.001" /><testcase classname="tests.test_8_split_sentences.SplitSentencesTests" name="test_split_sentences_df" time="0.003" /></testsuite></testsuites>

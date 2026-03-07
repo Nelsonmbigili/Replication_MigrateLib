@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="21" time="0.234" timestamp="2026-03-05T16:16:58.233989+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming" name="test_perform_stream_request_failure" time="0.011" /><testcase classname="tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming" name="test_perform_stream_request_success" time="0.005"><failure message="TypeError: 'async for' requires an object with __aiter__ method, got list_iterator">self = &lt;tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming testMethod=test_perform_stream_request_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4347619408'&gt;
+mock_post = &lt;MagicMock name='post' id='4347625168'&gt;
+
+    @pytest.mark.asyncio
+    @patch("tinychat.llms.anthropic.aiohttp.ClientSession.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    async def test_perform_stream_request_success(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking the response
+        mock_response = Mock(spec=ClientResponse)
+        mock_response.status = 200
+        mock_post.return_value.__aenter__.return_value = mock_response
+    
+        # Creating mock events
+        mock_event1 = MagicMock()
+        mock_event1.data = json.dumps(
+            {"type": "content_block_delta", "delta": {"text": "part1"}}
+        )
+        mock_event2 = MagicMock()
+        mock_event2.data = json.dumps(
+            {"type": "content_block_delta", "delta": {"text": "part2"}}
+        )
+        mock_event_done = MagicMock()
+        mock_event_done.data = json.dumps({"type": "done"})
+    
+        # Mocking SSEClient to return test events
+        with patch("tinychat.llms.anthropic.SSEClient") as mock_sse_client:
+            test_stream = iter([mock_event1, mock_event2, mock_event_done])
+            mock_sse_client.return_value.events = MagicMock(return_value=test_stream)
+    
+            client = AnthropicAIClient(model_name="test_model", temperature=0.0)
+            messages = [{"role": "user", "content": "hello"}]
+            stream = await client.perform_stream_request(messages)
+    
+            # Extracting and verifying the stream response
+            responses = []
+&gt;           async for event in stream.events():
+E           TypeError: 'async for' requires an object with __aiter__ method, got list_iterator
+
+tests/llms/test_anthropic_client.py:46: TypeError</failure></testcase><testcase classname="tests.llms.test_anthropic_handler.TestAnthropicAIHandlerStreaming" name="test_stream_response_success" time="0.000" /><testcase classname="tests.llms.test_cohere_client.TestCohereClientStreaming" name="test_perform_stream_request_failure" time="0.000" /><testcase classname="tests.llms.test_cohere_client.TestCohereClientStreaming" name="test_perform_stream_request_success" time="0.000" /><testcase classname="tests.llms.test_cohere_handler.TestCohereHandlerStreaming" name="test_stream_response_success" time="0.000" /><testcase classname="tests.llms.test_google_client.TestGoogleAIClientStreaming" name="test_perform_stream_request_failure" time="0.000" /><testcase classname="tests.llms.test_google_client.TestGoogleAIClientStreaming" name="test_perform_stream_request_success" time="0.000" /><testcase classname="tests.llms.test_google_handler.TestGoogleGeminiHandlerStreaming" name="test_stream_response" time="0.001" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_api_key_setter_invalid_key" time="0.001" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_api_key_setter_valid_key" time="0.001" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_default_headers" time="0.001" /><testcase classname="tests.llms.test_mistral_client.TestMistralClientStreaming" name="test_perform_stream_request_failure" time="0.000" /><testcase classname="tests.llms.test_mistral_client.TestMistralClientStreaming" name="test_perform_stream_request_success" time="0.000" /><testcase classname="tests.llms.test_mistral_handler.TestMistralHandlerStreaming" name="test_stream_response" time="0.000" /><testcase classname="tests.llms.test_openai_client.TestOpenAIClientStreaming" name="test_perform_stream_request_failure" time="0.005" /><testcase classname="tests.llms.test_openai_client.TestOpenAIClientStreaming" name="test_perform_stream_request_success" time="0.006"><failure message="TypeError: 'async for' requires an object with __aiter__ method, got list_iterator">self = &lt;tests.llms.test_openai_client.TestOpenAIClientStreaming testMethod=test_perform_stream_request_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4348199120'&gt;
+mock_sse_client = &lt;MagicMock name='SSEClient' id='4348205008'&gt;
+mock_post = &lt;MagicMock name='post' id='4348210832'&gt;
+
+    @pytest.mark.asyncio
+    @patch("tinychat.llms.openai.aiohttp.ClientSession.post")
+    @patch("tinychat.llms.openai.SSEClient")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    async def test_perform_stream_request_success(
+        self, mock_api_key, mock_sse_client, mock_post
+    ):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking SSEClient and the response
+        mock_response = Mock(spec=ClientResponse)
+        mock_response.status = 200
+        mock_post.return_value.__aenter__.return_value = mock_response
+    
+        # Creating mock events
+        mock_event1 = MagicMock()
+        mock_event1.data = json.dumps({"choices": [{"delta": {"content": "part1"}}]})
+        mock_event2 = MagicMock()
+        mock_event2.data = json.dumps({"choices": [{"delta": {"content": "part2"}}]})
+        mock_event_done = MagicMock()
+        mock_event_done.data = "[DONE]"
+    
+        # Setting up a test stream
+        test_stream = [mock_event1, mock_event2, mock_event_done]
+        mock_sse_client.return_value.events = MagicMock(return_value=iter(test_stream))
+    
+        client = OpenAIClient(model_name="test_model", temperature=0.0)
+        messages = [{"role": "user", "content": "hello"}]
+        stream = await client.perform_stream_request(messages)
+    
+        # Extracting and verifying the stream response
+        responses = []
+&gt;       async for event in stream.events():
+E       TypeError: 'async for' requires an object with __aiter__ method, got list_iterator
+
+tests/llms/test_openai_client.py:45: TypeError</failure></testcase><testcase classname="tests.llms.test_openai_handler.TestOpenAIHandlerStreaming" name="test_stream_response" time="0.000" /><testcase classname="tests.llms.test_together_client.TestTogetherClientStreaming" name="test_perform_stream_request_failure" time="0.000" /><testcase classname="tests.llms.test_together_client.TestTogetherClientStreaming" name="test_perform_stream_request_success" time="0.000" /><testcase classname="tests.llms.test_together_handler.TestTogetherHandlerStreaming" name="test_stream_response" time="0.000" /></testsuite></testsuites>

@@ -1,0 +1,88 @@
+mig: stephenhillier@starlette_exporter__05b9e18c__httpx__urllib3__05b9e18c__httpx__urllib3
+repo: stephenhillier@starlette_exporter__05b9e18c__httpx__urllib3
+commit: 05b9e18ccbd6f2925a229805d21b87a4000a740f
+source: httpx
+target: urllib3
+premig:
+  name: premig
+  status: finished
+  source_version: 0.23.3
+  target_version: 2.6.3
+  finished_at: '2026-03-07 05:30:10'
+  project_coverage: 96.14835948644793
+  total_tests: 54
+  passed_tests: 54
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 52.63157894736842
+  files:
+  - path: tests/test_middleware.py
+    file_change_coverage: 52.63157894736842
+    covered_changed_lines: 3,121-124,126-127,130,134,138
+    uncovered_changed_lines: 125,128-129,131-133,135-137
+  test_diffs:
+  - test_id: tests/test_middleware.py::TestMiddleware::test_200
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: MaxRetryError
+    error_message: 'urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host=''localhost'',
+      port=80): Max retries exceeded with url: /200 (Caused by NewConnectionError("HTTPConnection(host=''localhost'',
+      port=80): Failed to establish a new connection: [Errno 61] Connection refused"))'
+  - test_id: tests/test_middleware.py::TestMiddleware::test_404_filter
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: MaxRetryError
+    error_message: 'urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host=''localhost'',
+      port=80): Max retries exceeded with url: /metrics (Caused by NewConnectionError("HTTPConnection(host=''localhost'',
+      port=80): Failed to establish a new connection: [Errno 61] Connection refused"))'
+  - test_id: tests/test_middleware.py::TestMiddleware::test_500
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: MaxRetryError
+    error_message: 'urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host=''localhost'',
+      port=80): Max retries exceeded with url: /500 (Caused by NewConnectionError("HTTPConnection(host=''localhost'',
+      port=80): Failed to establish a new connection: [Errno 61] Connection refused"))'
+  - test_id: tests/test_middleware.py::TestMiddleware::test_histogram
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: MaxRetryError
+    error_message: 'urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host=''localhost'',
+      port=80): Max retries exceeded with url: /200 (Caused by NewConnectionError("HTTPConnection(host=''localhost'',
+      port=80): Failed to establish a new connection: [Errno 61] Connection refused"))'
+  - test_id: tests/test_middleware.py::TestMiddleware::test_requests_in_progress
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: MaxRetryError
+    error_message: 'urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host=''localhost'',
+      port=80): Max retries exceeded with url: /metrics (Caused by NewConnectionError("HTTPConnection(host=''localhost'',
+      port=80): Failed to establish a new connection: [Errno 61] Connection refused"))'
+  - test_id: tests/test_middleware.py::TestMiddleware::test_unhandled
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: MaxRetryError
+    error_message: 'urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host=''localhost'',
+      port=80): Max retries exceeded with url: /unhandled (Caused by NewConnectionError("HTTPConnection(host=''localhost'',
+      port=80): Failed to establish a new connection: [Errno 61] Connection refused"))'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

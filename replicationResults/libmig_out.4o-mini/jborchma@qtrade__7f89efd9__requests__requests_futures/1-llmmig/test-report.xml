@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="13" skipped="0" tests="18" time="0.495" timestamp="2026-03-07T05:29:54.160638+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_questrade" name="test_del_method_session_close" time="0.001"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">mock_get = &lt;MagicMock name='request' id='4381086736'&gt;
+
+    @mock.patch("qtrade.questrade.FuturesSession.request", side_effect=mocked_access_token_requests_get)
+    def test_del_method_session_close(mock_get):
+        """ "This function tests the successful session closing."""
+        with mock.patch.object(FuturesSession, "close") as mock_close:
+&gt;           qtrade = Questrade(access_code="hunter2")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_questrade.py:463: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:56: in __init__
+    self._get_access_token(save_yaml=save_yaml)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;qtrade.questrade.Questrade object at 0x105222b50&gt;, save_yaml = True
+yaml_path = 'access_token.yml'
+
+    def _get_access_token(
+        self, save_yaml: bool = False, yaml_path: str = "access_token.yml"
+    ) -&gt; TokenDict:
+        """Get access token.
+    
+        This internal method gets the access token from the access code and optionally saves it in
+        access_token.yaml.
+    
+        Parameters
+        ----------
+        save_yaml: bool, optional
+            Boolean to indicate if the token payload will be saved in a yaml-file. Default False.
+        yaml_path: str, optional
+            Path of the yaml-file that will be saved. If the file already exists, it will be
+            overwritten. Defaults to access_token.yml
+    
+        Returns
+        -------
+        dict
+            Dict with the access token data.
+        """
+        url = TOKEN_URL + str(self.access_code)
+        log.info("Getting access token...")
+        future = self.session.get(url)  # Changed to submit
+&gt;       data = future.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'result'
+
+qtrade/questrade.py:136: AttributeError</failure></testcase><testcase classname="tests.test_questrade" name="test_get_access_token" time="0.001"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">mock_get = &lt;MagicMock name='request' id='4381086800'&gt;
+
+    @mock.patch("qtrade.questrade.FuturesSession.request", side_effect=mocked_access_token_requests_get)
+    def test_get_access_token(mock_get):
+        """This function tests the get access token method."""
+&gt;       qtrade = Questrade(access_code="hunter2")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_questrade.py:471: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:56: in __init__
+    self._get_access_token(save_yaml=save_yaml)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;qtrade.questrade.Questrade object at 0x105221510&gt;, save_yaml = True
+yaml_path = 'access_token.yml'
+
+    def _get_access_token(
+        self, save_yaml: bool = False, yaml_path: str = "access_token.yml"
+    ) -&gt; TokenDict:
+        """Get access token.
+    
+        This internal method gets the access token from the access code and optionally saves it in
+        access_token.yaml.
+    
+        Parameters
+        ----------
+        save_yaml: bool, optional
+            Boolean to indicate if the token payload will be saved in a yaml-file. Default False.
+        yaml_path: str, optional
+            Path of the yaml-file that will be saved. If the file already exists, it will be
+            overwritten. Defaults to access_token.yml
+    
+        Returns
+        -------
+        dict
+            Dict with the access token data.
+        """
+        url = TOKEN_URL + str(self.access_code)
+        log.info("Getting access token...")
+        future = self.session.get(url)  # Changed to submit
+&gt;       data = future.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'result'
+
+qtrade/questrade.py:136: AttributeError</failure></testcase><testcase classname="tests.test_questrade" name="test_init_via_yaml" time="0.002" /><testcase classname="tests.test_questrade" name="test_init_via_incomplete_yaml" time="0.001" /><testcase classname="tests.test_questrade" name="test_refresh_token_yaml" time="0.002"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">mock_get = &lt;MagicMock name='request' id='4382837712'&gt;
+
+    @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+    @mock.patch("qtrade.questrade.FuturesSession.request", side_effect=mocked_access_token_requests_get)
+    def test_refresh_token_yaml(mock_get):
+        """This function tests the refresh token method by using the yaml."""
+        qtrade = Questrade(token_yaml="access_token.yml")
+&gt;       qtrade.refresh_access_token(from_yaml=True)
+
+tests/test_questrade.py:507: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;qtrade.questrade.Questrade object at 0x1053cc510&gt;, from_yaml = True
+yaml_path = 'access_token.yml'
+
+    def refresh_access_token(
+        self, from_yaml: bool = False, yaml_path: str = "access_token.yml"
+    ) -&gt; TokenDict:
+        """Refresh access token.
+    
+        This method refreshes the access token. This only works if the overall access has not yet
+        expired. By default it will look for the yaml-file, but it could also look for the internal
+        state
+    
+        Parameters
+        ----------
+        from_yaml: bool, optional [False]
+            This parameter controls if the refresh token is sourced from a yaml file
+            or if the attribute `access_token` is used (default). If True, the yaml-file will be
+            updated.
+        yaml_path: str, optional
+            Path of the yaml-file that will be updated. Defaults to access_token.yml
+    
+        Returns
+        -------
+        dict
+            Dict with the access token data.
+        """
+        if from_yaml:
+            old_access_token = get_access_token_yaml(yaml_path)
+        else:
+            old_access_token = self.access_token
+    
+        url = TOKEN_URL + str(old_access_token["refresh_token"])
+        log.info("Refreshing access token...")
+        future = self.session.get(url)  # Changed to submit
+&gt;       data = future.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'result'
+
+qtrade/questrade.py:197: AttributeError</failure></testcase><testcase classname="tests.test_questrade" name="test_refresh_token_non_yaml" time="0.002"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">mock_get = &lt;MagicMock name='request' id='4381146384'&gt;
+
+    @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+    @mock.patch("qtrade.questrade.FuturesSession.request", side_effect=mocked_access_token_requests_get)
+    def test_refresh_token_non_yaml(mock_get):
+        """This function tests the refresh token method without yaml use."""
+        qtrade = Questrade(token_yaml="access_token.yml")
+&gt;       qtrade.refresh_access_token()
+
+tests/test_questrade.py:519: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;qtrade.questrade.Questrade object at 0x10522fa50&gt;, from_yaml = False
+yaml_path = 'access_token.yml'
+
+    def refresh_access_token(
+        self, from_yaml: bool = False, yaml_path: str = "access_token.yml"
+    ) -&gt; TokenDict:
+        """Refresh access token.
+    
+        This method refreshes the access token. This only works if the overall access has not yet
+        expired. By default it will look for the yaml-file, but it could also look for the internal
+        state
+    
+        Parameters
+        ----------
+        from_yaml: bool, optional [False]
+            This parameter controls if the refresh token is sourced from a yaml file
+            or if the attribute `access_token` is used (default). If True, the yaml-file will be
+            updated.
+        yaml_path: str, optional
+            Path of the yaml-file that will be updated. Defaults to access_token.yml
+    
+        Returns
+        -------
+        dict
+            Dict with the access token data.
+        """
+        if from_yaml:
+            old_access_token = get_access_token_yaml(yaml_path)
+        else:
+            old_access_token = self.access_token
+    
+        url = TOKEN_URL + str(old_access_token["refresh_token"])
+        log.info("Refreshing access token...")
+        future = self.session.get(url)  # Changed to submit
+&gt;       data = future.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'result'
+
+qtrade/questrade.py:197: AttributeError</failure></testcase><testcase classname="tests.test_questrade" name="test_get_account_id" time="0.001"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">mock_get = &lt;MagicMock name='request' id='4382087504'&gt;
+
+    @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+    @mock.patch.object(FuturesSession, "request", side_effect=mocked_acct_id_get)
+    def test_get_account_id(mock_get):
+        """This function tests the account ID function."""
+        qtrade = Questrade(token_yaml="access_token.yml")
+&gt;       acct_id = qtrade.get_account_id()
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_questrade.py:531: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:238: in get_account_id
+    response: Dict[str, List[Dict[str, int]]] = self._send_message("get", "accounts")
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;qtrade.questrade.Questrade object at 0x105317750&gt;, method = 'get'
+endpoint = 'accounts', params = None, data = None, json = None
+
+    def _send_message(
+        self,
+        method: str,
+        endpoint: str,
+        params: Optional[Dict] = None,
+        data: Optional[Dict] = None,
+        json: Optional[Dict] = None,
+    ) -&gt; Dict[str, Any]:  # pylint: disable=R0913
+        """Send an API request.
+    
+        Parameters
+        ----------
+        method: str
+            HTTP method (get, post, delete, etc.)
+        endpoint: str
+            Endpoint (to be added to base URL)
+        params: dict, optional
+            HTTP request parameters
+        data: dict, optional
+            JSON-encoded string payload for POST
+        json: dict, optional
+            Dictionary payload for POST
+    
+        Returns
+        -------
+        dict/list:
+            JSON response
+        """
+        if self.access_token is not None:
+            url = self.access_token["api_server"] + "/v1/" + endpoint
+        else:
+            log.error("Access token not set...")
+            raise Exception("Access token not set...")
+        future = self.session.request(method, url, params=params, data=data, json=json, timeout=30)  # Changed to submit
+&gt;       resp = future.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'result'
+
+qtrade/questrade.py:95: AttributeError</failure></testcase><testcase classname="tests.test_questrade" name="test_get_positions" time="0.001"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">mock_get = &lt;MagicMock name='request' id='4381804560'&gt;
+
+    @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+    @mock.patch.object(FuturesSession, "request", side_effect=mocked_positions_get)
+    def test_get_positions(mock_get):
+        """This function tests the get account positions method."""
+        qtrade = Questrade(token_yaml="access_token.yml")
+&gt;       positions = qtrade.get_account_positions(123)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_questrade.py:540: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:289: in get_account_positions
+    response = self._send_message("get", "accounts/" + str(account_id) + "/positions")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;qtrade.questrade.Questrade object at 0x1052d2010&gt;, method = 'get'
+endpoint = 'accounts/123/positions', params = None, data = None, json = None
+
+    def _send_message(
+        self,
+        method: str,
+        endpoint: str,
+        params: Optional[Dict] = None,
+        data: Optional[Dict] = None,
+        json: Optional[Dict] = None,
+    ) -&gt; Dict[str, Any]:  # pylint: disable=R0913
+        """Send an API request.
+    
+        Parameters
+        ----------
+        method: str
+            HTTP method (get, post, delete, etc.)
+        endpoint: str
+            Endpoint (to be added to base URL)
+        params: dict, optional
+            HTTP request parameters
+        data: dict, optional
+            JSON-encoded string payload for POST
+        json: dict, optional
+            Dictionary payload for POST
+    
+        Returns
+        -------
+        dict/list:
+            JSON response
+        """
+        if self.access_token is not None:
+            url = self.access_token["api_server"] + "/v1/" + endpoint
+        else:
+            log.error("Access token not set...")
+            raise Exception("Access token not set...")
+        future = self.session.request(method, url, params=params, data=data, json=json, timeout=30)  # Changed to submit
+&gt;       resp = future.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'result'
+
+qtrade/questrade.py:95: AttributeError</failure></testcase><testcase classname="tests.test_questrade" name="test_get_balances" time="0.001"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">mock_get = &lt;MagicMock name='request' id='4381300624'&gt;
+
+    @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+    @mock.patch.object(FuturesSession, "request", side_effect=mocked_balances_get)
+    def test_get_balances(mock_get):
+        """This function tests the get account balances method."""
+        qtrade = Questrade(token_yaml="access_token.yml")
+&gt;       balances = qtrade.get_account_balances(123)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_questrade.py:558: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:316: in get_account_balances
+    response = self._send_message("get", "accounts/" + str(account_id) + "/balances")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;qtrade.questrade.Questrade object at 0x105257210&gt;, method = 'get'
+endpoint = 'accounts/123/balances', params = None, data = None, json = None
+
+    def _send_message(
+        self,
+        method: str,
+        endpoint: str,
+        params: Optional[Dict] = None,
+        data: Optional[Dict] = None,
+        json: Optional[Dict] = None,
+    ) -&gt; Dict[str, Any]:  # pylint: disable=R0913
+        """Send an API request.
+    
+        Parameters
+        ----------
+        method: str
+            HTTP method (get, post, delete, etc.)
+        endpoint: str
+            Endpoint (to be added to base URL)
+        params: dict, optional
+            HTTP request parameters
+        data: dict, optional
+            JSON-encoded string payload for POST
+        json: dict, optional
+            Dictionary payload for POST
+    
+        Returns
+        -------
+        dict/list:
+            JSON response
+        """
+        if self.access_token is not None:
+            url = self.access_token["api_server"] + "/v1/" + endpoint
+        else:
+            log.error("Access token not set...")
+            raise Exception("Access token not set...")
+        future = self.session.request(method, url, params=params, data=data, json=json, timeout=30)  # Changed to submit
+&gt;       resp = future.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'result'
+
+qtrade/questrade.py:95: AttributeError</failure></testcase><testcase classname="tests.test_questrade" name="test_get_activity" time="0.001"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">mock_get = &lt;MagicMock name='request' id='4381307344'&gt;
+
+    @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+    @mock.patch.object(FuturesSession, "request", side_effect=mocked_activities_get)
+    def test_get_activity(mock_get):
+        """This function tests the get account activities method."""
+        qtrade = Questrade(token_yaml="access_token.yml")
+&gt;       activities = qtrade.get_account_activities(123, "2018-08-07", "2018-08-10")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_questrade.py:576: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:371: in get_account_activities
+    response = self._send_message(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;qtrade.questrade.Questrade object at 0x1052549d0&gt;, method = 'get'
+endpoint = 'accounts/123/activities'
+params = {'endTime': '2018-08-10T00:00:00-05:00', 'startTime': '2018-08-07T00:00:00-05:00'}
+data = None, json = None
+
+    def _send_message(
+        self,
+        method: str,
+        endpoint: str,
+        params: Optional[Dict] = None,
+        data: Optional[Dict] = None,
+        json: Optional[Dict] = None,
+    ) -&gt; Dict[str, Any]:  # pylint: disable=R0913
+        """Send an API request.
+    
+        Parameters
+        ----------
+        method: str
+            HTTP method (get, post, delete, etc.)
+        endpoint: str
+            Endpoint (to be added to base URL)
+        params: dict, optional
+            HTTP request parameters
+        data: dict, optional
+            JSON-encoded string payload for POST
+        json: dict, optional
+            Dictionary payload for POST
+    
+        Returns
+        -------
+        dict/list:
+            JSON response
+        """
+        if self.access_token is not None:
+            url = self.access_token["api_server"] + "/v1/" + endpoint
+        else:
+            log.error("Access token not set...")
+            raise Exception("Access token not set...")
+        future = self.session.request(method, url, params=params, data=data, json=json, timeout=30)  # Changed to submit
+&gt;       resp = future.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'result'
+
+qtrade/questrade.py:95: AttributeError</failure></testcase><testcase classname="tests.test_questrade" name="test_get_execution" time="0.002"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">mock_get = &lt;MagicMock name='request' id='4381140560'&gt;
+
+    @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+    @mock.patch.object(FuturesSession, "request", side_effect=mocked_executions_get)
+    def test_get_execution(mock_get):
+        """This function tests the get account executions method."""
+        qtrade = Questrade(token_yaml="access_token.yml")
+&gt;       executions = qtrade.get_account_executions(123, "2018-08-07", "2018-08-10")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_questrade.py:591: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:438: in get_account_executions
+    response = self._send_message(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;qtrade.questrade.Questrade object at 0x10522e950&gt;, method = 'get'
+endpoint = 'accounts/123/executions'
+params = {'endTime': '2018-08-10T00:00:00-05:00', 'startTime': '2018-08-07T00:00:00-05:00'}
+data = None, json = None
+
+    def _send_message(
+        self,
+        method: str,
+        endpoint: str,
+        params: Optional[Dict] = None,
+        data: Optional[Dict] = None,
+        json: Optional[Dict] = None,
+    ) -&gt; Dict[str, Any]:  # pylint: disable=R0913
+        """Send an API request.
+    
+        Parameters
+        ----------
+        method: str
+            HTTP method (get, post, delete, etc.)
+        endpoint: str
+            Endpoint (to be added to base URL)
+        params: dict, optional
+            HTTP request parameters
+        data: dict, optional
+            JSON-encoded string payload for POST
+        json: dict, optional
+            Dictionary payload for POST
+    
+        Returns
+        -------
+        dict/list:
+            JSON response
+        """
+        if self.access_token is not None:
+            url = self.access_token["api_server"] + "/v1/" + endpoint
+        else:
+            log.error("Access token not set...")
+            raise Exception("Access token not set...")
+        future = self.session.request(method, url, params=params, data=data, json=json, timeout=30)  # Changed to submit
+&gt;       resp = future.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'result'
+
+qtrade/questrade.py:95: AttributeError</failure></testcase><testcase classname="tests.test_questrade" name="test_get_ticker_information" time="0.001"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">mock_get = &lt;MagicMock name='request' id='4381300496'&gt;
+
+    @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+    @mock.patch.object(FuturesSession, "request", side_effect=mocked_ticker_get)
+    def test_get_ticker_information(mock_get):
+        """This function tests the get ticker information method."""
+        qtrade = Questrade(token_yaml="access_token.yml")
+&gt;       ticker_info_single = qtrade.ticker_information("XYZ")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_questrade.py:606: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:471: in ticker_information
+    response = self._send_message("get", "symbols", params=payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;qtrade.questrade.Questrade object at 0x105257bd0&gt;, method = 'get'
+endpoint = 'symbols', params = {'names': 'XYZ'}, data = None, json = None
+
+    def _send_message(
+        self,
+        method: str,
+        endpoint: str,
+        params: Optional[Dict] = None,
+        data: Optional[Dict] = None,
+        json: Optional[Dict] = None,
+    ) -&gt; Dict[str, Any]:  # pylint: disable=R0913
+        """Send an API request.
+    
+        Parameters
+        ----------
+        method: str
+            HTTP method (get, post, delete, etc.)
+        endpoint: str
+            Endpoint (to be added to base URL)
+        params: dict, optional
+            HTTP request parameters
+        data: dict, optional
+            JSON-encoded string payload for POST
+        json: dict, optional
+            Dictionary payload for POST
+    
+        Returns
+        -------
+        dict/list:
+            JSON response
+        """
+        if self.access_token is not None:
+            url = self.access_token["api_server"] + "/v1/" + endpoint
+        else:
+            log.error("Access token not set...")
+            raise Exception("Access token not set...")
+        future = self.session.request(method, url, params=params, data=data, json=json, timeout=30)  # Changed to submit
+&gt;       resp = future.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'result'
+
+qtrade/questrade.py:95: AttributeError</failure></testcase><testcase classname="tests.test_questrade" name="test_get_quote" time="0.001"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">mock_get = &lt;MagicMock name='request' id='4382874320'&gt;
+
+    @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+    @mock.patch.object(FuturesSession, "request", side_effect=mocked_quote_get)
+    def test_get_quote(mock_get):
+        """This function tests the get quote method."""
+        qtrade = Questrade(token_yaml="access_token.yml")
+&gt;       quote_single = qtrade.get_quote("XYZ")
+                       ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_questrade.py:623: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:502: in get_quote
+    info = self.ticker_information(tickers)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+qtrade/questrade.py:471: in ticker_information
+    response = self._send_message("get", "symbols", params=payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;qtrade.questrade.Questrade object at 0x1053d6d90&gt;, method = 'get'
+endpoint = 'symbols', params = {'names': 'XYZ'}, data = None, json = None
+
+    def _send_message(
+        self,
+        method: str,
+        endpoint: str,
+        params: Optional[Dict] = None,
+        data: Optional[Dict] = None,
+        json: Optional[Dict] = None,
+    ) -&gt; Dict[str, Any]:  # pylint: disable=R0913
+        """Send an API request.
+    
+        Parameters
+        ----------
+        method: str
+            HTTP method (get, post, delete, etc.)
+        endpoint: str
+            Endpoint (to be added to base URL)
+        params: dict, optional
+            HTTP request parameters
+        data: dict, optional
+            JSON-encoded string payload for POST
+        json: dict, optional
+            Dictionary payload for POST
+    
+        Returns
+        -------
+        dict/list:
+            JSON response
+        """
+        if self.access_token is not None:
+            url = self.access_token["api_server"] + "/v1/" + endpoint
+        else:
+            log.error("Access token not set...")
+            raise Exception("Access token not set...")
+        future = self.session.request(method, url, params=params, data=data, json=json, timeout=30)  # Changed to submit
+&gt;       resp = future.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'result'
+
+qtrade/questrade.py:95: AttributeError</failure></testcase><testcase classname="tests.test_questrade" name="test_get_historical_data" time="0.001"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">mock_get = &lt;MagicMock name='request' id='4383396944'&gt;
+
+    @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+    @mock.patch.object(FuturesSession, "request", side_effect=mocked_historical_get)
+    def test_get_historical_data(mock_get):
+        """This function tests the get historical data method."""
+        qtrade = Questrade(token_yaml="access_token.yml")
+&gt;       historical_data = qtrade.get_historical_data("XYZ", "2018-08-01", "2018-08-02", "OneDay")
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_questrade.py:641: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:547: in get_historical_data
+    info = self.ticker_information(ticker)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+qtrade/questrade.py:471: in ticker_information
+    response = self._send_message("get", "symbols", params=payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;qtrade.questrade.Questrade object at 0x105455950&gt;, method = 'get'
+endpoint = 'symbols', params = {'names': 'XYZ'}, data = None, json = None
+
+    def _send_message(
+        self,
+        method: str,
+        endpoint: str,
+        params: Optional[Dict] = None,
+        data: Optional[Dict] = None,
+        json: Optional[Dict] = None,
+    ) -&gt; Dict[str, Any]:  # pylint: disable=R0913
+        """Send an API request.
+    
+        Parameters
+        ----------
+        method: str
+            HTTP method (get, post, delete, etc.)
+        endpoint: str
+            Endpoint (to be added to base URL)
+        params: dict, optional
+            HTTP request parameters
+        data: dict, optional
+            JSON-encoded string payload for POST
+        json: dict, optional
+            Dictionary payload for POST
+    
+        Returns
+        -------
+        dict/list:
+            JSON response
+        """
+        if self.access_token is not None:
+            url = self.access_token["api_server"] + "/v1/" + endpoint
+        else:
+            log.error("Access token not set...")
+            raise Exception("Access token not set...")
+        future = self.session.request(method, url, params=params, data=data, json=json, timeout=30)  # Changed to submit
+&gt;       resp = future.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'result'
+
+qtrade/questrade.py:95: AttributeError</failure></testcase><testcase classname="tests.test_questrade" name="test_get_option_chain" time="0.001"><failure message="AttributeError: 'MockResponse' object has no attribute 'result'">mock_get = &lt;MagicMock name='request' id='4382812240'&gt;
+
+    @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+    @mock.patch.object(FuturesSession, "request", side_effect=mocked_option_chain_get)
+    def test_get_option_chain(mock_get):
+        """This function tests the get historical data method."""
+        qtrade = Questrade(token_yaml="access_token.yml")
+&gt;       option_chain_data = qtrade.get_option_chain("XYZ")
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_questrade.py:654: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+qtrade/questrade.py:672: in get_option_chain
+    info = self.ticker_information([ticker])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+qtrade/questrade.py:471: in ticker_information
+    response = self._send_message("get", "symbols", params=payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;qtrade.questrade.Questrade object at 0x1053c5c90&gt;, method = 'get'
+endpoint = 'symbols', params = {'names': 'XYZ'}, data = None, json = None
+
+    def _send_message(
+        self,
+        method: str,
+        endpoint: str,
+        params: Optional[Dict] = None,
+        data: Optional[Dict] = None,
+        json: Optional[Dict] = None,
+    ) -&gt; Dict[str, Any]:  # pylint: disable=R0913
+        """Send an API request.
+    
+        Parameters
+        ----------
+        method: str
+            HTTP method (get, post, delete, etc.)
+        endpoint: str
+            Endpoint (to be added to base URL)
+        params: dict, optional
+            HTTP request parameters
+        data: dict, optional
+            JSON-encoded string payload for POST
+        json: dict, optional
+            Dictionary payload for POST
+    
+        Returns
+        -------
+        dict/list:
+            JSON response
+        """
+        if self.access_token is not None:
+            url = self.access_token["api_server"] + "/v1/" + endpoint
+        else:
+            log.error("Access token not set...")
+            raise Exception("Access token not set...")
+        future = self.session.request(method, url, params=params, data=data, json=json, timeout=30)  # Changed to submit
+&gt;       resp = future.result()  # Get the response from the Future
+               ^^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'result'
+
+qtrade/questrade.py:95: AttributeError</failure></testcase><testcase classname="tests.test_utility" name="test_get_access_token_yaml" time="0.001" /><testcase classname="tests.test_utility" name="test_get_access_token_error" time="0.000" /><testcase classname="tests.test_utility" name="test_get_access_token_yaml_error" time="0.001" /></testsuite></testsuites>

@@ -1,0 +1,931 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="23" skipped="0" tests="49" time="34.190" timestamp="2026-03-05T16:17:51.255518+04:00" hostname="nelsonmbigili.local"><testcase classname="test.integration.test_api.test_avatar.TestAvatar" name="test_get_avatar_as_thumbnail" time="0.113" /><testcase classname="test.integration.test_api.test_avatar.TestAvatar" name="test_get_avatar_defaults" time="0.091" /><testcase classname="test.integration.test_api.test_draft.TestDraft" name="test_get_draft" time="0.073" /><testcase classname="test.integration.test_api.test_draft.TestDraft" name="test_get_drafts_in_league" time="0.146" /><testcase classname="test.integration.test_api.test_draft.TestDraft" name="test_get_player_draft_picks" time="0.102" /><testcase classname="test.integration.test_api.test_draft.TestDraft" name="test_get_traded_draft_picks" time="0.098" /><testcase classname="test.integration.test_api.test_draft.TestDraft" name="test_get_user_drafts_for_year_happy_path" time="0.097" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_league" time="0.101"><failure message="AssertionError: {'nam[1130 chars] 0, 'reserve_allow_cov': 0, 'daily_waivers_las[1656 chars]': 6} != {'nam[1130 chars] 0, 'was_auto_archived': 1, 'reserve_allow_cov[1680 chars]': 6}&#10;Diff is 4957 characters long. Set self.maxDiff to None to see it.">self = &lt;test.integration.test_api.test_league.TestLeague testMethod=test_get_league&gt;
+
+    def test_get_league(self):
+        response = get_league(league_id=LEAGUE_A_LEAGUE_ID)
+&gt;       self.assertEqual(LEAGUE_A_LEAGUE, response)
+E       AssertionError: {'nam[1130 chars] 0, 'reserve_allow_cov': 0, 'daily_waivers_las[1656 chars]': 6} != {'nam[1130 chars] 0, 'was_auto_archived': 1, 'reserve_allow_cov[1680 chars]': 6}
+E       Diff is 4957 characters long. Set self.maxDiff to None to see it.
+
+test/integration/test_api/test_league.py:34: AssertionError</failure></testcase><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_losers_bracket" time="0.184" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_matchups_for_week" time="0.103" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_rosters" time="0.123" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_sport_state" time="0.110" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_traded_picks" time="0.163" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_transactions" time="0.134" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_user_leagues_for_year" time="0.124"><failure message="AssertionError: Lists differ: [{'league_id': '852776957778173952', 'last_author_id': Non[12328 chars]one}] != [{'league_id': '874771854727471104', 'loser_bracket_overri[12353 chars]one}]&#10;&#10;First differing element 0:&#10;{'league_id': '852776957778173952', 'last_author_id': Non[2418 chars]None}&#10;{'league_id': '874771854727471104', 'loser_bracket_overri[2874 chars]None}&#10;&#10;Diff is 27567 characters long. Set self.maxDiff to None to see it.">self = &lt;test.integration.test_api.test_league.TestLeague testMethod=test_get_user_leagues_for_year&gt;
+
+    def test_get_user_leagues_for_year(self):
+        response = get_user_leagues_for_year(
+            user_id=USER_A_USER_ID, sport="nfl", year=2022
+        )
+&gt;       self.assertEqual(USER_A_LEAGUES_2022, response)
+E       AssertionError: Lists differ: [{'league_id': '852776957778173952', 'last_author_id': Non[12328 chars]one}] != [{'league_id': '874771854727471104', 'loser_bracket_overri[12353 chars]one}]
+E       
+E       First differing element 0:
+E       {'league_id': '852776957778173952', 'last_author_id': Non[2418 chars]None}
+E       {'league_id': '874771854727471104', 'loser_bracket_overri[2874 chars]None}
+E       
+E       Diff is 27567 characters long. Set self.maxDiff to None to see it.
+
+test/integration/test_api/test_league.py:40: AssertionError</failure></testcase><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_users_in_league" time="0.080" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_winners_bracket" time="0.167" /><testcase classname="test.integration.test_api.test_player.TestPlayer" name="test_get_all_players" time="0.414" /><testcase classname="test.integration.test_api.test_player.TestPlayer" name="test_get_trending_players" time="0.098" /><testcase classname="test.integration.test_api.test_user.TestUser" name="test_get_user_with_user_id_as_identifier" time="0.074" /><testcase classname="test.integration.test_api.test_user.TestUser" name="test_get_user_with_username_as_identifier" time="0.075" /><testcase classname="test.unit.test_api.test_avatar.TestAvatar" name="test_get_avatar_as_thumbnail" time="0.866"><failure message="httpx.HTTPStatusError: Client error '403 Forbidden' for url 'https://sleepercdn.com/avatars/thumbs/abc'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403">self = &lt;test.unit.test_api.test_avatar.TestAvatar testMethod=test_get_avatar_as_thumbnail&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4345706960'&gt;
+
+    @patch("requests.get")
+    def test_get_avatar_as_thumbnail(self, mock_requests_get):
+        mock_bytes = b"foo"
+        mock_response = MockResponse({}, 200, mock_bytes)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_avatar(avatar_id="abc", as_thumbnail=True)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_avatar.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/avatar.py:16: in get_avatar
+    return get_content(url)
+           ^^^^^^^^^^^^^^^^
+sleeper/api/_utils.py:36: in get_content
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [403 Forbidden]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '403 Forbidden' for url 'https://sleepercdn.com/avatars/thumbs/abc'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="test.unit.test_api.test_avatar.TestAvatar" name="test_get_avatar_defaults" time="0.822"><failure message="httpx.HTTPStatusError: Client error '403 Forbidden' for url 'https://sleepercdn.com/avatars/abc'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403">self = &lt;test.unit.test_api.test_avatar.TestAvatar testMethod=test_get_avatar_defaults&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4431699664'&gt;
+
+    @patch("requests.get")
+    def test_get_avatar_defaults(self, mock_requests_get):
+        mock_bytes = b"foo"
+        mock_response = MockResponse({}, 200, mock_bytes)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_avatar(avatar_id="abc")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_avatar.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/avatar.py:16: in get_avatar
+    return get_content(url)
+           ^^^^^^^^^^^^^^^^
+sleeper/api/_utils.py:36: in get_content
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [403 Forbidden]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '403 Forbidden' for url 'https://sleepercdn.com/avatars/abc'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="test.unit.test_api.test_draft.TestDraft" name="test_get_draft" time="0.679"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/draft/12345'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test.unit.test_api.test_draft.TestDraft testMethod=test_get_draft&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4431653328'&gt;
+
+    @patch("requests.get")
+    def test_get_draft(self, mock_requests_get):
+        mock_dict = {"foo": "bar"}
+        mock_response = MockResponse(mock_dict, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_draft(draft_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_draft.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/draft.py:42: in get_draft
+    return get(build_route(SLEEPER_APP_BASE_URL, VERSION, DRAFT_ROUTE, draft_id))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sleeper/api/_utils.py:30: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/draft/12345'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="test.unit.test_api.test_draft.TestDraft" name="test_get_drafts_in_league" time="0.406"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != []&#10;&#10;First list contains 1 additional elements.&#10;First extra element 0:&#10;{'foo': 'bar'}&#10;&#10;- [{'foo': 'bar'}]&#10;+ []">self = &lt;test.unit.test_api.test_draft.TestDraft testMethod=test_get_drafts_in_league&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4345732304'&gt;
+
+    @patch("requests.get")
+    def test_get_drafts_in_league(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_drafts_in_league(league_id="12345")
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       {'foo': 'bar'}
+E       
+E       - [{'foo': 'bar'}]
+E       + []
+
+test/unit/test_api/test_draft.py:36: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_draft.TestDraft" name="test_get_player_draft_picks" time="0.559"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/draft/12345/picks'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test.unit.test_api.test_draft.TestDraft testMethod=test_get_player_draft_picks&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4345893264'&gt;
+
+    @patch("requests.get")
+    def test_get_player_draft_picks(self, mock_requests_get):
+        mock_dict = {"foo": "bar"}
+        mock_response = MockResponse(mock_dict, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_player_draft_picks(draft_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_draft.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/draft.py:46: in get_player_draft_picks
+    return get(
+sleeper/api/_utils.py:30: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/draft/12345/picks'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="test.unit.test_api.test_draft.TestDraft" name="test_get_traded_draft_picks" time="0.466"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/draft/12345/traded_picks'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test.unit.test_api.test_draft.TestDraft testMethod=test_get_traded_draft_picks&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4432013392'&gt;
+
+    @patch("requests.get")
+    def test_get_traded_draft_picks(self, mock_requests_get):
+        mock_dict = {"foo": "bar"}
+        mock_response = MockResponse(mock_dict, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_traded_draft_picks(draft_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_draft.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/draft.py:58: in get_traded_draft_picks
+    return get(
+sleeper/api/_utils.py:30: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/draft/12345/traded_picks'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="test.unit.test_api.test_draft.TestDraft" name="test_get_user_drafts_for_year_happy_path" time="0.468"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/user/user_id/drafts/nfl/2020'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test.unit.test_api.test_draft.TestDraft testMethod=test_get_user_drafts_for_year_happy_path&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4432074896'&gt;
+
+    @patch("requests.get")
+    def test_get_user_drafts_for_year_happy_path(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_user_drafts_for_year(user_id="user_id", sport="nfl", year=2020)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_draft.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/draft.py:16: in get_user_drafts_for_year
+    return get(
+sleeper/api/_utils.py:30: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/user/user_id/drafts/nfl/2020'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_league" time="0.465"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/league/12345'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_league&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4431546512'&gt;
+
+    @patch("requests.get")
+    def test_get_league(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_league(league_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_league.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/league.py:21: in get_league
+    return get(build_route(SLEEPER_APP_BASE_URL, VERSION, LEAGUE_ROUTE, league_id))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sleeper/api/_utils.py:30: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/league/12345'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_losers_bracket" time="0.468"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/league/12345/losers_bracket'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_losers_bracket&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4404444176'&gt;
+
+    @patch("requests.get")
+    def test_get_losers_bracket(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_losers_bracket(league_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_league.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/league.py:88: in get_losers_bracket
+    return get(
+sleeper/api/_utils.py:30: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/league/12345/losers_bracket'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_matchups_for_week" time="0.465"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/league/12345/matchups/1'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_matchups_for_week&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4404113616'&gt;
+
+    @patch("requests.get")
+    def test_get_matchups_for_week(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_matchups_for_week(league_id="12345", week=1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_league.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/league.py:63: in get_matchups_for_week
+    return get(
+sleeper/api/_utils.py:30: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/league/12345/matchups/1'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_rosters" time="0.465"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/league/12345/rosters'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_rosters&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4404550480'&gt;
+
+    @patch("requests.get")
+    def test_get_rosters(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_rosters(league_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_league.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/league.py:39: in get_rosters
+    return get(
+sleeper/api/_utils.py:30: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/league/12345/rosters'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_sport_state" time="0.072"><failure message="AssertionError: {'foo': 'bar'} != {'week': 0, 'leg': 0, 'season': '2026', 'se[171 chars]alse}&#10;- {'foo': 'bar'}&#10;+ {'display_week': 0,&#10;+  'league_create_season': '2026',&#10;+  'league_season': '2026',&#10;+  'leg': 0,&#10;+  'previous_season': '2025',&#10;+  'season': '2026',&#10;+  'season_has_scores': False,&#10;+  'season_start_date': None,&#10;+  'season_type': 'off',&#10;+  'week': 0}">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_sport_state&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4403972816'&gt;
+
+    @patch("requests.get")
+    def test_get_sport_state(self, mock_requests_get):
+        mock_dict = {"foo": "bar"}
+        mock_response = MockResponse(mock_dict, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_sport_state(sport="nfl")
+    
+&gt;       self.assertEqual(mock_dict, response)
+E       AssertionError: {'foo': 'bar'} != {'week': 0, 'leg': 0, 'season': '2026', 'se[171 chars]alse}
+E       - {'foo': 'bar'}
+E       + {'display_week': 0,
+E       +  'league_create_season': '2026',
+E       +  'league_season': '2026',
+E       +  'leg': 0,
+E       +  'previous_season': '2025',
+E       +  'season': '2026',
+E       +  'season_has_scores': False,
+E       +  'season_start_date': None,
+E       +  'season_type': 'off',
+E       +  'week': 0}
+
+test/unit/test_api/test_league.py:145: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_traded_picks" time="0.502"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != []&#10;&#10;First list contains 1 additional elements.&#10;First extra element 0:&#10;{'foo': 'bar'}&#10;&#10;- [{'foo': 'bar'}]&#10;+ []">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_traded_picks&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4403983952'&gt;
+
+    @patch("requests.get")
+    def test_get_traded_picks(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_traded_picks(league_id="12345")
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       {'foo': 'bar'}
+E       
+E       - [{'foo': 'bar'}]
+E       + []
+
+test/unit/test_api/test_league.py:132: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_transactions" time="0.406"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != []&#10;&#10;First list contains 1 additional elements.&#10;First extra element 0:&#10;{'foo': 'bar'}&#10;&#10;- [{'foo': 'bar'}]&#10;+ []">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_transactions&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4404859856'&gt;
+
+    @patch("requests.get")
+    def test_get_transactions(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_transactions(league_id="12345", week=1)
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       {'foo': 'bar'}
+E       
+E       - [{'foo': 'bar'}]
+E       + []
+
+test/unit/test_api/test_league.py:119: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_user_leagues_for_year" time="0.094"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != []&#10;&#10;First list contains 1 additional elements.&#10;First extra element 0:&#10;{'foo': 'bar'}&#10;&#10;- [{'foo': 'bar'}]&#10;+ []">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_user_leagues_for_year&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4431287184'&gt;
+
+    @patch("requests.get")
+    def test_get_user_leagues_for_year(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_user_leagues_for_year(user_id="12345", sport="nfl", year=2024)
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       {'foo': 'bar'}
+E       
+E       - [{'foo': 'bar'}]
+E       + []
+
+test/unit/test_api/test_league.py:41: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_users_in_league" time="0.460"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != []&#10;&#10;First list contains 1 additional elements.&#10;First extra element 0:&#10;{'foo': 'bar'}&#10;&#10;- [{'foo': 'bar'}]&#10;+ []">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_users_in_league&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4404161232'&gt;
+
+    @patch("requests.get")
+    def test_get_users_in_league(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_users_in_league(league_id="12345")
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       {'foo': 'bar'}
+E       
+E       - [{'foo': 'bar'}]
+E       + []
+
+test/unit/test_api/test_league.py:67: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_winners_bracket" time="0.419"><failure message="httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/league/12345/winners_bracket'&#10;For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_winners_bracket&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4404857616'&gt;
+
+    @patch("requests.get")
+    def test_get_winners_bracket(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_winners_bracket(league_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_league.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/league.py:76: in get_winners_bracket
+    return get(
+sleeper/api/_utils.py:30: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://api.sleeper.app/v1/league/12345/winners_bracket'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError</failure></testcase><testcase classname="test.unit.test_api.test_player.TestPlayer" name="test_get_all_players" time="21.402"><failure message="AssertionError: {'foo': {'bar': 'baz'}} != {'6462': {'competitions': [], 'pandascore_i[15037792 chars]one}}&#10;Diff is 22546293 characters long. Set self.maxDiff to None to see it.">self = &lt;test.unit.test_api.test_player.TestPlayer testMethod=test_get_all_players&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4431823568'&gt;
+
+    @patch("requests.get")
+    def test_get_all_players(self, mock_requests_get):
+        mock_dict = {"foo": {"bar": "baz"}}
+        mock_response = MockResponse(mock_dict, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_all_players(sport="nfl")
+    
+&gt;       self.assertEqual(mock_dict, response)
+E       AssertionError: {'foo': {'bar': 'baz'}} != {'6462': {'competitions': [], 'pandascore_i[15037792 chars]one}}
+E       Diff is 22546293 characters long. Set self.maxDiff to None to see it.
+
+test/unit/test_api/test_player.py:17: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_player.TestPlayer" name="test_get_trending_players_with_defaults" time="0.068"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != [{'count': 6832, 'player_id': '11729'}, {'co[890 chars]83'}]&#10;&#10;First differing element 0:&#10;{'foo': 'bar'}&#10;{'count': 6832, 'player_id': '11729'}&#10;&#10;Second list contains 24 additional elements.&#10;First extra element 1:&#10;{'count': 4788, 'player_id': '8180'}&#10;&#10;Diff is 1033 characters long. Set self.maxDiff to None to see it.">self = &lt;test.unit.test_api.test_player.TestPlayer testMethod=test_get_trending_players_with_defaults&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4436777616'&gt;
+
+    @patch("requests.get")
+    def test_get_trending_players_with_defaults(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_trending_players(sport="nfl", trend_type="add")
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != [{'count': 6832, 'player_id': '11729'}, {'co[890 chars]83'}]
+E       
+E       First differing element 0:
+E       {'foo': 'bar'}
+E       {'count': 6832, 'player_id': '11729'}
+E       
+E       Second list contains 24 additional elements.
+E       First extra element 1:
+E       {'count': 4788, 'player_id': '8180'}
+E       
+E       Diff is 1033 characters long. Set self.maxDiff to None to see it.
+
+test/unit/test_api/test_player.py:30: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_player.TestPlayer" name="test_get_trending_players_with_optional_params_given" time="0.511"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != [{'count': 259, 'player_id': '11729'}, {'count': 144, 'player_id': '8180'}]&#10;&#10;First differing element 0:&#10;{'foo': 'bar'}&#10;{'count': 259, 'player_id': '11729'}&#10;&#10;Second list contains 1 additional elements.&#10;First extra element 1:&#10;{'count': 144, 'player_id': '8180'}&#10;&#10;- [{'foo': 'bar'}]&#10;+ [{'count': 259, 'player_id': '11729'}, {'count': 144, 'player_id': '8180'}]">self = &lt;test.unit.test_api.test_player.TestPlayer testMethod=test_get_trending_players_with_optional_params_given&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4431706768'&gt;
+
+    @patch("requests.get")
+    def test_get_trending_players_with_optional_params_given(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_trending_players(
+            sport="nfl", trend_type="add", lookback_hours=1, limit=2
+        )
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != [{'count': 259, 'player_id': '11729'}, {'count': 144, 'player_id': '8180'}]
+E       
+E       First differing element 0:
+E       {'foo': 'bar'}
+E       {'count': 259, 'player_id': '11729'}
+E       
+E       Second list contains 1 additional elements.
+E       First extra element 1:
+E       {'count': 144, 'player_id': '8180'}
+E       
+E       - [{'foo': 'bar'}]
+E       + [{'count': 259, 'player_id': '11729'}, {'count': 144, 'player_id': '8180'}]
+
+test/unit/test_api/test_player.py:45: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_user.TestUser" name="test_get_user" time="0.472"><failure message="AssertionError: {'foo': 'bar'} != {'avatar': 'nfl_was', 'cookies': None, 'cre[370 chars]None}&#10;- {'foo': 'bar'}&#10;+ {'avatar': 'nfl_was',&#10;+  'cookies': None,&#10;+  'created': None,&#10;+  'currencies': None,&#10;+  'data_updated': None,&#10;+  'deleted': None,&#10;+  'display_name': 'Foo',&#10;+  'email': None,&#10;+  'is_bot': None,&#10;+  'metadata': None,&#10;+  'notifications': None,&#10;+  'pending': None,&#10;+  'phone': None,&#10;+  'real_name': None,&#10;+  'solicitable': None,&#10;+  'summoner_name': None,&#10;+  'summoner_region': None,&#10;+  'token': None,&#10;+  'user_id': '109850266073186304',&#10;+  'username': 'foo',&#10;+  'verification': None}">self = &lt;test.unit.test_api.test_user.TestUser testMethod=test_get_user&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4345889104'&gt;
+
+    @patch("requests.get")
+    def test_get_user(self, mock_requests_get):
+        mock_dict = {"foo": "bar"}
+        mock_response = MockResponse(mock_dict, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_user(identifier="foo")
+    
+&gt;       self.assertEqual(mock_dict, response)
+E       AssertionError: {'foo': 'bar'} != {'avatar': 'nfl_was', 'cookies': None, 'cre[370 chars]None}
+E       - {'foo': 'bar'}
+E       + {'avatar': 'nfl_was',
+E       +  'cookies': None,
+E       +  'created': None,
+E       +  'currencies': None,
+E       +  'data_updated': None,
+E       +  'deleted': None,
+E       +  'display_name': 'Foo',
+E       +  'email': None,
+E       +  'is_bot': None,
+E       +  'metadata': None,
+E       +  'notifications': None,
+E       +  'pending': None,
+E       +  'phone': None,
+E       +  'real_name': None,
+E       +  'solicitable': None,
+E       +  'summoner_name': None,
+E       +  'summoner_region': None,
+E       +  'token': None,
+E       +  'user_id': '109850266073186304',
+E       +  'username': 'foo',
+E       +  'verification': None}
+
+test/unit/test_api/test_user.py:17: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_add_filters_filters_given" time="0.001" /><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_add_filters_no_filters_given" time="0.001" /><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_add_filters_url_already_has_filters" time="0.001" /><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_build_route_base_url_ends_with_slash" time="0.001" /><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_build_route_ending_path_ends_with_slash" time="0.001" /><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_build_route_with_int_and_str_paths" time="0.001" /><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_build_route_with_str_paths" time="0.001" /></testsuite></testsuites>

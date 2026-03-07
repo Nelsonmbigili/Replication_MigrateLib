@@ -1,0 +1,152 @@
+### Explanation of Changes
+To migrate the code from using the `requests` library to the `requests_futures` library, the following changes were made:
+
+1. **Import Statement**: The `requests` library was replaced with `requests_futures.sessions`. This allows us to use the `FuturesSession` class, which provides asynchronous capabilities.
+  
+2. **Session Creation**: Instead of using the standard `requests` session, we create an instance of `FuturesSession` from `requests_futures.sessions`.
+
+3. **Making Requests**: The calls to `requests.get()` or similar methods are replaced with the `session.get()` method from the `FuturesSession`. This allows the requests to be made asynchronously.
+
+4. **Handling Responses**: Since the requests are now asynchronous, we need to call `.result()` on the future object returned by `session.get()` to get the actual response.
+
+Here is the modified code:
+
+```python
+"""Integration tests for pyaxis module."""
+
+from pandas import Series
+
+from pkg_resources import resource_filename
+
+from pyaxis import pyaxis
+
+import pytest
+
+from requests_futures.sessions import FuturesSession
+
+
+data_path = resource_filename('pyaxis', 'test/data/')
+
+
+# Create a FuturesSession instance
+session = FuturesSession()
+
+
+def test_uri_type():
+    """uri_type() should be capable of discriminating files and URLs."""
+    assert pyaxis.uri_type(
+        'https://www.ine.es/jaxiT3/files/es/2184.px') == 'URL'
+
+
+def test_read():
+    """Check if a URL is loaded into a string variable."""
+    future = session.get('https://www.ine.es/jaxiT3/files/es/1001.px')
+    pc_axis = future.result().content.decode('iso-8859-15')
+    assert len(pc_axis) >= 3434
+    assert pc_axis.startswith('AXIS-VERSION="2006";')
+    assert pc_axis.endswith('6.21 5.95;')
+
+
+def test_metadata_extract():
+    """Should extract pcaxis metadata into a list."""
+    future = session.get(
+        'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/'
+        '14001.px?nocab=1')
+    pc_axis = future.result().content.decode('iso-8859-15')
+    metadata_elements, raw_data = pyaxis.metadata_extract(pc_axis)
+    assert isinstance(metadata_elements, list)
+    assert len(metadata_elements) == 23
+    assert isinstance(raw_data, str)
+    assert len(raw_data) >= 40282
+
+
+def test_metadata_split_to_dict():
+    """Should split metadata into a dictionary."""
+    future = session.get(
+        'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/'
+        '14001.px?nocab=1')
+    pc_axis = future.result().content.decode('iso-8859-15')
+    metadata_elements, raw_data = pyaxis.metadata_extract(pc_axis)
+    metadata = pyaxis.metadata_split_to_dict(metadata_elements)
+    assert isinstance(metadata, dict)
+    assert len(metadata) == 23
+
+
+def test_get_dimensions():
+    """Should return two lists (dimension names and members)."""
+    future = session.get(
+        'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/'
+        '14001.px?nocab=1')
+    pc_axis = future.result().content.decode('iso-8859-15')
+    metadata_elements, raw_data = pyaxis.metadata_extract(pc_axis)
+    metadata = pyaxis.metadata_split_to_dict(metadata_elements)
+    dimension_names, dimension_members = pyaxis.get_dimensions(metadata)
+    assert len(dimension_names) == 4
+    assert dimension_names[0] == 'Comunidad Autónoma de residencia de los cónyuges'
+    assert dimension_names[3] == 'Estado civil anterior de los cónyuges'
+    assert len(dimension_members) == 4
+    assert dimension_members[0][0] == 'Todas las comunidades'
+    assert dimension_members[3][3] == 'Divorciados/as'
+
+
+def test_build_dataframe():
+    """Should return a dataframe with n+1 columns (dimensions + data)."""
+    null_values = r'^"\."$'
+    sd_values = r'"\.\."'
+    future = session.get(
+        'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/'
+        '14001.px?nocab=1')
+    pc_axis = future.result().content.decode('iso-8859-15')
+    metadata_elements, raw_data = pyaxis.metadata_extract(pc_axis)
+    metadata = pyaxis.metadata_split_to_dict(metadata_elements)
+    dimension_names, dimension_members = pyaxis.get_dimensions(metadata)
+    data_values = Series(raw_data.split())
+    df = pyaxis.build_dataframe(
+        dimension_names,
+        dimension_members,
+        data_values,
+        null_values=null_values,
+        sd_values=sd_values)
+    assert df.shape == (8064, 5)
+    assert df['DATA'][7] == '10624.0'
+    assert df['DATA'][159] == '534.0'
+
+
+def test_parse():
+    """Should parse a pc-axis into a dataframe and a metadata dictionary"""
+    future = session.get(
+        'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/'
+        '14001.px?nocab=1')
+    parsed_pcaxis = pyaxis.parse(future.result().content.decode('ISO-8859-15'))
+    assert parsed_pcaxis['DATA'].dtypes['DATA'] == 'object'
+    assert len(parsed_pcaxis['DATA']) == 8064
+    assert parsed_pcaxis['METADATA']
+    ['VALUES(Comunidad Autónoma de residencia de los cónyuges)'][0][0] == \
+        'Total'
+    assert parsed_pcaxis['METADATA']
+    ['VALUES(Comunidad Autónoma de residencia de los cónyuges)'][0][20] == \
+        'Extranjero'
+
+
+def test_http_error():
+    """Using parse() with a non-existent URL should return a 404."""
+    url = 'https://www.ine.es/jaxi'
+    future = session.get(url)
+    with pytest.raises(requests_futures.exceptions.HTTPError):
+        pyaxis.parse(future.result().content.decode('windows-1252'))
+
+
+def test_connection_error():
+    """Using parse() with a wrong URL should return a connection error."""
+    url = 'https://www.ine.net/jaxiT3/files/t/es/px/1001.px'
+    future = session.get(url)
+
+    with pytest.raises(requests_futures.exceptions.ConnectionError):
+        pyaxis.parse(future.result().content.decode('windows-1252'))
+
+
+if __name__ == '__main__':
+    pytest.main()
+``` 
+
+This code now uses `requests_futures` for asynchronous HTTP requests while maintaining the original structure and functionality.

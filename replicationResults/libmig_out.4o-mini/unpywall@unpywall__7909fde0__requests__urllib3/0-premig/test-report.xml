@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="26" time="38.822" timestamp="2026-03-06T10:30:11.923590+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_cache.TestUnpywallCache" name="test_reset_cache" time="0.001" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_delete" time="0.001" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_timeout" time="2.810" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_get" time="1.700" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_save_load" time="0.008" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_download" time="1.780" /><testcase classname="tests.test_cli.TestUnpywallCli" name="test_main" time="0.006" /><testcase classname="tests.test_cli.TestUnpywallCli" name="test_view" time="1.765" /><testcase classname="tests.test_cli.TestUnpywallCli" name="test_download" time="1.894" /><testcase classname="tests.test_cli.TestUnpywallCli" name="test_link" time="1.832" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_init_cache" time="0.003" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_validate_dois" time="0.003" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_df" time="0.024" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_doi" time="2.077" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_query" time="0.760"><failure message="requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;Response [500]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+&gt;           return complexjson.loads(self.text, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/requests/models.py:976: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x1054f9f90&gt;
+s = '&lt;!doctype html&gt;\n&lt;html lang=en&gt;\n&lt;title&gt;500 Internal Server Error&lt;/title&gt;\n&lt;h1&gt;Internal Server Error&lt;/h1&gt;\n&lt;p&gt;The ser...nd was unable to complete your request. Either the server is overloaded or there is an error in the application.&lt;/p&gt;\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py:355: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_unpywall.TestUnpywall object at 0x11572b710&gt;
+Unpywall = &lt;class 'unpywall.Unpywall'&gt;
+
+    def test_query(self, Unpywall):
+    
+&gt;       df = Unpywall.query(query='test',
+                            is_oa=True,
+                            errors='ignore')
+
+tests/test_unpywall.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+unpywall/__init__.py:203: in query
+    data = Unpywall.get_json(query=query, is_oa=is_oa, errors=errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+unpywall/__init__.py:338: in get_json
+    return r.json()
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [500]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+            return complexjson.loads(self.text, **kwargs)
+        except JSONDecodeError as e:
+            # Catch JSON-related errors and raise as requests.JSONDecodeError
+            # This aliases json.JSONDecodeError and simplejson.JSONDecodeError
+&gt;           raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+E           requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+.venv/lib/python3.11/site-packages/requests/models.py:980: JSONDecodeError</failure></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_json" time="5.139"><failure message="requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;Response [500]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+&gt;           return complexjson.loads(self.text, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/requests/models.py:976: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x1054f9f90&gt;
+s = '&lt;!doctype html&gt;\n&lt;html lang=en&gt;\n&lt;title&gt;500 Internal Server Error&lt;/title&gt;\n&lt;h1&gt;Internal Server Error&lt;/h1&gt;\n&lt;p&gt;The ser...nd was unable to complete your request. Either the server is overloaded or there is an error in the application.&lt;/p&gt;\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py:355: JSONDecodeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_unpywall.TestUnpywall object at 0x115728f90&gt;
+Unpywall = &lt;class 'unpywall.Unpywall'&gt;
+
+    def test_get_json(self, Unpywall):
+    
+        with pytest.raises(HTTPError):
+            Unpywall.get_json(doi='a bad doi', errors='raise')
+    
+        with pytest.warns(UserWarning):
+            Unpywall.get_json(doi='a bad doi', errors='ignore')
+    
+        assert isinstance(Unpywall.get_json(doi='10.1016/j.tmaid.2020.101663',
+                                            errors='raise'), dict)
+    
+&gt;       assert isinstance(Unpywall.get_json(query='test',
+                                            is_oa=True,
+                                            errors='raise'), dict)
+
+tests/test_unpywall.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+unpywall/__init__.py:338: in get_json
+    return r.json()
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [500]&gt;, kwargs = {}
+
+    def json(self, **kwargs):
+        r"""Decodes the JSON response body (if any) as a Python object.
+    
+        This may return a dictionary, list, etc. depending on what is in the response.
+    
+        :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
+        :raises requests.exceptions.JSONDecodeError: If the response body does not
+            contain valid json.
+        """
+    
+        if not self.encoding and self.content and len(self.content) &gt; 3:
+            # No encoding set. JSON RFC 4627 section 3 states we should expect
+            # UTF-8, -16 or -32. Detect which one to use; If the detection or
+            # decoding fails, fall back to `self.text` (using charset_normalizer to make
+            # a best guess).
+            encoding = guess_json_utf(self.content)
+            if encoding is not None:
+                try:
+                    return complexjson.loads(self.content.decode(encoding), **kwargs)
+                except UnicodeDecodeError:
+                    # Wrong UTF codec detected; usually because it's not UTF-8
+                    # but some other 8-bit codec.  This is an RFC violation,
+                    # and the server didn't bother to tell us what codec *was*
+                    # used.
+                    pass
+                except JSONDecodeError as e:
+                    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+    
+        try:
+            return complexjson.loads(self.text, **kwargs)
+        except JSONDecodeError as e:
+            # Catch JSON-related errors and raise as requests.JSONDecodeError
+            # This aliases json.JSONDecodeError and simplejson.JSONDecodeError
+&gt;           raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+E           requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+.venv/lib/python3.11/site-packages/requests/models.py:980: JSONDecodeError</failure></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_pdf_link" time="0.001" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_doc_link" time="0.001" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_all_links" time="0.001" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_download_pdf_handle" time="0.278" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_progress" time="0.003" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_view_pdf" time="0.001" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_download_pdf_file" time="0.074"><failure message="AssertionError: assert 0 &gt; 0&#10; +  where 0 = len('')&#10; +    where '' = CaptureResult(out='', err='').out">self = &lt;tests.test_unpywall.TestUnpywall object at 0x11571e8d0&gt;
+Unpywall = &lt;class 'unpywall.Unpywall'&gt;
+capfd = &lt;_pytest.capture.CaptureFixture object at 0x1159552d0&gt;
+
+    def test_download_pdf_file(self, Unpywall, capfd):
+    
+        filename = 'test.pdf'
+        filepath = './test_dir'
+    
+        Unpywall.download_pdf_file('10.1038/nature12373',
+                                   filename=filename,
+                                   filepath=filepath,
+                                   progress=True)
+    
+        captured = capfd.readouterr()
+&gt;       assert len(captured.out) &gt; 0
+E       AssertionError: assert 0 &gt; 0
+E        +  where 0 = len('')
+E        +    where '' = CaptureResult(out='', err='').out
+
+tests/test_unpywall.py:168: AssertionError</failure></testcase><testcase classname="tests.test_utils.TestUnpywallCredentials" name="test_validate_email" time="0.001" /><testcase classname="tests.test_utils.TestUnpywallURL" name="test_doi_url" time="0.000" /><testcase classname="tests.test_utils.TestUnpywallURL" name="test_query_url" time="0.000" /></testsuite></testsuites>

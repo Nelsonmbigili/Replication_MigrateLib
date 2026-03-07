@@ -1,0 +1,90 @@
+### Explanation of Changes
+
+To migrate the code from using the `requests` library to the `aiohttp` library, the following changes were made:
+
+1. **Importing aiohttp**: The `requests` library was replaced with `aiohttp` for making asynchronous HTTP requests.
+2. **Using Async Functions**: The test methods were modified to be asynchronous (`async def`) to accommodate the asynchronous nature of `aiohttp`.
+3. **Creating an Async Session**: Instead of directly calling `requests.post`, an `aiohttp.ClientSession` was created to manage the HTTP requests.
+4. **Awaiting the Response**: The response from the `aiohttp` request needs to be awaited, which is different from the synchronous `requests` library.
+5. **Mocking Changes**: The mock for the response was adjusted to fit the `aiohttp` response model.
+
+Here is the modified code:
+
+```python
+import json
+import unittest
+from unittest.mock import MagicMock, Mock, patch
+import aiohttp
+from aiohttp import ClientResponse
+
+from tinychat.llms.openai import OpenAIClient
+
+
+class TestOpenAIClientStreaming(unittest.IsolatedAsyncioTestCase):
+
+    @patch("tinychat.llms.openai.aiohttp.ClientSession.post")
+    @patch("tinychat.llms.openai.SSEClient")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    async def test_perform_stream_request_success(
+        self, mock_api_key, mock_sse_client, mock_post
+    ):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+
+        # Mocking SSEClient and the response
+        mock_response = Mock(spec=ClientResponse)
+        mock_response.status = 200
+        mock_post.return_value.__aenter__.return_value = mock_response
+
+        # Creating mock events
+        mock_event1 = MagicMock()
+        mock_event1.data = json.dumps({"choices": [{"delta": {"content": "part1"}}]})
+        mock_event2 = MagicMock()
+        mock_event2.data = json.dumps({"choices": [{"delta": {"content": "part2"}}]})
+        mock_event_done = MagicMock()
+        mock_event_done.data = "[DONE]"
+
+        # Setting up a test stream
+        test_stream = [mock_event1, mock_event2, mock_event_done]
+        mock_sse_client.return_value.events = MagicMock(return_value=iter(test_stream))
+
+        client = OpenAIClient(model_name="test_model", temperature=0.0)
+        messages = [{"role": "user", "content": "hello"}]
+        stream = await client.perform_stream_request(messages)
+
+        # Extracting and verifying the stream response
+        responses = []
+        async for event in stream.events():
+            if event.data != "[DONE]":
+                event_data = json.loads(event.data)
+                if "choices" in event_data and len(event_data["choices"]) > 0:
+                    response_content = event_data["choices"][0]["delta"].get(
+                        "content", ""
+                    )
+                    responses.append(response_content)
+
+        self.assertEqual(responses, ["part1", "part2"])
+
+    @patch("tinychat.llms.openai.aiohttp.ClientSession.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    async def test_perform_stream_request_failure(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+
+        # Mocking the response with an error status code
+        mock_response = Mock(spec=ClientResponse)
+        mock_response.status = 400
+        mock_post.return_value.__aenter__.return_value = mock_response
+
+        client = OpenAIClient(model_name="test_model", temperature=0.0)
+        messages = [{"role": "user", "content": "hello"}]
+
+        with self.assertRaises(ValueError) as context:
+            await client.perform_stream_request(messages)  # type: ignore
+        self.assertIn(
+            "Server responded with an error. Status Code: 400", str(context.exception)
+        )
+```
+
+### Key Points
+- The test class now inherits from `unittest.IsolatedAsyncioTestCase` to support asynchronous tests.
+- The `aiohttp.ClientSession.post` method is mocked instead of `requests.post`.
+- The response handling is adjusted to work with the asynchronous context manager of `aiohttp`.

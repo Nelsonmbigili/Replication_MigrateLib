@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="10" skipped="0" tests="34" time="0.296" timestamp="2026-03-05T23:03:24.998977+04:00" hostname="nelsonmbigili.local"><testcase classname="test_auth.TestAuth" name="test_auth_to_github_invalid_credentials" time="0.001" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_app" time="0.001" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_ghe" time="0.001" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_ghe_and_ghe_app" time="0.001" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_with_token" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_auth_to_github_without_token" time="0.000" /><testcase classname="test_auth.TestAuth" name="test_get_github_app_installation_token" time="0.001" /><testcase classname="test_auth.TestAuth" name="test_get_github_app_installation_token_request_failure" time="0.001" /><testcase classname="test_contributor_stats.TestContributorStats" name="test_fetch_sponsor_info" time="0.001" /><testcase classname="test_contributor_stats.TestContributorStats" name="test_init" time="0.000" /><testcase classname="test_contributor_stats.TestContributorStats" name="test_is_new_contributor_false" time="0.000" /><testcase classname="test_contributor_stats.TestContributorStats" name="test_is_new_contributor_true" time="0.000" /><testcase classname="test_contributor_stats.TestContributorStats" name="test_merge_contributors" time="0.000" /><testcase classname="test_contributors.TestContributors" name="test_get_all_contributors_with_organization" time="0.001" /><testcase classname="test_contributors.TestContributors" name="test_get_all_contributors_with_repository" time="0.001" /><testcase classname="test_contributors.TestContributors" name="test_get_contributors" time="0.002" /><testcase classname="test_contributors.TestContributors" name="test_get_contributors_no_commit_end_date" time="0.001" /><testcase classname="test_contributors.TestContributors" name="test_get_contributors_skip_bot" time="0.001" /><testcase classname="test_contributors.TestContributors" name="test_get_contributors_skip_users_with_no_commits" time="0.002" /><testcase classname="test_env.TestEnv" name="test_get_env_vars" time="0.001"><failure message="NameError: name 'env' is not defined">self = &lt;test_env.TestEnv testMethod=test_get_env_vars&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "REPOSITORY": "repo,repo2",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "token",
+            "GH_ENTERPRISE_URL": "",
+            "START_DATE": "2022-01-01",
+            "END_DATE": "2022-12-31",
+            "SPONSOR_INFO": "False",
+            "LINK_TO_PROFILE": "True",
+        },
+        clear=True,
+    )
+    def test_get_env_vars(self):
+        """
+        Test the get_env_vars function when all environment variables are set correctly.
+        """
+    
+        (
+            organization,
+            repository_list,
+            gh_app_id,
+            gh_app_installation_id,
+            gh_app_private_key,
+            gh_app_enterprise_only,
+            token,
+            ghe,
+            start_date,
+            end_date,
+            sponsor_info,
+            link_to_profile,
+&gt;       ) = env.get_env_vars()
+            ^^^^^^^^^^^^^^^^^^
+
+test_env.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+env.py:112: in get_env_vars
+    gh_app_id = get_int_env_var("GH_APP_ID")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env_var_name = 'GH_APP_ID'
+
+    def get_int_env_var(env_var_name: str) -&gt; int | None:
+        """Get an integer environment variable.
+    
+        Args:
+            env_var_name: The name of the environment variable to retrieve.
+    
+        Returns:
+            The value of the environment variable as an integer or None.
+        """
+&gt;       env_var = env.int(env_var_name, None)
+                  ^^^
+E       NameError: name 'env' is not defined
+
+env.py:34: NameError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_auth_with_github_app_installation_missing_inputs" time="0.001"><failure message="NameError: name 'env' is not defined">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_auth_with_github_app_installation_missing_inputs&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "my_organization",
+            "GH_APP_ID": "12345",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_auth_with_github_app_installation_missing_inputs(self):
+        """Test that an error is raised there are missing inputs for the gh app"""
+        with self.assertRaises(ValueError) as context_manager:
+&gt;           env.get_env_vars()
+
+test_env.py:218: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+env.py:112: in get_env_vars
+    gh_app_id = get_int_env_var("GH_APP_ID")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_int_env_var(env_var_name: str) -&gt; int | None:
+        """Get an integer environment variable.
+    
+        Args:
+            env_var_name: The name of the environment variable to retrieve.
+    
+        Returns:
+            The value of the environment variable as an integer or None.
+        """
+&gt;       env_var = env.int(env_var_name, None)
+                  ^^^
+E       NameError: name 'env' is not defined
+
+env.py:34: NameError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_invalid_start_date" time="0.001"><failure message="NameError: name 'env' is not defined">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_invalid_start_date&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "REPOSITORY": "repo,repo2",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "token",
+            "GH_ENTERPRISE_URL": "",
+            "START_DATE": "2022/01/01",
+            "END_DATE": "2022-12-31",
+            "SPONSOR_INFO": "False",
+            "LINK_TO_PROFILE": "True",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_invalid_start_date(self):
+        """
+        Test the get_env_vars function when invalid start date given.
+        Expect a ValueError to be raised.
+        """
+    
+        with self.assertRaises(ValueError) as cm:
+&gt;           env.get_env_vars()
+
+test_env.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+env.py:112: in get_env_vars
+    gh_app_id = get_int_env_var("GH_APP_ID")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_int_env_var(env_var_name: str) -&gt; int | None:
+        """Get an integer environment variable.
+    
+        Args:
+            env_var_name: The name of the environment variable to retrieve.
+    
+        Returns:
+            The value of the environment variable as an integer or None.
+        """
+&gt;       env_var = env.int(env_var_name, None)
+                  ^^^
+E       NameError: name 'env' is not defined
+
+env.py:34: NameError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_missing_org_or_repo" time="0.001" /><testcase classname="test_env.TestEnv" name="test_get_env_vars_missing_values" time="0.001"><failure message="NameError: name 'env' is not defined">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_missing_values&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "REPOSITORY": "repo,repo2",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "",
+            "GH_ENTERPRISE_URL": "",
+            "START_DATE": "2022-01-01",
+            "END_DATE": "2022-12-31",
+            "SPONSOR_INFO": "False",
+            "LINK_TO_PROFILE": "True",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_missing_values(self):
+        """
+        Test the get_env_vars function when none of the environment variables are set.
+        Expect a ValueError to be raised.
+        """
+    
+        with self.assertRaises(ValueError) as cm:
+&gt;           env.get_env_vars()
+
+test_env.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+env.py:112: in get_env_vars
+    gh_app_id = get_int_env_var("GH_APP_ID")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_int_env_var(env_var_name: str) -&gt; int | None:
+        """Get an integer environment variable.
+    
+        Args:
+            env_var_name: The name of the environment variable to retrieve.
+    
+        Returns:
+            The value of the environment variable as an integer or None.
+        """
+&gt;       env_var = env.int(env_var_name, None)
+                  ^^^
+E       NameError: name 'env' is not defined
+
+env.py:34: NameError</failure></testcase><testcase classname="test_env.TestEnv" name="test_get_env_vars_no_dates" time="0.001"><failure message="NameError: name 'env' is not defined">self = &lt;test_env.TestEnv testMethod=test_get_env_vars_no_dates&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "org",
+            "REPOSITORY": "repo,repo2",
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "token",
+            "GH_ENTERPRISE_URL": "",
+            "START_DATE": "",
+            "END_DATE": "",
+            "SPONSOR_INFO": "False",
+            "LINK_TO_PROFILE": "True",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_no_dates(self):
+        """
+        Test the get_env_vars function when all environment variables are set correctly
+        and start_date and end_date are not set.
+        """
+    
+        (
+            organization,
+            repository_list,
+            gh_app_id,
+            gh_app_installation_id,
+            gh_app_private_key,
+            gh_app_enterprise_only,
+            token,
+            ghe,
+            start_date,
+            end_date,
+            sponsor_info,
+            link_to_profile,
+&gt;       ) = env.get_env_vars()
+            ^^^^^^^^^^^^^^^^^^
+
+test_env.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+env.py:112: in get_env_vars
+    gh_app_id = get_int_env_var("GH_APP_ID")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env_var_name = 'GH_APP_ID'
+
+    def get_int_env_var(env_var_name: str) -&gt; int | None:
+        """Get an integer environment variable.
+    
+        Args:
+            env_var_name: The name of the environment variable to retrieve.
+    
+        Returns:
+            The value of the environment variable as an integer or None.
+        """
+&gt;       env_var = env.int(env_var_name, None)
+                  ^^^
+E       NameError: name 'env' is not defined
+
+env.py:34: NameError</failure></testcase><testcase classname="test_env_get_bool.TestEnv" name="test_get_bool_env_var_that_does_not_exist_and_default_value_returns_false" time="0.001"><failure message="NameError: name 'env' is not defined">self = &lt;test_env_get_bool.TestEnv testMethod=test_get_bool_env_var_that_does_not_exist_and_default_value_returns_false&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "TEST_BOOL": "true",
+        },
+        clear=True,
+    )
+    def test_get_bool_env_var_that_does_not_exist_and_default_value_returns_false(self):
+        """Test that gets a boolean environment variable that does not exist
+        and default value returns: false
+        """
+&gt;       result = get_bool_env_var("DOES_NOT_EXIST", False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_env_get_bool.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env_var_name = 'DOES_NOT_EXIST', default = False
+
+    def get_bool_env_var(env_var_name: str, default: bool = False) -&gt; bool:
+        """Get a boolean environment variable.
+    
+        Args:
+            env_var_name: The name of the environment variable to retrieve.
+            default: The default value to return if the environment variable is not set.
+    
+        Returns:
+            The value of the environment variable as a boolean.
+        """
+&gt;       return env.bool(env_var_name, default)
+               ^^^
+E       NameError: name 'env' is not defined
+
+env.py:22: NameError</failure></testcase><testcase classname="test_env_get_bool.TestEnv" name="test_get_bool_env_var_that_does_not_exist_and_default_value_returns_true" time="0.001"><failure message="NameError: name 'env' is not defined">self = &lt;test_env_get_bool.TestEnv testMethod=test_get_bool_env_var_that_does_not_exist_and_default_value_returns_true&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "TEST_BOOL": "false",
+        },
+        clear=True,
+    )
+    def test_get_bool_env_var_that_does_not_exist_and_default_value_returns_true(self):
+        """Test that gets a boolean environment variable that does not exist
+        and default value returns: true
+        """
+&gt;       result = get_bool_env_var("DOES_NOT_EXIST", True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_env_get_bool.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env_var_name = 'DOES_NOT_EXIST', default = True
+
+    def get_bool_env_var(env_var_name: str, default: bool = False) -&gt; bool:
+        """Get a boolean environment variable.
+    
+        Args:
+            env_var_name: The name of the environment variable to retrieve.
+            default: The default value to return if the environment variable is not set.
+    
+        Returns:
+            The value of the environment variable as a boolean.
+        """
+&gt;       return env.bool(env_var_name, default)
+               ^^^
+E       NameError: name 'env' is not defined
+
+env.py:22: NameError</failure></testcase><testcase classname="test_env_get_bool.TestEnv" name="test_get_bool_env_var_that_exists_and_is_false" time="0.001"><failure message="NameError: name 'env' is not defined">self = &lt;test_env_get_bool.TestEnv testMethod=test_get_bool_env_var_that_exists_and_is_false&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "TEST_BOOL": "false",
+        },
+        clear=True,
+    )
+    def test_get_bool_env_var_that_exists_and_is_false(self):
+        """Test that gets a boolean environment variable that exists and is false"""
+&gt;       result = get_bool_env_var("TEST_BOOL", False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_env_get_bool.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env_var_name = 'TEST_BOOL', default = False
+
+    def get_bool_env_var(env_var_name: str, default: bool = False) -&gt; bool:
+        """Get a boolean environment variable.
+    
+        Args:
+            env_var_name: The name of the environment variable to retrieve.
+            default: The default value to return if the environment variable is not set.
+    
+        Returns:
+            The value of the environment variable as a boolean.
+        """
+&gt;       return env.bool(env_var_name, default)
+               ^^^
+E       NameError: name 'env' is not defined
+
+env.py:22: NameError</failure></testcase><testcase classname="test_env_get_bool.TestEnv" name="test_get_bool_env_var_that_exists_and_is_false_due_to_invalid_value" time="0.001"><failure message="NameError: name 'env' is not defined">self = &lt;test_env_get_bool.TestEnv testMethod=test_get_bool_env_var_that_exists_and_is_false_due_to_invalid_value&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "TEST_BOOL": "nope",
+        },
+        clear=True,
+    )
+    def test_get_bool_env_var_that_exists_and_is_false_due_to_invalid_value(self):
+        """Test that gets a boolean environment variable that exists and is false
+        due to an invalid value
+        """
+&gt;       result = get_bool_env_var("TEST_BOOL", False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_env_get_bool.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env_var_name = 'TEST_BOOL', default = False
+
+    def get_bool_env_var(env_var_name: str, default: bool = False) -&gt; bool:
+        """Get a boolean environment variable.
+    
+        Args:
+            env_var_name: The name of the environment variable to retrieve.
+            default: The default value to return if the environment variable is not set.
+    
+        Returns:
+            The value of the environment variable as a boolean.
+        """
+&gt;       return env.bool(env_var_name, default)
+               ^^^
+E       NameError: name 'env' is not defined
+
+env.py:22: NameError</failure></testcase><testcase classname="test_env_get_bool.TestEnv" name="test_get_bool_env_var_that_exists_and_is_true" time="0.001"><failure message="NameError: name 'env' is not defined">self = &lt;test_env_get_bool.TestEnv testMethod=test_get_bool_env_var_that_exists_and_is_true&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "TEST_BOOL": "true",
+        },
+        clear=True,
+    )
+    def test_get_bool_env_var_that_exists_and_is_true(self):
+        """Test that gets a boolean environment variable that exists and is true"""
+&gt;       result = get_bool_env_var("TEST_BOOL", False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_env_get_bool.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+env_var_name = 'TEST_BOOL', default = False
+
+    def get_bool_env_var(env_var_name: str, default: bool = False) -&gt; bool:
+        """Get a boolean environment variable.
+    
+        Args:
+            env_var_name: The name of the environment variable to retrieve.
+            default: The default value to return if the environment variable is not set.
+    
+        Returns:
+            The value of the environment variable as a boolean.
+        """
+&gt;       return env.bool(env_var_name, default)
+               ^^^
+E       NameError: name 'env' is not defined
+
+env.py:22: NameError</failure></testcase><testcase classname="test_json_writer.TestWriteToJson" name="test_write_to_json" time="0.001" /><testcase classname="test_markdown.TestMarkdown" name="test_write_to_markdown" time="0.002" /><testcase classname="test_markdown.TestMarkdown" name="test_write_to_markdown_with_sponsors" time="0.003" /><testcase classname="test_markdown.TestMarkdown" name="test_write_to_markdown_without_link_to_profile" time="0.002" /></testsuite></testsuites>

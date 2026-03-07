@@ -1,0 +1,97 @@
+mig: skyme5@snapchat-dl__9b382d01__requests__aiohttp__9b382d01__requests__aiohttp
+repo: skyme5@snapchat-dl__9b382d01__requests__aiohttp
+commit: 9b382d01f467a9d13b1bf7db67196321d2638c6d
+source: requests
+target: aiohttp
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.5
+  target_version: 3.13.3
+  finished_at: '2026-03-07 06:39:20'
+  project_coverage: 95.83333333333333
+  total_tests: 14
+  passed_tests: 12
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 37.735849056603776
+  files:
+  - path: snapchat_dl/downloader.py
+    file_change_coverage: 24.137931034482758
+    covered_changed_lines: 4-5,9,24,26-28
+    uncovered_changed_lines: 29-33,35-38,40-41,43-53
+  - path: snapchat_dl/snapchat_dl.py
+    file_change_coverage: 37.5
+    covered_changed_lines: 7-8,43,45,56,100
+    uncovered_changed_lines: 47-54,68,109
+  - path: tests/test_downlaoder.py
+    file_change_coverage: 87.5
+    covered_changed_lines: 6-7,9,30,35,39-40
+    uncovered_changed_lines: '42'
+  test_diffs:
+  - test_id: tests/test_downlaoder.py::Test_downloader::test_download_url_raise
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ClientConnectorCertificateError
+    error_message: 'aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot
+      connect to host google.com:443 ssl:True [SSLCertVerificationError: (1, ''[SSL:
+      CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer
+      certificate (_ssl.c:1006)'')]'
+  - test_id: tests/test_snapchat_dl.py::TestSnapchat_dl::test_api_error
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: APIResponseError not raised'
+  - test_id: tests/test_snapchat_dl.py::TestSnapchat_dl::test_invalid_username
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: UserNotFoundError not raised'
+  - test_id: tests/test_snapchat_dl.py::TestSnapchat_dl::test_no_stories
+    before: passed
+    after: error
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: NoStoriesFound not raised'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 38.35616438356164
+  files:
+  - path: tests/test_snapchat_dl.py
+    file_change_coverage: 69.23076923076923
+    covered_changed_lines: 13,50-51,56,58,64,66,71,73
+    uncovered_changed_lines: 54,62,69,77
+  - path: snapchat_dl/snapchat_dl.py
+    file_change_coverage: 37.5
+    covered_changed_lines: 7-8,43,45,56,100
+    uncovered_changed_lines: 47-54,68,109
+  - path: snapchat_dl/downloader.py
+    file_change_coverage: 10.344827586206897
+    covered_changed_lines: 4-5,9
+    uncovered_changed_lines: 24,26-33,35-38,40-41,43-53
+  - path: tests/test_downlaoder.py
+    file_change_coverage: 66.66666666666667
+    covered_changed_lines: 6-7,9,12,29-30,34-35,40-41
+    uncovered_changed_lines: 32,38,43-44,46
+  test_diffs:
+  - test_id: tests/test_snapchat_dl.py::TestSnapchat_dl::test_no_stories
+    before: passed
+    after: error
+    failed_phase: teardown
+    exception: FileNotFoundError
+    error_message: 'FileNotFoundError: [Errno 2] No such file or directory: ''.test-data'''
+manual_edit: null

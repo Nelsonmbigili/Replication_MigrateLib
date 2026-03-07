@@ -1,0 +1,118 @@
+mig: unpywall@unpywall__7909fde0__requests__urllib3__7909fde0__requests__urllib3
+repo: unpywall@unpywall__7909fde0__requests__urllib3
+commit: 7909fde0a069289226239266ec9c1d7ab30c77ae
+source: requests
+target: urllib3
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.5
+  target_version: 2.6.3
+  finished_at: '2026-03-06 10:30:51'
+  project_coverage: 88.5304659498208
+  total_tests: 26
+  passed_tests: 23
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 50.0
+  files:
+  - path: tests/test_cache.py
+    file_change_coverage: 62.5
+    covered_changed_lines: 5-6,19,71,94
+    uncovered_changed_lines: 72-74
+  - path: tests/test_cli.py
+    file_change_coverage: 100.0
+    covered_changed_lines: '2'
+    uncovered_changed_lines: ''
+  - path: tests/test_unpywall.py
+    file_change_coverage: 36.36363636363637
+    covered_changed_lines: 5-6,17,112
+    uncovered_changed_lines: 118-120,122-125
+  - path: unpywall/__init__.py
+    file_change_coverage: 63.63636363636363
+    covered_changed_lines: 1-2,15,338,340,426,497
+    uncovered_changed_lines: 427,447,457,508
+  - path: unpywall/cache.py
+    file_change_coverage: 36.36363636363637
+    covered_changed_lines: 1,45,179,186
+    uncovered_changed_lines: 180-183,190,195,200
+  test_diffs:
+  - test_id: tests/test_cache.py::TestUnpywallCache::test_download
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: MaxRetryError
+    error_message: 'urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host=''api.unpaywall.org'',
+      port=443): Max retries exceeded with url: /v2/10.1016/j.jns.2020.116832?email=nick.haupka@gmail.com
+      (Caused by SSLError(SSLCertVerificationError(1, ''[SSL: CERTIFICATE_VERIFY_FAILED]
+      certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)'')))'
+  - test_id: tests/test_cache.py::TestUnpywallCache::test_get
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: MaxRetryError
+    error_message: 'urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host=''api.unpaywall.org'',
+      port=443): Max retries exceeded with url: /v2/10.1016/j.jns.2020.116832?email=nick.haupka@gmail.com
+      (Caused by SSLError(SSLCertVerificationError(1, ''[SSL: CERTIFICATE_VERIFY_FAILED]
+      certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)'')))'
+  - test_id: tests/test_cache.py::TestUnpywallCache::test_timeout
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: MaxRetryError
+    error_message: 'urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host=''api.unpaywall.org'',
+      port=443): Max retries exceeded with url: /v2/10.1016/j.jns.2020.116832?email=nick.haupka@gmail.com
+      (Caused by SSLError(SSLCertVerificationError(1, ''[SSL: CERTIFICATE_VERIFY_FAILED]
+      certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)'')))'
+  - test_id: tests/test_unpywall.py::TestUnpywall::test_doi
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert False\n +  where False = isinstance(None,\
+      \ <class 'pandas.DataFrame'>)\n +    where <class 'pandas.DataFrame'> = pd.DataFrame"
+  - test_id: tests/test_unpywall.py::TestUnpywall::test_download_pdf_handle
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: LocationValueError
+    error_message: 'urllib3.exceptions.LocationValueError: No host specified.'
+  - test_id: tests/test_unpywall.py::TestUnpywall::test_get_df
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: NotImplementedError
+    error_message: NotImplementedError
+  - test_id: tests/test_unpywall.py::TestUnpywall::test_get_doc_link
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert False\n +  where False = isinstance(None,\
+      \ str)\n +    where None = <function Unpywall.get_doc_link at 0x107ee0ea0>('10.1016/j.tmaid.2020.101663')\n\
+      \ +      where <function Unpywall.get_doc_link at 0x107ee0ea0> = <class 'unpywall.Unpywall'>.get_doc_link"
+  - test_id: tests/test_unpywall.py::TestUnpywall::test_get_pdf_link
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert False\n +  where False = isinstance(None,\
+      \ str)\n +    where None = <function Unpywall.get_pdf_link at 0x107ee0e00>('10.1038/nature12373')\n\
+      \ +      where <function Unpywall.get_pdf_link at 0x107ee0e00> = <class 'unpywall.Unpywall'>.get_pdf_link"
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="44" time="6.482" timestamp="2026-03-07T00:42:36.110713+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_auth.AuthTests" name="test_bad_login" time="0.392" /><testcase classname="tests.test_auth.AuthTests" name="test_get_token" time="0.139" /><testcase classname="tests.test_auth.AuthTests" name="test_get_token_in_body_only" time="0.132" /><testcase classname="tests.test_auth.AuthTests" name="test_get_token_in_cookie_only" time="0.131" /><testcase classname="tests.test_auth.AuthTests" name="test_no_auth" time="0.072" /><testcase classname="tests.test_auth.AuthTests" name="test_no_login" time="0.071" /><testcase classname="tests.test_auth.AuthTests" name="test_oauth" time="0.073"><failure message="TypeError: 'FuturesSession' object does not support item assignment">self = &lt;tests.test_auth.AuthTests testMethod=test_oauth&gt;
+
+    def test_oauth(self):
+        rv = self.client.get('/api/tokens/oauth2/bar')
+        assert rv.status_code == 404
+&gt;       rv = self.client.get('/api/tokens/oauth2/foo')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_auth.py:220: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1162: in get
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/testing.py:235: in open
+    response = super().open(
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1116: in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:988: in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1264: in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1498: in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1476: in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1473: in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:882: in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:880: in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:865: in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:113: in _response
+    rv = f(*args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:36: in wrapper
+    return current_app.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+provider = 'foo'
+
+    @tokens.route('/tokens/oauth2/&lt;provider&gt;', methods=['GET'])
+    @response(EmptySchema, status_code=302,
+              description="Redirect to OAuth2 provider's authentication page")
+    @other_responses({404: 'Unknown OAuth2 provider'})
+    def oauth2_authorize(provider):
+        """Initiate OAuth2 authentication with a third-party provider"""
+        provider_data = current_app.config['OAUTH2_PROVIDERS'].get(provider)
+        if provider_data is None:
+            abort(404)
+&gt;       session['oauth2_state'] = secrets.token_urlsafe(16)
+        ^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'FuturesSession' object does not support item assignment
+
+api/tokens.py:141: TypeError</failure></testcase><testcase classname="tests.test_auth.AuthTests" name="test_refresh_revoke_all" time="0.208" /><testcase classname="tests.test_auth.AuthTests" name="test_refresh_token" time="0.146" /><testcase classname="tests.test_auth.AuthTests" name="test_refresh_token_failure" time="0.138" /><testcase classname="tests.test_auth.AuthTests" name="test_reset_password" time="0.251" /><testcase classname="tests.test_auth.AuthTests" name="test_revoke" time="0.138" /><testcase classname="tests.test_auth.AuthTests" name="test_token_expired" time="0.134" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_after_asc" time="0.128" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_after_desc" time="0.157" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_custom_limit" time="0.131" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_default" time="0.129" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_invalid" time="0.126" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_large_per_page" time="0.126" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_last" time="0.124" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_offset_and_after" time="0.123" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_page" time="0.145" /><testcase classname="tests.test_post_model.PostModelTests" name="test_url" time="0.074" /><testcase classname="tests.test_posts.PostTests" name="test_delete_post" time="0.080" /><testcase classname="tests.test_posts.PostTests" name="test_edit_post" time="0.082" /><testcase classname="tests.test_posts.PostTests" name="test_new_post" time="0.087" /><testcase classname="tests.test_posts.PostTests" name="test_permissions" time="0.136" /><testcase classname="tests.test_posts.PostTests" name="test_post_feed" time="0.142" /><testcase classname="tests.test_token_model.TokenModelTests" name="test_token_clean" time="0.076" /><testcase classname="tests.test_user_model.UserModelTests" name="test_avatar" time="0.072" /><testcase classname="tests.test_user_model.UserModelTests" name="test_follow" time="0.096" /><testcase classname="tests.test_user_model.UserModelTests" name="test_follow_posts" time="0.084" /><testcase classname="tests.test_user_model.UserModelTests" name="test_get_users" time="0.137" /><testcase classname="tests.test_user_model.UserModelTests" name="test_password_hashing" time="0.257" /><testcase classname="tests.test_user_model.UserModelTests" name="test_url" time="0.077" /><testcase classname="tests.test_users.UserTests" name="test_create_invalid_user" time="0.075" /><testcase classname="tests.test_users.UserTests" name="test_create_user" time="0.137" /><testcase classname="tests.test_users.UserTests" name="test_edit_me" time="0.076" /><testcase classname="tests.test_users.UserTests" name="test_edit_password" time="0.433" /><testcase classname="tests.test_users.UserTests" name="test_edit_user_no_changes" time="0.075" /><testcase classname="tests.test_users.UserTests" name="test_follow_unfollow" time="0.174" /><testcase classname="tests.test_users.UserTests" name="test_get_me" time="0.075" /><testcase classname="tests.test_users.UserTests" name="test_get_user" time="0.074" /><testcase classname="tests.test_users.UserTests" name="test_get_users" time="0.076" /></testsuite></testsuites>

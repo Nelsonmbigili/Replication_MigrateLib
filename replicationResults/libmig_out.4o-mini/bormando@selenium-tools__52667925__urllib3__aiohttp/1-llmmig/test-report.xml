@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="10" time="14.709" timestamp="2026-03-07T09:35:44.645448" hostname="nelsonmbigili.local"><testcase classname="seletools.tests.test_drag_and_drop" name="test_drag_and_drop" time="4.185" /><testcase classname="seletools.tests.test_indexeddb.TestIndexedDB" name="test_get_data_from_indexeddb" time="1.522"><failure message="TypeError: 'coroutine' object cannot be interpreted as an integer">self = &lt;seletools.tests.test_indexeddb.TestIndexedDB object at 0x103572a10&gt;
+
+    def test_get_data_from_indexeddb(self):
+&gt;       value = self.idb.get_value("keyvaluepairs", "foo")
+
+seletools/tests/test_indexeddb.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;seletools.indexeddb.IndexedDB object at 0x1035b2b90&gt;
+table_name = 'keyvaluepairs', key = 'foo'
+
+    def get_value(self, table_name, key):
+        log_id = uuid.uuid4().hex
+        self.driver.execute_script(
+            """
+                var [ dbName, dbVersion, tableName, searchKey, logId ] = [ arguments[0], arguments[1], arguments[2], arguments[3], arguments[4] ];
+                var request = window.indexedDB.open(dbName, dbVersion);
+                request.onsuccess = function(event) {
+                    var db = event.target.result;
+                    db.transaction(tableName, 'readwrite').objectStore(tableName).get(searchKey).onsuccess = function(event) {
+                        console.log(`Selenium Tools log #${logId}: ` + event.target.result);
+                    };
+                };
+            """,
+            self.db_name,
+            self.db_version,
+            table_name,
+            key,
+            log_id,
+        )
+        implicit_wait = get_implicit_wait(self.driver)
+        if not implicit_wait:
+            implicit_wait = 1
+&gt;       for i in range(implicit_wait):
+E       TypeError: 'coroutine' object cannot be interpreted as an integer
+
+seletools/indexeddb.py:34: TypeError</failure></testcase><testcase classname="seletools.tests.test_indexeddb.TestIndexedDB" name="test_put_data_in_indexeddb" time="0.602"><failure message="TypeError: 'coroutine' object cannot be interpreted as an integer">self = &lt;seletools.tests.test_indexeddb.TestIndexedDB object at 0x103573090&gt;
+
+    def test_put_data_in_indexeddb(self):
+        self.idb.put_value("keyvaluepairs", "foo", "yay")
+&gt;       value = self.idb.get_value("keyvaluepairs", "foo")
+
+seletools/tests/test_indexeddb.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;seletools.indexeddb.IndexedDB object at 0x1035d7310&gt;
+table_name = 'keyvaluepairs', key = 'foo'
+
+    def get_value(self, table_name, key):
+        log_id = uuid.uuid4().hex
+        self.driver.execute_script(
+            """
+                var [ dbName, dbVersion, tableName, searchKey, logId ] = [ arguments[0], arguments[1], arguments[2], arguments[3], arguments[4] ];
+                var request = window.indexedDB.open(dbName, dbVersion);
+                request.onsuccess = function(event) {
+                    var db = event.target.result;
+                    db.transaction(tableName, 'readwrite').objectStore(tableName).get(searchKey).onsuccess = function(event) {
+                        console.log(`Selenium Tools log #${logId}: ` + event.target.result);
+                    };
+                };
+            """,
+            self.db_name,
+            self.db_version,
+            table_name,
+            key,
+            log_id,
+        )
+        implicit_wait = get_implicit_wait(self.driver)
+        if not implicit_wait:
+            implicit_wait = 1
+&gt;       for i in range(implicit_wait):
+E       TypeError: 'coroutine' object cannot be interpreted as an integer
+
+seletools/indexeddb.py:34: TypeError</failure></testcase><testcase classname="seletools.tests.test_indexeddb.TestIndexedDB" name="test_add_data_into_indexeddb" time="0.979"><failure message="TypeError: 'coroutine' object cannot be interpreted as an integer">self = &lt;seletools.tests.test_indexeddb.TestIndexedDB object at 0x103573690&gt;
+
+    def test_add_data_into_indexeddb(self):
+        self.idb.add_value("keyvaluepairs", "win", "war")
+&gt;       value = self.idb.get_value("keyvaluepairs", "win")
+
+seletools/tests/test_indexeddb.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;seletools.indexeddb.IndexedDB object at 0x1035d5810&gt;
+table_name = 'keyvaluepairs', key = 'win'
+
+    def get_value(self, table_name, key):
+        log_id = uuid.uuid4().hex
+        self.driver.execute_script(
+            """
+                var [ dbName, dbVersion, tableName, searchKey, logId ] = [ arguments[0], arguments[1], arguments[2], arguments[3], arguments[4] ];
+                var request = window.indexedDB.open(dbName, dbVersion);
+                request.onsuccess = function(event) {
+                    var db = event.target.result;
+                    db.transaction(tableName, 'readwrite').objectStore(tableName).get(searchKey).onsuccess = function(event) {
+                        console.log(`Selenium Tools log #${logId}: ` + event.target.result);
+                    };
+                };
+            """,
+            self.db_name,
+            self.db_version,
+            table_name,
+            key,
+            log_id,
+        )
+        implicit_wait = get_implicit_wait(self.driver)
+        if not implicit_wait:
+            implicit_wait = 1
+&gt;       for i in range(implicit_wait):
+E       TypeError: 'coroutine' object cannot be interpreted as an integer
+
+seletools/indexeddb.py:34: TypeError</failure></testcase><testcase classname="seletools.tests.test_indexeddb.TestIndexedDB" name="test_remove_data_from_indexeddb" time="0.617"><failure message="TypeError: 'coroutine' object cannot be interpreted as an integer">self = &lt;seletools.tests.test_indexeddb.TestIndexedDB object at 0x103573cd0&gt;
+
+    def test_remove_data_from_indexeddb(self):
+        self.idb.remove_item("keyvaluepairs", "foo")
+&gt;       value = self.idb.get_value("keyvaluepairs", "foo")
+
+seletools/tests/test_indexeddb.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;seletools.indexeddb.IndexedDB object at 0x10364c490&gt;
+table_name = 'keyvaluepairs', key = 'foo'
+
+    def get_value(self, table_name, key):
+        log_id = uuid.uuid4().hex
+        self.driver.execute_script(
+            """
+                var [ dbName, dbVersion, tableName, searchKey, logId ] = [ arguments[0], arguments[1], arguments[2], arguments[3], arguments[4] ];
+                var request = window.indexedDB.open(dbName, dbVersion);
+                request.onsuccess = function(event) {
+                    var db = event.target.result;
+                    db.transaction(tableName, 'readwrite').objectStore(tableName).get(searchKey).onsuccess = function(event) {
+                        console.log(`Selenium Tools log #${logId}: ` + event.target.result);
+                    };
+                };
+            """,
+            self.db_name,
+            self.db_version,
+            table_name,
+            key,
+            log_id,
+        )
+        implicit_wait = get_implicit_wait(self.driver)
+        if not implicit_wait:
+            implicit_wait = 1
+&gt;       for i in range(implicit_wait):
+E       TypeError: 'coroutine' object cannot be interpreted as an integer
+
+seletools/indexeddb.py:34: TypeError</failure></testcase><testcase classname="seletools.tests.test_localstorage.TestLocalStorage" name="test_get_data_from_localstorage" time="0.933" /><testcase classname="seletools.tests.test_localstorage.TestLocalStorage" name="test_set_data_in_localstorage" time="0.611" /><testcase classname="seletools.tests.test_localstorage.TestLocalStorage" name="test_remove_data_from_localstorage" time="0.979" /><testcase classname="seletools.tests.test_scroll.TestScroll" name="test_scroll_to_top_with_obstacle" time="0.891" /><testcase classname="seletools.tests.test_scroll.TestScroll" name="test_scroll_to_bottom_with_obstacle" time="0.871" /></testsuite></testsuites>

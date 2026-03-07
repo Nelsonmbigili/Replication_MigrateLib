@@ -1,0 +1,69 @@
+mig: digitaltrustcenter@sectxt__0f06db1f__requests__pycurl__0f06db1f__requests__pycurl
+repo: digitaltrustcenter@sectxt__0f06db1f__requests__pycurl
+commit: 0f06db1f47f033df1f2fdc4bd5e0bfb25cced08c
+source: requests
+target: pycurl
+premig:
+  name: premig
+  status: finished
+  source_version: 2.31.0
+  target_version: 7.45.7
+  finished_at: '2026-03-05 23:17:29'
+  project_coverage: 84.2560553633218
+  total_tests: 31
+  passed_tests: 30
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 64.58333333333333
+  files:
+  - path: sectxt/__init__.py
+    file_change_coverage: 34.285714285714285
+    covered_changed_lines: 17-18,550-555,560-561,577,579
+    uncovered_changed_lines: 556-558,562-575,578,596-597,603,619-620
+  - path: test/test_sectxt.py
+    file_change_coverage: 81.9672131147541
+    covered_changed_lines: 5-6,297-298,300-306,308-310,314-320,323,325-327,331-337,340,342-344,356-358,361-367,369-372
+    uncovered_changed_lines: 299,307,321-322,324,338-339,341,359-360,368
+  test_diffs:
+  - test_id: test/test_sectxt.py::SecTxtTestCase::test_byte_order_mark
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: Failed
+    error_message: 'Failed: bom_in_file error code should be given'
+  - test_id: test/test_sectxt.py::SecTxtTestCase::test_invalid_uri_scheme
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: Failed
+    error_message: 'Failed: invalid_uri_scheme error code should be given'
+  - test_id: test/test_sectxt.py::SecTxtTestCase::test_not_correct_path
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: Failed
+    error_message: 'Failed: location error code should be given'
+  - test_id: test/test_sectxt.py::SecTxtTestCase::test_valid_security_txt
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False\n +  where False = is_valid()\n +    where is_valid\
+      \ = <sectxt.SecurityTXT object at 0x1066277d0>.is_valid"
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

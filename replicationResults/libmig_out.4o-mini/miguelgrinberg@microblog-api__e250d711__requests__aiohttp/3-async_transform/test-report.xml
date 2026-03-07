@@ -1,0 +1,951 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="11" skipped="0" tests="44" time="7.442" timestamp="2026-03-05T11:59:20.252655+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_auth.AuthTests" name="test_bad_login" time="0.301" /><testcase classname="tests.test_auth.AuthTests" name="test_get_token" time="0.135"><failure message="RuntimeError: Install Flask with the 'async' extra in order to use async views.">self = &lt;tests.test_auth.AuthTests testMethod=test_get_token&gt;
+
+    def test_get_token(self):
+&gt;       rv = self.client.post('/api/tokens', auth=('test', 'foo'))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_auth.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1167: in post
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/testing.py:235: in open
+    response = super().open(
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1116: in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:988: in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1264: in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1498: in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1476: in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1473: in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:882: in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:880: in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:865: in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_httpauth.py:174: in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:113: in _response
+    rv = f(*args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:36: in wrapper
+    return current_app.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:939: in ensure_sync
+    return self.async_to_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Flask 'api.app'&gt;, func = &lt;function new at 0x106e0b9c0&gt;
+
+    def async_to_sync(
+        self, func: t.Callable[..., t.Coroutine[t.Any, t.Any, t.Any]]
+    ) -&gt; t.Callable[..., t.Any]:
+        """Return a sync function that will run the coroutine function.
+    
+        .. code-block:: python
+    
+            result = app.async_to_sync(func)(*args, **kwargs)
+    
+        Override this method to change how the app converts async code
+        to be synchronously callable.
+    
+        .. versionadded:: 2.0
+        """
+        try:
+            from asgiref.sync import async_to_sync as asgiref_async_to_sync
+        except ImportError:
+&gt;           raise RuntimeError(
+                "Install Flask with the 'async' extra in order to use async views."
+            ) from None
+E           RuntimeError: Install Flask with the 'async' extra in order to use async views.
+
+.venv/lib/python3.11/site-packages/flask/app.py:960: RuntimeError</failure></testcase><testcase classname="tests.test_auth.AuthTests" name="test_get_token_in_body_only" time="0.139"><failure message="RuntimeError: Install Flask with the 'async' extra in order to use async views.">self = &lt;tests.test_auth.AuthTests testMethod=test_get_token_in_body_only&gt;
+
+    def test_get_token_in_body_only(self):
+        self.app.config['REFRESH_TOKEN_IN_COOKIE'] = False
+        self.app.config['REFRESH_TOKEN_IN_BODY'] = True
+&gt;       rv = self.client.post('/api/tokens', auth=('test', 'foo'))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_auth.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1167: in post
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/testing.py:235: in open
+    response = super().open(
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1116: in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:988: in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1264: in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1498: in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1476: in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1473: in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:882: in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:880: in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:865: in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_httpauth.py:174: in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:113: in _response
+    rv = f(*args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:36: in wrapper
+    return current_app.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:939: in ensure_sync
+    return self.async_to_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Flask 'api.app'&gt;, func = &lt;function new at 0x106e0b9c0&gt;
+
+    def async_to_sync(
+        self, func: t.Callable[..., t.Coroutine[t.Any, t.Any, t.Any]]
+    ) -&gt; t.Callable[..., t.Any]:
+        """Return a sync function that will run the coroutine function.
+    
+        .. code-block:: python
+    
+            result = app.async_to_sync(func)(*args, **kwargs)
+    
+        Override this method to change how the app converts async code
+        to be synchronously callable.
+    
+        .. versionadded:: 2.0
+        """
+        try:
+            from asgiref.sync import async_to_sync as asgiref_async_to_sync
+        except ImportError:
+&gt;           raise RuntimeError(
+                "Install Flask with the 'async' extra in order to use async views."
+            ) from None
+E           RuntimeError: Install Flask with the 'async' extra in order to use async views.
+
+.venv/lib/python3.11/site-packages/flask/app.py:960: RuntimeError</failure></testcase><testcase classname="tests.test_auth.AuthTests" name="test_get_token_in_cookie_only" time="0.152"><failure message="RuntimeError: Install Flask with the 'async' extra in order to use async views.">self = &lt;tests.test_auth.AuthTests testMethod=test_get_token_in_cookie_only&gt;
+
+    def test_get_token_in_cookie_only(self):
+        self.app.config['REFRESH_TOKEN_IN_COOKIE'] = True
+        self.app.config['REFRESH_TOKEN_IN_BODY'] = False
+&gt;       rv = self.client.post('/api/tokens', auth=('test', 'foo'))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_auth.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1167: in post
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/testing.py:235: in open
+    response = super().open(
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1116: in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:988: in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1264: in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1498: in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1476: in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1473: in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:882: in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:880: in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:865: in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_httpauth.py:174: in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:113: in _response
+    rv = f(*args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:36: in wrapper
+    return current_app.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:939: in ensure_sync
+    return self.async_to_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Flask 'api.app'&gt;, func = &lt;function new at 0x106e0b9c0&gt;
+
+    def async_to_sync(
+        self, func: t.Callable[..., t.Coroutine[t.Any, t.Any, t.Any]]
+    ) -&gt; t.Callable[..., t.Any]:
+        """Return a sync function that will run the coroutine function.
+    
+        .. code-block:: python
+    
+            result = app.async_to_sync(func)(*args, **kwargs)
+    
+        Override this method to change how the app converts async code
+        to be synchronously callable.
+    
+        .. versionadded:: 2.0
+        """
+        try:
+            from asgiref.sync import async_to_sync as asgiref_async_to_sync
+        except ImportError:
+&gt;           raise RuntimeError(
+                "Install Flask with the 'async' extra in order to use async views."
+            ) from None
+E           RuntimeError: Install Flask with the 'async' extra in order to use async views.
+
+.venv/lib/python3.11/site-packages/flask/app.py:960: RuntimeError</failure></testcase><testcase classname="tests.test_auth.AuthTests" name="test_no_auth" time="0.075" /><testcase classname="tests.test_auth.AuthTests" name="test_no_login" time="0.073" /><testcase classname="tests.test_auth.AuthTests" name="test_oauth" time="0.080"><failure message="RuntimeError: Install Flask with the 'async' extra in order to use async views.">self = &lt;tests.test_auth.AuthTests testMethod=test_oauth&gt;
+
+    def test_oauth(self):
+&gt;       rv = self.client.get('/api/tokens/oauth2/bar')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_auth.py:218: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1162: in get
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/testing.py:235: in open
+    response = super().open(
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1116: in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:988: in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1264: in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1498: in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1476: in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1473: in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:882: in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:880: in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:865: in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:113: in _response
+    rv = f(*args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:36: in wrapper
+    return current_app.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:939: in ensure_sync
+    return self.async_to_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Flask 'api.app'&gt;, func = &lt;function oauth2_authorize at 0x106e9ab60&gt;
+
+    def async_to_sync(
+        self, func: t.Callable[..., t.Coroutine[t.Any, t.Any, t.Any]]
+    ) -&gt; t.Callable[..., t.Any]:
+        """Return a sync function that will run the coroutine function.
+    
+        .. code-block:: python
+    
+            result = app.async_to_sync(func)(*args, **kwargs)
+    
+        Override this method to change how the app converts async code
+        to be synchronously callable.
+    
+        .. versionadded:: 2.0
+        """
+        try:
+            from asgiref.sync import async_to_sync as asgiref_async_to_sync
+        except ImportError:
+&gt;           raise RuntimeError(
+                "Install Flask with the 'async' extra in order to use async views."
+            ) from None
+E           RuntimeError: Install Flask with the 'async' extra in order to use async views.
+
+.venv/lib/python3.11/site-packages/flask/app.py:960: RuntimeError</failure></testcase><testcase classname="tests.test_auth.AuthTests" name="test_refresh_revoke_all" time="0.135"><failure message="RuntimeError: Install Flask with the 'async' extra in order to use async views.">self = &lt;tests.test_auth.AuthTests testMethod=test_refresh_revoke_all&gt;
+
+    def test_refresh_revoke_all(self):
+&gt;       rv = self.client.post('/api/tokens', auth=('test', 'foo'))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_auth.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1167: in post
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/testing.py:235: in open
+    response = super().open(
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1116: in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:988: in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1264: in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1498: in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1476: in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1473: in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:882: in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:880: in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:865: in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_httpauth.py:174: in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:113: in _response
+    rv = f(*args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:36: in wrapper
+    return current_app.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:939: in ensure_sync
+    return self.async_to_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Flask 'api.app'&gt;, func = &lt;function new at 0x106e0b9c0&gt;
+
+    def async_to_sync(
+        self, func: t.Callable[..., t.Coroutine[t.Any, t.Any, t.Any]]
+    ) -&gt; t.Callable[..., t.Any]:
+        """Return a sync function that will run the coroutine function.
+    
+        .. code-block:: python
+    
+            result = app.async_to_sync(func)(*args, **kwargs)
+    
+        Override this method to change how the app converts async code
+        to be synchronously callable.
+    
+        .. versionadded:: 2.0
+        """
+        try:
+            from asgiref.sync import async_to_sync as asgiref_async_to_sync
+        except ImportError:
+&gt;           raise RuntimeError(
+                "Install Flask with the 'async' extra in order to use async views."
+            ) from None
+E           RuntimeError: Install Flask with the 'async' extra in order to use async views.
+
+.venv/lib/python3.11/site-packages/flask/app.py:960: RuntimeError</failure></testcase><testcase classname="tests.test_auth.AuthTests" name="test_refresh_token" time="0.135"><failure message="RuntimeError: Install Flask with the 'async' extra in order to use async views.">self = &lt;tests.test_auth.AuthTests testMethod=test_refresh_token&gt;
+
+    def test_refresh_token(self):
+&gt;       rv = self.client.post('/api/tokens', auth=('test@example.com', 'foo'))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_auth.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1167: in post
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/testing.py:235: in open
+    response = super().open(
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1116: in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:988: in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1264: in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1498: in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1476: in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1473: in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:882: in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:880: in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:865: in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_httpauth.py:174: in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:113: in _response
+    rv = f(*args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:36: in wrapper
+    return current_app.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:939: in ensure_sync
+    return self.async_to_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Flask 'api.app'&gt;, func = &lt;function new at 0x106e0b9c0&gt;
+
+    def async_to_sync(
+        self, func: t.Callable[..., t.Coroutine[t.Any, t.Any, t.Any]]
+    ) -&gt; t.Callable[..., t.Any]:
+        """Return a sync function that will run the coroutine function.
+    
+        .. code-block:: python
+    
+            result = app.async_to_sync(func)(*args, **kwargs)
+    
+        Override this method to change how the app converts async code
+        to be synchronously callable.
+    
+        .. versionadded:: 2.0
+        """
+        try:
+            from asgiref.sync import async_to_sync as asgiref_async_to_sync
+        except ImportError:
+&gt;           raise RuntimeError(
+                "Install Flask with the 'async' extra in order to use async views."
+            ) from None
+E           RuntimeError: Install Flask with the 'async' extra in order to use async views.
+
+.venv/lib/python3.11/site-packages/flask/app.py:960: RuntimeError</failure></testcase><testcase classname="tests.test_auth.AuthTests" name="test_refresh_token_failure" time="0.138"><failure message="RuntimeError: Install Flask with the 'async' extra in order to use async views.">self = &lt;tests.test_auth.AuthTests testMethod=test_refresh_token_failure&gt;
+
+    def test_refresh_token_failure(self):
+&gt;       rv = self.client.post('/api/tokens', auth=('test', 'foo'))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_auth.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1167: in post
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/testing.py:235: in open
+    response = super().open(
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1116: in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:988: in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1264: in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1498: in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1476: in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1473: in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:882: in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:880: in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:865: in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_httpauth.py:174: in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:113: in _response
+    rv = f(*args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:36: in wrapper
+    return current_app.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:939: in ensure_sync
+    return self.async_to_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Flask 'api.app'&gt;, func = &lt;function new at 0x106e0b9c0&gt;
+
+    def async_to_sync(
+        self, func: t.Callable[..., t.Coroutine[t.Any, t.Any, t.Any]]
+    ) -&gt; t.Callable[..., t.Any]:
+        """Return a sync function that will run the coroutine function.
+    
+        .. code-block:: python
+    
+            result = app.async_to_sync(func)(*args, **kwargs)
+    
+        Override this method to change how the app converts async code
+        to be synchronously callable.
+    
+        .. versionadded:: 2.0
+        """
+        try:
+            from asgiref.sync import async_to_sync as asgiref_async_to_sync
+        except ImportError:
+&gt;           raise RuntimeError(
+                "Install Flask with the 'async' extra in order to use async views."
+            ) from None
+E           RuntimeError: Install Flask with the 'async' extra in order to use async views.
+
+.venv/lib/python3.11/site-packages/flask/app.py:960: RuntimeError</failure></testcase><testcase classname="tests.test_auth.AuthTests" name="test_reset_password" time="0.086"><failure message="RuntimeError: Install Flask with the 'async' extra in order to use async views.">self = &lt;tests.test_auth.AuthTests testMethod=test_reset_password&gt;
+
+    def test_reset_password(self):
+        with mock.patch('api.tokens.send_email') as send_email:
+&gt;           rv = self.client.post('/api/tokens/reset', json={
+                'email': 'bad@example.com',
+            })
+
+tests/test_auth.py:184: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1167: in post
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/testing.py:235: in open
+    response = super().open(
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1116: in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:988: in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1264: in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1498: in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1476: in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1473: in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:882: in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:880: in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:865: in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/webargs/core.py:649: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:95: in _f
+    return f(*args, location_args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:113: in _response
+    rv = f(*args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:36: in wrapper
+    return current_app.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:939: in ensure_sync
+    return self.async_to_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Flask 'api.app'&gt;, func = &lt;function reset at 0x106e9b6a0&gt;
+
+    def async_to_sync(
+        self, func: t.Callable[..., t.Coroutine[t.Any, t.Any, t.Any]]
+    ) -&gt; t.Callable[..., t.Any]:
+        """Return a sync function that will run the coroutine function.
+    
+        .. code-block:: python
+    
+            result = app.async_to_sync(func)(*args, **kwargs)
+    
+        Override this method to change how the app converts async code
+        to be synchronously callable.
+    
+        .. versionadded:: 2.0
+        """
+        try:
+            from asgiref.sync import async_to_sync as asgiref_async_to_sync
+        except ImportError:
+&gt;           raise RuntimeError(
+                "Install Flask with the 'async' extra in order to use async views."
+            ) from None
+E           RuntimeError: Install Flask with the 'async' extra in order to use async views.
+
+.venv/lib/python3.11/site-packages/flask/app.py:960: RuntimeError</failure></testcase><testcase classname="tests.test_auth.AuthTests" name="test_revoke" time="0.135"><failure message="RuntimeError: Install Flask with the 'async' extra in order to use async views.">self = &lt;tests.test_auth.AuthTests testMethod=test_revoke&gt;
+
+    def test_revoke(self):
+&gt;       rv = self.client.post('/api/tokens', auth=('test', 'foo'))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_auth.py:158: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1167: in post
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/testing.py:235: in open
+    response = super().open(
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1116: in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:988: in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1264: in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1498: in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1476: in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1473: in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:882: in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:880: in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:865: in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_httpauth.py:174: in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:113: in _response
+    rv = f(*args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:36: in wrapper
+    return current_app.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:939: in ensure_sync
+    return self.async_to_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Flask 'api.app'&gt;, func = &lt;function new at 0x106e0b9c0&gt;
+
+    def async_to_sync(
+        self, func: t.Callable[..., t.Coroutine[t.Any, t.Any, t.Any]]
+    ) -&gt; t.Callable[..., t.Any]:
+        """Return a sync function that will run the coroutine function.
+    
+        .. code-block:: python
+    
+            result = app.async_to_sync(func)(*args, **kwargs)
+    
+        Override this method to change how the app converts async code
+        to be synchronously callable.
+    
+        .. versionadded:: 2.0
+        """
+        try:
+            from asgiref.sync import async_to_sync as asgiref_async_to_sync
+        except ImportError:
+&gt;           raise RuntimeError(
+                "Install Flask with the 'async' extra in order to use async views."
+            ) from None
+E           RuntimeError: Install Flask with the 'async' extra in order to use async views.
+
+.venv/lib/python3.11/site-packages/flask/app.py:960: RuntimeError</failure></testcase><testcase classname="tests.test_auth.AuthTests" name="test_token_expired" time="0.146"><failure message="RuntimeError: Install Flask with the 'async' extra in order to use async views.">self = &lt;tests.test_auth.AuthTests testMethod=test_token_expired&gt;
+
+    def test_token_expired(self):
+&gt;       rv = self.client.post('/api/tokens', auth=('test', 'foo'))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_auth.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1167: in post
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/testing.py:235: in open
+    response = super().open(
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1116: in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:988: in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1264: in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1498: in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1476: in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1473: in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:882: in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:880: in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:865: in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_httpauth.py:174: in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:113: in _response
+    rv = f(*args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:36: in wrapper
+    return current_app.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:939: in ensure_sync
+    return self.async_to_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Flask 'api.app'&gt;, func = &lt;function new at 0x106e0b9c0&gt;
+
+    def async_to_sync(
+        self, func: t.Callable[..., t.Coroutine[t.Any, t.Any, t.Any]]
+    ) -&gt; t.Callable[..., t.Any]:
+        """Return a sync function that will run the coroutine function.
+    
+        .. code-block:: python
+    
+            result = app.async_to_sync(func)(*args, **kwargs)
+    
+        Override this method to change how the app converts async code
+        to be synchronously callable.
+    
+        .. versionadded:: 2.0
+        """
+        try:
+            from asgiref.sync import async_to_sync as asgiref_async_to_sync
+        except ImportError:
+&gt;           raise RuntimeError(
+                "Install Flask with the 'async' extra in order to use async views."
+            ) from None
+E           RuntimeError: Install Flask with the 'async' extra in order to use async views.
+
+.venv/lib/python3.11/site-packages/flask/app.py:960: RuntimeError</failure></testcase><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_after_asc" time="0.130" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_after_desc" time="0.134" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_custom_limit" time="0.126" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_default" time="0.160" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_invalid" time="0.134" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_large_per_page" time="0.127" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_last" time="0.127" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_offset_and_after" time="0.124" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_page" time="0.126" /><testcase classname="tests.test_post_model.PostModelTests" name="test_url" time="0.075" /><testcase classname="tests.test_posts.PostTests" name="test_delete_post" time="0.080" /><testcase classname="tests.test_posts.PostTests" name="test_edit_post" time="0.080" /><testcase classname="tests.test_posts.PostTests" name="test_new_post" time="0.090" /><testcase classname="tests.test_posts.PostTests" name="test_permissions" time="0.143" /><testcase classname="tests.test_posts.PostTests" name="test_post_feed" time="0.145" /><testcase classname="tests.test_token_model.TokenModelTests" name="test_token_clean" time="0.076" /><testcase classname="tests.test_user_model.UserModelTests" name="test_avatar" time="0.074" /><testcase classname="tests.test_user_model.UserModelTests" name="test_follow" time="0.096" /><testcase classname="tests.test_user_model.UserModelTests" name="test_follow_posts" time="0.114" /><testcase classname="tests.test_user_model.UserModelTests" name="test_get_users" time="0.139" /><testcase classname="tests.test_user_model.UserModelTests" name="test_password_hashing" time="0.255" /><testcase classname="tests.test_user_model.UserModelTests" name="test_url" time="0.078" /><testcase classname="tests.test_users.UserTests" name="test_create_invalid_user" time="0.082" /><testcase classname="tests.test_users.UserTests" name="test_create_user" time="0.144" /><testcase classname="tests.test_users.UserTests" name="test_edit_me" time="0.075" /><testcase classname="tests.test_users.UserTests" name="test_edit_password" time="0.438"><failure message="RuntimeError: Install Flask with the 'async' extra in order to use async views.">self = &lt;tests.test_users.UserTests testMethod=test_edit_password&gt;
+
+    def test_edit_password(self):
+        rv = self.client.put('/api/me', json={
+            'password': 'bar',
+        })
+        assert rv.status_code == 400
+        rv = self.client.put('/api/me', json={
+            'old_password': 'foo1',
+            'password': 'bar',
+        })
+        assert rv.status_code == 400
+        rv = self.client.put('/api/me', json={
+            'old_password': 'foo',
+            'password': 'bar',
+        })
+        assert rv.status_code == 200
+        assert rv.json['username'] == 'test'
+        assert rv.json['email'] == 'test@example.com'
+        assert 'password' not in rv.json
+    
+        rv = self.client.post('/api/tokens', auth=('test@example.com', 'foo'))
+        assert rv.status_code == 401
+&gt;       rv = self.client.post('/api/tokens', auth=('test@example.com', 'bar'))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_users.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1167: in post
+    return self.open(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/testing.py:235: in open
+    response = super().open(
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1116: in open
+    response_parts = self.run_wsgi_app(request.environ, buffered=buffered)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:988: in run_wsgi_app
+    rv = run_wsgi_app(self.application, environ, buffered=buffered)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/werkzeug/test.py:1264: in run_wsgi_app
+    app_rv = app(environ, start_response)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1498: in __call__
+    return self.wsgi_app(environ, start_response)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1476: in wsgi_app
+    response = self.handle_exception(e)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:1473: in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:882: in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_cors/extension.py:178: in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:880: in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:865: in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask_httpauth.py:174: in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:113: in _response
+    rv = f(*args, **kwargs)
+         ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/apifairy/decorators.py:36: in wrapper
+    return current_app.ensure_sync(f)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/flask/app.py:939: in ensure_sync
+    return self.async_to_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Flask 'api.app'&gt;, func = &lt;function new at 0x106e0b9c0&gt;
+
+    def async_to_sync(
+        self, func: t.Callable[..., t.Coroutine[t.Any, t.Any, t.Any]]
+    ) -&gt; t.Callable[..., t.Any]:
+        """Return a sync function that will run the coroutine function.
+    
+        .. code-block:: python
+    
+            result = app.async_to_sync(func)(*args, **kwargs)
+    
+        Override this method to change how the app converts async code
+        to be synchronously callable.
+    
+        .. versionadded:: 2.0
+        """
+        try:
+            from asgiref.sync import async_to_sync as asgiref_async_to_sync
+        except ImportError:
+&gt;           raise RuntimeError(
+                "Install Flask with the 'async' extra in order to use async views."
+            ) from None
+E           RuntimeError: Install Flask with the 'async' extra in order to use async views.
+
+.venv/lib/python3.11/site-packages/flask/app.py:960: RuntimeError</failure></testcase><testcase classname="tests.test_users.UserTests" name="test_edit_user_no_changes" time="0.076" /><testcase classname="tests.test_users.UserTests" name="test_follow_unfollow" time="0.168" /><testcase classname="tests.test_users.UserTests" name="test_get_me" time="0.074" /><testcase classname="tests.test_users.UserTests" name="test_get_user" time="0.076" /><testcase classname="tests.test_users.UserTests" name="test_get_users" time="0.076" /></testsuite></testsuites>
