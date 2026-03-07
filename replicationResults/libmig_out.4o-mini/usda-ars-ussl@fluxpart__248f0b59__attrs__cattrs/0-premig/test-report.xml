@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="9" time="21.075" timestamp="2026-03-06T10:19:56.601075+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_fluxpart" name="test_flux_partition" time="0.035"><failure message="ValueError: buffer source array is read-only">def test_flux_partition():
+        """Integrated test of highest level flux_partition function.
+    
+        In test below, the "desired" results are not exact or even
+        necessarily correct. They were obtained with an independent (matlab)
+        code, and there should be reasonable agreement.
+        """
+    
+        wue_data = {
+            "meas_ht": 7.11,
+            "canopy_ht": 4.42,
+            "ppath": "C3",
+            "ci_mod": "const_ppm",
+            "diff_ratio": 1 / 0.7,
+        }
+    
+        # soln exists for this data without any wavelet filtering
+        fname = os.path.join(
+            TESTDIR, "data/TOA5_6843.ts_Above_2012_06_07_1300.dat"
+        )
+    
+        matlab_fluxes = SimpleNamespace(
+            Fcp=-1.02807378762793,
+            Fcr=0.402683101177712,
+            Fqe=0.00500869036088203,
+            Fqt=0.145615860044424,
+            Fcp_mol=-23.3600042633021,
+            Fcr_mol=9.14980916104776,
+            LEe=12.1870591763138,
+            LEt=354.310004313924,
+        )
+    
+&gt;       fvsp = fvs_partition(fname, wue_options=wue_data, hfd_format="ec-TOA5")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_fluxpart.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fluxpart/api.py:314: in fvs_partition
+    return fvspart(
+fluxpart/fluxpart.py:304: in fvspart
+    fluxes, fvsp = fvspart_progressive(
+fluxpart/partition.py:60: in fvspart_progressive
+    for cnt, lowcut_wqc in enumerate(_progressive_lowcut(w, q, c)):
+fluxpart/partition.py:421: in _progressive_lowcut
+    for lowcut_series in zip(lowcut_w, lowcut_q, lowcut_c):
+fluxpart/util.py:253: in progressive_lowcut_series
+    decomp_coef = pywt.wavedec(series_data, wavelet=wavelet, level=nlevel)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/pywt/_multilevel.py:103: in wavedec
+    a, d = dwt(a, wavelet, mode, axis)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/pywt/_dwt.py:182: in dwt
+    cA, cD = dwt_single(data, wavelet, mode)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pywt/_extensions/_dwt.pyx:26: in pywt._extensions._dwt.__pyx_fuse_1dwt_single
+    ???
+&lt;stringsource&gt;:663: in View.MemoryView.memoryview_cwrapper
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+&gt;   ???
+E   ValueError: buffer source array is read-only
+
+&lt;stringsource&gt;:351: ValueError</failure></testcase><testcase classname="tests.test_fluxpart" name="test_fpread" time="0.027"><failure message="ValueError: buffer source array is read-only">tmpdir = local('/private/var/folders/01/v7wkp0nx73l4tyy9v0_96rgh0000gn/T/pytest-of-nelsonmbigili/pytest-52/test_fpread0')
+
+    def test_fpread(tmpdir):
+        """Test of writing and reading partitioning results."""
+    
+        wue_data = {
+            "meas_ht": 7.11,
+            "canopy_ht": 4.42,
+            "ppath": "C3",
+            "ci_mod": "const_ratio",
+        }
+        fname = os.path.join(
+            TESTDIR, "data/TOA5_6843.ts_Above_2012_06_07_1300.dat"
+        )
+&gt;       fvsp = fvs_partition(
+            fname, wue_options=wue_data, hfd_format="ec-TOA5", interval="1min"
+        )
+
+tests/test_fluxpart.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fluxpart/api.py:314: in fvs_partition
+    return fvspart(
+fluxpart/fluxpart.py:304: in fvspart
+    fluxes, fvsp = fvspart_progressive(
+fluxpart/partition.py:60: in fvspart_progressive
+    for cnt, lowcut_wqc in enumerate(_progressive_lowcut(w, q, c)):
+fluxpart/partition.py:421: in _progressive_lowcut
+    for lowcut_series in zip(lowcut_w, lowcut_q, lowcut_c):
+fluxpart/util.py:253: in progressive_lowcut_series
+    decomp_coef = pywt.wavedec(series_data, wavelet=wavelet, level=nlevel)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/pywt/_multilevel.py:103: in wavedec
+    a, d = dwt(a, wavelet, mode, axis)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/pywt/_dwt.py:182: in dwt
+    cA, cD = dwt_single(data, wavelet, mode)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pywt/_extensions/_dwt.pyx:26: in pywt._extensions._dwt.__pyx_fuse_1dwt_single
+    ???
+&lt;stringsource&gt;:663: in View.MemoryView.memoryview_cwrapper
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+&gt;   ???
+E   ValueError: buffer source array is read-only
+
+&lt;stringsource&gt;:351: ValueError</failure></testcase><testcase classname="tests.test_hfdata" name="test_hfdata_reader" time="0.002"><failure message="TypeError: Invalid value '[False False  True False False False False False False False False False]' for dtype 'int64'">self = &lt;pandas.core.indexing._iLocIndexer object at 0x1120bbfc0&gt;, loc = 7
+value = array([False, False,  True, False, False, False, False, False, False,
+       False, False, False])
+plane_indexer = slice(None, None, None)
+
+    def _setitem_single_column(self, loc: int, value, plane_indexer) -&gt; None:
+        """
+    
+        Parameters
+        ----------
+        loc : int
+            Indexer for column position
+        plane_indexer : int, slice, listlike[int]
+            The indexer we use for setitem along axis=0.
+        """
+        pi = plane_indexer
+    
+        is_full_setter = com.is_null_slice(pi) or com.is_full_slice(pi, len(self.obj))
+    
+        is_null_setter = com.is_empty_slice(pi) or (is_array_like(pi) and len(pi) == 0)
+    
+        if is_null_setter:
+            # no-op, don't cast dtype later
+            return
+    
+        elif is_full_setter:
+            try:
+&gt;               self.obj._mgr.column_setitem(
+                    loc, plane_indexer, value, inplace_only=True
+                )
+
+.venv/lib/python3.11/site-packages/pandas/core/indexing.py:2144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/pandas/core/internals/managers.py:1518: in column_setitem
+    col_mgr.setitem_inplace(idx, value)
+.venv/lib/python3.11/site-packages/pandas/core/internals/managers.py:2220: in setitem_inplace
+    value = np_can_hold_element(arr.dtype, value)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+dtype = dtype('int64')
+element = array([False, False,  True, False, False, False, False, False, False,
+       False, False, False])
+
+    def np_can_hold_element(dtype: np.dtype, element: Any) -&gt; Any:
+        """
+        Raise if we cannot losslessly set this element into an ndarray with this dtype.
+    
+        Specifically about places where we disagree with numpy.  i.e. there are
+        cases where numpy will raise in doing the setitem that we do not check
+        for here, e.g. setting str "X" into a numeric ndarray.
+    
+        Returns
+        -------
+        Any
+            The element, potentially cast to the dtype.
+    
+        Raises
+        ------
+        ValueError : If we cannot losslessly store this element with this dtype.
+        """
+        if dtype == _dtype_obj:
+            return element
+    
+        tipo = _maybe_infer_dtype_type(element)
+    
+        if dtype.kind in "iu":
+            if isinstance(element, range):
+                if _dtype_can_hold_range(element, dtype):
+                    return element
+                raise LossySetitemError
+    
+            if is_integer(element) or (is_float(element) and element.is_integer()):
+                # e.g. test_setitem_series_int8 if we have a python int 1
+                #  tipo may be np.int32, despite the fact that it will fit
+                #  in smaller int dtypes.
+                info = np.iinfo(dtype)
+                if info.min &lt;= element &lt;= info.max:
+                    return dtype.type(element)
+                raise LossySetitemError
+    
+            if tipo is not None:
+                if tipo.kind not in "iu":
+                    if isinstance(element, np.ndarray) and element.dtype.kind == "f":
+                        # If all can be losslessly cast to integers, then we can hold them
+                        with np.errstate(invalid="ignore"):
+                            # We check afterwards if cast was losslessly, so no need to show
+                            # the warning
+                            casted = element.astype(dtype)
+                        comp = casted == element
+                        if comp.all():
+                            # Return the casted values bc they can be passed to
+                            #  np.putmask, whereas the raw values cannot.
+                            #  see TestSetitemFloatNDarrayIntoIntegerSeries
+                            return casted
+                        raise LossySetitemError
+    
+                    elif isinstance(element, ABCExtensionArray) and isinstance(
+                        element.dtype, CategoricalDtype
+                    ):
+                        # GH#52927 setting Categorical value into non-EA frame
+                        # TODO: general-case for EAs?
+                        try:
+                            casted = element.astype(dtype)
+                        except (ValueError, TypeError) as err:
+                            raise LossySetitemError from err
+                        # Check for cases of either
+                        #  a) lossy overflow/rounding or
+                        #  b) semantic changes like dt64-&gt;int64
+                        comp = casted == element
+                        if not comp.all():
+                            raise LossySetitemError
+                        return casted
+    
+                    # Anything other than integer we cannot hold
+&gt;                   raise LossySetitemError
+E                   pandas.errors.LossySetitemError
+
+.venv/lib/python3.11/site-packages/pandas/core/dtypes/cast.py:1725: LossySetitemError
+
+The above exception was the direct cause of the following exception:
+
+    def test_hfdata_reader():
+        toy_data = (
+            "foobar baz\n"
+            "'asdf',0,2,3,4,5,6,7,9,0\n"
+            "'asdf',1,2,3,4,5,6,7,9,0\n"
+            "'asdf',2,2,3,4,5,6,7,9,1\n"
+            "'asdf',3,2,3,4,5,6,,9,0\n"
+            "'asdf',4,2,3,4,5,6,7,9,0\n"
+            "# foo\n"
+            "'asdf',5,2,3,4,5,6,7,9,0\n"
+            "'asdf',6,2,3,4,5,6,7,xxx,0\n"
+            "'asdf',7,???,3,4,5,6,7,9,0\n"
+            "'asdf',8,2,3,4,5,6,7,9,0\n"
+            "'asdf',9,2,3,4,5,6,7,9,0\n"
+            "'asdf',10,2,3,4,5,6,7,9,0\n"
+            "'asdf',11,-2,3,4,5,6,7,9,0\n"
+        )
+    
+        source = HFDataSource(
+            files=[io.BytesIO(toy_data.encode())],
+            filetype="csv",
+            cols=(1, 2, 3, 6, 7, 4, 5),
+            comment="#",
+            skiprows=1,
+            na_values="???",
+            converters={"q": _converter_func(10., 0)},
+            flags=(9, 0),
+            delimiter=",",
+        )
+    
+&gt;       toy = HFData(next(source.reader(interval=None)))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_hfdata.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fluxpart/hfdata.py:333: in reader
+    yield from util.chunked_df(hf_dfs, interval)
+fluxpart/util.py:35: in chunked_df
+    for df in dataframes:
+fluxpart/hfdata.py:331: in &lt;genexpr&gt;
+    hf_dfs = (self._set_flags(df) for df in si_dfs)
+              ^^^^^^^^^^^^^^^^^^^
+fluxpart/hfdata.py:365: in _set_flags
+    df.loc[:, "flag-" + str(col)] = (
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/pandas/core/indexing.py:938: in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+.venv/lib/python3.11/site-packages/pandas/core/indexing.py:1953: in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+.venv/lib/python3.11/site-packages/pandas/core/indexing.py:1997: in _setitem_with_indexer_split_path
+    self._setitem_single_column(ilocs[0], value, pi)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pandas.core.indexing._iLocIndexer object at 0x1120bbfc0&gt;, loc = 7
+value = array([False, False,  True, False, False, False, False, False, False,
+       False, False, False])
+plane_indexer = slice(None, None, None)
+
+    def _setitem_single_column(self, loc: int, value, plane_indexer) -&gt; None:
+        """
+    
+        Parameters
+        ----------
+        loc : int
+            Indexer for column position
+        plane_indexer : int, slice, listlike[int]
+            The indexer we use for setitem along axis=0.
+        """
+        pi = plane_indexer
+    
+        is_full_setter = com.is_null_slice(pi) or com.is_full_slice(pi, len(self.obj))
+    
+        is_null_setter = com.is_empty_slice(pi) or (is_array_like(pi) and len(pi) == 0)
+    
+        if is_null_setter:
+            # no-op, don't cast dtype later
+            return
+    
+        elif is_full_setter:
+            try:
+                self.obj._mgr.column_setitem(
+                    loc, plane_indexer, value, inplace_only=True
+                )
+            except (ValueError, TypeError, LossySetitemError) as exc:
+                # If we're setting an entire column and we can't do it inplace,
+                #  then we can use value's dtype (or inferred dtype)
+                #  instead of object
+                dtype = self.obj.dtypes.iloc[loc]
+                if dtype not in (np.void, object) and not self.obj.empty:
+                    # - Exclude np.void, as that is a special case for expansion.
+                    #   We want to raise for
+                    #       df = pd.DataFrame({'a': [1, 2]})
+                    #       df.loc[:, 'a'] = .3
+                    #   but not for
+                    #       df = pd.DataFrame({'a': [1, 2]})
+                    #       df.loc[:, 'b'] = .3
+                    # - Exclude `object`, as then no upcasting happens.
+                    # - Exclude empty initial object with enlargement,
+                    #   as then there's nothing to be inconsistent with.
+&gt;                   raise TypeError(
+                        f"Invalid value '{value}' for dtype '{dtype}'"
+                    ) from exc
+E                   TypeError: Invalid value '[False False  True False False False False False False False False False]' for dtype 'int64'
+
+.venv/lib/python3.11/site-packages/pandas/core/indexing.py:2163: TypeError</failure></testcase><testcase classname="tests.test_partition" name="test_fvspart_interval" time="0.001" /><testcase classname="tests.test_util" name="test_stats2" time="0.002" /><testcase classname="tests.test_util" name="test_mulitifile_read_csv" time="0.005" /><testcase classname="tests.test_util" name="test_chunked_df" time="0.006" /><testcase classname="tests.test_util" name="test_read_warning" time="0.002" /><testcase classname="tests.test_wue" name="test_water_use_efficiency" time="0.001" /></testsuite></testsuites>

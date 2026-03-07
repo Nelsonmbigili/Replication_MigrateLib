@@ -1,0 +1,86 @@
+mig: internetarchive@openlibrary-client__7e45d512__requests__treq__7e45d512__requests__treq
+repo: internetarchive@openlibrary-client__7e45d512__requests__treq
+commit: 7e45d512d031970d2bf4f56ca23f6247f205a0a8
+source: requests
+target: treq
+premig:
+  name: premig
+  status: finished
+  source_version: 2.31.0
+  target_version: 25.5.0
+  finished_at: '2026-03-05 19:10:16'
+  project_coverage: 82.97682709447416
+  total_tests: 46
+  passed_tests: 46
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 46.51162790697674
+  files:
+  - path: olclient/entity_helpers/work.py
+    file_change_coverage: 18.181818181818183
+    covered_changed_lines: 9,193
+    uncovered_changed_lines: 68,74,115,125,132,136,140,148,155
+  - path: olclient/openlibrary.py
+    file_change_coverage: 36.8421052631579
+    covered_changed_lines: 15,116,128,132,143,623,754
+    uncovered_changed_lines: 53-54,86,114-115,254,270,280,513,687,734,844
+  - path: tests/test_openlibrary.py
+    file_change_coverage: 84.61538461538461
+    covered_changed_lines: 8,62,80,86,103,132,145,249,257,261,307
+    uncovered_changed_lines: 50,54
+  test_diffs:
+  - test_id: tests/test_openlibrary.py::TestFullEditionGet::test_load_by_isbn
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: Calls not found.\nExpected: [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0137903952'),\n\
+      \ call().raise_for_status(),\n call().json(),\n call('https://openlibrary.org/books/OL3702561M.json'),\n\
+      \ call().raise_for_status(),\n call().json(),\n call('https://openlibrary.org/authors/OL440500A.json'),\n\
+      \ call().raise_for_status(),\n call().json()]\nActual: [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0137903952'),\n\
+      \ call().json(),\n call('https://openlibrary.org/books/OL3702561M.json'),\n\
+      \ call().json(),\n call('https://openlibrary.org/authors/OL440500A.json'),\n\
+      \ call().json()]"
+  - test_id: tests/test_openlibrary.py::TestFullEditionGet::test_load_by_olid
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: Calls not found.\nExpected: [call('https://openlibrary.org/books/OL3702561M.json'),\n\
+      \ call().raise_for_status(),\n call().json(),\n call('https://openlibrary.org/authors/OL440500A.json'),\n\
+      \ call().raise_for_status(),\n call().json()]\nActual: [call('https://openlibrary.org/books/OL3702561M.json'),\n\
+      \ call().json(),\n call('https://openlibrary.org/authors/OL440500A.json'),\n\
+      \ call().json()]"
+  - test_id: tests/test_openlibrary.py::TestOpenLibrary::test_get_edition_by_isbn
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: Calls not found.\nExpected: [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0374202915'),\n\
+      \ call().raise_for_status(),\n call().json(),\n call('https://openlibrary.org/books/OL23575801M.json'),\n\
+      \ call().raise_for_status(),\n call().json()]\nActual: [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0374202915'),\n\
+      \ call().json(),\n call('https://openlibrary.org/books/OL23575801M.json'),\n\
+      \ call().json()]"
+  - test_id: tests/test_openlibrary.py::TestOpenLibrary::test_get_notfound
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: module ''treq'' has no attribute ''exceptions'''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

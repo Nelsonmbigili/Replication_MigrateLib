@@ -1,0 +1,141 @@
+mig: git-shogg@finsec__e64e34a9__requests__aiohttp__e64e34a9__requests__aiohttp
+repo: git-shogg@finsec__e64e34a9__requests__aiohttp
+commit: e64e34a9179f3d7930982c0d6790aeb9456739d9
+source: requests
+target: aiohttp
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.5
+  target_version: 3.13.3
+  finished_at: '2026-03-07 00:37:20'
+  project_coverage: 83.98576512455516
+  total_tests: 7
+  passed_tests: 7
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 9.405940594059405
+  files:
+  - path: finsec/base.py
+    file_change_coverage: 5.882352941176471
+    covered_changed_lines: 1-2,36,62,104,207,249,280,290,300,310
+    uncovered_changed_lines: 41-58,64-76,100,105-206,208,218,225,227,239,245-246,251,256,260,263-272,274-275,283,286,293,296,303,306,312,333,336,339-340,343-351
+  - path: finsec/filing.py
+    file_change_coverage: 53.333333333333336
+    covered_changed_lines: 1,8,11,14,18,22,25,29
+    uncovered_changed_lines: 9,12,15,19,23,26,30
+  test_diffs:
+  - test_id: tests/test_13f.py::Test::test_get_a_13f_filing
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: cannot unpack non-iterable coroutine object'
+  - test_id: tests/test_13f.py::Test::test_latest_13f_count_holdings
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False\n +  where False = isinstance(<coroutine object Filing.latest_13f_count_holdings\
+      \ at 0x108d42680>, int)"
+  - test_id: tests/test_13f.py::Test::test_latest_13f_filing
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert False\n +  where False = isinstance(<coroutine\
+      \ object Filing.latest_13f_filing at 0x108d56ea0>, <class 'pandas.DataFrame'>)\n\
+      \ +    where <class 'pandas.DataFrame'> = pd.DataFrame"
+  - test_id: tests/test_13f.py::Test::test_latest_13f_filing_cover_page
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False\n +  where False = isinstance(<coroutine object Filing.latest_13f_filing_cover_page\
+      \ at 0x108d42500>, dict)"
+  - test_id: tests/test_13f.py::Test::test_latest_13f_filing_detailed
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert False\n +  where False = isinstance(<coroutine\
+      \ object Filing.latest_13f_filing_detailed at 0x108d69f20>, <class 'pandas.DataFrame'>)\n\
+      \ +    where <class 'pandas.DataFrame'> = pd.DataFrame"
+  - test_id: tests/test_13f.py::Test::test_latest_13f_portfolio_value
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False\n +  where False = isinstance(<coroutine object Filing.latest_13f_portfolio_value\
+      \ at 0x108d425c0>, int)"
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 19.26605504587156
+  files:
+  - path: finsec/filing.py
+    file_change_coverage: 73.33333333333333
+    covered_changed_lines: 1,8-9,11,14-15,18,22,25-26,29
+    uncovered_changed_lines: 12,19,23,30
+  - path: finsec/base.py
+    file_change_coverage: 8.02139037433155
+    covered_changed_lines: 1-2,36,41-42,62,104,207,249,251,280,290,300,310,312
+    uncovered_changed_lines: 43-58,64-76,100,105-206,208,218,225,227,239,245-246,256,260,263-272,274-275,283,286,293,296,303,306,333,336,339-340,343-351
+  - path: tests/test_13f.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 7,18-20,24-26,29-30,34-35,39-40,44-46
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/test_13f.py::Test::test_get_a_13f_filing
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ClientConnectorError
+    error_message: 'aiohttp.client_exceptions.ClientConnectorError: Cannot connect
+      to host www.sec.gov:443 ssl:default [No route to host]'
+  - test_id: tests/test_13f.py::Test::test_latest_13f_count_holdings
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False\n +  where False = isinstance(<coroutine object Filing.latest_13f_count_holdings\
+      \ at 0x105ec1fc0>, int)"
+  - test_id: tests/test_13f.py::Test::test_latest_13f_filing
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ClientConnectorError
+    error_message: 'aiohttp.client_exceptions.ClientConnectorError: Cannot connect
+      to host www.sec.gov:443 ssl:default [No route to host]'
+  - test_id: tests/test_13f.py::Test::test_latest_13f_filing_cover_page
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False\n +  where False = isinstance(<coroutine object Filing.latest_13f_filing_cover_page\
+      \ at 0x105e5d900>, dict)"
+  - test_id: tests/test_13f.py::Test::test_latest_13f_filing_detailed
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ClientConnectorError
+    error_message: 'aiohttp.client_exceptions.ClientConnectorError: Cannot connect
+      to host www.sec.gov:443 ssl:default [No route to host]'
+  - test_id: tests/test_13f.py::Test::test_latest_13f_portfolio_value
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False\n +  where False = isinstance(<coroutine object Filing.latest_13f_portfolio_value\
+      \ at 0x105ec1d80>, int)"
+manual_edit: null

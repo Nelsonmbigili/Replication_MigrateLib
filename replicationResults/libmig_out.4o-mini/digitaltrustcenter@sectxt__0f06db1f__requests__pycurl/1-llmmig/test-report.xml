@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="31" time="4.818" timestamp="2026-03-05T23:20:55.447229+04:00" hostname="nelsonmbigili.local"><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_byte_order_mark" time="0.357"><failure message="Failed: bom_in_file error code should be given">self = &lt;test.test_sectxt.SecTxtTestCase testMethod=test_byte_order_mark&gt;
+
+    def test_byte_order_mark(self):
+        url = "https://example.com/.well-known/security.txt"
+        expires = f"Expires: {(date.today() + timedelta(days=10)).isoformat()}T18:37:07z\n"
+        byte_content_with_bom = b'\xef\xbb\xbf\xef\xbb\xbfContact: mailto:me@example.com\n' \
+                                + expires.encode()
+    
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, url)
+        c.setopt(c.HTTPHEADER, ["Content-Type: text/plain"])
+        c.setopt(c.WRITEDATA, buffer)
+        c.perform()
+        c.close()
+    
+        s = SecurityTXT("example.com")
+        assert (not s.is_valid())
+        if not any(d["code"] == "bom_in_file" for d in s.errors):
+&gt;           pytest.fail("bom_in_file error code should be given")
+E           Failed: bom_in_file error code should be given
+
+test/test_sectxt.py:372: Failed</failure></testcase><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_byte_order_mark_parser" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_contact_field_properties" time="0.013" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_csaf_https_uri" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_csaf_provider_file" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_empty_key" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_empty_key2" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_expired" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_future_expires" time="0.000" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_invalid_expires" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_invalid_uri_scheme" time="0.320"><failure message="Failed: invalid_uri_scheme error code should be given">self = &lt;test.test_sectxt.SecTxtTestCase testMethod=test_invalid_uri_scheme&gt;
+
+    def test_invalid_uri_scheme(self):
+        url = "https://example.com/.well-known/security.txt"
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, url)
+        c.setopt(c.NOBODY, True)
+        try:
+            c.perform()
+        except pycurl.error:
+            pass
+        c.close()
+    
+        s = SecurityTXT("example.com")
+        if not any(d["code"] == "invalid_uri_scheme" for d in s.errors):
+&gt;           pytest.fail("invalid_uri_scheme error code should be given")
+E           Failed: invalid_uri_scheme error code should be given
+
+test/test_sectxt.py:344: Failed</failure></testcase><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_local_file" time="0.004" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_long_expiry" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_missing_space" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_missing_value" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_multiple_csaf_notification" time="0.002" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_multiple_signed_messages" time="0.002"><failure message="AssertionError: True is not false">self = &lt;test.test_sectxt.SecTxtTestCase testMethod=test_multiple_signed_messages&gt;
+
+    def test_multiple_signed_messages(self):
+        content = _signed_example.replace(
+            "-----BEGIN PGP SIGNATURE-----",
+            "-----BEGIN PGP SIGNATURE-----\n-----BEGIN PGP SIGNATURE-----",
+        )
+        p = Parser(content.encode())
+&gt;       self.assertFalse(p.is_valid())
+E       AssertionError: True is not false
+
+test/test_sectxt.py:272: AssertionError</failure></testcase><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_no_https" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_no_line_separators" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_no_uri" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_not_correct_path" time="0.427"><failure message="Failed: location error code should be given">self = &lt;test.test_sectxt.SecTxtTestCase testMethod=test_not_correct_path&gt;
+
+    def test_not_correct_path(self):
+        url = "https://example.com/.well-known/security.txt"
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, url)
+        c.setopt(c.NOBODY, True)
+        try:
+            c.perform()
+        except pycurl.error:
+            pass
+        c.close()
+    
+        s = SecurityTXT("example.com")
+        if not any(d["code"] == "location" for d in s.errors):
+&gt;           pytest.fail("location error code should be given")
+E           Failed: location error code should be given
+
+test/test_sectxt.py:327: Failed</failure></testcase><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_pgp_signed_formatting" time="0.003" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_prec_ws" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_preferred_languages" time="0.002" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_signed" time="0.002" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_signed_dash_escaped" time="0.002" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_signed_invalid_pgp" time="0.043" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_signed_no_canonical" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_too_many_final_newlines_signed" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_unknown_fields" time="0.001" /><testcase classname="test.test_sectxt.SecTxtTestCase" name="test_valid_security_txt" time="0.241"><failure message="assert False&#10; +  where False = is_valid()&#10; +    where is_valid = &lt;sectxt.SecurityTXT object at 0x1066277d0&gt;.is_valid">self = &lt;test.test_sectxt.SecTxtTestCase testMethod=test_valid_security_txt&gt;
+
+    def test_valid_security_txt(self):
+        url = "https://example.com/.well-known/security.txt"
+        byte_content = b'Contact: mailto:me@example.com\n' + bytes(f"Expires: {(date.today() + timedelta(days=10)).isoformat()}T18:37:07z\n", "utf-8")
+    
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, url)
+        c.setopt(c.HTTPHEADER, ["Content-Type: text/plain"])
+        c.setopt(c.WRITEDATA, buffer)
+        c.perform()
+        c.close()
+    
+        m = buffer.getvalue().decode('utf-8')
+        s = SecurityTXT("example.com")
+&gt;       assert (s.is_valid())
+E       assert False
+E        +  where False = is_valid()
+E        +    where is_valid = &lt;sectxt.SecurityTXT object at 0x1066277d0&gt;.is_valid
+
+test/test_sectxt.py:310: AssertionError</failure></testcase></testsuite></testsuites>

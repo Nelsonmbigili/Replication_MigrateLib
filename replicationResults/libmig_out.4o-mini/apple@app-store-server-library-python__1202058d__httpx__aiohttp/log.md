@@ -1,0 +1,95 @@
+## Running premig
+creating venv at /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/apple@app-store-server-library-python__1202058d__httpx__aiohttp/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 2 files
+### migrating appstoreserverlibrary/api_client.py
+### migrating tests/test_api_client_async.py
+### running tests
+- test finished with status 2, cov finished with status 1
+### test diff with round premig
+- `tests/test_api_client.py::DecodedPayloads::test_api_error: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_api_too_many_requests: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_extend_renewal_date_for_all_active_subscribers: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_extend_subscription_renewal_date: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_get_all_subscription_statuses: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_get_notification_history: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_get_refund_history: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_get_status_of_subscription_renewal_date_extensions: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_get_test_notification_status: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_get_transaction_history_v1: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_get_transaction_history_v2: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_get_transaction_history_with_malformed_app_apple_id: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_get_transaction_history_with_unknown_environment: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_get_transaction_info: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_look_up_order_id: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_request_test_notification: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_send_consumption_data: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_unknown_error: passed != not found`
+- `tests/test_api_client.py::DecodedPayloads::test_xcode_not_supported_error: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_api_error: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_api_too_many_requests: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_extend_renewal_date_for_all_active_subscribers: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_extend_subscription_renewal_date: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_get_all_subscription_statuses: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_get_notification_history: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_get_refund_history: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_get_status_of_subscription_renewal_date_extensions: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_get_test_notification_status: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_get_transaction_history_v1: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_get_transaction_history_v2: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_get_transaction_history_with_malformed_app_apple_id: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_get_transaction_history_with_unknown_environment: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_get_transaction_info: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_look_up_order_id: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_request_test_notification: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_send_consumption_data: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_unknown_error: passed != not found`
+- `tests/test_api_client_async.py::DecodedPayloads::test_xcode_not_supported_error: passed != not found`
+- `tests/test_decoded_payloads.py::DecodedPayloads::test_app_transaction_decoding: passed != not found`
+- `tests/test_decoded_payloads.py::DecodedPayloads::test_consumption_request_notification_decoding: passed != not found`
+- `tests/test_decoded_payloads.py::DecodedPayloads::test_external_purchase_token_notification_decoding: passed != not found`
+- `tests/test_decoded_payloads.py::DecodedPayloads::test_external_purchase_token_sandbox_notification_decoding: passed != not found`
+- `tests/test_decoded_payloads.py::DecodedPayloads::test_notification_decoding: passed != not found`
+- `tests/test_decoded_payloads.py::DecodedPayloads::test_renewal_info_decoding: passed != not found`
+- `tests/test_decoded_payloads.py::DecodedPayloads::test_summary_notification_decoding: passed != not found`
+- `tests/test_decoded_payloads.py::DecodedPayloads::test_transaction_decoding: passed != not found`
+- `tests/test_payload_verification.py::PayloadVerification::test_app_store_server_notification_decoding: passed != not found`
+- `tests/test_payload_verification.py::PayloadVerification::test_app_store_server_notification_decoding_production: passed != not found`
+- `tests/test_payload_verification.py::PayloadVerification::test_malformed_jwt_with_malformed_data: passed != not found`
+- `tests/test_payload_verification.py::PayloadVerification::test_malformed_jwt_with_too_many_parts: passed != not found`
+- `tests/test_payload_verification.py::PayloadVerification::test_missing_x5c_header: passed != not found`
+- `tests/test_payload_verification.py::PayloadVerification::test_renewal_info_decoding: passed != not found`
+- `tests/test_payload_verification.py::PayloadVerification::test_transaction_info_decoding: passed != not found`
+- `tests/test_payload_verification.py::PayloadVerification::test_wrong_app_apple_id_for_server_notification: passed != not found`
+- `tests/test_payload_verification.py::PayloadVerification::test_wrong_bundle_id_for_server_notification: passed != not found`
+- `tests/test_promotional_offer_signature_creator.py::PromotionalOfferSignatureCreatorTest::test_signature_creator: passed != not found`
+- `tests/test_receipt_utility.py::ReceiptUtilityTest::test_transaction_receipt_extraction: passed != not found`
+- `tests/test_receipt_utility.py::ReceiptUtilityTest::test_xcode_app_receipt_extraction_with_no_transactions: passed != not found`
+- `tests/test_receipt_utility.py::ReceiptUtilityTest::test_xcode_app_receipt_extraction_with_transactions: passed != not found`
+- `tests/test_x509_verifiction.py::X509Verification::test_apple_chain_is_valid_with_ocsp_and_strict: passed != not found`
+- `tests/test_x509_verifiction.py::X509Verification::test_chain_different_than_root_certificate: passed != not found`
+- `tests/test_x509_verifiction.py::X509Verification::test_invalid_base64_in_certificate_list: passed != not found`
+- `tests/test_x509_verifiction.py::X509Verification::test_invalid_chain_length: passed != not found`
+- `tests/test_x509_verifiction.py::X509Verification::test_invalid_data_in_certificate_list: passed != not found`
+- `tests/test_x509_verifiction.py::X509Verification::test_malformed_root_cert: passed != not found`
+- `tests/test_x509_verifiction.py::X509Verification::test_valid_chain_invalid_intermediate_OID_without_OCSP: passed != not found`
+- `tests/test_x509_verifiction.py::X509Verification::test_valid_chain_invalid_leaf_OID_without_OCSP: passed != not found`
+- `tests/test_x509_verifiction.py::X509Verification::test_valid_chain_without_ocsp: passed != not found`
+- `tests/test_x509_verifiction.py::X509Verification::test_valid_expired_chain: passed != not found`
+- `tests/test_xcode_signed_data.py::ReceiptUtilityTest::test_xcode_signed_app_transaction: passed != not found`
+- `tests/test_xcode_signed_data.py::ReceiptUtilityTest::test_xcode_signed_app_transaction_with_production_environment: passed != not found`
+- `tests/test_xcode_signed_data.py::ReceiptUtilityTest::test_xcode_signed_renewal_info: passed != not found`
+- `tests/test_xcode_signed_data.py::ReceiptUtilityTest::test_xcode_signed_transaction: passed != not found`
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+### Finding async transforms
+- Found 0 functions to mark async including 0 tests
+- Found 0 calls to await
+- async_transform finished

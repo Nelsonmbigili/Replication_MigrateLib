@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="46" time="3.492" timestamp="2026-03-05T19:16:10.904949+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.schemata.test_import_schema" name="test_import_examples[example0]" time="0.009" /><testcase classname="tests.schemata.test_import_schema" name="test_import_examples[example1]" time="0.003" /><testcase classname="tests.schemata.test_import_schema" name="test_import_examples[example2]" time="0.002" /><testcase classname="tests.test_book.TestBook" name="test_canonical_title" time="0.000" /><testcase classname="tests.test_book.TestBook" name="test_create_book" time="0.000" /><testcase classname="tests.test_book.TestBook" name="test_xisbn_to_books" time="0.000" /><testcase classname="tests.test_bots.TestBots" name="test__init__" time="0.002" /><testcase classname="tests.test_bots.TestBots" name="test__str2bool_errors_for_non_boolean_input" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test__str2bool_returns_false_for_falsey_input" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test__str2bool_returns_true_for_truthy_input" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test_process_row_with_bytecode" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test_process_row_with_string" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test_save_exits_when_limit_reached" time="0.002" /><testcase classname="tests.test_bots.TestBots" name="test_save_when_write_changes_is_false" time="0.002" /><testcase classname="tests.test_bots.TestBots" name="test_save_when_write_changes_is_true" time="0.002" /><testcase classname="tests.test_bots.TestBots" name="test_setup_logger" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test_write_changes_declaration_when_write_changes_is_false" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test_write_changes_declaration_when_write_changes_is_true" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_create_book" time="0.002" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_delete" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_edition_json" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_edition_validation" time="0.003" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_edition_by_isbn" time="0.002"><failure message="AssertionError: Calls not found.&#10;Expected: [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0374202915'),&#10; call().raise_for_status(),&#10; call().json(),&#10; call('https://openlibrary.org/books/OL23575801M.json'),&#10; call().raise_for_status(),&#10; call().json()]&#10;Actual: [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0374202915'),&#10; call().json(),&#10; call('https://openlibrary.org/books/OL23575801M.json'),&#10; call().json()]">self = &lt;tests.test_openlibrary.TestOpenLibrary testMethod=test_get_edition_by_isbn&gt;
+mock_get = &lt;MagicMock name='get' id='4357540368'&gt;
+
+    @patch('treq.get')
+    def test_get_edition_by_isbn(self, mock_get):
+        isbn_lookup_response = {
+            'ISBN:0374202915': {
+                'info_url': 'https://openlibrary.org/books/OL23575801M/Marie_LaVeau'
+            }
+        }
+        edition_response = {'key': "/books/OL23575801M", 'title': 'test'}
+        mock_get.return_value.json.side_effect = [
+            isbn_lookup_response,
+            edition_response,
+        ]
+        book = self.ol.Edition.get(isbn='0374202915')
+&gt;       mock_get.assert_has_calls(
+            [
+                call(f"{self.ol.base_url}/api/books.json?bibkeys=ISBN:0374202915"),
+                call().raise_for_status(),
+                call().json(),
+                call(f"{self.ol.base_url}/books/OL23575801M.json"),
+                call().raise_for_status(),
+                call().json(),
+            ]
+        )
+
+tests/test_openlibrary.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='get' id='4357540368'&gt;
+calls = [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0374202915'), call().raise_for_status(), call().json(), call('https://openlibrary.org/books/OL23575801M.json'), call().raise_for_status(), call().json()]
+any_order = False
+
+    def assert_has_calls(self, calls, any_order=False):
+        """assert the mock has been called with the specified calls.
+        The `mock_calls` list is checked for the calls.
+    
+        If `any_order` is False (the default) then the calls must be
+        sequential. There can be extra calls before or after the
+        specified calls.
+    
+        If `any_order` is True then the calls can be in any order, but
+        they must all appear in `mock_calls`."""
+        expected = [self._call_matcher(c) for c in calls]
+        cause = next((e for e in expected if isinstance(e, Exception)), None)
+        all_calls = _CallList(self._call_matcher(c) for c in self.mock_calls)
+        if not any_order:
+            if expected not in all_calls:
+                if cause is None:
+                    problem = 'Calls not found.'
+                else:
+                    problem = ('Error processing expected calls.\n'
+                               'Errors: {}').format(
+                                   [e if isinstance(e, Exception) else None
+                                    for e in expected])
+&gt;               raise AssertionError(
+                    f'{problem}\n'
+                    f'Expected: {_CallList(calls)}'
+                    f'{self._calls_repr(prefix="Actual").rstrip(".")}'
+                ) from cause
+E               AssertionError: Calls not found.
+E               Expected: [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0374202915'),
+E                call().raise_for_status(),
+E                call().json(),
+E                call('https://openlibrary.org/books/OL23575801M.json'),
+E                call().raise_for_status(),
+E                call().json()]
+E               Actual: [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0374202915'),
+E                call().json(),
+E                call('https://openlibrary.org/books/OL23575801M.json'),
+E                call().json()]
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:976: AssertionError</failure></testcase><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_notfound" time="0.001"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = &lt;tests.test_openlibrary.TestOpenLibrary testMethod=test_get_notfound&gt;
+mock_get = &lt;MagicMock name='get' id='4357412496'&gt;
+
+    @patch('treq.get')
+    def test_get_notfound(self, mock_get):
+        # This tests that if requests.raise_for_status() raises an exception,
+        # (e.g. 404 or 500 HTTP response) it is not swallowed by the client.
+        mock_get.return_value.raise_for_status = raise_http_error
+        suffixes = {'edition': 'M', 'work': 'W', 'author': 'A'}
+        for _type, suffix in suffixes.items():
+            target = f"OLnotfound{suffix}"
+&gt;           with pytest.raises(treq.exceptions.HTTPError):
+                               ^^^^^^^^^^^^^^^
+E           AttributeError: module 'treq' has no attribute 'exceptions'
+
+tests/test_openlibrary.py:257: AttributeError</failure></testcase><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_olid_by_isbn" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_olid_notfound_by_bibkey" time="0.002" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_work" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_work_by_metadata" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_matching_authors_olid" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_redirect" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_save_many" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_work_json" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_work_validation" time="0.002" /><testcase classname="tests.test_openlibrary.TestAuthors" name="test_author_validation" time="0.012" /><testcase classname="tests.test_openlibrary.TestFullEditionGet" name="test_load_by_isbn" time="0.002"><failure message="AssertionError: Calls not found.&#10;Expected: [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0137903952'),&#10; call().raise_for_status(),&#10; call().json(),&#10; call('https://openlibrary.org/books/OL3702561M.json'),&#10; call().raise_for_status(),&#10; call().json(),&#10; call('https://openlibrary.org/authors/OL440500A.json'),&#10; call().raise_for_status(),&#10; call().json()]&#10;Actual: [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0137903952'),&#10; call().json(),&#10; call('https://openlibrary.org/books/OL3702561M.json'),&#10; call().json(),&#10; call('https://openlibrary.org/authors/OL440500A.json'),&#10; call().json()]">self = &lt;tests.test_openlibrary.TestFullEditionGet testMethod=test_load_by_isbn&gt;
+mock_get = &lt;MagicMock name='get' id='4357408912'&gt;
+
+    def test_load_by_isbn(self, mock_get):
+        isbn_key = 'ISBN:0137903952'
+        isbn_bibkeys = {
+            isbn_key: {
+                'info_url': "https://openlibrary.org/books/%s/Artificial_intelligence"
+                % self.target_olid
+            }
+        }
+        mock_get.return_value.json.side_effect = [
+            isbn_bibkeys,
+            self.raw_edition.copy(),
+            self.raw_author.copy(),
+        ]
+    
+        actual = json.loads(jsonpickle.encode(self.ol.Edition.get(isbn='0137903952')))
+&gt;       mock_get.assert_has_calls(
+            [
+                call(f"{self.ol.base_url}/api/books.json?bibkeys={isbn_key}"),
+                call().raise_for_status(),
+                call().json(),
+                call(f"{self.ol.base_url}/books/{self.target_olid}.json"),
+                call().raise_for_status(),
+                call().json(),
+                call(f"{self.ol.base_url}/authors/OL440500A.json"),
+                call().raise_for_status(),
+                call().json(),
+            ]
+        )
+
+tests/test_openlibrary.py:340: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='get' id='4357408912'&gt;
+calls = [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0137903952'), call().raise_for_status(), call().json(), call('https://openlibrary.org/books/OL3702561M.json'), call().raise_for_status(), call().json(), ...]
+any_order = False
+
+    def assert_has_calls(self, calls, any_order=False):
+        """assert the mock has been called with the specified calls.
+        The `mock_calls` list is checked for the calls.
+    
+        If `any_order` is False (the default) then the calls must be
+        sequential. There can be extra calls before or after the
+        specified calls.
+    
+        If `any_order` is True then the calls can be in any order, but
+        they must all appear in `mock_calls`."""
+        expected = [self._call_matcher(c) for c in calls]
+        cause = next((e for e in expected if isinstance(e, Exception)), None)
+        all_calls = _CallList(self._call_matcher(c) for c in self.mock_calls)
+        if not any_order:
+            if expected not in all_calls:
+                if cause is None:
+                    problem = 'Calls not found.'
+                else:
+                    problem = ('Error processing expected calls.\n'
+                               'Errors: {}').format(
+                                   [e if isinstance(e, Exception) else None
+                                    for e in expected])
+&gt;               raise AssertionError(
+                    f'{problem}\n'
+                    f'Expected: {_CallList(calls)}'
+                    f'{self._calls_repr(prefix="Actual").rstrip(".")}'
+                ) from cause
+E               AssertionError: Calls not found.
+E               Expected: [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0137903952'),
+E                call().raise_for_status(),
+E                call().json(),
+E                call('https://openlibrary.org/books/OL3702561M.json'),
+E                call().raise_for_status(),
+E                call().json(),
+E                call('https://openlibrary.org/authors/OL440500A.json'),
+E                call().raise_for_status(),
+E                call().json()]
+E               Actual: [call('https://openlibrary.org/api/books.json?bibkeys=ISBN:0137903952'),
+E                call().json(),
+E                call('https://openlibrary.org/books/OL3702561M.json'),
+E                call().json(),
+E                call('https://openlibrary.org/authors/OL440500A.json'),
+E                call().json()]
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:976: AssertionError</failure></testcase><testcase classname="tests.test_openlibrary.TestFullEditionGet" name="test_load_by_olid" time="0.002"><failure message="AssertionError: Calls not found.&#10;Expected: [call('https://openlibrary.org/books/OL3702561M.json'),&#10; call().raise_for_status(),&#10; call().json(),&#10; call('https://openlibrary.org/authors/OL440500A.json'),&#10; call().raise_for_status(),&#10; call().json()]&#10;Actual: [call('https://openlibrary.org/books/OL3702561M.json'),&#10; call().json(),&#10; call('https://openlibrary.org/authors/OL440500A.json'),&#10; call().json()]">self = &lt;tests.test_openlibrary.TestFullEditionGet testMethod=test_load_by_olid&gt;
+mock_get = &lt;MagicMock name='get' id='4357054288'&gt;
+
+    def test_load_by_olid(self, mock_get):
+        mock_get.return_value.json.side_effect = [
+            self.raw_edition.copy(),
+            self.raw_author.copy(),
+        ]
+    
+        actual = json.loads(
+            jsonpickle.encode(self.ol.Edition.get(olid=self.target_olid))
+        )
+&gt;       mock_get.assert_has_calls(
+            [
+                call(f"{self.ol.base_url}/books/{self.target_olid}.json"),
+                call().raise_for_status(),
+                call().json(),
+                call(f"{self.ol.base_url}/authors/OL440500A.json"),
+                call().raise_for_status(),
+                call().json(),
+            ]
+        )
+
+tests/test_openlibrary.py:370: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='get' id='4357054288'&gt;
+calls = [call('https://openlibrary.org/books/OL3702561M.json'), call().raise_for_status(), call().json(), call('https://openlibrary.org/authors/OL440500A.json'), call().raise_for_status(), call().json()]
+any_order = False
+
+    def assert_has_calls(self, calls, any_order=False):
+        """assert the mock has been called with the specified calls.
+        The `mock_calls` list is checked for the calls.
+    
+        If `any_order` is False (the default) then the calls must be
+        sequential. There can be extra calls before or after the
+        specified calls.
+    
+        If `any_order` is True then the calls can be in any order, but
+        they must all appear in `mock_calls`."""
+        expected = [self._call_matcher(c) for c in calls]
+        cause = next((e for e in expected if isinstance(e, Exception)), None)
+        all_calls = _CallList(self._call_matcher(c) for c in self.mock_calls)
+        if not any_order:
+            if expected not in all_calls:
+                if cause is None:
+                    problem = 'Calls not found.'
+                else:
+                    problem = ('Error processing expected calls.\n'
+                               'Errors: {}').format(
+                                   [e if isinstance(e, Exception) else None
+                                    for e in expected])
+&gt;               raise AssertionError(
+                    f'{problem}\n'
+                    f'Expected: {_CallList(calls)}'
+                    f'{self._calls_repr(prefix="Actual").rstrip(".")}'
+                ) from cause
+E               AssertionError: Calls not found.
+E               Expected: [call('https://openlibrary.org/books/OL3702561M.json'),
+E                call().raise_for_status(),
+E                call().json(),
+E                call('https://openlibrary.org/authors/OL440500A.json'),
+E                call().raise_for_status(),
+E                call().json()]
+E               Actual: [call('https://openlibrary.org/books/OL3702561M.json'),
+E                call().json(),
+E                call('https://openlibrary.org/authors/OL440500A.json'),
+E                call().json()]
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:976: AssertionError</failure></testcase><testcase classname="tests.test_openlibrary.TestTextType" name="test_edition_text_type" time="0.002" /><testcase classname="tests.test_openlibrary.TestTextType" name="test_edition_text_type_from_string" time="0.002" /><testcase classname="tests.test_openlibrary.TestTextType" name="test_work_text_type" time="0.002" /><testcase classname="tests.test_openlibrary.TestTextType" name="test_work_text_type_from_string" time="0.002" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_0-merged0]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_1-merged1]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_2-merged2]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_3-merged3]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_4-merged4]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_5-merged5]" time="0.000" /></testsuite></testsuites>

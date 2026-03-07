@@ -1,0 +1,1261 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="20" time="4.635" timestamp="2026-03-05T14:09:30.169950+04:00" hostname="nelsonmbigili.local"><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_assert_lang_or_custom_emb" time="0.001" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_dim_100" time="1.209" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_dim_25" time="0.010" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_dim_50" time="0.010" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_model_download" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_vs_1000" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_vs_10000" time="0.059" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_vs_5000" time="0.032" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_encode_decode_many_roundtrip" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_encode_decode_roundtrip" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_encode_ids_decode_ids_many_roundtrip" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_encode_ids_decode_ids_roundtrip" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_gensim_import" time="0.000" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pad_index" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pad_lookup" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pickle" time="0.010" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pickle_custom_cache_dir" time="1.531"><failure message="urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='nlp.h-its.org', port=443): Max retries exceeded with url: /bpemb/en/en.wiki.bpe.vs1000.model (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')))">self = &lt;urllib3.connectionpool.HTTPSConnectionPool object at 0x1097f2290&gt;
+conn = &lt;HTTPSConnection(host='nlp.h-its.org', port=443) at 0x1095457d0&gt;
+method = 'GET', url = '/bpemb/en/en.wiki.bpe.vs1000.model', body = None
+headers = {}
+retries = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+timeout = Timeout(connect=&lt;_TYPE_DEFAULT.token: -1&gt;, read=&lt;_TYPE_DEFAULT.token: -1&gt;, total=None)
+chunked = False
+response_conn = &lt;HTTPSConnection(host='nlp.h-its.org', port=443) at 0x1095457d0&gt;
+preload_content = False, decode_content = True, enforce_content_length = True
+
+    def _make_request(
+        self,
+        conn: BaseHTTPConnection,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | None = None,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        chunked: bool = False,
+        response_conn: BaseHTTPConnection | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        enforce_content_length: bool = True,
+    ) -&gt; BaseHTTPResponse:
+        """
+        Perform a request on a given urllib connection object taken from our
+        pool.
+    
+        :param conn:
+            a connection from one of our connection pools
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            Pass ``None`` to retry until you receive a response. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param response_conn:
+            Set this to ``None`` if you will handle releasing the connection or
+            set the connection to have the response release it.
+    
+        :param preload_content:
+          If True, the response's body will be preloaded during construction.
+    
+        :param decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param enforce_content_length:
+            Enforce content length checking. Body returned by server must match
+            value of Content-Length header, if present. Otherwise, raise error.
+        """
+        self.num_requests += 1
+    
+        timeout_obj = self._get_timeout(timeout)
+        timeout_obj.start_connect()
+        conn.timeout = Timeout.resolve_default_timeout(timeout_obj.connect_timeout)
+    
+        try:
+            # Trigger any extra validation we need to do.
+            try:
+&gt;               self._validate_conn(conn)
+
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:464: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:1093: in _validate_conn
+    conn.connect()
+.venv/lib/python3.11/site-packages/urllib3/connection.py:796: in connect
+    sock_and_verified = _ssl_wrap_socket_and_match_hostname(
+.venv/lib/python3.11/site-packages/urllib3/connection.py:975: in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+.venv/lib/python3.11/site-packages/urllib3/util/ssl_.py:483: in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/urllib3/util/ssl_.py:527: in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:517: in wrap_socket
+    return self.sslsocket_class._create(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1108: in _create
+    self.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLSocket [closed] fd=-1, family=2, type=1, proto=0&gt;, block = False
+
+    @_sslcopydoc
+    def do_handshake(self, block=False):
+        self._check_connected()
+        timeout = self.gettimeout()
+        try:
+            if timeout == 0.0 and block:
+                self.settimeout(None)
+&gt;           self._sslobj.do_handshake()
+E           ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1379: SSLCertVerificationError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;urllib3.connectionpool.HTTPSConnectionPool object at 0x1097f2290&gt;
+method = 'GET', url = '/bpemb/en/en.wiki.bpe.vs1000.model', body = None
+headers = {}
+retries = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+redirect = False, assert_same_host = False, timeout = &lt;_TYPE_DEFAULT.token: -1&gt;
+pool_timeout = None, release_conn = False, chunked = False, body_pos = None
+preload_content = False, decode_content = True, response_kw = {}
+parsed_url = Url(scheme=None, auth=None, host=None, port=None, path='/bpemb/en/en.wiki.bpe.vs1000.model', query=None, fragment=None)
+destination_scheme = None, conn = None, release_this_conn = True
+http_tunnel_required = False, err = None, clean_exit = False
+
+    def urlopen(  # type: ignore[override]
+        self,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | bool | int | None = None,
+        redirect: bool = True,
+        assert_same_host: bool = True,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        pool_timeout: int | None = None,
+        release_conn: bool | None = None,
+        chunked: bool = False,
+        body_pos: _TYPE_BODY_POSITION | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        **response_kw: typing.Any,
+    ) -&gt; BaseHTTPResponse:
+        """
+        Get a connection from the pool and perform an HTTP request. This is the
+        lowest level call for making a request, so you'll need to specify all
+        the raw details.
+    
+        .. note::
+    
+           More commonly, it's appropriate to use a convenience method
+           such as :meth:`request`.
+    
+        .. note::
+    
+           `release_conn` will only behave as expected if
+           `preload_content=False` because we want to make
+           `preload_content=False` the default behaviour someday soon without
+           breaking backwards compatibility.
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            If ``None`` (default) will retry 3 times, see ``Retry.DEFAULT``. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param redirect:
+            If True, automatically handle redirects (status codes 301, 302,
+            303, 307, 308). Each redirect counts as a retry. Disabling retries
+            will disable redirect, too.
+    
+        :param assert_same_host:
+            If ``True``, will make sure that the host of the pool requests is
+            consistent else will raise HostChangedError. When ``False``, you can
+            use the pool on an HTTP proxy and request foreign hosts.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param pool_timeout:
+            If set and the pool is set to block=True, then this method will
+            block for ``pool_timeout`` seconds and raise EmptyPoolError if no
+            connection is available within the time period.
+    
+        :param bool preload_content:
+            If True, the response's body will be preloaded into memory.
+    
+        :param bool decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param release_conn:
+            If False, then the urlopen call will not release the connection
+            back into the pool once a response is received (but will release if
+            you read the entire contents of the response such as when
+            `preload_content=True`). This is useful if you're not preloading
+            the response's content immediately. You will need to call
+            ``r.release_conn()`` on the response ``r`` to return the connection
+            back into the pool. If None, it takes the value of ``preload_content``
+            which defaults to ``True``.
+    
+        :param bool chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param int body_pos:
+            Position to seek to in file-like body in the event of a retry or
+            redirect. Typically this won't need to be set because urllib3 will
+            auto-populate the value when needed.
+        """
+        parsed_url = parse_url(url)
+        destination_scheme = parsed_url.scheme
+    
+        if headers is None:
+            headers = self.headers
+    
+        if not isinstance(retries, Retry):
+            retries = Retry.from_int(retries, redirect=redirect, default=self.retries)
+    
+        if release_conn is None:
+            release_conn = preload_content
+    
+        # Check host
+        if assert_same_host and not self.is_same_host(url):
+            raise HostChangedError(self, url, retries)
+    
+        # Ensure that the URL we're connecting to is properly encoded
+        if url.startswith("/"):
+            url = to_str(_encode_target(url))
+        else:
+            url = to_str(parsed_url.url)
+    
+        conn = None
+    
+        # Track whether `conn` needs to be released before
+        # returning/raising/recursing. Update this variable if necessary, and
+        # leave `release_conn` constant throughout the function. That way, if
+        # the function recurses, the original value of `release_conn` will be
+        # passed down into the recursive call, and its value will be respected.
+        #
+        # See issue #651 [1] for details.
+        #
+        # [1] &lt;https://github.com/urllib3/urllib3/issues/651&gt;
+        release_this_conn = release_conn
+    
+        http_tunnel_required = connection_requires_http_tunnel(
+            self.proxy, self.proxy_config, destination_scheme
+        )
+    
+        # Merge the proxy headers. Only done when not using HTTP CONNECT. We
+        # have to copy the headers dict so we can safely change it without those
+        # changes being reflected in anyone else's copy.
+        if not http_tunnel_required:
+            headers = headers.copy()  # type: ignore[attr-defined]
+            headers.update(self.proxy_headers)  # type: ignore[union-attr]
+    
+        # Must keep the exception bound to a separate variable or else Python 3
+        # complains about UnboundLocalError.
+        err = None
+    
+        # Keep track of whether we cleanly exited the except block. This
+        # ensures we do proper cleanup in finally.
+        clean_exit = False
+    
+        # Rewind body position, if needed. Record current position
+        # for future rewinds in the event of a redirect/retry.
+        body_pos = set_file_position(body, body_pos)
+    
+        try:
+            # Request a connection from the queue.
+            timeout_obj = self._get_timeout(timeout)
+            conn = self._get_conn(timeout=pool_timeout)
+    
+            conn.timeout = timeout_obj.connect_timeout  # type: ignore[assignment]
+    
+            # Is this a closed/new connection that requires CONNECT tunnelling?
+            if self.proxy is not None and http_tunnel_required and conn.is_closed:
+                try:
+                    self._prepare_proxy(conn)
+                except (BaseSSLError, OSError, SocketTimeout) as e:
+                    self._raise_timeout(
+                        err=e, url=self.proxy.url, timeout_value=conn.timeout
+                    )
+                    raise
+    
+            # If we're going to release the connection in ``finally:``, then
+            # the response doesn't need to know about the connection. Otherwise
+            # it will also try to release it and we'll have a double-release
+            # mess.
+            response_conn = conn if not release_conn else None
+    
+            # Make the request on the HTTPConnection object
+&gt;           response = self._make_request(
+                conn,
+                method,
+                url,
+                timeout=timeout_obj,
+                body=body,
+                headers=headers,
+                chunked=chunked,
+                retries=retries,
+                response_conn=response_conn,
+                preload_content=preload_content,
+                decode_content=decode_content,
+                **response_kw,
+            )
+
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:787: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;urllib3.connectionpool.HTTPSConnectionPool object at 0x1097f2290&gt;
+conn = &lt;HTTPSConnection(host='nlp.h-its.org', port=443) at 0x1095457d0&gt;
+method = 'GET', url = '/bpemb/en/en.wiki.bpe.vs1000.model', body = None
+headers = {}
+retries = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+timeout = Timeout(connect=&lt;_TYPE_DEFAULT.token: -1&gt;, read=&lt;_TYPE_DEFAULT.token: -1&gt;, total=None)
+chunked = False
+response_conn = &lt;HTTPSConnection(host='nlp.h-its.org', port=443) at 0x1095457d0&gt;
+preload_content = False, decode_content = True, enforce_content_length = True
+
+    def _make_request(
+        self,
+        conn: BaseHTTPConnection,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | None = None,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        chunked: bool = False,
+        response_conn: BaseHTTPConnection | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        enforce_content_length: bool = True,
+    ) -&gt; BaseHTTPResponse:
+        """
+        Perform a request on a given urllib connection object taken from our
+        pool.
+    
+        :param conn:
+            a connection from one of our connection pools
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            Pass ``None`` to retry until you receive a response. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param response_conn:
+            Set this to ``None`` if you will handle releasing the connection or
+            set the connection to have the response release it.
+    
+        :param preload_content:
+          If True, the response's body will be preloaded during construction.
+    
+        :param decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param enforce_content_length:
+            Enforce content length checking. Body returned by server must match
+            value of Content-Length header, if present. Otherwise, raise error.
+        """
+        self.num_requests += 1
+    
+        timeout_obj = self._get_timeout(timeout)
+        timeout_obj.start_connect()
+        conn.timeout = Timeout.resolve_default_timeout(timeout_obj.connect_timeout)
+    
+        try:
+            # Trigger any extra validation we need to do.
+            try:
+                self._validate_conn(conn)
+            except (SocketTimeout, BaseSSLError) as e:
+                self._raise_timeout(err=e, url=url, timeout_value=conn.timeout)
+                raise
+    
+        # _validate_conn() starts the connection to an HTTPS proxy
+        # so we need to wrap errors with 'ProxyError' here too.
+        except (
+            OSError,
+            NewConnectionError,
+            TimeoutError,
+            BaseSSLError,
+            CertificateError,
+            SSLError,
+        ) as e:
+            new_e: Exception = e
+            if isinstance(e, (BaseSSLError, CertificateError)):
+                new_e = SSLError(e)
+            # If the connection didn't successfully connect to it's proxy
+            # then there
+            if isinstance(
+                new_e, (OSError, NewConnectionError, TimeoutError, SSLError)
+            ) and (conn and conn.proxy and not conn.has_connected_to_proxy):
+                new_e = _wrap_proxy_error(new_e, conn.proxy.scheme)
+&gt;           raise new_e
+E           urllib3.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:488: SSLError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;bpemb.tests.bpemb_test.BPEmbTest testMethod=test_pickle_custom_cache_dir&gt;
+
+    def test_pickle_custom_cache_dir(self):
+        import pickle
+        from tempfile import mkdtemp
+        from pathlib import Path
+&gt;       bpemb = BPEmb(lang="en", vs=1000, dim=25, cache_dir=mkdtemp())
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bpemb/tests/bpemb_test.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bpemb/bpemb.py:174: in __init__
+    self.model_file = self._load_file(model_file)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/bpemb.py:234: in _load_file
+    return http_get(file_url, cached_file, ignore_tardir=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/util.py:50: in http_get
+    headers = http_get_temp(url, temp_file)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/util.py:24: in http_get_temp
+    req = http.request('GET', url, preload_content=False)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/urllib3/_request_methods.py:135: in request
+    return self.request_encode_url(
+.venv/lib/python3.11/site-packages/urllib3/_request_methods.py:182: in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/urllib3/poolmanager.py:457: in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:841: in urlopen
+    retries = retries.increment(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+method = 'GET', url = '/bpemb/en/en.wiki.bpe.vs1000.model', response = None
+error = SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)'))
+_pool = &lt;urllib3.connectionpool.HTTPSConnectionPool object at 0x1097f2290&gt;
+_stacktrace = &lt;traceback object at 0x109545c40&gt;
+
+    def increment(
+        self,
+        method: str | None = None,
+        url: str | None = None,
+        response: BaseHTTPResponse | None = None,
+        error: Exception | None = None,
+        _pool: ConnectionPool | None = None,
+        _stacktrace: TracebackType | None = None,
+    ) -&gt; Self:
+        """Return a new Retry object with incremented retry counters.
+    
+        :param response: A response object, or None, if the server did not
+            return a response.
+        :type response: :class:`~urllib3.response.BaseHTTPResponse`
+        :param Exception error: An error encountered during the request, or
+            None if the response was received successfully.
+    
+        :return: A new ``Retry`` object.
+        """
+        if self.total is False and error:
+            # Disabled, indicate to re-raise the error.
+            raise reraise(type(error), error, _stacktrace)
+    
+        total = self.total
+        if total is not None:
+            total -= 1
+    
+        connect = self.connect
+        read = self.read
+        redirect = self.redirect
+        status_count = self.status
+        other = self.other
+        cause = "unknown"
+        status = None
+        redirect_location = None
+    
+        if error and self._is_connection_error(error):
+            # Connect retry?
+            if connect is False:
+                raise reraise(type(error), error, _stacktrace)
+            elif connect is not None:
+                connect -= 1
+    
+        elif error and self._is_read_error(error):
+            # Read retry?
+            if read is False or method is None or not self._is_method_retryable(method):
+                raise reraise(type(error), error, _stacktrace)
+            elif read is not None:
+                read -= 1
+    
+        elif error:
+            # Other retry?
+            if other is not None:
+                other -= 1
+    
+        elif response and response.get_redirect_location():
+            # Redirect retry?
+            if redirect is not None:
+                redirect -= 1
+            cause = "too many redirects"
+            response_redirect_location = response.get_redirect_location()
+            if response_redirect_location:
+                redirect_location = response_redirect_location
+            status = response.status
+    
+        else:
+            # Incrementing because of a server error like a 500 in
+            # status_forcelist and the given method is in the allowed_methods
+            cause = ResponseError.GENERIC_ERROR
+            if response and response.status:
+                if status_count is not None:
+                    status_count -= 1
+                cause = ResponseError.SPECIFIC_ERROR.format(status_code=response.status)
+                status = response.status
+    
+        history = self.history + (
+            RequestHistory(method, url, error, status, redirect_location),
+        )
+    
+        new_retry = self.new(
+            total=total,
+            connect=connect,
+            read=read,
+            redirect=redirect,
+            status=status_count,
+            other=other,
+            history=history,
+        )
+    
+        if new_retry.is_exhausted():
+            reason = error or ResponseError(cause)
+&gt;           raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='nlp.h-its.org', port=443): Max retries exceeded with url: /bpemb/en/en.wiki.bpe.vs1000.model (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')))
+
+.venv/lib/python3.11/site-packages/urllib3/util/retry.py:535: MaxRetryError</failure></testcase><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pickle_custom_no_cache" time="1.106"><failure message="urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='nlp.h-its.org', port=443): Max retries exceeded with url: /bpemb/en/en.wiki.bpe.vs1000.model (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')))">self = &lt;urllib3.connectionpool.HTTPSConnectionPool object at 0x109a8a950&gt;
+conn = &lt;HTTPSConnection(host='nlp.h-its.org', port=443) at 0x109a78190&gt;
+method = 'GET', url = '/bpemb/en/en.wiki.bpe.vs1000.model', body = None
+headers = {}
+retries = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+timeout = Timeout(connect=&lt;_TYPE_DEFAULT.token: -1&gt;, read=&lt;_TYPE_DEFAULT.token: -1&gt;, total=None)
+chunked = False
+response_conn = &lt;HTTPSConnection(host='nlp.h-its.org', port=443) at 0x109a78190&gt;
+preload_content = False, decode_content = True, enforce_content_length = True
+
+    def _make_request(
+        self,
+        conn: BaseHTTPConnection,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | None = None,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        chunked: bool = False,
+        response_conn: BaseHTTPConnection | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        enforce_content_length: bool = True,
+    ) -&gt; BaseHTTPResponse:
+        """
+        Perform a request on a given urllib connection object taken from our
+        pool.
+    
+        :param conn:
+            a connection from one of our connection pools
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            Pass ``None`` to retry until you receive a response. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param response_conn:
+            Set this to ``None`` if you will handle releasing the connection or
+            set the connection to have the response release it.
+    
+        :param preload_content:
+          If True, the response's body will be preloaded during construction.
+    
+        :param decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param enforce_content_length:
+            Enforce content length checking. Body returned by server must match
+            value of Content-Length header, if present. Otherwise, raise error.
+        """
+        self.num_requests += 1
+    
+        timeout_obj = self._get_timeout(timeout)
+        timeout_obj.start_connect()
+        conn.timeout = Timeout.resolve_default_timeout(timeout_obj.connect_timeout)
+    
+        try:
+            # Trigger any extra validation we need to do.
+            try:
+&gt;               self._validate_conn(conn)
+
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:464: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:1093: in _validate_conn
+    conn.connect()
+.venv/lib/python3.11/site-packages/urllib3/connection.py:796: in connect
+    sock_and_verified = _ssl_wrap_socket_and_match_hostname(
+.venv/lib/python3.11/site-packages/urllib3/connection.py:975: in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+.venv/lib/python3.11/site-packages/urllib3/util/ssl_.py:483: in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/urllib3/util/ssl_.py:527: in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:517: in wrap_socket
+    return self.sslsocket_class._create(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1108: in _create
+    self.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLSocket [closed] fd=-1, family=2, type=1, proto=0&gt;, block = False
+
+    @_sslcopydoc
+    def do_handshake(self, block=False):
+        self._check_connected()
+        timeout = self.gettimeout()
+        try:
+            if timeout == 0.0 and block:
+                self.settimeout(None)
+&gt;           self._sslobj.do_handshake()
+E           ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1379: SSLCertVerificationError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;urllib3.connectionpool.HTTPSConnectionPool object at 0x109a8a950&gt;
+method = 'GET', url = '/bpemb/en/en.wiki.bpe.vs1000.model', body = None
+headers = {}
+retries = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+redirect = False, assert_same_host = False, timeout = &lt;_TYPE_DEFAULT.token: -1&gt;
+pool_timeout = None, release_conn = False, chunked = False, body_pos = None
+preload_content = False, decode_content = True, response_kw = {}
+parsed_url = Url(scheme=None, auth=None, host=None, port=None, path='/bpemb/en/en.wiki.bpe.vs1000.model', query=None, fragment=None)
+destination_scheme = None, conn = None, release_this_conn = True
+http_tunnel_required = False, err = None, clean_exit = False
+
+    def urlopen(  # type: ignore[override]
+        self,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | bool | int | None = None,
+        redirect: bool = True,
+        assert_same_host: bool = True,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        pool_timeout: int | None = None,
+        release_conn: bool | None = None,
+        chunked: bool = False,
+        body_pos: _TYPE_BODY_POSITION | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        **response_kw: typing.Any,
+    ) -&gt; BaseHTTPResponse:
+        """
+        Get a connection from the pool and perform an HTTP request. This is the
+        lowest level call for making a request, so you'll need to specify all
+        the raw details.
+    
+        .. note::
+    
+           More commonly, it's appropriate to use a convenience method
+           such as :meth:`request`.
+    
+        .. note::
+    
+           `release_conn` will only behave as expected if
+           `preload_content=False` because we want to make
+           `preload_content=False` the default behaviour someday soon without
+           breaking backwards compatibility.
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            If ``None`` (default) will retry 3 times, see ``Retry.DEFAULT``. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param redirect:
+            If True, automatically handle redirects (status codes 301, 302,
+            303, 307, 308). Each redirect counts as a retry. Disabling retries
+            will disable redirect, too.
+    
+        :param assert_same_host:
+            If ``True``, will make sure that the host of the pool requests is
+            consistent else will raise HostChangedError. When ``False``, you can
+            use the pool on an HTTP proxy and request foreign hosts.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param pool_timeout:
+            If set and the pool is set to block=True, then this method will
+            block for ``pool_timeout`` seconds and raise EmptyPoolError if no
+            connection is available within the time period.
+    
+        :param bool preload_content:
+            If True, the response's body will be preloaded into memory.
+    
+        :param bool decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param release_conn:
+            If False, then the urlopen call will not release the connection
+            back into the pool once a response is received (but will release if
+            you read the entire contents of the response such as when
+            `preload_content=True`). This is useful if you're not preloading
+            the response's content immediately. You will need to call
+            ``r.release_conn()`` on the response ``r`` to return the connection
+            back into the pool. If None, it takes the value of ``preload_content``
+            which defaults to ``True``.
+    
+        :param bool chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param int body_pos:
+            Position to seek to in file-like body in the event of a retry or
+            redirect. Typically this won't need to be set because urllib3 will
+            auto-populate the value when needed.
+        """
+        parsed_url = parse_url(url)
+        destination_scheme = parsed_url.scheme
+    
+        if headers is None:
+            headers = self.headers
+    
+        if not isinstance(retries, Retry):
+            retries = Retry.from_int(retries, redirect=redirect, default=self.retries)
+    
+        if release_conn is None:
+            release_conn = preload_content
+    
+        # Check host
+        if assert_same_host and not self.is_same_host(url):
+            raise HostChangedError(self, url, retries)
+    
+        # Ensure that the URL we're connecting to is properly encoded
+        if url.startswith("/"):
+            url = to_str(_encode_target(url))
+        else:
+            url = to_str(parsed_url.url)
+    
+        conn = None
+    
+        # Track whether `conn` needs to be released before
+        # returning/raising/recursing. Update this variable if necessary, and
+        # leave `release_conn` constant throughout the function. That way, if
+        # the function recurses, the original value of `release_conn` will be
+        # passed down into the recursive call, and its value will be respected.
+        #
+        # See issue #651 [1] for details.
+        #
+        # [1] &lt;https://github.com/urllib3/urllib3/issues/651&gt;
+        release_this_conn = release_conn
+    
+        http_tunnel_required = connection_requires_http_tunnel(
+            self.proxy, self.proxy_config, destination_scheme
+        )
+    
+        # Merge the proxy headers. Only done when not using HTTP CONNECT. We
+        # have to copy the headers dict so we can safely change it without those
+        # changes being reflected in anyone else's copy.
+        if not http_tunnel_required:
+            headers = headers.copy()  # type: ignore[attr-defined]
+            headers.update(self.proxy_headers)  # type: ignore[union-attr]
+    
+        # Must keep the exception bound to a separate variable or else Python 3
+        # complains about UnboundLocalError.
+        err = None
+    
+        # Keep track of whether we cleanly exited the except block. This
+        # ensures we do proper cleanup in finally.
+        clean_exit = False
+    
+        # Rewind body position, if needed. Record current position
+        # for future rewinds in the event of a redirect/retry.
+        body_pos = set_file_position(body, body_pos)
+    
+        try:
+            # Request a connection from the queue.
+            timeout_obj = self._get_timeout(timeout)
+            conn = self._get_conn(timeout=pool_timeout)
+    
+            conn.timeout = timeout_obj.connect_timeout  # type: ignore[assignment]
+    
+            # Is this a closed/new connection that requires CONNECT tunnelling?
+            if self.proxy is not None and http_tunnel_required and conn.is_closed:
+                try:
+                    self._prepare_proxy(conn)
+                except (BaseSSLError, OSError, SocketTimeout) as e:
+                    self._raise_timeout(
+                        err=e, url=self.proxy.url, timeout_value=conn.timeout
+                    )
+                    raise
+    
+            # If we're going to release the connection in ``finally:``, then
+            # the response doesn't need to know about the connection. Otherwise
+            # it will also try to release it and we'll have a double-release
+            # mess.
+            response_conn = conn if not release_conn else None
+    
+            # Make the request on the HTTPConnection object
+&gt;           response = self._make_request(
+                conn,
+                method,
+                url,
+                timeout=timeout_obj,
+                body=body,
+                headers=headers,
+                chunked=chunked,
+                retries=retries,
+                response_conn=response_conn,
+                preload_content=preload_content,
+                decode_content=decode_content,
+                **response_kw,
+            )
+
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:787: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;urllib3.connectionpool.HTTPSConnectionPool object at 0x109a8a950&gt;
+conn = &lt;HTTPSConnection(host='nlp.h-its.org', port=443) at 0x109a78190&gt;
+method = 'GET', url = '/bpemb/en/en.wiki.bpe.vs1000.model', body = None
+headers = {}
+retries = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+timeout = Timeout(connect=&lt;_TYPE_DEFAULT.token: -1&gt;, read=&lt;_TYPE_DEFAULT.token: -1&gt;, total=None)
+chunked = False
+response_conn = &lt;HTTPSConnection(host='nlp.h-its.org', port=443) at 0x109a78190&gt;
+preload_content = False, decode_content = True, enforce_content_length = True
+
+    def _make_request(
+        self,
+        conn: BaseHTTPConnection,
+        method: str,
+        url: str,
+        body: _TYPE_BODY | None = None,
+        headers: typing.Mapping[str, str] | None = None,
+        retries: Retry | None = None,
+        timeout: _TYPE_TIMEOUT = _DEFAULT_TIMEOUT,
+        chunked: bool = False,
+        response_conn: BaseHTTPConnection | None = None,
+        preload_content: bool = True,
+        decode_content: bool = True,
+        enforce_content_length: bool = True,
+    ) -&gt; BaseHTTPResponse:
+        """
+        Perform a request on a given urllib connection object taken from our
+        pool.
+    
+        :param conn:
+            a connection from one of our connection pools
+    
+        :param method:
+            HTTP request method (such as GET, POST, PUT, etc.)
+    
+        :param url:
+            The URL to perform the request on.
+    
+        :param body:
+            Data to send in the request body, either :class:`str`, :class:`bytes`,
+            an iterable of :class:`str`/:class:`bytes`, or a file-like object.
+    
+        :param headers:
+            Dictionary of custom headers to send, such as User-Agent,
+            If-None-Match, etc. If None, pool headers are used. If provided,
+            these headers completely replace any pool-specific headers.
+    
+        :param retries:
+            Configure the number of retries to allow before raising a
+            :class:`~urllib3.exceptions.MaxRetryError` exception.
+    
+            Pass ``None`` to retry until you receive a response. Pass a
+            :class:`~urllib3.util.retry.Retry` object for fine-grained control
+            over different types of retries.
+            Pass an integer number to retry connection errors that many times,
+            but no other types of errors. Pass zero to never retry.
+    
+            If ``False``, then retries are disabled and any exception is raised
+            immediately. Also, instead of raising a MaxRetryError on redirects,
+            the redirect response will be returned.
+    
+        :type retries: :class:`~urllib3.util.retry.Retry`, False, or an int.
+    
+        :param timeout:
+            If specified, overrides the default timeout for this one
+            request. It may be a float (in seconds) or an instance of
+            :class:`urllib3.util.Timeout`.
+    
+        :param chunked:
+            If True, urllib3 will send the body using chunked transfer
+            encoding. Otherwise, urllib3 will send the body using the standard
+            content-length form. Defaults to False.
+    
+        :param response_conn:
+            Set this to ``None`` if you will handle releasing the connection or
+            set the connection to have the response release it.
+    
+        :param preload_content:
+          If True, the response's body will be preloaded during construction.
+    
+        :param decode_content:
+            If True, will attempt to decode the body based on the
+            'content-encoding' header.
+    
+        :param enforce_content_length:
+            Enforce content length checking. Body returned by server must match
+            value of Content-Length header, if present. Otherwise, raise error.
+        """
+        self.num_requests += 1
+    
+        timeout_obj = self._get_timeout(timeout)
+        timeout_obj.start_connect()
+        conn.timeout = Timeout.resolve_default_timeout(timeout_obj.connect_timeout)
+    
+        try:
+            # Trigger any extra validation we need to do.
+            try:
+                self._validate_conn(conn)
+            except (SocketTimeout, BaseSSLError) as e:
+                self._raise_timeout(err=e, url=url, timeout_value=conn.timeout)
+                raise
+    
+        # _validate_conn() starts the connection to an HTTPS proxy
+        # so we need to wrap errors with 'ProxyError' here too.
+        except (
+            OSError,
+            NewConnectionError,
+            TimeoutError,
+            BaseSSLError,
+            CertificateError,
+            SSLError,
+        ) as e:
+            new_e: Exception = e
+            if isinstance(e, (BaseSSLError, CertificateError)):
+                new_e = SSLError(e)
+            # If the connection didn't successfully connect to it's proxy
+            # then there
+            if isinstance(
+                new_e, (OSError, NewConnectionError, TimeoutError, SSLError)
+            ) and (conn and conn.proxy and not conn.has_connected_to_proxy):
+                new_e = _wrap_proxy_error(new_e, conn.proxy.scheme)
+&gt;           raise new_e
+E           urllib3.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:488: SSLError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;bpemb.tests.bpemb_test.BPEmbTest testMethod=test_pickle_custom_no_cache&gt;
+
+    def test_pickle_custom_no_cache(self):
+        import pickle
+        from tempfile import mkdtemp
+        from pathlib import Path
+        import shutil
+        cache_dir = mkdtemp()
+&gt;       bpemb = BPEmb(lang="en", vs=1000, dim=25, cache_dir=cache_dir)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bpemb/tests/bpemb_test.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bpemb/bpemb.py:174: in __init__
+    self.model_file = self._load_file(model_file)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/bpemb.py:234: in _load_file
+    return http_get(file_url, cached_file, ignore_tardir=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/util.py:50: in http_get
+    headers = http_get_temp(url, temp_file)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/util.py:24: in http_get_temp
+    req = http.request('GET', url, preload_content=False)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/urllib3/_request_methods.py:135: in request
+    return self.request_encode_url(
+.venv/lib/python3.11/site-packages/urllib3/_request_methods.py:182: in request_encode_url
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/urllib3/poolmanager.py:457: in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:871: in urlopen
+    return self.urlopen(
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:841: in urlopen
+    retries = retries.increment(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Retry(total=0, connect=None, read=None, redirect=None, status=None)
+method = 'GET', url = '/bpemb/en/en.wiki.bpe.vs1000.model', response = None
+error = SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)'))
+_pool = &lt;urllib3.connectionpool.HTTPSConnectionPool object at 0x109a8a950&gt;
+_stacktrace = &lt;traceback object at 0x109a78880&gt;
+
+    def increment(
+        self,
+        method: str | None = None,
+        url: str | None = None,
+        response: BaseHTTPResponse | None = None,
+        error: Exception | None = None,
+        _pool: ConnectionPool | None = None,
+        _stacktrace: TracebackType | None = None,
+    ) -&gt; Self:
+        """Return a new Retry object with incremented retry counters.
+    
+        :param response: A response object, or None, if the server did not
+            return a response.
+        :type response: :class:`~urllib3.response.BaseHTTPResponse`
+        :param Exception error: An error encountered during the request, or
+            None if the response was received successfully.
+    
+        :return: A new ``Retry`` object.
+        """
+        if self.total is False and error:
+            # Disabled, indicate to re-raise the error.
+            raise reraise(type(error), error, _stacktrace)
+    
+        total = self.total
+        if total is not None:
+            total -= 1
+    
+        connect = self.connect
+        read = self.read
+        redirect = self.redirect
+        status_count = self.status
+        other = self.other
+        cause = "unknown"
+        status = None
+        redirect_location = None
+    
+        if error and self._is_connection_error(error):
+            # Connect retry?
+            if connect is False:
+                raise reraise(type(error), error, _stacktrace)
+            elif connect is not None:
+                connect -= 1
+    
+        elif error and self._is_read_error(error):
+            # Read retry?
+            if read is False or method is None or not self._is_method_retryable(method):
+                raise reraise(type(error), error, _stacktrace)
+            elif read is not None:
+                read -= 1
+    
+        elif error:
+            # Other retry?
+            if other is not None:
+                other -= 1
+    
+        elif response and response.get_redirect_location():
+            # Redirect retry?
+            if redirect is not None:
+                redirect -= 1
+            cause = "too many redirects"
+            response_redirect_location = response.get_redirect_location()
+            if response_redirect_location:
+                redirect_location = response_redirect_location
+            status = response.status
+    
+        else:
+            # Incrementing because of a server error like a 500 in
+            # status_forcelist and the given method is in the allowed_methods
+            cause = ResponseError.GENERIC_ERROR
+            if response and response.status:
+                if status_count is not None:
+                    status_count -= 1
+                cause = ResponseError.SPECIFIC_ERROR.format(status_code=response.status)
+                status = response.status
+    
+        history = self.history + (
+            RequestHistory(method, url, error, status, redirect_location),
+        )
+    
+        new_retry = self.new(
+            total=total,
+            connect=connect,
+            read=read,
+            redirect=redirect,
+            status=status_count,
+            other=other,
+            history=history,
+        )
+    
+        if new_retry.is_exhausted():
+            reason = error or ResponseError(cause)
+&gt;           raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='nlp.h-its.org', port=443): Max retries exceeded with url: /bpemb/en/en.wiki.bpe.vs1000.model (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')))
+
+.venv/lib/python3.11/site-packages/urllib3/util/retry.py:535: MaxRetryError</failure></testcase><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_segmentation_only" time="0.001" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_sentencepiece_import" time="0.000" /></testsuite></testsuites>

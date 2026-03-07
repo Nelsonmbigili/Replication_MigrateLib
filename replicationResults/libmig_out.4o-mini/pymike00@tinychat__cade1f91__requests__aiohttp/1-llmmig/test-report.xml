@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="21" time="3.389" timestamp="2026-03-05T16:16:53.088645+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming" name="test_perform_stream_request_failure" time="0.017" /><testcase classname="tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming" name="test_perform_stream_request_success" time="0.005"><failure message="TypeError: 'async for' requires an object with __aiter__ method, got list_iterator">self = &lt;tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming testMethod=test_perform_stream_request_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4412763536'&gt;
+mock_post = &lt;MagicMock name='post' id='4413490256'&gt;
+
+    @patch("tinychat.llms.anthropic.aiohttp.ClientSession.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    async def test_perform_stream_request_success(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking the response
+        mock_response = Mock(spec=ClientResponse)
+        mock_response.status = 200
+        mock_post.return_value.__aenter__.return_value = mock_response
+    
+        # Creating mock events
+        mock_event1 = MagicMock()
+        mock_event1.data = json.dumps(
+            {"type": "content_block_delta", "delta": {"text": "part1"}}
+        )
+        mock_event2 = MagicMock()
+        mock_event2.data = json.dumps(
+            {"type": "content_block_delta", "delta": {"text": "part2"}}
+        )
+        mock_event_done = MagicMock()
+        mock_event_done.data = json.dumps({"type": "done"})
+    
+        # Mocking SSEClient to return test events
+        with patch("tinychat.llms.anthropic.SSEClient") as mock_sse_client:
+            test_stream = iter([mock_event1, mock_event2, mock_event_done])
+            mock_sse_client.return_value.events = MagicMock(return_value=test_stream)
+    
+            client = AnthropicAIClient(model_name="test_model", temperature=0.0)
+            messages = [{"role": "user", "content": "hello"}]
+            stream = await client.perform_stream_request(messages)
+    
+            # Extracting and verifying the stream response
+            responses = []
+&gt;           async for event in stream.events():
+E           TypeError: 'async for' requires an object with __aiter__ method, got list_iterator
+
+tests/llms/test_anthropic_client.py:44: TypeError</failure></testcase><testcase classname="tests.llms.test_anthropic_handler.TestAnthropicAIHandlerStreaming" name="test_stream_response_success" time="0.002"><failure message="TypeError: 'async_generator' object is not iterable">self = &lt;tests.llms.test_anthropic_handler.TestAnthropicAIHandlerStreaming testMethod=test_stream_response_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4413580048'&gt;
+mock_perform_stream_request = &lt;AsyncMock name='perform_stream_request' id='4413585104'&gt;
+
+    @patch.object(AnthropicAIClient, "perform_stream_request")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_stream_response_success(self, mock_api_key, mock_perform_stream_request):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Create a mock SSEClient with a mock events method
+        mock_sse_client = MagicMock()
+        mock_stream = iter(
+            [
+                Mock(
+                    data=json.dumps(
+                        {
+                            "type": "content_block_start",
+                            "index": 0,
+                            "content_block": {"type": "text", "text": ""},
+                        }
+                    )
+                ),
+                Mock(data=json.dumps({"type": "ping"})),
+                Mock(
+                    data=json.dumps(
+                        {
+                            "type": "content_block_delta",
+                            "index": 0,
+                            "delta": {"type": "text_delta", "text": "Hello"},
+                        }
+                    )
+                ),
+                Mock(
+                    data=json.dumps(
+                        {
+                            "type": "content_block_delta",
+                            "index": 0,
+                            "delta": {"type": "text_delta", "text": "!"},
+                        }
+                    )
+                ),
+                Mock(data=json.dumps({"type": "content_block_stop", "index": 0})),
+            ]
+        )
+        mock_sse_client.events.return_value = mock_stream
+        mock_perform_stream_request.return_value = mock_sse_client
+    
+        handler = AnthropicAIHandler(model_name="test_model")
+        generator = handler.stream_response("hello")
+    
+        # Extracting and verifying the stream response
+        responses = []
+&gt;       for part in generator:
+E       TypeError: 'async_generator' object is not iterable
+
+tests/llms/test_anthropic_handler.py:58: TypeError</failure></testcase><testcase classname="tests.llms.test_cohere_client.TestCohereClientStreaming" name="test_perform_stream_request_failure" time="0.001"><failure message="AttributeError: __aenter__">self = &lt;tests.llms.test_cohere_client.TestCohereClientStreaming testMethod=test_perform_stream_request_failure&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4413658896'&gt;
+mock_post = &lt;MagicMock name='post' id='4413659536'&gt;
+
+    @patch("tinychat.llms.cohere.aiohttp.ClientSession.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_failure(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        mock_response = Mock()
+        mock_response.status = 400
+&gt;       mock_response.__aenter__.return_value = mock_response
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/llms/test_cohere_client.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Mock id='4413662672'&gt;, name = '__aenter__'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+                raise AttributeError("Mock object has no attribute %r" % name)
+        elif _is_magic(name):
+&gt;           raise AttributeError(name)
+E           AttributeError: __aenter__
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:655: AttributeError</failure></testcase><testcase classname="tests.llms.test_cohere_client.TestCohereClientStreaming" name="test_perform_stream_request_success" time="0.001"><failure message="AttributeError: __aenter__">self = &lt;tests.llms.test_cohere_client.TestCohereClientStreaming testMethod=test_perform_stream_request_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4413563088'&gt;
+mock_post = &lt;MagicMock name='post' id='4413566416'&gt;
+
+    @patch("tinychat.llms.cohere.aiohttp.ClientSession.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_success(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        mock_response = Mock()
+        mock_response.status = 200
+&gt;       mock_response.__aenter__.return_value = mock_response
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/llms/test_cohere_client.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Mock id='4413566160'&gt;, name = '__aenter__'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+                raise AttributeError("Mock object has no attribute %r" % name)
+        elif _is_magic(name):
+&gt;           raise AttributeError(name)
+E           AttributeError: __aenter__
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:655: AttributeError</failure></testcase><testcase classname="tests.llms.test_cohere_handler.TestCohereHandlerStreaming" name="test_stream_response_success" time="0.001"><failure message="TypeError: 'async_generator' object is not iterable">self = &lt;tests.llms.test_cohere_handler.TestCohereHandlerStreaming testMethod=test_stream_response_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4391229264'&gt;
+mock_perform_stream_request = &lt;AsyncMock name='perform_stream_request' id='4413576912'&gt;
+
+    @patch.object(CohereClient, "perform_stream_request")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_stream_response_success(self, mock_api_key, mock_perform_stream_request):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking the stream of responses
+        mock_stream = [b'{"event_type": "text-generation", "text": "Hi!"}',
+                       b'{"event_type": "text-generation", "text": "How can I help?"}']
+        mock_perform_stream_request.return_value = mock_stream
+    
+        handler = CohereHandler()
+        user_input = "hello"
+        generator = handler.stream_response(user_input)
+    
+        # Collecting responses from the generator
+&gt;       responses = [resp for resp in generator]
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'async_generator' object is not iterable
+
+tests/llms/test_cohere_handler.py:23: TypeError</failure></testcase><testcase classname="tests.llms.test_google_client.TestGoogleAIClientStreaming" name="test_perform_stream_request_failure" time="0.000" /><testcase classname="tests.llms.test_google_client.TestGoogleAIClientStreaming" name="test_perform_stream_request_success" time="0.000" /><testcase classname="tests.llms.test_google_handler.TestGoogleGeminiHandlerStreaming" name="test_stream_response" time="0.002"><failure message="TypeError: 'async_generator' object is not iterable">self = &lt;tests.llms.test_google_handler.TestGoogleGeminiHandlerStreaming testMethod=test_stream_response&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4413574416'&gt;
+mock_perform_stream_request = &lt;AsyncMock name='perform_stream_request' id='4413578320'&gt;
+
+    @patch.object(GoogleAIClient, "perform_stream_request")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_stream_response(self, mock_api_key, mock_perform_stream_request):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Create a mock SSEClient with a mock events method
+        mock_sse_client = MagicMock()
+        mock_stream = iter(
+            [
+                Mock(
+                    data=json.dumps(
+                        {
+                            "candidates": [
+                                {"content": {"parts": [{"text": "response part 1"}]}}
+                            ]
+                        }
+                    )
+                ),
+                Mock(
+                    data=json.dumps(
+                        {
+                            "candidates": [
+                                {"content": {"parts": [{"text": "response part 2"}]}}
+                            ]
+                        }
+                    )
+                ),
+            ]
+        )
+        mock_sse_client.events.return_value = mock_stream
+        mock_perform_stream_request.return_value = mock_sse_client
+    
+        handler = GoogleAIHandler()
+        generator = handler.stream_response("hello")
+    
+        # Extracting and verifying the stream response
+        responses = []
+&gt;       for part in generator:
+E       TypeError: 'async_generator' object is not iterable
+
+tests/llms/test_google_handler.py:46: TypeError</failure></testcase><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_api_key_setter_invalid_key" time="0.001" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_api_key_setter_valid_key" time="0.001" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_default_headers" time="0.001" /><testcase classname="tests.llms.test_mistral_client.TestMistralClientStreaming" name="test_perform_stream_request_failure" time="0.000" /><testcase classname="tests.llms.test_mistral_client.TestMistralClientStreaming" name="test_perform_stream_request_success" time="0.000" /><testcase classname="tests.llms.test_mistral_handler.TestMistralHandlerStreaming" name="test_stream_response" time="0.002"><failure message="TypeError: 'async_generator' object is not iterable">self = &lt;tests.llms.test_mistral_handler.TestMistralHandlerStreaming testMethod=test_stream_response&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4413517456'&gt;
+mock_perform_stream_request = &lt;AsyncMock name='perform_stream_request' id='4413556176'&gt;
+
+    @patch.object(MistralClient, "perform_stream_request")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_stream_response(self, mock_api_key, mock_perform_stream_request):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Create a mock SSEClient with a mock events method
+        mock_sse_client = MagicMock()
+        mock_stream = iter(
+            [
+                Mock(
+                    data=json.dumps(
+                        {"choices": [{"delta": {"content": "response part 1"}}]}
+                    )
+                ),
+                Mock(
+                    data=json.dumps(
+                        {"choices": [{"delta": {"content": "response part 2"}}]}
+                    )
+                ),
+                Mock(data="[DONE]"),
+            ]
+        )
+        mock_sse_client.events.return_value = mock_stream
+        mock_perform_stream_request.return_value = mock_sse_client
+    
+        handler = MistralHandler(model_name="test_model")
+        generator = handler.stream_response("hello")
+    
+        # Extracting and verifying the stream response
+        responses = []
+&gt;       for part in generator:
+E       TypeError: 'async_generator' object is not iterable
+
+tests/llms/test_mistral_handler.py:39: TypeError</failure></testcase><testcase classname="tests.llms.test_openai_client.TestOpenAIClientStreaming" name="test_perform_stream_request_failure" time="0.004" /><testcase classname="tests.llms.test_openai_client.TestOpenAIClientStreaming" name="test_perform_stream_request_success" time="0.005"><failure message="TypeError: 'async for' requires an object with __aiter__ method, got list_iterator">self = &lt;tests.llms.test_openai_client.TestOpenAIClientStreaming testMethod=test_perform_stream_request_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4414363216'&gt;
+mock_sse_client = &lt;MagicMock name='SSEClient' id='4414369104'&gt;
+mock_post = &lt;MagicMock name='post' id='4413932176'&gt;
+
+    @patch("tinychat.llms.openai.aiohttp.ClientSession.post")
+    @patch("tinychat.llms.openai.SSEClient")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    async def test_perform_stream_request_success(
+        self, mock_api_key, mock_sse_client, mock_post
+    ):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking SSEClient and the response
+        mock_response = Mock(spec=ClientResponse)
+        mock_response.status = 200
+        mock_post.return_value.__aenter__.return_value = mock_response
+    
+        # Creating mock events
+        mock_event1 = MagicMock()
+        mock_event1.data = json.dumps({"choices": [{"delta": {"content": "part1"}}]})
+        mock_event2 = MagicMock()
+        mock_event2.data = json.dumps({"choices": [{"delta": {"content": "part2"}}]})
+        mock_event_done = MagicMock()
+        mock_event_done.data = "[DONE]"
+    
+        # Setting up a test stream
+        test_stream = [mock_event1, mock_event2, mock_event_done]
+        mock_sse_client.return_value.events = MagicMock(return_value=iter(test_stream))
+    
+        client = OpenAIClient(model_name="test_model", temperature=0.0)
+        messages = [{"role": "user", "content": "hello"}]
+        stream = await client.perform_stream_request(messages)
+    
+        # Extracting and verifying the stream response
+        responses = []
+&gt;       async for event in stream.events():
+E       TypeError: 'async for' requires an object with __aiter__ method, got list_iterator
+
+tests/llms/test_openai_client.py:43: TypeError</failure></testcase><testcase classname="tests.llms.test_openai_handler.TestOpenAIHandlerStreaming" name="test_stream_response" time="0.002"><failure message="TypeError: 'async_generator' object is not iterable">self = &lt;tests.llms.test_openai_handler.TestOpenAIHandlerStreaming testMethod=test_stream_response&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4414116240'&gt;
+mock_perform_stream_request = &lt;AsyncMock name='perform_stream_request' id='4414121744'&gt;
+
+    @patch.object(OpenAIClient, "perform_stream_request")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_stream_response(self, mock_api_key, mock_perform_stream_request):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Create a mock SSEClient with a mock events method
+        mock_sse_client = MagicMock()
+        mock_stream = iter(
+            [
+                Mock(
+                    data=json.dumps(
+                        {"choices": [{"delta": {"content": "response part 1"}}]}
+                    )
+                ),
+                Mock(
+                    data=json.dumps(
+                        {"choices": [{"delta": {"content": "response part 2"}}]}
+                    )
+                ),
+                Mock(data="[DONE]"),
+            ]
+        )
+        mock_sse_client.events.return_value = mock_stream
+        mock_perform_stream_request.return_value = mock_sse_client
+    
+        handler = OpenAIHandler(model_name="test_model")
+        generator = handler.stream_response("hello")
+    
+        # Extracting and verifying the stream response
+        responses = []
+&gt;       for part in generator:
+E       TypeError: 'async_generator' object is not iterable
+
+tests/llms/test_openai_handler.py:39: TypeError</failure></testcase><testcase classname="tests.llms.test_together_client.TestTogetherClientStreaming" name="test_perform_stream_request_failure" time="0.001"><failure message="AttributeError: __aenter__">self = &lt;tests.llms.test_together_client.TestTogetherClientStreaming testMethod=test_perform_stream_request_failure&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4414154768'&gt;
+mock_post = &lt;MagicMock name='post' id='4413568656'&gt;
+
+    @patch("tinychat.llms.together.aiohttp.ClientSession.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_failure(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking the response with an error status code
+        mock_response = Mock()
+        mock_response.status = 400
+&gt;       mock_response.__aenter__.return_value = mock_response
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/llms/test_together_client.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Mock id='4414155344'&gt;, name = '__aenter__'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+                raise AttributeError("Mock object has no attribute %r" % name)
+        elif _is_magic(name):
+&gt;           raise AttributeError(name)
+E           AttributeError: __aenter__
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:655: AttributeError</failure></testcase><testcase classname="tests.llms.test_together_client.TestTogetherClientStreaming" name="test_perform_stream_request_success" time="0.001"><failure message="AttributeError: __aenter__">self = &lt;tests.llms.test_together_client.TestTogetherClientStreaming testMethod=test_perform_stream_request_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4413930512'&gt;
+mock_sse_client = &lt;MagicMock name='SSEClient' id='4413926288'&gt;
+mock_post = &lt;MagicMock name='post' id='4413918864'&gt;
+
+    @patch("tinychat.llms.together.aiohttp.ClientSession.post")
+    @patch("tinychat.llms.together.SSEClient")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_success(
+        self, mock_api_key, mock_sse_client, mock_post
+    ):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking SSEClient and the response
+        mock_response = Mock()
+        mock_response.status = 200
+&gt;       mock_response.__aenter__.return_value = mock_response
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/llms/test_together_client.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Mock id='4393430288'&gt;, name = '__aenter__'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+                raise AttributeError("Mock object has no attribute %r" % name)
+        elif _is_magic(name):
+&gt;           raise AttributeError(name)
+E           AttributeError: __aenter__
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:655: AttributeError</failure></testcase><testcase classname="tests.llms.test_together_handler.TestTogetherHandlerStreaming" name="test_stream_response" time="0.002"><failure message="TypeError: 'async_generator' object is not iterable">self = &lt;tests.llms.test_together_handler.TestTogetherHandlerStreaming testMethod=test_stream_response&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4414341072'&gt;
+mock_perform_stream_request = &lt;AsyncMock name='perform_stream_request' id='4414335248'&gt;
+
+    @patch.object(TogetherClient, "perform_stream_request")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_stream_response(self, mock_api_key, mock_perform_stream_request):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Create a mock SSEClient with a mock events method
+        mock_sse_client = MagicMock()
+        mock_stream = iter(
+            [
+                Mock(
+                    data=json.dumps(
+                        {"choices": [{"delta": {"content": "response part 1"}}]}
+                    )
+                ),
+                Mock(
+                    data=json.dumps(
+                        {"choices": [{"delta": {"content": "response part 2"}}]}
+                    )
+                ),
+                Mock(data="[DONE]"),
+            ]
+        )
+        mock_sse_client.events.return_value = mock_stream
+        mock_perform_stream_request.return_value = mock_sse_client
+    
+        handler = TogetherHandler(model_name="test_model")
+        generator = handler.stream_response("hello")
+    
+        # Extracting and verifying the stream response
+        responses = []
+&gt;       for part in generator:
+E       TypeError: 'async_generator' object is not iterable
+
+tests/llms/test_together_handler.py:39: TypeError</failure></testcase></testsuite></testsuites>

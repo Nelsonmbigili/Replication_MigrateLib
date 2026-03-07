@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="7" time="3.356" timestamp="2026-03-05T15:28:33.601154+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_utils" name="test_fetch_gists" time="2.432"><failure message="AssertionError: assert 30 == 1&#10; +  where 30 = len([Gist(url='https://api.github.com/gists/5d39783fe52ec74fcf972a0c26188f67', forks_url='https://api.github.com/gists/5d3...s/rjvitorino/received_events', 'type': 'User', 'user_view_type': 'public', 'site_admin': False}, truncated=False), ...])">mock_get = &lt;MagicMock name='get' id='4373880272'&gt;
+
+    @patch("requests.get")
+    def test_fetch_gists(mock_get):
+        mock_response = MagicMock()
+        mock_response.json.return_value = [example_gist_data]
+        mock_get.return_value = mock_response
+        gists = fetch_gists()
+&gt;       assert len(gists) == 1
+E       AssertionError: assert 30 == 1
+E        +  where 30 = len([Gist(url='https://api.github.com/gists/5d39783fe52ec74fcf972a0c26188f67', forks_url='https://api.github.com/gists/5d3...s/rjvitorino/received_events', 'type': 'User', 'user_view_type': 'public', 'site_admin': False}, truncated=False), ...])
+
+tests/test_utils.py:40: AssertionError</failure></testcase><testcase classname="tests.test_utils" name="test_fetch_gist_content" time="0.071"><failure message="assert b'from typing import List\n\ndef count_vowels(name: str) -&gt; int:\n    &quot;&quot;&quot;Helper function to count the number of vowels..., f&quot;Expected {expected_sorted_names3}, but got {sorted_names3}&quot;\n    print(sorted_names3)  # Output: [&quot;Doe&quot;, &quot;John&quot;]\n' == &quot;print('Hello, world!')&quot;">mock_get = &lt;MagicMock name='get' id='4430991056'&gt;
+
+    @patch("requests.get")
+    def test_fetch_gist_content(mock_get):
+        mock_response = MagicMock()
+        mock_response.text = "print('Hello, world!')"
+        mock_get.return_value = mock_response
+        content = fetch_gist_content(
+            "https://gist.githubusercontent.com/rjvitorino/dfef5433066c061954d29d1b15202290/raw/54a0207aaf64e70e57a2063795b0a1c88a6b046c/file1.py"
+        )
+&gt;       assert content == "print('Hello, world!')"
+E       assert b'from typing import List\n\ndef count_vowels(name: str) -&gt; int:\n    """Helper function to count the number of vowels..., f"Expected {expected_sorted_names3}, but got {sorted_names3}"\n    print(sorted_names3)  # Output: ["Doe", "John"]\n' == "print('Hello, world!')"
+
+tests/test_utils.py:52: AssertionError</failure></testcase><testcase classname="tests.test_utils" name="test_format_date" time="0.001" /><testcase classname="tests.test_utils" name="test_generate_folder_name" time="0.001" /><testcase classname="tests.test_utils" name="test_save_gist_files" time="0.003" /><testcase classname="tests.test_utils" name="test_create_gist_index" time="0.150" /><testcase classname="tests.test_utils" name="test_update_readme" time="0.040" /></testsuite></testsuites>

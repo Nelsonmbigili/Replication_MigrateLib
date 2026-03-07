@@ -1,0 +1,79 @@
+mig: france-travail@words_n_fun__3bf4b159__tqdm__progressbar2__3bf4b159__tqdm__progressbar2
+repo: france-travail@words_n_fun__3bf4b159__tqdm__progressbar2
+commit: 3bf4b159d30b4e0df5110eb2fa8deb2d5364155a
+source: tqdm
+target: progressbar2
+premig:
+  name: premig
+  status: finished
+  source_version: 4.66.1
+  target_version: 4.5.0
+  finished_at: '2026-03-07 05:18:40'
+  project_coverage: 95.28446950281906
+  total_tests: 70
+  passed_tests: 70
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 18.181818181818183
+  files:
+  - path: words_n_fun/__init__.py
+    file_change_coverage: 50.0
+    covered_changed_lines: 4,29,35
+    uncovered_changed_lines: 26-27,37
+  - path: words_n_fun/preprocessing/basic.py
+    file_change_coverage: 9.523809523809524
+    covered_changed_lines: 47,57
+    uncovered_changed_lines: 48,50-52,58-64,101,149,154,359,448,477,550,606
+  - path: words_n_fun/preprocessing/split_sentences.py
+    file_change_coverage: 16.666666666666668
+    covered_changed_lines: '30'
+    uncovered_changed_lines: 32-33,137-139
+  test_diffs:
+  - test_id: tests/test_2_basic.py::BasicTests::test_lemmatize
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: module ''words_n_fun.preprocessing.basic'' has
+      no attribute ''lemmatizer'''
+  - test_id: tests/test_2_basic.py::BasicTests::test_remove_gender_synonyms
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: NameError
+    error_message: 'NameError: name ''synonym_malefemale_replacement'' is not defined'
+  - test_id: tests/test_2_basic.py::BasicTests::test_remove_stopwords
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: NameError
+    error_message: 'NameError: name ''stopwords'' is not defined'
+  - test_id: tests/test_3_api.py::ApiTests::test_PreProcessor
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: NameError
+    error_message: 'NameError: name ''synonym_malefemale_replacement'' is not defined'
+  - test_id: tests/test_3_api.py::ApiTests::test_preprocess_pipeline
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: NameError
+    error_message: 'NameError: name ''synonym_malefemale_replacement'' is not defined'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

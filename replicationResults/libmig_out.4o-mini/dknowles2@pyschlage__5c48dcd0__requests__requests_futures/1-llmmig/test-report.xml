@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="11" skipped="0" tests="58" time="0.461" timestamp="2026-03-07T11:43:11.910143+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_api" name="test_locks" time="0.008" /><testcase classname="tests.test_api" name="test_users" time="0.003" /><testcase classname="tests.test_auth" name="test_authenticate" time="0.001"><failure message="NameError: name 'requests' is not defined">mock_cognito = &lt;MagicMock name='Cognito' id='4394303952'&gt;
+mock_srp_auth = &lt;MagicMock name='RequestsSrpAuth' id='4394319952'&gt;
+mock_request = &lt;MagicMock name='request' id='4394197712'&gt;
+
+    @mock.patch("requests_futures.sessions.FuturesSession.request")
+    @mock.patch("pycognito.utils.RequestsSrpAuth")
+    @mock.patch("pycognito.Cognito")
+    def test_authenticate(mock_cognito, mock_srp_auth, mock_request):
+        auth = _auth.Auth("__username__", "__password__")
+    
+        mock_cognito.assert_called_once()
+        assert mock_cognito.call_args.kwargs["username"] == "__username__"
+    
+        mock_srp_auth.assert_called_once_with(
+            password="__password__", cognito=mock_cognito.return_value
+        )
+    
+&gt;       auth.authenticate()
+
+tests/test_auth.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyschlage/auth.py:41: in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pyschlage.auth.Auth object at 0x105ebd210&gt;
+
+    @_translate_auth_errors
+    def authenticate(self):
+        """Performs authentication with AWS.
+    
+        :raise pyschlage.exceptions.NotAuthorizedError: When authentication fails.
+        :raise pyschlage.exceptions.UnknownError: On other errors.
+        """
+&gt;       self.auth(requests.Request())
+                  ^^^^^^^^
+E       NameError: name 'requests' is not defined
+
+pyschlage/auth.py:106: NameError</failure></testcase><testcase classname="tests.test_auth" name="test_request" time="0.002" /><testcase classname="tests.test_auth" name="test_request_not_authorized" time="0.002" /><testcase classname="tests.test_auth" name="test_request_unknown_error" time="0.002"><failure message="NameError: name 'requests' is not defined">mock_cognito = &lt;MagicMock name='Cognito' id='4390600592'&gt;
+mock_srp_auth = &lt;MagicMock name='RequestsSrpAuth' spec='RequestsSrpAuth' id='4393663952'&gt;
+mock_request = &lt;MagicMock name='request' spec='function' id='4394510800'&gt;
+
+    @mock.patch("requests_futures.sessions.FuturesSession.request", spec=True)
+    @mock.patch("pycognito.utils.RequestsSrpAuth", spec=True)
+    @mock.patch("pycognito.Cognito")
+    def test_request_unknown_error(mock_cognito, mock_srp_auth, mock_request):
+        url = "https://api.allegion.yonomi.cloud/v1/foo/bar"
+        auth = _auth.Auth("__username__", "__password__")
+&gt;       mock_resp = mock.create_autospec(requests.Response)
+                                         ^^^^^^^^
+E       NameError: name 'requests' is not defined
+
+tests/test_auth.py:81: NameError</failure></testcase><testcase classname="tests.test_auth" name="test_user_id" time="0.002"><failure message="TypeError: 'Mock' object is not subscriptable">mock_cognito = &lt;MagicMock name='Cognito' id='4394712848'&gt;
+mock_srp_auth = &lt;MagicMock name='RequestsSrpAuth' id='4394995536'&gt;
+mock_request = &lt;MagicMock name='request' id='4395001680'&gt;
+
+    @mock.patch("requests_futures.sessions.FuturesSession.request")
+    @mock.patch("pycognito.utils.RequestsSrpAuth")
+    @mock.patch("pycognito.Cognito")
+    def test_user_id(mock_cognito, mock_srp_auth, mock_request):
+        auth = _auth.Auth("__username__", "__password__")
+        mock_request.return_value = mock.Mock(
+            json=mock.Mock(
+                return_value={
+                    "consentRecords": [],
+                    "created": "2022-12-24T20:00:00.000Z",
+                    "email": "asdf@asdf.com",
+                    "friendlyName": "username",
+                    "identityId": "&lt;user-id&gt;",
+                    "lastUpdated": "2022-12-24T20:00:00.000Z",
+                }
+            )
+        )
+&gt;       assert auth.user_id == "&lt;user-id&gt;"
+               ^^^^^^^^^^^^
+
+tests/test_auth.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyschlage/auth.py:112: in user_id
+    self._user_id = self._get_user_id()
+                    ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pyschlage.auth.Auth object at 0x105f1e150&gt;
+
+    def _get_user_id(self) -&gt; str:
+        resp = self.request("get", "users/@me")
+&gt;       return resp.json()["identityId"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'Mock' object is not subscriptable
+
+pyschlage/auth.py:117: TypeError</failure></testcase><testcase classname="tests.test_auth" name="test_user_id_is_cached" time="0.002"><failure message="TypeError: 'Mock' object is not subscriptable">mock_cognito = &lt;MagicMock name='Cognito' id='4394706128'&gt;
+mock_srp_auth = &lt;MagicMock name='RequestsSrpAuth' id='4394706064'&gt;
+mock_request = &lt;MagicMock name='request' id='4394861264'&gt;
+
+    @mock.patch("requests_futures.sessions.FuturesSession.request")
+    @mock.patch("pycognito.utils.RequestsSrpAuth")
+    @mock.patch("pycognito.Cognito")
+    def test_user_id_is_cached(mock_cognito, mock_srp_auth, mock_request):
+        auth = _auth.Auth("__username__", "__password__")
+        mock_request.return_value = mock.Mock(
+            json=mock.Mock(
+                return_value={
+                    "consentRecords": [],
+                    "created": "2022-12-24T20:00:00.000Z",
+                    "email": "asdf@asdf.com",
+                    "friendlyName": "username",
+                    "identityId": "&lt;user-id&gt;",
+                    "lastUpdated": "2022-12-24T20:00:00.000Z",
+                }
+            )
+        )
+&gt;       assert auth.user_id == "&lt;user-id&gt;"
+               ^^^^^^^^^^^^
+
+tests/test_auth.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyschlage/auth.py:112: in user_id
+    self._user_id = self._get_user_id()
+                    ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;pyschlage.auth.Auth object at 0x105f1d8d0&gt;
+
+    def _get_user_id(self) -&gt; str:
+        resp = self.request("get", "users/@me")
+&gt;       return resp.json()["identityId"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'Mock' object is not subscriptable
+
+pyschlage/auth.py:117: TypeError</failure></testcase><testcase classname="tests.test_code.TestAccessCode" name="test_to_from_json" time="0.003" /><testcase classname="tests.test_code.TestAccessCode" name="test_to_from_json_recurring_schedule" time="0.003" /><testcase classname="tests.test_code.TestAccessCode" name="test_to_from_json_temporary_schedule" time="0.004"><failure message="AssertionError: assert AccessCode(na...isabled=False) == AccessCode(na...isabled=False)&#10;  &#10;  Omitting 10 identical items, use -vv to show&#10;  Differing attributes:&#10;  ['schedule']&#10;  &#10;  Drill down into differing attribute schedule:&#10;    schedule: TemporarySchedule(start=datetime.datetime(2022, 12, 25, 12, 30), end=datetime.datetime(2022, 12, 25, 13, 0)) != TemporarySchedule(start=datetime.datetime(2022, 12, 25, 8, 30), end=datetime.datetime(2022, 12, 25, 9, 0))...&#10;  &#10;  ...Full output truncated (9 lines hidden), use '-vv' to show">self = &lt;tests.test_code.TestAccessCode object at 0x105e37ed0&gt;
+mock_auth = &lt;MagicMock spec_set='Auth' id='4394506640'&gt;
+access_code_json = {'accessCode': 123, 'accessCodeLength': 4, 'accesscodeId': '__access_code_uuid__', 'activationSecs': 0, ...}
+wifi_device = Device(device_id='__wifi_uuid__', device_type='be489wifi')
+
+    def test_to_from_json_temporary_schedule(
+        self, mock_auth: Mock, access_code_json: dict[str, Any], wifi_device: Device
+    ):
+        access_code_id = "__access_code_uuid__"
+        sched = TemporarySchedule(
+            start=datetime(2022, 12, 25, 8, 30, 0),
+            end=datetime(2022, 12, 25, 9, 0, 0),
+        )
+        json = deepcopy(access_code_json)
+        json["activationSecs"] = 1671957000
+        json["expirationSecs"] = 1671958800
+        code = AccessCode(
+            _auth=mock_auth,
+            _json=json,
+            _device=wifi_device,
+            name="Friendly name",
+            code="0123",
+            schedule=sched,
+            device_id=wifi_device.device_id,
+            access_code_id=access_code_id,
+        )
+&gt;       assert AccessCode.from_json(mock_auth, wifi_device, json) == code
+E       AssertionError: assert AccessCode(na...isabled=False) == AccessCode(na...isabled=False)
+E         
+E         Omitting 10 identical items, use -vv to show
+E         Differing attributes:
+E         ['schedule']
+E         
+E         Drill down into differing attribute schedule:
+E           schedule: TemporarySchedule(start=datetime.datetime(2022, 12, 25, 12, 30), end=datetime.datetime(2022, 12, 25, 13, 0)) != TemporarySchedule(start=datetime.datetime(2022, 12, 25, 8, 30), end=datetime.datetime(2022, 12, 25, 9, 0))...
+E         
+E         ...Full output truncated (9 lines hidden), use '-vv' to show
+
+tests/test_code.py:75: AssertionError</failure></testcase><testcase classname="tests.test_code.TestAccessCode" name="test_save" time="0.015" /><testcase classname="tests.test_code.TestAccessCode" name="test_delete" time="0.010" /><testcase classname="tests.test_common" name="test_pickle_unpickle" time="0.000" /><testcase classname="tests.test_common" name="test_redact_allow_asterisk" time="0.000" /><testcase classname="tests.test_common" name="test_redact_allow_all" time="0.000" /><testcase classname="tests.test_common" name="test_redact_all" time="0.000" /><testcase classname="tests.test_common" name="test_redact_partial" time="0.000" /><testcase classname="tests.test_lock.TestLock" name="test_from_json" time="0.004" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_cat_optional" time="0.003" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_no_connected" time="0.003" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_is_jammed" time="0.003" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_wifi_lock_unavailable" time="0.003" /><testcase classname="tests.test_lock.TestLock" name="test_from_json_no_model_name" time="0.003" /><testcase classname="tests.test_lock.TestLock" name="test_diagnostics" time="0.003" /><testcase classname="tests.test_lock.TestLock" name="test_refresh" time="0.004" /><testcase classname="tests.test_lock.TestLock" name="test_send_command_unauthenticated" time="0.000" /><testcase classname="tests.test_lock.TestLock" name="test_lock_wifi" time="0.004" /><testcase classname="tests.test_lock.TestLock" name="test_unlock_wifi" time="0.003" /><testcase classname="tests.test_lock.TestLock" name="test_lock_ble" time="0.004"><failure message="AssertionError: Expected 'request' to be called once. Called 0 times.">self = &lt;tests.test_lock.TestLock object at 0x105e94c10&gt;
+mock_auth = &lt;MagicMock spec_set='Auth' id='4394927824'&gt;
+ble_lock_json = {'CAT': 'abcdef', 'SAT': 'ghijkl', 'attributes': {'CAT': 'abcdef', 'SAT': 'ghijkl', 'accessCodeLength': 4, 'adminOnlyEnabled': 0, ...}, 'connected': False, ...}
+
+    def test_lock_ble(self, mock_auth, ble_lock_json):
+        with pytest.raises(NotAuthenticatedError):
+            Lock().lock()
+    
+        lock = Lock.from_json(mock_auth, ble_lock_json)
+        lock.lock()
+    
+        command_json = {
+            "data": {
+                "CAT": "abcdef",
+                "deviceId": "__ble_uuid__",
+                "state": 1,
+                "userId": "&lt;user-id&gt;",
+            },
+            "name": "changelockstate",
+        }
+&gt;       mock_auth.request.assert_called_once_with(
+            "post", "devices/__ble_uuid__/commands", json=command_json
+        )
+
+tests/test_lock.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.request' spec_set='function' id='4393204240'&gt;
+args = ('post', 'devices/__ble_uuid__/commands')
+kwargs = {'json': {'data': {'CAT': 'abcdef', 'deviceId': '__ble_uuid__', 'state': 1, 'userId': '&lt;user-id&gt;'}, 'name': 'changelockstate'}}
+msg = "Expected 'request' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'request' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_lock.TestLock" name="test_unlock_ble" time="0.004"><failure message="AssertionError: Expected 'request' to be called once. Called 0 times.">self = &lt;tests.test_lock.TestLock object at 0x105e94fd0&gt;
+mock_auth = &lt;MagicMock spec_set='Auth' id='4394293072'&gt;
+ble_lock_json = {'CAT': 'abcdef', 'SAT': 'ghijkl', 'attributes': {'CAT': 'abcdef', 'SAT': 'ghijkl', 'accessCodeLength': 4, 'adminOnlyEnabled': 0, ...}, 'connected': False, ...}
+
+    def test_unlock_ble(self, mock_auth, ble_lock_json):
+        with pytest.raises(NotAuthenticatedError):
+            Lock().unlock()
+    
+        lock = Lock.from_json(mock_auth, ble_lock_json)
+        lock.unlock()
+    
+        command_json = {
+            "data": {
+                "CAT": "abcdef",
+                "deviceId": "__ble_uuid__",
+                "state": 0,
+                "userId": "&lt;user-id&gt;",
+            },
+            "name": "changelockstate",
+        }
+&gt;       mock_auth.request.assert_called_once_with(
+            "post", "devices/__ble_uuid__/commands", json=command_json
+        )
+
+tests/test_lock.py:246: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='mock.request' spec_set='function' id='4393359888'&gt;
+args = ('post', 'devices/__ble_uuid__/commands')
+kwargs = {'json': {'data': {'CAT': 'abcdef', 'deviceId': '__ble_uuid__', 'state': 0, 'userId': '&lt;user-id&gt;'}, 'name': 'changelockstate'}}
+msg = "Expected 'request' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'request' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_lock.TestLock" name="test_logs" time="0.004" /><testcase classname="tests.test_lock.TestLock" name="test_refresh_access_codes" time="0.004" /><testcase classname="tests.test_lock.TestLock" name="test_add_access_code" time="0.004"><failure message="AttributeError: 'Future' object has no attribute 'json'">self = &lt;tests.test_lock.TestLock object at 0x105e96290&gt;
+mock_auth = &lt;MagicMock spec_set='Auth' id='4394315408'&gt;
+lock_json = {'CAT': '01234', 'SAT': '98765', 'attributes': {'CAT': '01234', 'SAT': '98765', 'accessCodeLength': 4, 'actAlarmBuzzerEnabled': 0, ...}, 'connected': True, ...}
+access_code_json = {'accessCode': 123, 'accessCodeLength': 4, 'accesscodeId': '__access_code_uuid__', 'activationSecs': 0, ...}
+notification_json = {'active': False, 'createdAt': '2023-03-01T17:26:47.366Z', 'deviceId': '__wifi_uuid__', 'devicetypeId': 'be489wifi', ...}
+
+    def test_add_access_code(
+        self,
+        mock_auth: Mock,
+        lock_json: dict[str, Any],
+        access_code_json: dict[str, Any],
+        notification_json: dict[str, Any],
+    ):
+        lock = Lock.from_json(mock_auth, lock_json)
+        code = AccessCode.from_json(mock_auth, lock, access_code_json)
+        # Users should not set these.
+        code._auth = None
+        code._device = None
+        code.access_code_id = None
+        code.device_id = None
+        json = code.to_json()
+    
+        notification_json["active"] = False
+        mock_auth.request.side_effect = [
+            Mock(json=Mock(return_value=access_code_json)),
+            Mock(json=Mock(return_value=notification_json)),
+        ]
+&gt;       lock.add_access_code(code)
+
+tests/test_lock.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyschlage/lock.py:372: in add_access_code
+    code.save()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = AccessCode(name='Friendly name', code='0123', schedule=None, notify_on_use=False, disabled=False)
+
+    def save(self):
+        """Commits changes to the access code.
+    
+        :raise pyschlage.exceptions.NotAuthenticatedError: When the user is not
+            authenticated.
+        :raise pyschlage.exceptions.NotAuthorizedError: When authentication fails.
+        :raise pyschlage.exceptions.UnknownError: On other errors.
+        """
+        if not self._auth:
+            raise NotAuthenticatedError
+        assert self._device is not None
+    
+        command = "updateaccesscode" if self.access_code_id else "addaccesscode"
+        resp = self._device.send_command(command, self.to_json())
+    
+        # NOTE: We don't call self._update_with() here because the API only returns
+        # the accesscodeId field.
+&gt;       resp_json = resp.json()
+                    ^^^^^^^^^
+E       AttributeError: 'Future' object has no attribute 'json'
+
+pyschlage/code.py:253: AttributeError</failure></testcase><testcase classname="tests.test_lock.TestLock" name="test_set_beeper" time="0.004" /><testcase classname="tests.test_lock.TestLock" name="test_set_lock_and_leave" time="0.004" /><testcase classname="tests.test_lock.TestLock" name="test_set_auto_lock_time" time="0.003" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_true" time="0.003" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_true_unsorted" time="0.003" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_false" time="0.003" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_fetches_logs" time="0.003" /><testcase classname="tests.test_lock.TestKeypadDisabled" name="test_fetches_logs_no_logs" time="0.003" /><testcase classname="tests.test_lock.TestChangedBy" name="test_thumbturn" time="0.003" /><testcase classname="tests.test_lock.TestChangedBy" name="test_one_touch_locking" time="0.003" /><testcase classname="tests.test_lock.TestChangedBy" name="test_nfc_device" time="0.003" /><testcase classname="tests.test_lock.TestChangedBy" name="test_nfc_device_no_uuid" time="0.003" /><testcase classname="tests.test_lock.TestChangedBy" name="test_keypad" time="0.003" /><testcase classname="tests.test_lock.TestChangedBy" name="test_mobile_device" time="0.003" /><testcase classname="tests.test_lock.TestChangedBy" name="test_unknown" time="0.003" /><testcase classname="tests.test_lock.TestChangedBy" name="test_no_metadata" time="0.003" /><testcase classname="tests.test_log.TestFromJson" name="test_unlocked_by_thumbturn" time="0.001"><failure message="AssertionError: assert LockLog(creat..._code_id=None) == LockLog(creat..._code_id=None)&#10;  &#10;  Omitting 3 identical items, use -vv to show&#10;  Differing attributes:&#10;  ['created_at']&#10;  &#10;  Drill down into differing attribute created_at:&#10;    created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)">self = &lt;tests.test_log.TestFromJson object at 0x105e99dd0&gt;
+log_json = {'createdAt': '2023-03-01T17:26:47.366Z', 'deviceId': '__device_uuid__', 'logId': '__log_uuid__', 'message': {'accessorUuid': 'ffffffff-ffff-ffff-ffff-ffffffffffff', 'action': 2, 'clientId': None, 'eventCode': 4, ...}, ...}
+
+    def test_unlocked_by_thumbturn(self, log_json):
+        log_json["message"]["eventCode"] = 4
+        lock_log = LockLog(
+            created_at=datetime(2023, 3, 1, 17, 26, 47, 366000),
+            accessor_id=None,
+            access_code_id=None,
+            message="Unlocked by thumbturn",
+        )
+&gt;       assert LockLog.from_json(log_json) == lock_log
+E       AssertionError: assert LockLog(creat..._code_id=None) == LockLog(creat..._code_id=None)
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing attributes:
+E         ['created_at']
+E         
+E         Drill down into differing attribute created_at:
+E           created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)
+
+tests/test_log.py:17: AssertionError</failure></testcase><testcase classname="tests.test_log.TestFromJson" name="test_unlocked_by_keypad" time="0.000"><failure message="AssertionError: assert LockLog(creat...ss-code-id__') == LockLog(creat...ss-code-id__')&#10;  &#10;  Omitting 3 identical items, use -vv to show&#10;  Differing attributes:&#10;  ['created_at']&#10;  &#10;  Drill down into differing attribute created_at:&#10;    created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)">self = &lt;tests.test_log.TestFromJson object at 0x105e9a450&gt;
+log_json = {'createdAt': '2023-03-01T17:26:47.366Z', 'deviceId': '__device_uuid__', 'logId': '__log_uuid__', 'message': {'accessorUuid': 'ffffffff-ffff-ffff-ffff-ffffffffffff', 'action': 2, 'clientId': None, 'eventCode': 2, ...}, ...}
+
+    def test_unlocked_by_keypad(self, log_json):
+        log_json["message"].update(
+            {
+                "eventCode": 2,
+                "keypadUuid": "__access-code-id__",
+            }
+        )
+        lock_log = LockLog(
+            created_at=datetime(2023, 3, 1, 17, 26, 47, 366000),
+            accessor_id=None,
+            access_code_id="__access-code-id__",
+            message="Unlocked by keypad",
+        )
+&gt;       assert LockLog.from_json(log_json) == lock_log
+E       AssertionError: assert LockLog(creat...ss-code-id__') == LockLog(creat...ss-code-id__')
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing attributes:
+E         ['created_at']
+E         
+E         Drill down into differing attribute created_at:
+E           created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)
+
+tests/test_log.py:32: AssertionError</failure></testcase><testcase classname="tests.test_log.TestFromJson" name="test_unlocked_by_mobile_device" time="0.000"><failure message="AssertionError: assert LockLog(creat..._code_id=None) == LockLog(creat..._code_id=None)&#10;  &#10;  Omitting 3 identical items, use -vv to show&#10;  Differing attributes:&#10;  ['created_at']&#10;  &#10;  Drill down into differing attribute created_at:&#10;    created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)">self = &lt;tests.test_log.TestFromJson object at 0x105e9aad0&gt;
+log_json = {'createdAt': '2023-03-01T17:26:47.366Z', 'deviceId': '__device_uuid__', 'logId': '__log_uuid__', 'message': {'accessorUuid': '__user-id__', 'action': 2, 'clientId': None, 'eventCode': 7, ...}, ...}
+
+    def test_unlocked_by_mobile_device(self, log_json):
+        log_json["message"].update(
+            {
+                "eventCode": 7,
+                "accessorUuid": "__user-id__",
+            }
+        )
+        lock_log = LockLog(
+            created_at=datetime(2023, 3, 1, 17, 26, 47, 366000),
+            accessor_id="__user-id__",
+            access_code_id=None,
+            message="Unlocked by mobile device",
+        )
+&gt;       assert LockLog.from_json(log_json) == lock_log
+E       AssertionError: assert LockLog(creat..._code_id=None) == LockLog(creat..._code_id=None)
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Differing attributes:
+E         ['created_at']
+E         
+E         Drill down into differing attribute created_at:
+E           created_at: datetime.datetime(2023, 3, 1, 21, 26, 47, 366000) != datetime.datetime(2023, 3, 1, 17, 26, 47, 366000)
+
+tests/test_log.py:47: AssertionError</failure></testcase><testcase classname="tests.test_notification" name="test_from_json" time="0.003" /><testcase classname="tests.test_notification" name="test_save" time="0.000" /><testcase classname="tests.test_notification" name="test_delete" time="0.003" /><testcase classname="tests.test_user" name="test_from_json" time="0.000" /><testcase classname="tests.test_user" name="test_from_json_no_name" time="0.000" /></testsuite></testsuites>

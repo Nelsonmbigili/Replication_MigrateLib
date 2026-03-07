@@ -5,48 +5,72 @@ source: requests
 target: aiohttp
 premig:
   name: premig
-  status: error
-  source_version: 2.32.5
-  target_version: 3.13.3
-  finished_at: '2026-03-05 03:08:21'
-  project_coverage: 0
-  total_tests: null
-  passed_tests: null
-  error_code: 102
-  error_type: no premig tests
-  error_message: null
-  error_traceback: null
+  status: finished
+  source_version: 2.32.3
+  target_version: 3.9.5
+  finished_at: '2026-03-05 14:13:51'
+  project_coverage: 88.88888888888889
+  total_tests: 13
+  passed_tests: 6
 llmmig:
   name: llmmig
   base_round: premig
-  status: error
-  project_change_coverage: null
-  files: null
-  test_diffs: null
-  error_code: 2
-  error_type: round premig failed
-  error_message: Round premig failed. Cannot run round llmmig
-  error_traceback: null
+  status: finished
+  project_change_coverage: 10.714285714285714
+  files:
+  - path: dmr/utils/scraper.py
+    file_change_coverage: 10.714285714285714
+    covered_changed_lines: 1,8,16
+    uncovered_changed_lines: 10-13,18,20,29-32,34-36,38-49
+  test_diffs:
+  - test_id: tests/test_dmr_methods.py::test_invalid_license_plate
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: dmr.models.vehicle.Vehicle() argument after ** must
+      be a mapping, not coroutine'
 merge_skipped:
   name: merge_skipped
   base_round: llmmig
-  status: error
-  project_change_coverage: null
-  files: null
-  test_diffs: null
-  error_code: 2
-  error_type: round premig failed
-  error_message: Round premig failed. Cannot run round merge_skipped
-  error_traceback: null
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
 async_transform:
   name: async_transform
   base_round: llmmig
-  status: error
-  project_change_coverage: null
-  files: null
-  test_diffs: null
-  error_code: 2
-  error_type: round premig failed
-  error_message: Round premig failed. Cannot run round async_transform
-  error_traceback: null
+  status: finished
+  project_change_coverage: 60.0
+  files:
+  - path: tests/helper_methods.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 7,12
+    uncovered_changed_lines: ''
+  - path: tests/test_dmr_object.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 2,5-7,11-13,17-19,23-25,29-31,35-37
+    uncovered_changed_lines: ''
+  - path: dmr/utils/scraper.py
+    file_change_coverage: 21.428571428571427
+    covered_changed_lines: 1,8,10,16,18,20
+    uncovered_changed_lines: 11-13,29-32,34-36,38-49
+  - path: tests/test_dmr_methods.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 3,15-17
+    uncovered_changed_lines: ''
+  - path: dmr/dmr.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 33,49
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/test_dmr_methods.py::test_invalid_license_plate
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ClientConnectorCertificateError
+    error_message: 'aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot
+      connect to host motorregister.skat.dk:443 ssl:True [SSLCertVerificationError:
+      (1, ''[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed
+      certificate in certificate chain (_ssl.c:1006)'')]'
 manual_edit: null

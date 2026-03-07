@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="20" time="3.234" timestamp="2026-03-07T09:31:19.916156+04:00" hostname="nelsonmbigili.local"><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_assert_lang_or_custom_emb" time="0.001" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_dim_100" time="1.005" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_dim_25" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_dim_50" time="0.009" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_model_download" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_vs_1000" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_vs_10000" time="0.058" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_vs_5000" time="0.031" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_encode_decode_many_roundtrip" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_encode_decode_roundtrip" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_encode_ids_decode_ids_many_roundtrip" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_encode_ids_decode_ids_roundtrip" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_gensim_import" time="0.000" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pad_index" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pad_lookup" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pickle" time="0.009" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pickle_custom_cache_dir" time="1.796"><failure message="TypeError: HTTPClient.request() got an unexpected keyword argument 'stream'">self = &lt;bpemb.tests.bpemb_test.BPEmbTest testMethod=test_pickle_custom_cache_dir&gt;
+
+    def test_pickle_custom_cache_dir(self):
+        import pickle
+        from tempfile import mkdtemp
+        from pathlib import Path
+&gt;       bpemb = BPEmb(lang="en", vs=1000, dim=25, cache_dir=mkdtemp())
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bpemb/tests/bpemb_test.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bpemb/bpemb.py:174: in __init__
+    self.model_file = self._load_file(model_file)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/bpemb.py:234: in _load_file
+    return http_get(file_url, cached_file, ignore_tardir=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/util.py:48: in http_get
+    headers = http_get_temp(url, temp_file)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/util.py:23: in http_get_temp
+    req = treq.get(url, stream=True, verify=False)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/treq/api.py:23: in get
+    return _client(kwargs).get(url, headers=headers, _stacklevel=4, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;treq.client.HTTPClient object at 0x108a38cd0&gt;
+url = 'https://nlp.h-its.org/bpemb/en/en.wiki.bpe.vs1000.model'
+kwargs = {'_stacklevel': 4, 'headers': None, 'stream': True, 'verify': False}
+
+    def get(self, url: _URLType, **kwargs: Any) -&gt; "Deferred[_Response]":
+        """
+        See :func:`treq.get()`.
+        """
+        kwargs.setdefault("_stacklevel", 3)
+&gt;       return self.request("GET", url, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: HTTPClient.request() got an unexpected keyword argument 'stream'
+
+.venv/lib/python3.11/site-packages/treq/client.py:151: TypeError</failure></testcase><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pickle_custom_no_cache" time="0.001"><failure message="TypeError: HTTPClient.request() got an unexpected keyword argument 'stream'">self = &lt;bpemb.tests.bpemb_test.BPEmbTest testMethod=test_pickle_custom_no_cache&gt;
+
+    def test_pickle_custom_no_cache(self):
+        import pickle
+        from tempfile import mkdtemp
+        from pathlib import Path
+        import shutil
+        cache_dir = mkdtemp()
+&gt;       bpemb = BPEmb(lang="en", vs=1000, dim=25, cache_dir=cache_dir)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bpemb/tests/bpemb_test.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bpemb/bpemb.py:174: in __init__
+    self.model_file = self._load_file(model_file)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/bpemb.py:234: in _load_file
+    return http_get(file_url, cached_file, ignore_tardir=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/util.py:48: in http_get
+    headers = http_get_temp(url, temp_file)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/util.py:23: in http_get_temp
+    req = treq.get(url, stream=True, verify=False)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/treq/api.py:23: in get
+    return _client(kwargs).get(url, headers=headers, _stacklevel=4, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;treq.client.HTTPClient object at 0x108cca510&gt;
+url = 'https://nlp.h-its.org/bpemb/en/en.wiki.bpe.vs1000.model'
+kwargs = {'_stacklevel': 4, 'headers': None, 'stream': True, 'verify': False}
+
+    def get(self, url: _URLType, **kwargs: Any) -&gt; "Deferred[_Response]":
+        """
+        See :func:`treq.get()`.
+        """
+        kwargs.setdefault("_stacklevel", 3)
+&gt;       return self.request("GET", url, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: HTTPClient.request() got an unexpected keyword argument 'stream'
+
+.venv/lib/python3.11/site-packages/treq/client.py:151: TypeError</failure></testcase><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_segmentation_only" time="0.002" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_sentencepiece_import" time="0.000" /></testsuite></testsuites>

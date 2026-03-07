@@ -1,0 +1,391 @@
+To migrate the provided code from using the `requests` library to the `pycurl` library, several changes are necessary. The `requests` library provides a high-level interface for making HTTP requests, while `pycurl` is a low-level interface that requires more detailed configuration for each request. 
+
+### Changes Made:
+1. **Import Statement**: The `requests` library is replaced with `pycurl`.
+2. **HTTP Request Handling**: The `send_post_request` method needs to be modified to use `pycurl` for making HTTP requests. This involves setting up a `pycurl.Curl` object, configuring it with the necessary options (like URL, POST fields, etc.), and handling the response manually.
+3. **Response Handling**: The response from `pycurl` is handled differently than `requests`. We need to capture the response data using a callback function and manage the status code manually.
+
+### Modified Code:
+```python
+# Copyright (c) 2024 Dell Inc. or its subsidiaries.
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+import logging
+import pycurl
+from io import BytesIO
+from PyPowerFlex import base_client
+from PyPowerFlex import exceptions
+from PyPowerFlex import utils
+
+LOG = logging.getLogger(__name__)
+
+
+class SdtIp(dict):
+    """PowerFlex sdt ip object.
+
+    JSON-serializable, should be used as `sdt_ips` list item
+    in `Sdt.create` method or sdt_ip item in `Sdt.add_sdt_ip` method.
+    """
+
+    def __init__(self, ip, role):
+        params = utils.prepare_params(
+            {
+                "ip": ip,
+                "role": role,
+            },
+            dump=False,
+        )
+        super(SdtIp, self).__init__(**params)
+
+
+class SdtIpRoles:
+    """SDT ip roles."""
+
+    storage_only = "StorageOnly"
+    host_only = "HostOnly"
+    storage_and_host = "StorageAndHost"
+
+
+class Sdt(base_client.EntityRequest):
+
+    def create(
+        self,
+        sdt_ips,
+        sdt_name,
+        protection_domain_id,
+        storage_port=None,
+        nvme_port=None,
+        discovery_port=None,
+    ):
+        """Create PowerFlex SDT.
+
+        :type sdt_ips: list[dict]
+        :type storage_port: int
+        :type nvme_port: int
+        :type discovery_port: int
+        :type sdt_name: str
+        :type protection_domain_id: str
+        :rtype: dict
+        """
+
+        params = dict(
+            ips=sdt_ips,
+            storagePort=storage_port,
+            nvmePort=nvme_port,
+            discoveryPort=discovery_port,
+            name=sdt_name,
+            protectionDomainId=protection_domain_id,
+        )
+
+        return self._create_entity(params)
+
+    def rename(self, sdt_id, name):
+        """Rename PowerFlex SDT.
+
+        :type sdt_id: str
+        :type name: str
+        :rtype: dict
+        """
+
+        action = "renameSdt"
+
+        params = dict(newName=name)
+
+        return self._rename_entity(action, sdt_id, params)
+
+    def add_ip(self, sdt_id, ip, role):
+        """Add PowerFlex SDT target IP address.
+
+        :type sdt_id: str
+        :type ip: str
+        :type role: str
+        :rtype: dict
+        """
+
+        action = "addIp"
+
+        params = dict(
+            ip=ip,
+            role=role,
+        )
+
+        r, response = self.send_post_request(
+            self.base_action_url,
+            action=action,
+            entity=self.entity,
+            entity_id=sdt_id,
+            params=params,
+        )
+        if r != 200:
+            msg = (
+                "Failed to add IP for PowerFlex {entity} "
+                "with id {_id}. Error: {response}".format(
+                    entity=self.entity, _id=sdt_id, response=response
+                )
+            )
+            LOG.error(msg)
+            raise exceptions.PowerFlexClientException(msg)
+
+        return self.get(entity_id=sdt_id)
+
+    def remove_ip(self, sdt_id, ip):
+        """Remove PowerFlex SDT target IP address.
+
+        :type sdt_id: str
+        :type ip: str
+        :rtype: dict
+        """
+
+        action = "removeIp"
+
+        params = dict(ip=ip)
+
+        r, response = self.send_post_request(
+            self.base_action_url,
+            action=action,
+            entity=self.entity,
+            entity_id=sdt_id,
+            params=params,
+        )
+        if r != 200:
+            msg = (
+                "Failed to remove IP from PowerFlex {entity} "
+                "with id {_id}. Error: {response}".format(
+                    entity=self.entity, _id=sdt_id, response=response
+                )
+            )
+            LOG.error(msg)
+            raise exceptions.PowerFlexClientException(msg)
+
+        return self.get(entity_id=sdt_id)
+
+    def set_ip_role(self, sdt_id, ip, role):
+        """Set PowerFlex SDT target IP address role.
+
+        :type sdt_id: str
+        :type ip: str
+        :param role: one of predefined attributes of SdtIpRoles
+        :type role: str
+        :rtype: dict
+        """
+
+        action = "modifyIpRole"
+
+        params = dict(
+            ip=ip,
+            newRole=role,
+        )
+
+        r, response = self.send_post_request(
+            self.base_action_url,
+            action=action,
+            entity=self.entity,
+            entity_id=sdt_id,
+            params=params,
+        )
+        if r != 200:
+            msg = (
+                "Failed to set ip role for PowerFlex {entity} "
+                "with id {_id}. Error: {response}".format(
+                    entity=self.entity, _id=sdt_id, response=response
+                )
+            )
+            LOG.error(msg)
+            raise exceptions.PowerFlexClientException(msg)
+
+        return self.get(entity_id=sdt_id)
+
+    def set_storage_port(self, sdt_id, storage_port):
+        """Set PowerFlex SDT storage port.
+
+        :type sdt_id: str
+        :type storage_port: int
+        :rtype: dict
+        """
+
+        action = "modifyStoragePort"
+
+        params = dict(newStoragePort=storage_port)
+
+        r, response = self.send_post_request(
+            self.base_action_url,
+            action=action,
+            entity=self.entity,
+            entity_id=sdt_id,
+            params=params,
+        )
+        if r != 200:
+            msg = (
+                "Failed to set storage port for PowerFlex {entity} "
+                "with id {_id}. Error: {response}".format(
+                    entity=self.entity, _id=sdt_id, response=response
+                )
+            )
+            LOG.error(msg)
+            raise exceptions.PowerFlexClientException(msg)
+
+        return self.get(entity_id=sdt_id)
+
+    def set_nvme_port(self, sdt_id, nvme_port):
+        """Set PowerFlex SDT NVMe port.
+
+        :type sdt_id: str
+        :type nvme_port: int
+        :rtype: dict
+        """
+
+        action = "modifyNvmePort"
+
+        params = dict(newNvmePort=nvme_port)
+
+        r, response = self.send_post_request(
+            self.base_action_url,
+            action=action,
+            entity=self.entity,
+            entity_id=sdt_id,
+            params=params,
+        )
+        if r != 200:
+            msg = (
+                "Failed to set nvme port for PowerFlex {entity} "
+                "with id {_id}. Error: {response}".format(
+                    entity=self.entity, _id=sdt_id, response=response
+                )
+            )
+            LOG.error(msg)
+            raise exceptions.PowerFlexClientException(msg)
+
+        return self.get(entity_id=sdt_id)
+
+    def set_discovery_port(self, sdt_id, discovery_port):
+        """Set PowerFlex SDT discovery port.
+
+        :type sdt_id: str
+        :type discovery_port: int
+        :rtype: dict
+        """
+
+        action = "modifyDiscoveryPort"
+
+        params = dict(newDiscoveryPort=discovery_port)
+
+        r, response = self.send_post_request(
+            self.base_action_url,
+            action=action,
+            entity=self.entity,
+            entity_id=sdt_id,
+            params=params,
+        )
+        if r != 200:
+            msg = (
+                "Failed to set discovery port for PowerFlex {entity} "
+                "with id {_id}. Error: {response}".format(
+                    entity=self.entity, _id=sdt_id, response=response
+                )
+            )
+            LOG.error(msg)
+            raise exceptions.PowerFlexClientException(msg)
+
+        return self.get(entity_id=sdt_id)
+
+    def enter_maintenance_mode(self, sdt_id):
+        """Enter Maintenance Mode.
+
+        :type sdt_id: str
+        :rtype: dict
+        """
+
+        action = "enterMaintenanceMode"
+
+        r, response = self.send_post_request(
+            self.base_action_url,
+            action=action,
+            entity=self.entity,
+            entity_id=sdt_id,
+            params=None,
+        )
+        if r != 200:
+            msg = (
+                "Failed to enter maintenance mode for PowerFlex {entity} "
+                "with id {_id}. Error: {response}".format(
+                    entity=self.entity, _id=sdt_id, response=response
+                )
+            )
+            LOG.error(msg)
+            raise exceptions.PowerFlexClientException(msg)
+
+        return self.get(entity_id=sdt_id)
+
+    def exit_maintenance_mode(self, sdt_id):
+        """Exit Maintenance Mode.
+
+        :type sdt_id: str
+        :rtype: dict
+        """
+
+        action = "exitMaintenanceMode"
+
+        r, response = self.send_post_request(
+            self.base_action_url,
+            action=action,
+            entity=self.entity,
+            entity_id=sdt_id,
+            params=None,
+        )
+        if r != 200:
+            msg = (
+                "Failed to exit maintenance mode for PowerFlex {entity} "
+                "with id {_id}. Error: {response}".format(
+                    entity=self.entity, _id=sdt_id, response=response
+                )
+            )
+            LOG.error(msg)
+            raise exceptions.PowerFlexClientException(msg)
+
+        return self.get(entity_id=sdt_id)
+
+    def delete(self, sdt_id, force=None):
+        """Remove PowerFlex SDT.
+
+        :type sdt_id: str
+        :type force: bool
+        :rtype: None
+        """
+
+        params = dict(force=force)
+
+        return self._delete_entity(sdt_id, params)
+
+    def send_post_request(self, url, action, entity, entity_id, params):
+        """Send a POST request using pycurl."""
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, f"{url}/{action}")
+        c.setopt(c.POST, 1)
+        if params:
+            c.setopt(c.POSTFIELDS, '&'.join(f"{key}={value}" for key, value in params.items()))
+        c.setopt(c.WRITEDATA, buffer)
+        c.setopt(c.HTTPHEADER, ['Content-Type: application/json'])
+        
+        try:
+            c.perform()
+            response_code = c.getinfo(c.RESPONSE_CODE)
+            response_data = buffer.getvalue().decode('utf-8')
+            return response_code, response_data
+        finally:
+            c.close()
+```
+
+In this modified code, the `send_post_request` method is implemented to use `pycurl`, which handles the HTTP request and response. The response code is checked against `200` instead of using `requests.codes.ok`. The response data is captured in a `BytesIO` buffer and decoded to a string for further processing.

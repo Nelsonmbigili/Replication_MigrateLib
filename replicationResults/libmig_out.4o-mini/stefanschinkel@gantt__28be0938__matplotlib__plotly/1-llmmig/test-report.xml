@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="8" time="0.420" timestamp="2026-03-06T10:05:42.020010+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_basics.TestsPackage" name="testDefColor" time="0.002" /><testcase classname="tests.test_basics.TestsPackage" name="testNegatives" time="0.000" /><testcase classname="tests.test_basics.TestsPackage" name="testValError" time="0.000" /><testcase classname="tests.test_basics.TestsPackage" name="testValuePassing" time="0.000" /><testcase classname="tests.test_basics.TestsBasics" name="testPackages" time="0.001" /><testcase classname="tests.test_basics.TestsBasics" name="testPlotTitle" time="0.028"><failure message="NotImplementedError: Attempting to convert data_frame of type &lt;class 'list'&gt; to pandas DataFrame, but Pandas is not installed. Convert it to supported dataframe type or install pandas.">args = {'animation_frame': None, 'animation_group': None, 'category_orders': None, 'color': None, ...}
+constructor = 'timeline'
+
+    def build_dataframe(args, constructor):
+        """
+        Constructs a dataframe and modifies `args` in-place.
+    
+        The argument values in `args` can be either strings corresponding to
+        existing columns of a dataframe, or data arrays (lists, numpy arrays,
+        pandas columns, series).
+    
+        Parameters
+        ----------
+        args : OrderedDict
+            arguments passed to the px function and subsequently modified
+        constructor : graph_object trace class
+            the trace type selected for this figure
+        """
+    
+        # make copies of all the fields via dict() and list()
+        for field in args:
+            if field in array_attrables and args[field] is not None:
+                if isinstance(args[field], dict):
+                    args[field] = dict(args[field])
+                elif field in ["custom_data", "hover_data"] and isinstance(
+                    args[field], str
+                ):
+                    args[field] = [args[field]]
+                else:
+                    args[field] = list(args[field])
+    
+        # Cast data_frame argument to DataFrame (it could be a numpy array, dict etc.)
+        df_provided = args["data_frame"] is not None
+    
+        # Flag that indicates if the resulting data_frame after parsing is pandas-like
+        # (in terms of resulting Narwhals DataFrame).
+        # True if pandas, modin.pandas or cudf DataFrame/Series instance, or converted from
+        # PySpark to pandas.
+        is_pd_like = False
+    
+        # Flag that indicates if data_frame needs to be converted to PyArrow.
+        # True if Ibis, DuckDB, Vaex, or implements __dataframe__
+        needs_interchanging = False
+    
+        # If data_frame is provided, we parse it into a narwhals DataFrame, while accounting
+        # for compatibility with pandas specific paths (e.g. Index/MultiIndex case).
+        if df_provided:
+            # data_frame is pandas-like DataFrame (pandas, modin.pandas, cudf)
+            if nw.dependencies.is_pandas_like_dataframe(args["data_frame"]):
+                columns = args["data_frame"].columns  # This can be multi index
+                args["data_frame"] = nw.from_native(args["data_frame"], eager_only=True)
+                is_pd_like = True
+    
+            # data_frame is pandas-like Series (pandas, modin.pandas, cudf)
+            elif nw.dependencies.is_pandas_like_series(args["data_frame"]):
+                args["data_frame"] = nw.from_native(
+                    args["data_frame"], series_only=True
+                ).to_frame()
+                columns = args["data_frame"].columns
+                is_pd_like = True
+    
+            # data_frame is any other DataFrame object natively supported via Narwhals.
+            # With `pass_through=True`, the original object will be returned if unable to convert
+            # to a Narwhals DataFrame, making this condition False.
+            elif isinstance(
+                data_frame := nw.from_native(
+                    args["data_frame"], eager_or_interchange_only=True, pass_through=True
+                ),
+                nw.DataFrame,
+            ):
+                args["data_frame"] = data_frame
+                needs_interchanging = nw.get_level(data_frame) == "interchange"
+                columns = args["data_frame"].columns
+    
+            # data_frame is any other Series object natively supported via Narwhals.
+            # With `pass_through=True`, the original object will be returned if unable to convert
+            # to a Narwhals Series, making this condition False.
+            elif isinstance(
+                series := nw.from_native(
+                    args["data_frame"], series_only=True, pass_through=True
+                ),
+                nw.Series,
+            ):
+                args["data_frame"] = series.to_frame()
+                columns = args["data_frame"].columns
+    
+            # data_frame is PySpark: it does not support interchange protocol and it is not
+            # integrated in Narwhals. We use its native method to convert it to pandas.
+            elif hasattr(args["data_frame"], "toPandas"):
+                args["data_frame"] = nw.from_native(
+                    args["data_frame"].toPandas(), eager_only=True
+                )
+                columns = args["data_frame"].columns
+                is_pd_like = True
+    
+            # data_frame is some other object type (e.g. dict, list, ...)
+            # We try to import pandas, and then try to instantiate a pandas dataframe from
+            # this such object
+            else:
+                try:
+&gt;                   import pandas as pd
+E                   ModuleNotFoundError: No module named 'pandas'
+
+.venv/lib/python3.11/site-packages/plotly/express/_core.py:1576: ModuleNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;test_basics.TestsBasics testMethod=testPlotTitle&gt;
+
+    def testPlotTitle(self):
+        """Make sure title is passed to plot"""
+        g = Gantt(BASICS)
+&gt;       fig = go.Figure(px.timeline(g.packages, x_start="start", x_end="end", y="label", title=g.title))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_basics.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/plotly/express/_chart_types.py:432: in timeline
+    return make_figure(
+.venv/lib/python3.11/site-packages/plotly/express/_core.py:2511: in make_figure
+    args = build_dataframe(args, constructor)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = {'animation_frame': None, 'animation_group': None, 'category_orders': None, 'color': None, ...}
+constructor = 'timeline'
+
+    def build_dataframe(args, constructor):
+        """
+        Constructs a dataframe and modifies `args` in-place.
+    
+        The argument values in `args` can be either strings corresponding to
+        existing columns of a dataframe, or data arrays (lists, numpy arrays,
+        pandas columns, series).
+    
+        Parameters
+        ----------
+        args : OrderedDict
+            arguments passed to the px function and subsequently modified
+        constructor : graph_object trace class
+            the trace type selected for this figure
+        """
+    
+        # make copies of all the fields via dict() and list()
+        for field in args:
+            if field in array_attrables and args[field] is not None:
+                if isinstance(args[field], dict):
+                    args[field] = dict(args[field])
+                elif field in ["custom_data", "hover_data"] and isinstance(
+                    args[field], str
+                ):
+                    args[field] = [args[field]]
+                else:
+                    args[field] = list(args[field])
+    
+        # Cast data_frame argument to DataFrame (it could be a numpy array, dict etc.)
+        df_provided = args["data_frame"] is not None
+    
+        # Flag that indicates if the resulting data_frame after parsing is pandas-like
+        # (in terms of resulting Narwhals DataFrame).
+        # True if pandas, modin.pandas or cudf DataFrame/Series instance, or converted from
+        # PySpark to pandas.
+        is_pd_like = False
+    
+        # Flag that indicates if data_frame needs to be converted to PyArrow.
+        # True if Ibis, DuckDB, Vaex, or implements __dataframe__
+        needs_interchanging = False
+    
+        # If data_frame is provided, we parse it into a narwhals DataFrame, while accounting
+        # for compatibility with pandas specific paths (e.g. Index/MultiIndex case).
+        if df_provided:
+            # data_frame is pandas-like DataFrame (pandas, modin.pandas, cudf)
+            if nw.dependencies.is_pandas_like_dataframe(args["data_frame"]):
+                columns = args["data_frame"].columns  # This can be multi index
+                args["data_frame"] = nw.from_native(args["data_frame"], eager_only=True)
+                is_pd_like = True
+    
+            # data_frame is pandas-like Series (pandas, modin.pandas, cudf)
+            elif nw.dependencies.is_pandas_like_series(args["data_frame"]):
+                args["data_frame"] = nw.from_native(
+                    args["data_frame"], series_only=True
+                ).to_frame()
+                columns = args["data_frame"].columns
+                is_pd_like = True
+    
+            # data_frame is any other DataFrame object natively supported via Narwhals.
+            # With `pass_through=True`, the original object will be returned if unable to convert
+            # to a Narwhals DataFrame, making this condition False.
+            elif isinstance(
+                data_frame := nw.from_native(
+                    args["data_frame"], eager_or_interchange_only=True, pass_through=True
+                ),
+                nw.DataFrame,
+            ):
+                args["data_frame"] = data_frame
+                needs_interchanging = nw.get_level(data_frame) == "interchange"
+                columns = args["data_frame"].columns
+    
+            # data_frame is any other Series object natively supported via Narwhals.
+            # With `pass_through=True`, the original object will be returned if unable to convert
+            # to a Narwhals Series, making this condition False.
+            elif isinstance(
+                series := nw.from_native(
+                    args["data_frame"], series_only=True, pass_through=True
+                ),
+                nw.Series,
+            ):
+                args["data_frame"] = series.to_frame()
+                columns = args["data_frame"].columns
+    
+            # data_frame is PySpark: it does not support interchange protocol and it is not
+            # integrated in Narwhals. We use its native method to convert it to pandas.
+            elif hasattr(args["data_frame"], "toPandas"):
+                args["data_frame"] = nw.from_native(
+                    args["data_frame"].toPandas(), eager_only=True
+                )
+                columns = args["data_frame"].columns
+                is_pd_like = True
+    
+            # data_frame is some other object type (e.g. dict, list, ...)
+            # We try to import pandas, and then try to instantiate a pandas dataframe from
+            # this such object
+            else:
+                try:
+                    import pandas as pd
+    
+                    try:
+                        args["data_frame"] = nw.from_native(
+                            pd.DataFrame(args["data_frame"])
+                        )
+                        columns = args["data_frame"].columns
+                        is_pd_like = True
+                    except Exception:
+                        msg = (
+                            f"Unable to convert data_frame of type {type(args['data_frame'])} "
+                            "to pandas DataFrame. Please provide a supported dataframe type "
+                            "or a type that can be passed to pd.DataFrame."
+                        )
+    
+                        raise NotImplementedError(msg)
+                except ImportError:
+                    msg = (
+                        f"Attempting to convert data_frame of type {type(args['data_frame'])} "
+                        "to pandas DataFrame, but Pandas is not installed. "
+                        "Convert it to supported dataframe type or install pandas."
+                    )
+&gt;                   raise NotImplementedError(msg)
+E                   NotImplementedError: Attempting to convert data_frame of type &lt;class 'list'&gt; to pandas DataFrame, but Pandas is not installed. Convert it to supported dataframe type or install pandas.
+
+.venv/lib/python3.11/site-packages/plotly/express/_core.py:1598: NotImplementedError</failure></testcase><testcase classname="tests.test_basics.TestsBasics" name="testTimings" time="0.000" /><testcase classname="tests.test_basics.TestsBasics" name="testTitle" time="0.000" /></testsuite></testsuites>

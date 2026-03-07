@@ -1,0 +1,980 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="9" time="17.514" timestamp="2026-03-07T05:54:38.771894+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_construction_and_io.TestSequenceFunctions" name="test_build_methods" time="0.034"><failure message="ValueError: &#10;    Invalid value of type 'builtins.str' received for the 'color' property of scatter.line&#10;        Received value: 'k'&#10;&#10;    The 'color' property is a color and may be specified as:&#10;      - A hex string (e.g. '#ff0000')&#10;      - An rgb/rgba string (e.g. 'rgb(255,0,0)')&#10;      - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')&#10;      - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')&#10;      - A named CSS color: see https://plotly.com/python/css-colors/ for a list">self = &lt;tests.test_construction_and_io.TestSequenceFunctions testMethod=test_build_methods&gt;
+
+    def test_build_methods(self):
+        goals = trussme.Goals(
+            minimum_fos_buckling=1.5,
+            minimum_fos_yielding=1.5,
+            maximum_mass=5.0,
+            maximum_deflection=6e-3,
+        )
+    
+        # Build truss from scratch
+        truss_from_commands = trussme.Truss()
+        truss_from_commands.add_pinned_joint([0.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([1.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([2.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([3.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([4.0, 0.0, 0.0])
+        truss_from_commands.add_pinned_joint([5.0, 0.0, 0.0])
+    
+        truss_from_commands.add_free_joint([0.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([1.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([2.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([3.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([4.5, 1.0, 0.0])
+    
+        truss_from_commands.add_out_of_plane_support("z")
+    
+        truss_from_commands.joints[7].loads[1] = -20000
+        truss_from_commands.joints[8].loads[1] = -20000
+        truss_from_commands.joints[9].loads[1] = -20000
+    
+        truss_from_commands.add_member(0, 1)
+        truss_from_commands.add_member(1, 2)
+        truss_from_commands.add_member(2, 3)
+        truss_from_commands.add_member(3, 4)
+        truss_from_commands.add_member(4, 5)
+    
+        truss_from_commands.add_member(6, 7)
+        truss_from_commands.add_member(7, 8)
+        truss_from_commands.add_member(8, 9)
+        truss_from_commands.add_member(9, 10)
+    
+        truss_from_commands.add_member(0, 6)
+        truss_from_commands.add_member(6, 1)
+        truss_from_commands.add_member(1, 7)
+        truss_from_commands.add_member(7, 2)
+        truss_from_commands.add_member(2, 8)
+        truss_from_commands.add_member(8, 3)
+        truss_from_commands.add_member(3, 9)
+        truss_from_commands.add_member(9, 4)
+        truss_from_commands.add_member(4, 10)
+        truss_from_commands.add_member(10, 5)
+    
+        # Build truss from file
+        truss_from_file = trussme.read_trs(TEST_TRUSS_FILENAME)
+    
+        self.assertEqual(
+&gt;           trussme.report_to_str(truss_from_file, goals),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            trussme.report_to_str(truss_from_commands, goals),
+        )
+
+tests/test_construction_and_io.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:45: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:250: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/visualize.py:60: in plot_truss
+    fig.add_trace(go.Scatter(
+.venv/lib/python3.11/site-packages/plotly/graph_objs/_scatter.py:2796: in __init__
+    self._set_property("line", arg, line)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4924: in __setitem__
+    self._set_compound_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5335: in _set_compound_prop
+    val = validator.validate_coerce(val, skip_invalid=self._skip_invalid)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:2468: in validate_coerce
+    v = self.data_class(v, skip_invalid=skip_invalid, _validate=_validate)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/graph_objs/scatter/_line.py:303: in __init__
+    self._set_property("color", arg, color)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4932: in __setitem__
+    self._set_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5276: in _set_prop
+    raise err
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5271: in _set_prop
+    val = validator.validate_coerce(val)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:1399: in validate_coerce
+    self.raise_invalid_val(v)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;_plotly_utils.basevalidators.ColorValidator object at 0x10d6bb950&gt;
+v = 'k', inds = None
+
+        def raise_invalid_val(self, v, inds=None):
+            """
+            Helper method to raise an informative exception when an invalid
+            value is passed to the validate_coerce method.
+    
+            Parameters
+            ----------
+            v :
+                Value that was input to validate_coerce and could not be coerced
+            inds: list of int or None (default)
+                Indexes to display after property name. e.g. if self.plotly_name
+                is 'prop' and inds=[2, 1] then the name in the validation error
+                message will be 'prop[2][1]`
+            Raises
+            -------
+            ValueError
+            """
+            name = self.plotly_name
+            if inds:
+                for i in inds:
+                    name += "[" + str(i) + "]"
+    
+&gt;           raise ValueError(
+                """
+        Invalid value of type {typ} received for the '{name}' property of {pname}
+            Received value: {v}
+    
+    {valid_clr_desc}""".format(
+                    name=name,
+                    pname=self.parent_name,
+                    typ=type_str(v),
+                    v=repr(v),
+                    valid_clr_desc=self.description(),
+                )
+            )
+E           ValueError: 
+E               Invalid value of type 'builtins.str' received for the 'color' property of scatter.line
+E                   Received value: 'k'
+E           
+E               The 'color' property is a color and may be specified as:
+E                 - A hex string (e.g. '#ff0000')
+E                 - An rgb/rgba string (e.g. 'rgb(255,0,0)')
+E                 - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')
+E                 - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')
+E                 - A named CSS color: see https://plotly.com/python/css-colors/ for a list
+
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:312: ValueError</failure></testcase><testcase classname="tests.test_construction_and_io.TestSequenceFunctions" name="test_demo_report" time="0.005"><failure message="ValueError: &#10;    Invalid value of type 'builtins.str' received for the 'color' property of scatter.line&#10;        Received value: 'k'&#10;&#10;    The 'color' property is a color and may be specified as:&#10;      - A hex string (e.g. '#ff0000')&#10;      - An rgb/rgba string (e.g. 'rgb(255,0,0)')&#10;      - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')&#10;      - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')&#10;      - A named CSS color: see https://plotly.com/python/css-colors/ for a list">self = &lt;tests.test_construction_and_io.TestSequenceFunctions testMethod=test_demo_report&gt;
+
+    def test_demo_report(self):
+        # Build truss from file
+        truss_from_file = trussme.read_trs(TEST_TRUSS_FILENAME)
+    
+&gt;       trussme.report_to_md(
+            os.path.join(os.path.dirname(__file__), "asdf.md"),
+            truss_from_file,
+            trussme.Goals(),
+        )
+
+tests/test_construction_and_io.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:91: in report_to_md
+    f.write(report_to_str(truss, goals, with_figures=with_figures))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:45: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:250: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/visualize.py:60: in plot_truss
+    fig.add_trace(go.Scatter(
+.venv/lib/python3.11/site-packages/plotly/graph_objs/_scatter.py:2796: in __init__
+    self._set_property("line", arg, line)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4924: in __setitem__
+    self._set_compound_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5335: in _set_compound_prop
+    val = validator.validate_coerce(val, skip_invalid=self._skip_invalid)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:2468: in validate_coerce
+    v = self.data_class(v, skip_invalid=skip_invalid, _validate=_validate)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/graph_objs/scatter/_line.py:303: in __init__
+    self._set_property("color", arg, color)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4932: in __setitem__
+    self._set_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5276: in _set_prop
+    raise err
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5271: in _set_prop
+    val = validator.validate_coerce(val)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:1399: in validate_coerce
+    self.raise_invalid_val(v)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;_plotly_utils.basevalidators.ColorValidator object at 0x10d6bb950&gt;
+v = 'k', inds = None
+
+        def raise_invalid_val(self, v, inds=None):
+            """
+            Helper method to raise an informative exception when an invalid
+            value is passed to the validate_coerce method.
+    
+            Parameters
+            ----------
+            v :
+                Value that was input to validate_coerce and could not be coerced
+            inds: list of int or None (default)
+                Indexes to display after property name. e.g. if self.plotly_name
+                is 'prop' and inds=[2, 1] then the name in the validation error
+                message will be 'prop[2][1]`
+            Raises
+            -------
+            ValueError
+            """
+            name = self.plotly_name
+            if inds:
+                for i in inds:
+                    name += "[" + str(i) + "]"
+    
+&gt;           raise ValueError(
+                """
+        Invalid value of type {typ} received for the '{name}' property of {pname}
+            Received value: {v}
+    
+    {valid_clr_desc}""".format(
+                    name=name,
+                    pname=self.parent_name,
+                    typ=type_str(v),
+                    v=repr(v),
+                    valid_clr_desc=self.description(),
+                )
+            )
+E           ValueError: 
+E               Invalid value of type 'builtins.str' received for the 'color' property of scatter.line
+E                   Received value: 'k'
+E           
+E               The 'color' property is a color and may be specified as:
+E                 - A hex string (e.g. '#ff0000')
+E                 - An rgb/rgba string (e.g. 'rgb(255,0,0)')
+E                 - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')
+E                 - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')
+E                 - A named CSS color: see https://plotly.com/python/css-colors/ for a list
+
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:312: ValueError</failure></testcase><testcase classname="tests.test_construction_and_io.TestSequenceFunctions" name="test_save_to_json_and_rebuild" time="0.007"><failure message="ValueError: &#10;    Invalid value of type 'builtins.str' received for the 'color' property of scatter.line&#10;        Received value: 'k'&#10;&#10;    The 'color' property is a color and may be specified as:&#10;      - A hex string (e.g. '#ff0000')&#10;      - An rgb/rgba string (e.g. 'rgb(255,0,0)')&#10;      - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')&#10;      - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')&#10;      - A named CSS color: see https://plotly.com/python/css-colors/ for a list">self = &lt;tests.test_construction_and_io.TestSequenceFunctions testMethod=test_save_to_json_and_rebuild&gt;
+
+    def test_save_to_json_and_rebuild(self):
+        goals = trussme.Goals(
+            minimum_fos_buckling=1.5,
+            minimum_fos_yielding=1.5,
+            maximum_mass=5.0,
+            maximum_deflection=6e-3,
+        )
+    
+        # Build truss from file
+        truss_from_file = trussme.read_trs(TEST_TRUSS_FILENAME)
+    
+        # Save the truss
+        truss_from_file.to_json(os.path.join(os.path.dirname(__file__), "asdf.json"))
+    
+        # Rebuild
+        truss_rebuilt_from_file = trussme.read_json(
+            os.path.join(os.path.dirname(__file__), "asdf.json")
+        )
+    
+        self.assertEqual(
+&gt;           trussme.report_to_str(truss_from_file, goals),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            trussme.report_to_str(truss_rebuilt_from_file, goals),
+        )
+
+tests/test_construction_and_io.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:45: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:250: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/visualize.py:60: in plot_truss
+    fig.add_trace(go.Scatter(
+.venv/lib/python3.11/site-packages/plotly/graph_objs/_scatter.py:2796: in __init__
+    self._set_property("line", arg, line)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4924: in __setitem__
+    self._set_compound_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5335: in _set_compound_prop
+    val = validator.validate_coerce(val, skip_invalid=self._skip_invalid)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:2468: in validate_coerce
+    v = self.data_class(v, skip_invalid=skip_invalid, _validate=_validate)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/graph_objs/scatter/_line.py:303: in __init__
+    self._set_property("color", arg, color)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4932: in __setitem__
+    self._set_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5276: in _set_prop
+    raise err
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5271: in _set_prop
+    val = validator.validate_coerce(val)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:1399: in validate_coerce
+    self.raise_invalid_val(v)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;_plotly_utils.basevalidators.ColorValidator object at 0x10d6bb950&gt;
+v = 'k', inds = None
+
+        def raise_invalid_val(self, v, inds=None):
+            """
+            Helper method to raise an informative exception when an invalid
+            value is passed to the validate_coerce method.
+    
+            Parameters
+            ----------
+            v :
+                Value that was input to validate_coerce and could not be coerced
+            inds: list of int or None (default)
+                Indexes to display after property name. e.g. if self.plotly_name
+                is 'prop' and inds=[2, 1] then the name in the validation error
+                message will be 'prop[2][1]`
+            Raises
+            -------
+            ValueError
+            """
+            name = self.plotly_name
+            if inds:
+                for i in inds:
+                    name += "[" + str(i) + "]"
+    
+&gt;           raise ValueError(
+                """
+        Invalid value of type {typ} received for the '{name}' property of {pname}
+            Received value: {v}
+    
+    {valid_clr_desc}""".format(
+                    name=name,
+                    pname=self.parent_name,
+                    typ=type_str(v),
+                    v=repr(v),
+                    valid_clr_desc=self.description(),
+                )
+            )
+E           ValueError: 
+E               Invalid value of type 'builtins.str' received for the 'color' property of scatter.line
+E                   Received value: 'k'
+E           
+E               The 'color' property is a color and may be specified as:
+E                 - A hex string (e.g. '#ff0000')
+E                 - An rgb/rgba string (e.g. 'rgb(255,0,0)')
+E                 - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')
+E                 - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')
+E                 - A named CSS color: see https://plotly.com/python/css-colors/ for a list
+
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:312: ValueError</failure></testcase><testcase classname="tests.test_construction_and_io.TestSequenceFunctions" name="test_save_to_trs_and_rebuild" time="0.006"><failure message="ValueError: &#10;    Invalid value of type 'builtins.str' received for the 'color' property of scatter.line&#10;        Received value: 'k'&#10;&#10;    The 'color' property is a color and may be specified as:&#10;      - A hex string (e.g. '#ff0000')&#10;      - An rgb/rgba string (e.g. 'rgb(255,0,0)')&#10;      - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')&#10;      - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')&#10;      - A named CSS color: see https://plotly.com/python/css-colors/ for a list">self = &lt;tests.test_construction_and_io.TestSequenceFunctions testMethod=test_save_to_trs_and_rebuild&gt;
+
+    def test_save_to_trs_and_rebuild(self):
+        goals = trussme.Goals(
+            minimum_fos_buckling=1.5,
+            minimum_fos_yielding=1.5,
+            maximum_mass=5.0,
+            maximum_deflection=6e-3,
+        )
+    
+        # Build truss from file
+        truss_from_file = trussme.read_trs(TEST_TRUSS_FILENAME)
+    
+        # Save the truss
+        truss_from_file.to_trs(os.path.join(os.path.dirname(__file__), "asdf.trs"))
+    
+        # Rebuild
+        truss_rebuilt_from_file = trussme.read_trs(
+            os.path.join(os.path.dirname(__file__), "asdf.trs")
+        )
+    
+        self.assertEqual(
+&gt;           trussme.report_to_str(truss_from_file, goals),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            trussme.report_to_str(truss_rebuilt_from_file, goals),
+        )
+
+tests/test_construction_and_io.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:45: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:250: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/visualize.py:60: in plot_truss
+    fig.add_trace(go.Scatter(
+.venv/lib/python3.11/site-packages/plotly/graph_objs/_scatter.py:2796: in __init__
+    self._set_property("line", arg, line)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4924: in __setitem__
+    self._set_compound_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5335: in _set_compound_prop
+    val = validator.validate_coerce(val, skip_invalid=self._skip_invalid)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:2468: in validate_coerce
+    v = self.data_class(v, skip_invalid=skip_invalid, _validate=_validate)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/graph_objs/scatter/_line.py:303: in __init__
+    self._set_property("color", arg, color)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4932: in __setitem__
+    self._set_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5276: in _set_prop
+    raise err
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5271: in _set_prop
+    val = validator.validate_coerce(val)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:1399: in validate_coerce
+    self.raise_invalid_val(v)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;_plotly_utils.basevalidators.ColorValidator object at 0x10d6bb950&gt;
+v = 'k', inds = None
+
+        def raise_invalid_val(self, v, inds=None):
+            """
+            Helper method to raise an informative exception when an invalid
+            value is passed to the validate_coerce method.
+    
+            Parameters
+            ----------
+            v :
+                Value that was input to validate_coerce and could not be coerced
+            inds: list of int or None (default)
+                Indexes to display after property name. e.g. if self.plotly_name
+                is 'prop' and inds=[2, 1] then the name in the validation error
+                message will be 'prop[2][1]`
+            Raises
+            -------
+            ValueError
+            """
+            name = self.plotly_name
+            if inds:
+                for i in inds:
+                    name += "[" + str(i) + "]"
+    
+&gt;           raise ValueError(
+                """
+        Invalid value of type {typ} received for the '{name}' property of {pname}
+            Received value: {v}
+    
+    {valid_clr_desc}""".format(
+                    name=name,
+                    pname=self.parent_name,
+                    typ=type_str(v),
+                    v=repr(v),
+                    valid_clr_desc=self.description(),
+                )
+            )
+E           ValueError: 
+E               Invalid value of type 'builtins.str' received for the 'color' property of scatter.line
+E                   Received value: 'k'
+E           
+E               The 'color' property is a color and may be specified as:
+E                 - A hex string (e.g. '#ff0000')
+E                 - An rgb/rgba string (e.g. 'rgb(255,0,0)')
+E                 - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')
+E                 - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')
+E                 - A named CSS color: see https://plotly.com/python/css-colors/ for a list
+
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:312: ValueError</failure></testcase><testcase classname="tests.test_custom_materials_and_shapes.TestCustomStuff" name="test_custom_material" time="0.001" /><testcase classname="tests.test_custom_materials_and_shapes.TestCustomStuff" name="test_custom_shape" time="0.001" /><testcase classname="tests.test_optimization.TestCustomStuff" name="test_full_optimization" time="10.647"><failure message="ValueError: &#10;    Invalid value of type 'builtins.str' received for the 'color' property of scatter.line&#10;        Received value: 'k'&#10;&#10;    The 'color' property is a color and may be specified as:&#10;      - A hex string (e.g. '#ff0000')&#10;      - An rgb/rgba string (e.g. 'rgb(255,0,0)')&#10;      - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')&#10;      - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')&#10;      - A named CSS color: see https://plotly.com/python/css-colors/ for a list">self = &lt;tests.test_optimization.TestCustomStuff testMethod=test_full_optimization&gt;
+
+    def test_full_optimization(self):
+        truss_from_commands = trussme.Truss()
+        truss_from_commands.add_pinned_joint([0.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([1.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([2.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([3.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([4.0, 0.0, 0.0])
+        truss_from_commands.add_pinned_joint([5.0, 0.0, 0.0])
+    
+        truss_from_commands.add_free_joint([0.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([1.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([2.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([3.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([4.5, 1.0, 0.0])
+    
+        truss_from_commands.add_out_of_plane_support("z")
+    
+        truss_from_commands.joints[8].loads[1] = -20000
+    
+        truss_from_commands.add_member(0, 1)
+        truss_from_commands.add_member(1, 2)
+        truss_from_commands.add_member(2, 3)
+        truss_from_commands.add_member(3, 4)
+        truss_from_commands.add_member(4, 5)
+    
+        truss_from_commands.add_member(6, 7)
+        truss_from_commands.add_member(7, 8)
+        truss_from_commands.add_member(8, 9)
+        truss_from_commands.add_member(9, 10)
+    
+        truss_from_commands.add_member(0, 6)
+        truss_from_commands.add_member(6, 1)
+        truss_from_commands.add_member(1, 7)
+        truss_from_commands.add_member(7, 2)
+        truss_from_commands.add_member(2, 8)
+        truss_from_commands.add_member(8, 3)
+        truss_from_commands.add_member(3, 9)
+        truss_from_commands.add_member(9, 4)
+        truss_from_commands.add_member(4, 10)
+        truss_from_commands.add_member(10, 5)
+    
+        goals = trussme.Goals()
+    
+        x0, obj, con, gen, bnds = trussme.make_optimization_functions(
+            truss_from_commands,
+            goals,
+            joint_optimization="full",
+            member_optimization="full",
+        )
+    
+        results = scipy.optimize.minimize(
+            obj,
+            x0,
+            constraints=scipy.optimize.NonlinearConstraint(
+                con, -numpy.inf, 0.0, keep_feasible=True
+            ),
+            bounds=scipy.optimize.Bounds(bnds[0], bnds[1], keep_feasible=True),
+            method="trust-constr",
+            options={"verbose": 2, "maxiter": 50},
+        )
+    
+        result_truss = gen(results.x)
+        result_truss.analyze()
+&gt;       trussme.report_to_md(
+            os.path.join(os.path.dirname(__file__), "full_optim.md"),
+            result_truss,
+            goals,
+        )
+
+tests/test_optimization.py:196: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:91: in report_to_md
+    f.write(report_to_str(truss, goals, with_figures=with_figures))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:45: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:250: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/visualize.py:60: in plot_truss
+    fig.add_trace(go.Scatter(
+.venv/lib/python3.11/site-packages/plotly/graph_objs/_scatter.py:2796: in __init__
+    self._set_property("line", arg, line)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4924: in __setitem__
+    self._set_compound_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5335: in _set_compound_prop
+    val = validator.validate_coerce(val, skip_invalid=self._skip_invalid)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:2468: in validate_coerce
+    v = self.data_class(v, skip_invalid=skip_invalid, _validate=_validate)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/graph_objs/scatter/_line.py:303: in __init__
+    self._set_property("color", arg, color)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4932: in __setitem__
+    self._set_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5276: in _set_prop
+    raise err
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5271: in _set_prop
+    val = validator.validate_coerce(val)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:1399: in validate_coerce
+    self.raise_invalid_val(v)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;_plotly_utils.basevalidators.ColorValidator object at 0x10d6bb950&gt;
+v = 'k', inds = None
+
+        def raise_invalid_val(self, v, inds=None):
+            """
+            Helper method to raise an informative exception when an invalid
+            value is passed to the validate_coerce method.
+    
+            Parameters
+            ----------
+            v :
+                Value that was input to validate_coerce and could not be coerced
+            inds: list of int or None (default)
+                Indexes to display after property name. e.g. if self.plotly_name
+                is 'prop' and inds=[2, 1] then the name in the validation error
+                message will be 'prop[2][1]`
+            Raises
+            -------
+            ValueError
+            """
+            name = self.plotly_name
+            if inds:
+                for i in inds:
+                    name += "[" + str(i) + "]"
+    
+&gt;           raise ValueError(
+                """
+        Invalid value of type {typ} received for the '{name}' property of {pname}
+            Received value: {v}
+    
+    {valid_clr_desc}""".format(
+                    name=name,
+                    pname=self.parent_name,
+                    typ=type_str(v),
+                    v=repr(v),
+                    valid_clr_desc=self.description(),
+                )
+            )
+E           ValueError: 
+E               Invalid value of type 'builtins.str' received for the 'color' property of scatter.line
+E                   Received value: 'k'
+E           
+E               The 'color' property is a color and may be specified as:
+E                 - A hex string (e.g. '#ff0000')
+E                 - An rgb/rgba string (e.g. 'rgb(255,0,0)')
+E                 - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')
+E                 - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')
+E                 - A named CSS color: see https://plotly.com/python/css-colors/ for a list
+
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:312: ValueError</failure></testcase><testcase classname="tests.test_optimization.TestCustomStuff" name="test_joint_optimization" time="3.251"><failure message="ValueError: &#10;    Invalid value of type 'builtins.str' received for the 'color' property of scatter.line&#10;        Received value: 'k'&#10;&#10;    The 'color' property is a color and may be specified as:&#10;      - A hex string (e.g. '#ff0000')&#10;      - An rgb/rgba string (e.g. 'rgb(255,0,0)')&#10;      - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')&#10;      - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')&#10;      - A named CSS color: see https://plotly.com/python/css-colors/ for a list">self = &lt;tests.test_optimization.TestCustomStuff testMethod=test_joint_optimization&gt;
+
+    def test_joint_optimization(self):
+        truss_from_commands = trussme.Truss()
+        truss_from_commands.add_pinned_joint([0.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([1.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([2.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([3.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([4.0, 0.0, 0.0])
+        truss_from_commands.add_pinned_joint([5.0, 0.0, 0.0])
+    
+        truss_from_commands.add_free_joint([0.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([1.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([2.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([3.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([4.5, 1.0, 0.0])
+    
+        truss_from_commands.add_out_of_plane_support("z")
+    
+        truss_from_commands.joints[8].loads[1] = -20000
+    
+        truss_from_commands.add_member(0, 1)
+        truss_from_commands.add_member(1, 2)
+        truss_from_commands.add_member(2, 3)
+        truss_from_commands.add_member(3, 4)
+        truss_from_commands.add_member(4, 5)
+    
+        truss_from_commands.add_member(6, 7)
+        truss_from_commands.add_member(7, 8)
+        truss_from_commands.add_member(8, 9)
+        truss_from_commands.add_member(9, 10)
+    
+        truss_from_commands.add_member(0, 6)
+        truss_from_commands.add_member(6, 1)
+        truss_from_commands.add_member(1, 7)
+        truss_from_commands.add_member(7, 2)
+        truss_from_commands.add_member(2, 8)
+        truss_from_commands.add_member(8, 3)
+        truss_from_commands.add_member(3, 9)
+        truss_from_commands.add_member(9, 4)
+        truss_from_commands.add_member(4, 10)
+        truss_from_commands.add_member(10, 5)
+    
+        goals = trussme.Goals()
+    
+        x0, obj, con, gen, bnds = trussme.make_optimization_functions(
+            truss_from_commands,
+            goals,
+            joint_optimization="full",
+            member_optimization=None,
+        )
+    
+        results = scipy.optimize.minimize(
+            obj,
+            x0,
+            constraints=[
+                scipy.optimize.NonlinearConstraint(
+                    con, -numpy.inf, 0.0, keep_feasible=True
+                )
+            ],
+            method="trust-constr",
+            options={"verbose": 2, "maxiter": 50},
+        )
+    
+        result_truss = gen(results.x)
+        result_truss.analyze()
+&gt;       trussme.report_to_md(
+            os.path.join(os.path.dirname(__file__), "joint_optim.md"),
+            result_truss,
+            goals,
+        )
+
+tests/test_optimization.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:91: in report_to_md
+    f.write(report_to_str(truss, goals, with_figures=with_figures))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:45: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:250: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/visualize.py:60: in plot_truss
+    fig.add_trace(go.Scatter(
+.venv/lib/python3.11/site-packages/plotly/graph_objs/_scatter.py:2796: in __init__
+    self._set_property("line", arg, line)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4924: in __setitem__
+    self._set_compound_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5335: in _set_compound_prop
+    val = validator.validate_coerce(val, skip_invalid=self._skip_invalid)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:2468: in validate_coerce
+    v = self.data_class(v, skip_invalid=skip_invalid, _validate=_validate)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/graph_objs/scatter/_line.py:303: in __init__
+    self._set_property("color", arg, color)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4932: in __setitem__
+    self._set_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5276: in _set_prop
+    raise err
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5271: in _set_prop
+    val = validator.validate_coerce(val)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:1399: in validate_coerce
+    self.raise_invalid_val(v)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;_plotly_utils.basevalidators.ColorValidator object at 0x10d6bb950&gt;
+v = 'k', inds = None
+
+        def raise_invalid_val(self, v, inds=None):
+            """
+            Helper method to raise an informative exception when an invalid
+            value is passed to the validate_coerce method.
+    
+            Parameters
+            ----------
+            v :
+                Value that was input to validate_coerce and could not be coerced
+            inds: list of int or None (default)
+                Indexes to display after property name. e.g. if self.plotly_name
+                is 'prop' and inds=[2, 1] then the name in the validation error
+                message will be 'prop[2][1]`
+            Raises
+            -------
+            ValueError
+            """
+            name = self.plotly_name
+            if inds:
+                for i in inds:
+                    name += "[" + str(i) + "]"
+    
+&gt;           raise ValueError(
+                """
+        Invalid value of type {typ} received for the '{name}' property of {pname}
+            Received value: {v}
+    
+    {valid_clr_desc}""".format(
+                    name=name,
+                    pname=self.parent_name,
+                    typ=type_str(v),
+                    v=repr(v),
+                    valid_clr_desc=self.description(),
+                )
+            )
+E           ValueError: 
+E               Invalid value of type 'builtins.str' received for the 'color' property of scatter.line
+E                   Received value: 'k'
+E           
+E               The 'color' property is a color and may be specified as:
+E                 - A hex string (e.g. '#ff0000')
+E                 - An rgb/rgba string (e.g. 'rgb(255,0,0)')
+E                 - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')
+E                 - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')
+E                 - A named CSS color: see https://plotly.com/python/css-colors/ for a list
+
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:312: ValueError</failure></testcase><testcase classname="tests.test_optimization.TestCustomStuff" name="test_setup" time="0.008"><failure message="ValueError: &#10;    Invalid value of type 'builtins.str' received for the 'color' property of scatter.line&#10;        Received value: 'k'&#10;&#10;    The 'color' property is a color and may be specified as:&#10;      - A hex string (e.g. '#ff0000')&#10;      - An rgb/rgba string (e.g. 'rgb(255,0,0)')&#10;      - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')&#10;      - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')&#10;      - A named CSS color: see https://plotly.com/python/css-colors/ for a list">self = &lt;tests.test_optimization.TestCustomStuff testMethod=test_setup&gt;
+
+    def test_setup(self):
+        truss_from_commands = trussme.Truss()
+        truss_from_commands.add_pinned_joint([0.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([1.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([2.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([3.0, 0.0, 0.0])
+        truss_from_commands.add_free_joint([4.0, 0.0, 0.0])
+        truss_from_commands.add_pinned_joint([5.0, 0.0, 0.0])
+    
+        truss_from_commands.add_free_joint([0.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([1.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([2.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([3.5, 1.0, 0.0])
+        truss_from_commands.add_free_joint([4.5, 1.0, 0.0])
+    
+        truss_from_commands.add_out_of_plane_support("z")
+    
+        truss_from_commands.joints[8].loads[1] = -20000
+    
+        truss_from_commands.add_member(0, 1)
+        truss_from_commands.add_member(1, 2)
+        truss_from_commands.add_member(2, 3)
+        truss_from_commands.add_member(3, 4)
+        truss_from_commands.add_member(4, 5)
+    
+        truss_from_commands.add_member(6, 7)
+        truss_from_commands.add_member(7, 8)
+        truss_from_commands.add_member(8, 9)
+        truss_from_commands.add_member(9, 10)
+    
+        truss_from_commands.add_member(0, 6)
+        truss_from_commands.add_member(6, 1)
+        truss_from_commands.add_member(1, 7)
+        truss_from_commands.add_member(7, 2)
+        truss_from_commands.add_member(2, 8)
+        truss_from_commands.add_member(8, 3)
+        truss_from_commands.add_member(3, 9)
+        truss_from_commands.add_member(9, 4)
+        truss_from_commands.add_member(4, 10)
+        truss_from_commands.add_member(10, 5)
+    
+        goals = trussme.Goals()
+    
+        x0, obj, con, gen, bnds = trussme.make_optimization_functions(
+            truss_from_commands, goals
+        )
+    
+        self.assertEqual(
+&gt;           trussme.report_to_str(gen(x0), goals),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            trussme.report_to_str(truss_from_commands, goals),
+        )
+
+tests/test_optimization.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+trussme/report.py:45: in report_to_str
+    report_string += __generate_instantiation_information(truss, with_figures) + "\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/report.py:250: in __generate_instantiation_information
+    instantiation += _fig_to_svg(trussme.visualize.plot_truss(truss)) + "\n"
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trussme/visualize.py:60: in plot_truss
+    fig.add_trace(go.Scatter(
+.venv/lib/python3.11/site-packages/plotly/graph_objs/_scatter.py:2796: in __init__
+    self._set_property("line", arg, line)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4924: in __setitem__
+    self._set_compound_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5335: in _set_compound_prop
+    val = validator.validate_coerce(val, skip_invalid=self._skip_invalid)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:2468: in validate_coerce
+    v = self.data_class(v, skip_invalid=skip_invalid, _validate=_validate)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/graph_objs/scatter/_line.py:303: in __init__
+    self._set_property("color", arg, color)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4403: in _set_property
+    _set_property_provided_value(self, name, arg, provided)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:398: in _set_property_provided_value
+    obj[name] = val
+    ^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:4932: in __setitem__
+    self._set_prop(prop, value)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5276: in _set_prop
+    raise err
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5271: in _set_prop
+    val = validator.validate_coerce(val)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:1399: in validate_coerce
+    self.raise_invalid_val(v)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;_plotly_utils.basevalidators.ColorValidator object at 0x10d6bb950&gt;
+v = 'k', inds = None
+
+        def raise_invalid_val(self, v, inds=None):
+            """
+            Helper method to raise an informative exception when an invalid
+            value is passed to the validate_coerce method.
+    
+            Parameters
+            ----------
+            v :
+                Value that was input to validate_coerce and could not be coerced
+            inds: list of int or None (default)
+                Indexes to display after property name. e.g. if self.plotly_name
+                is 'prop' and inds=[2, 1] then the name in the validation error
+                message will be 'prop[2][1]`
+            Raises
+            -------
+            ValueError
+            """
+            name = self.plotly_name
+            if inds:
+                for i in inds:
+                    name += "[" + str(i) + "]"
+    
+&gt;           raise ValueError(
+                """
+        Invalid value of type {typ} received for the '{name}' property of {pname}
+            Received value: {v}
+    
+    {valid_clr_desc}""".format(
+                    name=name,
+                    pname=self.parent_name,
+                    typ=type_str(v),
+                    v=repr(v),
+                    valid_clr_desc=self.description(),
+                )
+            )
+E           ValueError: 
+E               Invalid value of type 'builtins.str' received for the 'color' property of scatter.line
+E                   Received value: 'k'
+E           
+E               The 'color' property is a color and may be specified as:
+E                 - A hex string (e.g. '#ff0000')
+E                 - An rgb/rgba string (e.g. 'rgb(255,0,0)')
+E                 - An hsl/hsla string (e.g. 'hsl(0,100%,50%)')
+E                 - An hsv/hsva string (e.g. 'hsv(0,100%,100%)')
+E                 - A named CSS color: see https://plotly.com/python/css-colors/ for a list
+
+.venv/lib/python3.11/site-packages/_plotly_utils/basevalidators.py:312: ValueError</failure></testcase></testsuite></testsuites>

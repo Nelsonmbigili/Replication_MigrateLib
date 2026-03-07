@@ -1,0 +1,37 @@
+"""
+Encapsulating error types.
+"""
+
+import json
+from requests_futures.sessions import FuturesSession
+
+
+class CoinbaseAdvancedTradeAPIError(Exception):
+    """
+    Class CoinbaseAdvancedTradeAPIError is derived from super class Exception
+    and represent the default generic error when endpoint request fail.
+    """
+
+    def __init__(self, error_dict: dict):
+        self.error_dict = error_dict
+
+    def __str__(self):
+        return str(self.error_dict)
+
+    @classmethod
+    def not_ok_response(cls, response) -> 'CoinbaseAdvancedTradeAPIError':
+        """
+        Factory Method for Coinbase Advanced errors.
+        """
+
+        try:
+            error_result = json.loads(response.text)
+        except ValueError:
+            error_result = {'reason': response.text}
+
+        return cls(error_dict=error_result)
+
+# Example of how to use FuturesSession (not part of the original code)
+# session = FuturesSession()
+# future = session.get('https://api.example.com/data')
+# response = future.result()  # This will block until the response is received

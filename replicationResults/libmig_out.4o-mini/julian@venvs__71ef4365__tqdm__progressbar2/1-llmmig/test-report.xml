@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="83" time="2.045" timestamp="2026-03-05T11:56:51.992203+04:00" hostname="nelsonmbigili.local"><testcase classname="venvs.tests.test_common.TestLocator" name="test_named_virtualenvs_are_children" time="0.003" /><testcase classname="venvs.tests.test_common.TestLocator" name="test_strips_py" time="0.001" /><testcase classname="venvs.tests.test_common.TestLocator" name="test_strips_python" time="0.001" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_add_empty" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_add_with_contents" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_bundles" time="0.003" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_duplicate_link_modules" time="0.001" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_duplicate_link_modules_across_venvs" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_duplicate_links" time="0.001" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_duplicate_links_across_venvs" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_duplicate_mixed_links" time="0.001" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_duplicate_mixed_links_across_venvs" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_empty" time="0.001" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_empty_from_string" time="0.001" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_expansion" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_explicit_python" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_links" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_links_to_same_binary" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_no_such_bundle" time="0.001" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_simple" time="0.002" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_bundles" time="0.018" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_changing_a_bundle_recreates_the_venv" time="0.007" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_conflicting_links" time="0.004" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_conflicting_links_via_rename" time="0.003" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_custom_link_dir" time="0.006" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_invalid_config_recreates_the_venv" time="0.018" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_can_be_asked_to_blow_up_immediately_on_create" time="0.006"><failure message="ValueError: Value 5 is too large. Should be between 0 and 4">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_can_be_asked_to_blow_up_immediately_on_create&gt;
+
+    def test_it_can_be_asked_to_blow_up_immediately_on_create(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            [virtualenv.b]
+            [virtualenv.magicExplodingVirtualenvOnCreate]
+            [virtualenv.c]
+            """,
+        )
+    
+        with self.assertRaises(ZeroDivisionError):
+&gt;           self.run_cli(["converge", "--fail-fast"])
+
+venvs/tests/test_converge.py:358: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:129: in _loop
+    handle_error(virtualenv=None, name=None)
+venvs/converge.py:127: in _loop
+    progress.update(progress.value + 1)  # Update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def update(
+        self, value: ValueT = None, force: bool = False, **kwargs: typing.Any
+    ):
+        "Updates the ProgressBar to a new value."
+        if self.start_time is None:
+            self.start()
+    
+        if (
+            value is not None
+            and value is not base.UnknownLength
+            and isinstance(value, (int, float))
+        ):
+            if self.max_value is base.UnknownLength:
+                # Can't compare against unknown lengths so just update
+                pass
+            elif self.min_value &gt; value:  # type: ignore
+                raise ValueError(
+                    f'Value {value} is too small. Should be '
+                    f'between {self.min_value} and {self.max_value}',
+                )
+            elif self.max_value &lt; value:  # type: ignore
+                if self.max_error:
+&gt;                   raise ValueError(
+                        f'Value {value} is too large. Should be between '
+                        f'{self.min_value} and {self.max_value}',
+                    )
+E                   ValueError: Value 5 is too large. Should be between 0 and 4
+
+.venv/lib/python3.11/site-packages/progressbar/bar.py:934: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_can_be_asked_to_blow_up_immediately_on_install" time="0.006"><failure message="ValueError: Value 5 is too large. Should be between 0 and 4">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_can_be_asked_to_blow_up_immediately_on_install&gt;
+
+    def test_it_can_be_asked_to_blow_up_immediately_on_install(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            [virtualenv.b]
+            [virtualenv.magicExplodingVirtualenvOnInstall]
+            [virtualenv.c]
+            """,
+        )
+    
+        with self.assertRaises(ZeroDivisionError):
+&gt;           self.run_cli(["converge", "--fail-fast"])
+
+venvs/tests/test_converge.py:308: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:129: in _loop
+    handle_error(virtualenv=None, name=None)
+venvs/converge.py:127: in _loop
+    progress.update(progress.value + 1)  # Update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def update(
+        self, value: ValueT = None, force: bool = False, **kwargs: typing.Any
+    ):
+        "Updates the ProgressBar to a new value."
+        if self.start_time is None:
+            self.start()
+    
+        if (
+            value is not None
+            and value is not base.UnknownLength
+            and isinstance(value, (int, float))
+        ):
+            if self.max_value is base.UnknownLength:
+                # Can't compare against unknown lengths so just update
+                pass
+            elif self.min_value &gt; value:  # type: ignore
+                raise ValueError(
+                    f'Value {value} is too small. Should be '
+                    f'between {self.min_value} and {self.max_value}',
+                )
+            elif self.max_value &lt; value:  # type: ignore
+                if self.max_error:
+&gt;                   raise ValueError(
+                        f'Value {value} is too large. Should be between '
+                        f'{self.min_value} and {self.max_value}',
+                    )
+E                   ValueError: Value 5 is too large. Should be between 0 and 4
+
+.venv/lib/python3.11/site-packages/progressbar/bar.py:934: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_converges_existing_virtualenvs" time="0.007" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_converges_specified_virtualenvs" time="0.005"><failure message="ValueError: Value 4 is too large. Should be between 0 and 3">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_converges_specified_virtualenvs&gt;
+
+    def test_it_converges_specified_virtualenvs(self):
+        self.assertFalse(self.locator.for_name("a").exists_on(self.filesystem))
+        self.assertFalse(self.locator.for_name("b").exists_on(self.filesystem))
+        self.assertFalse(self.locator.for_name("c").exists_on(self.filesystem))
+    
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            [virtualenv.b]
+            install = ["foo", "bar", "bla"]
+            requirements = ["requirements.txt"]
+            [virtualenv.c]
+            install = ["foo"]
+            link = ["bar", "baz"]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge", "a", "c"])
+
+venvs/tests/test_converge.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:125: in _loop
+    for venv_config in progress(iterable):  # Updated to use progressbar2
+.venv/lib/python3.11/site-packages/progressbar/bar.py:857: in __next__
+    self.update(self.value + 1)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ProgressBar#10&gt;, value = 4, force = False, kwargs = {}
+
+    def update(
+        self, value: ValueT = None, force: bool = False, **kwargs: typing.Any
+    ):
+        "Updates the ProgressBar to a new value."
+        if self.start_time is None:
+            self.start()
+    
+        if (
+            value is not None
+            and value is not base.UnknownLength
+            and isinstance(value, (int, float))
+        ):
+            if self.max_value is base.UnknownLength:
+                # Can't compare against unknown lengths so just update
+                pass
+            elif self.min_value &gt; value:  # type: ignore
+                raise ValueError(
+                    f'Value {value} is too small. Should be '
+                    f'between {self.min_value} and {self.max_value}',
+                )
+            elif self.max_value &lt; value:  # type: ignore
+                if self.max_error:
+&gt;                   raise ValueError(
+                        f'Value {value} is too large. Should be between '
+                        f'{self.min_value} and {self.max_value}',
+                    )
+E                   ValueError: Value 4 is too large. Should be between 0 and 3
+
+.venv/lib/python3.11/site-packages/progressbar/bar.py:934: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_creates_missing_virtualenvs" time="0.006"><failure message="ValueError: Value 4 is too large. Should be between 0 and 3">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_creates_missing_virtualenvs&gt;
+
+    def test_it_creates_missing_virtualenvs(self):
+        self.assertFalse(self.locator.for_name("a").exists_on(self.filesystem))
+        self.assertFalse(self.locator.for_name("b").exists_on(self.filesystem))
+        self.assertFalse(self.locator.for_name("c").exists_on(self.filesystem))
+    
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            [virtualenv.b]
+            install = ["foo", "bar", "bla"]
+            requirements = ["requirements.txt"]
+            [virtualenv.c]
+            install = ["foo", "$HOME", "~/a"]
+            link = ["bar", "baz"]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:125: in _loop
+    for venv_config in progress(iterable):  # Updated to use progressbar2
+.venv/lib/python3.11/site-packages/progressbar/bar.py:857: in __next__
+    self.update(self.value + 1)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ProgressBar#11&gt;, value = 4, force = False, kwargs = {}
+
+    def update(
+        self, value: ValueT = None, force: bool = False, **kwargs: typing.Any
+    ):
+        "Updates the ProgressBar to a new value."
+        if self.start_time is None:
+            self.start()
+    
+        if (
+            value is not None
+            and value is not base.UnknownLength
+            and isinstance(value, (int, float))
+        ):
+            if self.max_value is base.UnknownLength:
+                # Can't compare against unknown lengths so just update
+                pass
+            elif self.min_value &gt; value:  # type: ignore
+                raise ValueError(
+                    f'Value {value} is too small. Should be '
+                    f'between {self.min_value} and {self.max_value}',
+                )
+            elif self.max_value &lt; value:  # type: ignore
+                if self.max_error:
+&gt;                   raise ValueError(
+                        f'Value {value} is too large. Should be between '
+                        f'{self.min_value} and {self.max_value}',
+                    )
+E                   ValueError: Value 4 is too large. Should be between 0 and 3
+
+.venv/lib/python3.11/site-packages/progressbar/bar.py:934: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_does_not_blow_up_by_default_on_create" time="0.006"><failure message="ValueError: Value 5 is too large. Should be between 0 and 4">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_does_not_blow_up_by_default_on_create&gt;
+
+    def test_it_does_not_blow_up_by_default_on_create(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            [virtualenv.b]
+            [virtualenv.magicExplodingVirtualenvOnCreate]
+            [virtualenv.c]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:330: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:125: in _loop
+    for venv_config in progress(iterable):  # Updated to use progressbar2
+.venv/lib/python3.11/site-packages/progressbar/bar.py:857: in __next__
+    self.update(self.value + 1)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ProgressBar#12&gt;, value = 5, force = False, kwargs = {}
+
+    def update(
+        self, value: ValueT = None, force: bool = False, **kwargs: typing.Any
+    ):
+        "Updates the ProgressBar to a new value."
+        if self.start_time is None:
+            self.start()
+    
+        if (
+            value is not None
+            and value is not base.UnknownLength
+            and isinstance(value, (int, float))
+        ):
+            if self.max_value is base.UnknownLength:
+                # Can't compare against unknown lengths so just update
+                pass
+            elif self.min_value &gt; value:  # type: ignore
+                raise ValueError(
+                    f'Value {value} is too small. Should be '
+                    f'between {self.min_value} and {self.max_value}',
+                )
+            elif self.max_value &lt; value:  # type: ignore
+                if self.max_error:
+&gt;                   raise ValueError(
+                        f'Value {value} is too large. Should be between '
+                        f'{self.min_value} and {self.max_value}',
+                    )
+E                   ValueError: Value 5 is too large. Should be between 0 and 4
+
+.venv/lib/python3.11/site-packages/progressbar/bar.py:934: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_does_not_blow_up_by_default_on_install" time="0.005"><failure message="ValueError: Value 5 is too large. Should be between 0 and 4">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_does_not_blow_up_by_default_on_install&gt;
+
+    def test_it_does_not_blow_up_by_default_on_install(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            [virtualenv.b]
+            [virtualenv.magicExplodingVirtualenvOnInstall]
+            [virtualenv.c]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:280: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:125: in _loop
+    for venv_config in progress(iterable):  # Updated to use progressbar2
+.venv/lib/python3.11/site-packages/progressbar/bar.py:857: in __next__
+    self.update(self.value + 1)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ProgressBar#13&gt;, value = 5, force = False, kwargs = {}
+
+    def update(
+        self, value: ValueT = None, force: bool = False, **kwargs: typing.Any
+    ):
+        "Updates the ProgressBar to a new value."
+        if self.start_time is None:
+            self.start()
+    
+        if (
+            value is not None
+            and value is not base.UnknownLength
+            and isinstance(value, (int, float))
+        ):
+            if self.max_value is base.UnknownLength:
+                # Can't compare against unknown lengths so just update
+                pass
+            elif self.min_value &gt; value:  # type: ignore
+                raise ValueError(
+                    f'Value {value} is too small. Should be '
+                    f'between {self.min_value} and {self.max_value}',
+                )
+            elif self.max_value &lt; value:  # type: ignore
+                if self.max_error:
+&gt;                   raise ValueError(
+                        f'Value {value} is too large. Should be between '
+                        f'{self.min_value} and {self.max_value}',
+                    )
+E                   ValueError: Value 5 is too large. Should be between 0 and 4
+
+.venv/lib/python3.11/site-packages/progressbar/bar.py:934: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_does_not_run_post_commands_for_already_converged_envs" time="0.017" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_runs_post_commands" time="0.012"><failure message="AssertionError: 1772683560.0 not greater than 1772697413.4206777">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_runs_post_commands&gt;
+
+    def test_it_runs_post_commands(self):
+        self.assertFalse(self.locator.for_name("a").exists_on(self.filesystem))
+    
+        file = NamedTemporaryFile(delete=False)
+        self.addCleanup(os.remove, file.name)
+        mtime = os.path.getmtime(file.name)
+        later = timedelta(minutes=10)
+        new_mtime = datetime.fromtimestamp(mtime, tz=timezone.utc) + later
+    
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            f"""
+            [virtualenv.a]
+            post-commands = [
+                ["true"],
+                ["touch", "-t", "{new_mtime:%Y%m%d%H%M}", "{file.name}"],
+            ]
+            """,
+        )
+    
+        self.run_cli(["converge"])
+    
+        self.assertTrue(self.locator.for_name("a").exists_on(self.filesystem))
+&gt;       self.assertGreater(os.path.getmtime(file.name), mtime)
+E       AssertionError: 1772683560.0 not greater than 1772697413.4206777
+
+venvs/tests/test_converge.py:145: AssertionError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_stops_post_commands_on_error" time="0.009" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_exists" time="0.004" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_exists_as_broken_symlink" time="0.004" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_m_module" time="0.005" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_m_module_does_not_replace_non_venvs_wrappers" time="0.004" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_m_module_duplicated" time="0.003" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_m_module_replaces_generated_files" time="0.007" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_m_module_specified_name" time="0.004" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_linking_the_same_binary_twice" time="0.004" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_missing_config_recreates_the_venv" time="0.005" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_missing_link_dir" time="0.004" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_modifying_a_bundle_recreates_envs_using_it" time="0.006" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_no_such_bundle" time="0.003"><failure message="tomlkit.exceptions.NonExistentKey: 'Key &quot;dev&quot; does not exist.'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_no_such_bundle&gt;
+
+    def test_no_such_bundle(self):
+        self.assertFalse(self.locator.for_name("a").exists_on(self.filesystem))
+    
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            install = ["foo"]
+            install-bundle = ["dev"]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:262: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:125: in _loop
+    for venv_config in progress(iterable):  # Updated to use progressbar2
+.venv/lib/python3.11/site-packages/progressbar/bar.py:852: in __next__
+    value = next(self._iterable)
+            ^^^^^^^^^^^^^^^^^^^^
+venvs/_config.py:125: in &lt;genexpr&gt;
+    ConfiguredVirtualEnv.from_dict(
+venvs/_config.py:49: in from_dict
+    bundle = bundles[bundle_name]
+             ^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/tomlkit/items.py:1505: in __getitem__
+    return cast(Item, self._value[key])
+                      ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/tomlkit/container.py:622: in __getitem__
+    item = self.item(key)
+           ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = {}, key = &lt;Key dev&gt;
+
+    def item(self, key: Key | str) -&gt; Item:
+        """Get an item for the given key."""
+        if not isinstance(key, Key):
+            key = SingleKey(key)
+    
+        idx = self._map.get(key)
+        if idx is None:
+&gt;           raise NonExistentKey(key)
+E           tomlkit.exceptions.NonExistentKey: 'Key "dev" does not exist.'
+
+.venv/lib/python3.11/site-packages/tomlkit/container.py:464: NonExistentKey</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_specified_link_name" time="0.004" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_specified_python" time="0.017" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_valid_json_invalid_config_recreates_the_venv" time="0.006" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_create_creates_an_env_with_the_given_name" time="0.002" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_handle_empty_config_file" time="0.005" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_install_and_requirements" time="0.003" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_install_default_name" time="0.002" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_install_default_name_with_version_specification" time="0.002" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_install_edit_config" time="0.004" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_install_no_persist" time="0.002" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_link_default_name" time="0.002" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_multiple_installs_one_link" time="0.002" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_multiple_installs_one_link_no_name" time="0.003" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_no_persist_handles_missing_virtualenv_directory" time="0.002" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_persist_handles_missing_config_directory" time="0.004" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_recreate" time="0.003" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_venvs_default_name" time="0.002" /><testcase classname="venvs.tests.test_create.TestIntegration" name="test_it_works" time="0.067" /><testcase classname="venvs.tests.test_find.TestFind" name="test_cannot_specify_random_garbage" time="0.003" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_directory_defaults_to_cwd" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_directory_finds_envs_by_directory" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_directory_with_binary" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_existing_by_dir_fails_for_non_existing_virtualenvs" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_existing_by_dir_succeeds_for_existing_virtualenvs" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_existing_by_name_fails_for_non_existing_virtualenvs" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_existing_by_name_succeeds_for_existing_virtualenvs" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_name_finds_envs_by_name" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_without_args_finds_the_virtualenv_root" time="0.002" /><testcase classname="venvs.tests.test_remove.TestRemove" name="test_can_remove_non_existing_envs_with_force" time="0.002" /><testcase classname="venvs.tests.test_remove.TestRemove" name="test_cannot_remove_non_existing_envs" time="0.002" /><testcase classname="venvs.tests.test_remove.TestRemove" name="test_remove_multiple" time="0.002" /><testcase classname="venvs.tests.test_remove.TestRemove" name="test_remove_removes_an_env_with_the_given_name" time="0.002" /><testcase classname="venvs.tests.test_temporary.TestTemporary" name="test_env_with_single_install" time="0.002" /><testcase classname="venvs.tests.test_temporary.TestTemporary" name="test_it_creates_a_global_temporary_environment" time="0.003" /><testcase classname="venvs.tests.test_temporary.TestTemporary" name="test_it_recreates_the_environment_if_it_exists" time="0.003" /></testsuite></testsuites>

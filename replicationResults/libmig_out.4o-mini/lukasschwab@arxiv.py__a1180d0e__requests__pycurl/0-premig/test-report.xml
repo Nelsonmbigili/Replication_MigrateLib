@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="25" time="64.847" timestamp="2026-03-05T16:19:14.019392+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_api_bugs.TestAPIBugs" name="test_missing_title" time="0.415" /><testcase classname="tests.test_client.TestClient" name="test_invalid_format_id" time="0.417" /><testcase classname="tests.test_client.TestClient" name="test_invalid_id" time="0.435" /><testcase classname="tests.test_client.TestClient" name="test_max_results" time="0.563" /><testcase classname="tests.test_client.TestClient" name="test_no_duplicates" time="0.920" /><testcase classname="tests.test_client.TestClient" name="test_nonexistent_id_in_list" time="3.849" /><testcase classname="tests.test_client.TestClient" name="test_offset" time="6.617" /><testcase classname="tests.test_client.TestClient" name="test_query_page_count" time="17.785" /><testcase classname="tests.test_client.TestClient" name="test_retry" time="0.009" /><testcase classname="tests.test_client.TestClient" name="test_search_results_offset" time="10.490" /><testcase classname="tests.test_client.TestClient" name="test_sleep_between_errors" time="0.004" /><testcase classname="tests.test_client.TestClient" name="test_sleep_elapsed" time="0.002" /><testcase classname="tests.test_client.TestClient" name="test_sleep_multiple_requests" time="0.002" /><testcase classname="tests.test_client.TestClient" name="test_sleep_standard" time="0.002" /><testcase classname="tests.test_client.TestClient" name="test_sleep_zero_delay" time="0.002" /><testcase classname="tests.test_download.TestDownload" name="test_download_from_query" time="0.969"><failure message="urllib.error.URLError: &lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)&gt;">self = &lt;urllib.request.HTTPSHandler object at 0x1068b3b10&gt;
+http_class = &lt;class 'http.client.HTTPSConnection'&gt;
+req = &lt;urllib.request.Request object at 0x103179290&gt;
+http_conn_args = {'check_hostname': None, 'context': None}, host = 'arxiv.org'
+h = &lt;http.client.HTTPSConnection object at 0x1068b3950&gt;
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+&gt;               h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:1348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1286: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1332: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1281: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1041: in _send_output
+    self.send(msg)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:979: in send
+    self.connect()
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1458: in connect
+    self.sock = self._context.wrap_socket(self.sock,
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:517: in wrap_socket
+    return self.sslsocket_class._create(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1108: in _create
+    self.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLSocket [closed] fd=-1, family=2, type=1, proto=0&gt;, block = False
+
+    @_sslcopydoc
+    def do_handshake(self, block=False):
+        self._check_connected()
+        timeout = self.gettimeout()
+        try:
+            if timeout == 0.0 and block:
+                self.settimeout(None)
+&gt;           self._sslobj.do_handshake()
+E           ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1379: SSLCertVerificationError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_download.TestDownload testMethod=test_download_from_query&gt;
+
+    def test_download_from_query(self):
+&gt;       self.fetched_result.download_pdf(dirpath=self.temp_dir)
+
+tests/test_download.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:212: in download_pdf
+    written_path, _ = urlretrieve(self.pdf_url, path)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:241: in urlretrieve
+    with contextlib.closing(urlopen(url, data)) as fp:
+                            ^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:216: in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:519: in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:536: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:496: in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:1391: in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;urllib.request.HTTPSHandler object at 0x1068b3b10&gt;
+http_class = &lt;class 'http.client.HTTPSConnection'&gt;
+req = &lt;urllib.request.Request object at 0x103179290&gt;
+http_conn_args = {'check_hostname': None, 'context': None}, host = 'arxiv.org'
+h = &lt;http.client.HTTPSConnection object at 0x1068b3950&gt;
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+&gt;               raise URLError(err)
+E               urllib.error.URLError: &lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)&gt;
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:1351: URLError</failure></testcase><testcase classname="tests.test_download.TestDownload" name="test_download_tarfile_from_query" time="0.105"><failure message="urllib.error.URLError: &lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)&gt;">self = &lt;urllib.request.HTTPSHandler object at 0x1068b3b10&gt;
+http_class = &lt;class 'http.client.HTTPSConnection'&gt;
+req = &lt;urllib.request.Request object at 0x106fd89d0&gt;
+http_conn_args = {'check_hostname': None, 'context': None}, host = 'arxiv.org'
+h = &lt;http.client.HTTPSConnection object at 0x106fd9fd0&gt;
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+&gt;               h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:1348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1286: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1332: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1281: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1041: in _send_output
+    self.send(msg)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:979: in send
+    self.connect()
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1458: in connect
+    self.sock = self._context.wrap_socket(self.sock,
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:517: in wrap_socket
+    return self.sslsocket_class._create(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1108: in _create
+    self.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLSocket [closed] fd=-1, family=2, type=1, proto=0&gt;, block = False
+
+    @_sslcopydoc
+    def do_handshake(self, block=False):
+        self._check_connected()
+        timeout = self.gettimeout()
+        try:
+            if timeout == 0.0 and block:
+                self.settimeout(None)
+&gt;           self._sslobj.do_handshake()
+E           ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1379: SSLCertVerificationError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_download.TestDownload testMethod=test_download_tarfile_from_query&gt;
+
+    def test_download_tarfile_from_query(self):
+&gt;       self.fetched_result.download_source(dirpath=self.temp_dir)
+
+tests/test_download.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:227: in download_source
+    written_path, _ = urlretrieve(source_url, path)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:241: in urlretrieve
+    with contextlib.closing(urlopen(url, data)) as fp:
+                            ^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:216: in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:519: in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:536: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:496: in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:1391: in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;urllib.request.HTTPSHandler object at 0x1068b3b10&gt;
+http_class = &lt;class 'http.client.HTTPSConnection'&gt;
+req = &lt;urllib.request.Request object at 0x106fd89d0&gt;
+http_conn_args = {'check_hostname': None, 'context': None}, host = 'arxiv.org'
+h = &lt;http.client.HTTPSConnection object at 0x106fd9fd0&gt;
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+&gt;               raise URLError(err)
+E               urllib.error.URLError: &lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)&gt;
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:1351: URLError</failure></testcase><testcase classname="tests.test_download.TestDownload" name="test_download_with_custom_slugify_from_query" time="0.026"><failure message="urllib.error.URLError: &lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)&gt;">self = &lt;urllib.request.HTTPSHandler object at 0x1068b3b10&gt;
+http_class = &lt;class 'http.client.HTTPSConnection'&gt;
+req = &lt;urllib.request.Request object at 0x106fdb610&gt;
+http_conn_args = {'check_hostname': None, 'context': None}, host = 'arxiv.org'
+h = &lt;http.client.HTTPSConnection object at 0x106fdadd0&gt;
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+&gt;               h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:1348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1286: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1332: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1281: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1041: in _send_output
+    self.send(msg)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:979: in send
+    self.connect()
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1458: in connect
+    self.sock = self._context.wrap_socket(self.sock,
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:517: in wrap_socket
+    return self.sslsocket_class._create(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1108: in _create
+    self.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLSocket [closed] fd=-1, family=2, type=1, proto=0&gt;, block = False
+
+    @_sslcopydoc
+    def do_handshake(self, block=False):
+        self._check_connected()
+        timeout = self.gettimeout()
+        try:
+            if timeout == 0.0 and block:
+                self.settimeout(None)
+&gt;           self._sslobj.do_handshake()
+E           ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1379: SSLCertVerificationError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_download.TestDownload testMethod=test_download_with_custom_slugify_from_query&gt;
+
+    def test_download_with_custom_slugify_from_query(self):
+        fn = "custom-filename.extension"
+&gt;       self.fetched_result.download_pdf(dirpath=self.temp_dir, filename=fn)
+
+tests/test_download.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:212: in download_pdf
+    written_path, _ = urlretrieve(self.pdf_url, path)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:241: in urlretrieve
+    with contextlib.closing(urlopen(url, data)) as fp:
+                            ^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:216: in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:519: in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:536: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:496: in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:1391: in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;urllib.request.HTTPSHandler object at 0x1068b3b10&gt;
+http_class = &lt;class 'http.client.HTTPSConnection'&gt;
+req = &lt;urllib.request.Request object at 0x106fdb610&gt;
+http_conn_args = {'check_hostname': None, 'context': None}, host = 'arxiv.org'
+h = &lt;http.client.HTTPSConnection object at 0x106fdadd0&gt;
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+&gt;               raise URLError(err)
+E               urllib.error.URLError: &lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)&gt;
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:1351: URLError</failure></testcase><testcase classname="tests.test_package.TestPackage" name="test_deprecated_import_pattern" time="0.000" /><testcase classname="tests.test_result.TestResult" name="test_eq" time="0.000" /><testcase classname="tests.test_result.TestResult" name="test_from_feed_entry" time="0.496" /><testcase classname="tests.test_result.TestResult" name="test_get_short_id" time="3.331" /><testcase classname="tests.test_result.TestResult" name="test_legacy_ids" time="13.002"><failure message="arxiv.HTTPError: Page request resulted in HTTP 429 (https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100)">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:626: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = self._session.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+        if resp.status_code != requests.codes.OK:
+&gt;           raise HTTPError(url, try_index, resp.status_code)
+E           arxiv.HTTPError: Page request resulted in HTTP 429 (https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100)
+
+arxiv/__init__.py:663: HTTPError
+
+During handling of the above exception, another exception occurred:
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 1
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:626: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 1
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = self._session.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+        if resp.status_code != requests.codes.OK:
+&gt;           raise HTTPError(url, try_index, resp.status_code)
+E           arxiv.HTTPError: Page request resulted in HTTP 429 (https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100)
+
+arxiv/__init__.py:663: HTTPError
+
+During handling of the above exception, another exception occurred:
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 2
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:626: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 2
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = self._session.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+        if resp.status_code != requests.codes.OK:
+&gt;           raise HTTPError(url, try_index, resp.status_code)
+E           arxiv.HTTPError: Page request resulted in HTTP 429 (https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100)
+
+arxiv/__init__.py:663: HTTPError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_result.TestResult testMethod=test_legacy_ids&gt;
+
+    def test_legacy_ids(self):
+        full_legacy_id = "quant-ph/0201082v1"
+&gt;       result = next(self.client.results(arxiv.Search(id_list=[full_legacy_id])))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_result.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:579: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+arxiv/__init__.py:634: in _parse_feed
+    return self._parse_feed(url, first_page=first_page, _try_index=_try_index + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+arxiv/__init__.py:634: in _parse_feed
+    return self._parse_feed(url, first_page=first_page, _try_index=_try_index + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+arxiv/__init__.py:634: in _parse_feed
+    return self._parse_feed(url, first_page=first_page, _try_index=_try_index + 1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+arxiv/__init__.py:636: in _parse_feed
+    raise err
+arxiv/__init__.py:626: in _parse_feed
+    return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 3
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = self._session.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+        if resp.status_code != requests.codes.OK:
+&gt;           raise HTTPError(url, try_index, resp.status_code)
+E           arxiv.HTTPError: Page request resulted in HTTP 429 (https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100)
+
+arxiv/__init__.py:663: HTTPError</failure></testcase><testcase classname="tests.test_result.TestResult" name="test_result_shape" time="3.059" /><testcase classname="tests.test_result.TestResult" name="test_to_datetime" time="0.000" /></testsuite></testsuites>

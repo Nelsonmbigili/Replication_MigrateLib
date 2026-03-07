@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="6" skipped="0" tests="14" time="41.091" timestamp="2026-03-07T06:57:03.251312+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_downlaoder.Test_downloader" name="test_download_url" time="30.353"><failure message="aiohttp.client_exceptions.ConnectionTimeoutError: Connection timeout to host https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_1mb.mp4">self = &lt;aiohttp.connector.TCPConnector object at 0x1030dc4d0&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x1030dc850&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=True debug=False&gt;),)
+kwargs = {'server_hostname': 'sample-videos.com', 'ssl': &lt;ssl.SSLContext object at 0x102df4950&gt;}
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+&gt;               sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1298: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/aiohappyeyeballs/impl.py:73: in start_connection
+    sock = await _connect_sock(
+.venv/lib/python3.11/site-packages/aiohappyeyeballs/impl.py:208: in _connect_sock
+    await loop.sock_connect(sock, address)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;_UnixSelectorEventLoop running=False closed=True debug=False&gt;
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+address = ('103.145.51.95', 443)
+
+    async def sock_connect(self, sock, address):
+        """Connect to a remote socket at address.
+    
+        This method is a coroutine.
+        """
+        base_events._check_ssl_socket(sock)
+        if self._debug and sock.gettimeout() != 0:
+            raise ValueError("the socket must be non-blocking")
+    
+        if sock.family == socket.AF_INET or (
+                base_events._HAS_IPv6 and sock.family == socket.AF_INET6):
+            resolved = await self._ensure_resolved(
+                address, family=sock.family, type=sock.type, proto=sock.proto,
+                loop=self,
+            )
+            _, _, _, _, address = resolved[0]
+    
+        fut = self.create_future()
+        self._sock_connect(fut, sock, address)
+        try:
+&gt;           return await fut
+                   ^^^^^^^^^
+E           asyncio.exceptions.CancelledError
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/selector_events.py:634: CancelledError
+
+The above exception was the direct cause of the following exception:
+
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x1030dc850&gt;
+
+    async def _connect_and_send_request(
+        req: ClientRequest,
+    ) -&gt; ClientResponse:
+        # connection timeout
+        assert self._connector is not None
+        try:
+&gt;           conn = await self._connector.connect(
+                req, traces=traces, timeout=real_timeout
+            )
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1295: in _wrap_create_connection
+    async with ceil_timeout(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Timeout [expired]&gt;
+exc_type = &lt;class 'asyncio.exceptions.CancelledError'&gt;
+exc_val = CancelledError(), exc_tb = &lt;traceback object at 0x1031018c0&gt;
+
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -&gt; Optional[bool]:
+        assert self._state in (_State.ENTERED, _State.EXPIRING)
+    
+        if self._timeout_handler is not None:
+            self._timeout_handler.cancel()
+            self._timeout_handler = None
+    
+        if self._state is _State.EXPIRING:
+            self._state = _State.EXPIRED
+    
+            if self._task.uncancel() &lt;= self._cancelling and exc_type is exceptions.CancelledError:
+                # Since there are no new cancel requests, we're
+                # handling this.
+&gt;               raise TimeoutError from exc_val
+E               TimeoutError
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/timeouts.py:111: TimeoutError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;tests.test_downlaoder.Test_downloader testMethod=test_download_url&gt;
+
+    def test_download_url(self):
+        """Test snapchat_dl download_url."""
+&gt;       asyncio.run(download_url(self.test_url, ".test-data/test_dl_23.mp4", sleep_interval=0))
+
+tests/test_downlaoder.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+snapchat_dl/downloader.py:28: in download_url
+    async with session.get(url) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x1030dc850&gt;
+
+    async def _connect_and_send_request(
+        req: ClientRequest,
+    ) -&gt; ClientResponse:
+        # connection timeout
+        assert self._connector is not None
+        try:
+            conn = await self._connector.connect(
+                req, traces=traces, timeout=real_timeout
+            )
+        except asyncio.TimeoutError as exc:
+&gt;           raise ConnectionTimeoutError(
+                f"Connection timeout to host {req.url}"
+            ) from exc
+E           aiohttp.client_exceptions.ConnectionTimeoutError: Connection timeout to host https://sample-videos.com/video321/mp4/240/big_buck_bunny_240p_1mb.mp4
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:738: ConnectionTimeoutError</failure></testcase><testcase classname="tests.test_downlaoder.Test_downloader" name="test_download_url_raise" time="0.153"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host google.com:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')]">async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+&gt;               return await self._loop.create_connection(*args, **kwargs, sock=sock)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x10382f350&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;tests.test_downlaoder.Test_downloader testMethod=test_download_url_raise&gt;
+
+    def test_download_url_raise(self):
+        """Test snapchat_dl download_url with invalid url."""
+        with self.assertRaises(ClientResponseError):
+&gt;           asyncio.run(download_url(
+                self.test_url404, ".test-data/test_dl_23.mp4", sleep_interval=0
+            ))
+
+tests/test_downlaoder.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+snapchat_dl/downloader.py:28: in download_url
+    async with session.get(url) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host google.com:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1315: ClientConnectorCertificateError</failure></testcase><testcase classname="tests.test_downlaoder.Test_downloader" name="test_empty_download" time="5.016"><failure message="aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host sample-videos.com:443 ssl:default [Connect call failed ('103.145.51.95', 443)]">self = &lt;aiohttp.connector.TCPConnector object at 0x1038fab50&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x1038f9950&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=True debug=False&gt;),)
+kwargs = {'server_hostname': 'sample-videos.com', 'ssl': &lt;ssl.SSLContext object at 0x102df4950&gt;}
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+&gt;               sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1298: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/aiohappyeyeballs/impl.py:122: in start_connection
+    raise first_exception
+.venv/lib/python3.11/site-packages/aiohappyeyeballs/impl.py:73: in start_connection
+    sock = await _connect_sock(
+.venv/lib/python3.11/site-packages/aiohappyeyeballs/impl.py:208: in _connect_sock
+    await loop.sock_connect(sock, address)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/selector_events.py:634: in sock_connect
+    return await fut
+           ^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;_UnixSelectorEventLoop running=False closed=True debug=False&gt;
+fut = None, sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+address = ('103.145.51.95', 443)
+
+    def _sock_connect_cb(self, fut, sock, address):
+        if fut.done():
+            return
+    
+        try:
+            err = sock.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
+            if err != 0:
+                # Jump to any except clause below.
+&gt;               raise OSError(err, f'Connect call failed {address}')
+E               TimeoutError: [Errno 60] Connect call failed ('103.145.51.95', 443)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/selector_events.py:674: TimeoutError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;tests.test_downlaoder.Test_downloader testMethod=test_empty_download&gt;
+
+    def test_empty_download(self):
+        """Test snapchat_dl download_url."""
+        open(".test-data/test_dl_23.mp4", "w").close()
+&gt;       asyncio.run(download_url(self.test_url, ".test-data/test_dl_23.mp4", sleep_interval=0))
+
+tests/test_downlaoder.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+snapchat_dl/downloader.py:28: in download_url
+    async with session.get(url) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x1038fab50&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x1038f9950&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=True debug=False&gt;),)
+kwargs = {'server_hostname': 'sample-videos.com', 'ssl': &lt;ssl.SSLContext object at 0x102df4950&gt;}
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+            raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+        except ssl_errors as exc:
+            raise ClientConnectorSSLError(req.connection_key, exc) from exc
+        except OSError as exc:
+            if exc.errno is None and isinstance(exc, asyncio.TimeoutError):
+                raise
+&gt;           raise client_error(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host sample-videos.com:443 ssl:default [Connect call failed ('103.145.51.95', 443)]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1321: ClientConnectorError</failure></testcase><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_api_error" time="0.003"><failure message="AssertionError: APIResponseError not raised">self = &lt;tests.test_snapchat_dl.TestSnapchat_dl testMethod=test_api_error&gt;
+api_response = &lt;AsyncMock name='_api_response' id='4349395472'&gt;
+
+    @mock.patch("snapchat_dl.snapchat_dl.SnapchatDL._api_response")
+    def test_api_error(self, api_response):
+        """Test snapchat_dl Download."""
+        api_response.return_value = self.html_api_error
+&gt;       with self.assertRaises(APIResponseError):
+E       AssertionError: APIResponseError not raised
+
+tests/test_snapchat_dl.py:58: AssertionError</failure></testcase><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_class_init" time="0.001" /><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_get_stories" time="0.001" /><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_invalid_username" time="0.001"><failure message="AssertionError: UserNotFoundError not raised">self = &lt;tests.test_snapchat_dl.TestSnapchat_dl testMethod=test_invalid_username&gt;
+
+    def test_invalid_username(self):
+        """Test snapchat_dl Stories are not available."""
+&gt;       with self.assertRaises(UserNotFoundError):
+E       AssertionError: UserNotFoundError not raised
+
+tests/test_snapchat_dl.py:51: AssertionError</failure></testcase><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_no_stories" time="0.001"><failure message="AssertionError: NoStoriesFound not raised">self = &lt;tests.test_snapchat_dl.TestSnapchat_dl testMethod=test_no_stories&gt;
+api_response = &lt;AsyncMock name='_api_response' id='4350166480'&gt;
+
+    @mock.patch("snapchat_dl.snapchat_dl.SnapchatDL._api_response")
+    def test_no_stories(self, api_response):
+        """Test snapchat_dl Download."""
+        api_response.return_value = self.html_nostories
+&gt;       with self.assertRaises(NoStoriesFound):
+E       AssertionError: NoStoriesFound not raised
+
+tests/test_snapchat_dl.py:71: AssertionError</failure></testcase><testcase classname="tests.test_snapchat_dl.TestSnapchat_dl" name="test_no_stories" time="0.000"><error message="failed on teardown with &quot;FileNotFoundError: [Errno 2] No such file or directory: '.test-data'&quot;">module = &lt;module 'tests.test_snapchat_dl' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/skyme5@snapchat-dl__9b382d01__requests__aiohttp/tests/test_snapchat_dl.py'&gt;
+
+    def teardown_module(module):
+&gt;       shutil.rmtree(".test-data")
+
+tests/test_snapchat_dl.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/shutil.py:722: in rmtree
+    onerror(os.lstat, path, sys.exc_info())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = '.test-data', ignore_errors = False
+onerror = &lt;function rmtree.&lt;locals&gt;.onerror at 0x103350900&gt;
+
+    def rmtree(path, ignore_errors=False, onerror=None, *, dir_fd=None):
+        """Recursively delete a directory tree.
+    
+        If dir_fd is not None, it should be a file descriptor open to a directory;
+        path will then be relative to that directory.
+        dir_fd may not be implemented on your platform.
+        If it is unavailable, using it will raise a NotImplementedError.
+    
+        If ignore_errors is set, errors are ignored; otherwise, if onerror
+        is set, it is called to handle the error with arguments (func,
+        path, exc_info) where func is platform and implementation dependent;
+        path is the argument to that function that caused it to fail; and
+        exc_info is a tuple returned by sys.exc_info().  If ignore_errors
+        is false and onerror is None, an exception is raised.
+    
+        """
+        sys.audit("shutil.rmtree", path, dir_fd)
+        if ignore_errors:
+            def onerror(*args):
+                pass
+        elif onerror is None:
+            def onerror(*args):
+                raise
+        if _use_fd_functions:
+            # While the unsafe rmtree works fine on bytes, the fd based does not.
+            if isinstance(path, bytes):
+                path = os.fsdecode(path)
+            # Note: To guard against symlink races, we use the standard
+            # lstat()/open()/fstat() trick.
+            try:
+&gt;               orig_st = os.lstat(path, dir_fd=dir_fd)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               FileNotFoundError: [Errno 2] No such file or directory: '.test-data'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/shutil.py:720: FileNotFoundError</error></testcase><testcase classname="tests.test_utils.Test_utils" name="test_search_usernames" time="0.001" /><testcase classname="tests.test_utils.Test_utils" name="test_strf_time" time="0.000" /><testcase classname="tests.test_utils.Test_utils" name="test_use_batch_file" time="0.001" /><testcase classname="tests.test_utils.Test_utils" name="test_use_batch_file_err" time="0.001" /><testcase classname="tests.test_utils.Test_utils" name="test_use_prefix_dir" time="0.001" /><testcase classname="tests.test_utils.Test_utils" name="test_valid_username" time="0.000" /></testsuite></testsuites>

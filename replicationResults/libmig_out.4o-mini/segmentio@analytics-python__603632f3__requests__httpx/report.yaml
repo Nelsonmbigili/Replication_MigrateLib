@@ -1,0 +1,110 @@
+mig: segmentio@analytics-python__603632f3__requests__httpx__603632f3__requests__httpx
+repo: segmentio@analytics-python__603632f3__requests__httpx
+commit: 603632f3aa57965c694209c3e8470d935e443b60
+source: requests
+target: httpx
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 0.28.1
+  finished_at: '2026-03-05 15:30:04'
+  project_coverage: 93.76012965964344
+  total_tests: 79
+  passed_tests: 79
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 88.88888888888889
+  files:
+  - path: segment/analytics/oauth_manager.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 6,13
+    uncovered_changed_lines: ''
+  - path: segment/analytics/request.py
+    file_change_coverage: 60.0
+    covered_changed_lines: 7,12,51
+    uncovered_changed_lines: 44,68
+  - path: segment/analytics/test/test_oauth.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 11,76,86,95,104,118,127,136,146
+    uncovered_changed_lines: ''
+  - path: segment/analytics/test/test_request.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 4,48
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: segment/analytics/test/test_consumer.py::TestConsumer::test_max_batch_size
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ModuleNotFoundError
+    error_message: 'ModuleNotFoundError: No module named ''segment.analytics.request._session'';
+      ''segment.analytics.request'' is not a package'
+  - test_id: segment/analytics/test/test_consumer.py::TestConsumer::test_proxies
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: Client.post() got an unexpected keyword argument ''proxies'''
+  - test_id: segment/analytics/test/test_oauth.py::TestOauthIntegration::test_oauth_integration_failure
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: 0 != 1'
+  - test_id: segment/analytics/test/test_oauth.py::TestOauthIntegration::test_oauth_integration_recovery
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: True is not false'
+  - test_id: segment/analytics/test/test_oauth.py::TestOauthIntegration::test_oauth_integration_success
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: True is not false'
+  - test_id: segment/analytics/test/test_oauth.py::TestOauthManager::test_oauth_fail_unrecoverably
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: 0 != 1'
+  - test_id: segment/analytics/test/test_oauth.py::TestOauthManager::test_oauth_fail_with_retries
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: 0 != 3'
+  - test_id: segment/analytics/test/test_oauth.py::TestOauthManager::test_oauth_rate_limit_delay
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: Expected call: sleep(234)
+
+      Not called'
+  - test_id: segment/analytics/test/test_oauth.py::TestOauthManager::test_oauth_success
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: FatalError
+    error_message: 'segment.analytics.consumer.FatalError: [Segment] [Errno 61] Connection
+      refused)'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

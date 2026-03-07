@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="73" time="18.673" timestamp="2026-03-05T11:28:38.229031" hostname="nelsonmbigili.local"><testcase classname="tests.course_test.CourseTest" name="test_get_course_details" time="0.002" /><testcase classname="tests.course_test.CourseTest" name="test_get_section_details" time="0.001" /><testcase classname="tests.course_test.CourseTest" name="test_get_subject_courses" time="0.001" /><testcase classname="tests.course_test.CourseTest" name="test_get_subject_courses_invalid" time="0.001" /><testcase classname="tests.course_test.CourseTest" name="test_validate_course" time="0.001" /><testcase classname="tests.course_test.CourseTest" name="test_validate_subject" time="0.001" /><testcase classname="tests.course_test.CourseTest" name="test_validate_term" time="0.001" /><testcase classname="tests.dining_test.DiningTest" name="test_get_location_hours" time="0.013" /><testcase classname="tests.dining_test.DiningTest" name="test_get_location_menu" time="0.011" /><testcase classname="tests.dining_test.DiningTest" name="test_get_locations" time="0.003" /><testcase classname="tests.gym_test.GymTest" name="test_fetch_gym_info" time="0.008" /><testcase classname="tests.gym_test.GymTest" name="test_get_gym_info" time="0.007" /><testcase classname="tests.gym_test.GymTest" name="test_invalid_gym_name" time="0.007" /><testcase classname="tests.gym_test.GymTest" name="test_percentage_value_error" time="0.007" /><testcase classname="tests.gym_test.GymTest" name="test_valid_gym_name_not_all_info" time="0.007" /><testcase classname="tests.lab_test.LabTest" name="test_get_all_lab_data" time="8.280" /><testcase classname="tests.lab_test.LabTest" name="test_get_status_bellefield" time="1.172"><failure message="AssertionError: Lab(name='Thaw Hall M06', status=True, available_co[91 chars]s=29) != Lab(name='Bellefield 314', status=False, available_[93 chars]s=30)">self = &lt;tests.lab_test.LabTest testMethod=test_get_status_bellefield&gt;
+
+    @responses.activate
+    def test_get_status_bellefield(self):
+        responses.add(
+            responses.GET,
+            create_test_url("BELLEFIELD"),
+            json=lab_mocks.mocked_bellefield_data,
+        )
+    
+        result = lab.get_one_lab_data("BELLEFIELD")
+    
+        self.assertIsInstance(result, lab.Lab)
+&gt;       self.assertEqual(
+            result,
+            lab.Lab(
+                name="Bellefield 314",
+                status=False,
+                available_computers=29,
+                off_computers=1,
+                in_use_computers=0,
+                out_of_service_computers=0,
+                total_computers=30,
+            ),
+        )
+E       AssertionError: Lab(name='Thaw Hall M06', status=True, available_co[91 chars]s=29) != Lab(name='Bellefield 314', status=False, available_[93 chars]s=30)
+
+tests/lab_test.py:44: AssertionError</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_get_status_benedum" time="1.170"><failure message="AssertionError: Lab(n[21 chars]atus=True, available_computers=23, off_compute[69 chars]s=33) != Lab(n[21 chars]atus=False, available_computers=28, off_comput[69 chars]s=39)">self = &lt;tests.lab_test.LabTest testMethod=test_get_status_benedum&gt;
+
+    @responses.activate
+    def test_get_status_benedum(self):
+        responses.add(
+            responses.GET,
+            create_test_url("BENEDUM"),
+            json=lab_mocks.mocked_benedum_data,
+        )
+    
+        result = lab.get_one_lab_data("BENEDUM")
+    
+        self.assertIsInstance(result, lab.Lab)
+&gt;       self.assertEqual(
+            result,
+            lab.Lab(
+                name="Benedum B06",
+                status=False,
+                available_computers=28,
+                off_computers=7,
+                in_use_computers=4,
+                out_of_service_computers=0,
+                total_computers=39,
+            ),
+        )
+E       AssertionError: Lab(n[21 chars]atus=True, available_computers=23, off_compute[69 chars]s=33) != Lab(n[21 chars]atus=False, available_computers=28, off_comput[69 chars]s=39)
+
+tests/lab_test.py:164: AssertionError</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_get_status_cathg27" time="1.112"><failure message="AssertionError: Lab(n[23 chars]atus=True, available_computers=26, off_compute[68 chars]s=30) != Lab(n[23 chars]atus=False, available_computers=16, off_comput[70 chars]s=30)">self = &lt;tests.lab_test.LabTest testMethod=test_get_status_cathg27&gt;
+
+    @responses.activate
+    def test_get_status_cathg27(self):
+        responses.add(
+            responses.GET,
+            create_test_url("CATH_G27"),
+            json=lab_mocks.mocked_cathy_g27_data,
+        )
+    
+        result = lab.get_one_lab_data("CATH_G27")
+    
+        self.assertIsInstance(result, lab.Lab)
+&gt;       self.assertEqual(
+            result,
+            lab.Lab(
+                name="Cathedral G27",
+                status=False,
+                available_computers=16,
+                off_computers=3,
+                in_use_computers=11,
+                out_of_service_computers=0,
+                total_computers=30,
+            ),
+        )
+E       AssertionError: Lab(n[23 chars]atus=True, available_computers=26, off_compute[68 chars]s=30) != Lab(n[23 chars]atus=False, available_computers=16, off_comput[70 chars]s=30)
+
+tests/lab_test.py:116: AssertionError</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_get_status_cathg62" time="1.034"><failure message="AssertionError: Lab(n[23 chars]atus=True, available_computers=26, off_compute[68 chars]s=27) != Lab(n[23 chars]atus=False, available_computers=26, off_comput[69 chars]s=31)">self = &lt;tests.lab_test.LabTest testMethod=test_get_status_cathg62&gt;
+
+    @responses.activate
+    def test_get_status_cathg62(self):
+        responses.add(
+            responses.GET,
+            create_test_url("CATH_G62"),
+            json=lab_mocks.mocked_cathy_g62_data,
+        )
+    
+        result = lab.get_one_lab_data("CATH_G62")
+    
+        self.assertIsInstance(result, lab.Lab)
+&gt;       self.assertEqual(
+            result,
+            lab.Lab(
+                name="Cathedral G62",
+                status=False,
+                available_computers=26,
+                off_computers=5,
+                in_use_computers=0,
+                out_of_service_computers=0,
+                total_computers=31,
+            ),
+        )
+E       AssertionError: Lab(n[23 chars]atus=True, available_computers=26, off_compute[68 chars]s=27) != Lab(n[23 chars]atus=False, available_computers=26, off_comput[69 chars]s=31)
+
+tests/lab_test.py:140: AssertionError</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_get_status_lawrence" time="1.136"><failure message="AssertionError: Lab(n[28 chars]atus=True, available_computers=32, off_compute[68 chars]s=38) != Lab(n[28 chars]atus=False, available_computers=25, off_comput[70 chars]s=40)">self = &lt;tests.lab_test.LabTest testMethod=test_get_status_lawrence&gt;
+
+    @responses.activate
+    def test_get_status_lawrence(self):
+        responses.add(
+            responses.GET,
+            create_test_url("LAWRENCE"),
+            json=lab_mocks.mocked_lawrence_data,
+        )
+    
+        result = lab.get_one_lab_data("LAWRENCE")
+    
+        self.assertIsInstance(result, lab.Lab)
+&gt;       self.assertEqual(
+            result,
+            lab.Lab(
+                name="David Lawrence 230",
+                status=False,
+                available_computers=25,
+                off_computers=10,
+                in_use_computers=5,
+                out_of_service_computers=0,
+                total_computers=40,
+            ),
+        )
+E       AssertionError: Lab(n[28 chars]atus=True, available_computers=32, off_compute[68 chars]s=38) != Lab(n[28 chars]atus=False, available_computers=25, off_comput[70 chars]s=40)
+
+tests/lab_test.py:68: AssertionError</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_get_status_sutherland" time="1.110"><failure message="AssertionError: Lab(n[51 chars]ters=6, off_computers=4, in_use_computers=1, o[41 chars]s=11) != Lab(n[51 chars]ters=11, off_computers=1, in_use_computers=0, [42 chars]s=12)">self = &lt;tests.lab_test.LabTest testMethod=test_get_status_sutherland&gt;
+
+    @responses.activate
+    def test_get_status_sutherland(self):
+        responses.add(
+            responses.GET,
+            create_test_url("SUTH"),
+            json=lab_mocks.mocked_sutherland_data,
+        )
+    
+        result = lab.get_one_lab_data("SUTH")
+    
+        self.assertIsInstance(result, lab.Lab)
+&gt;       self.assertEqual(
+            result,
+            lab.Lab(
+                name="Sutherland 120",
+                status=False,
+                available_computers=11,
+                off_computers=1,
+                in_use_computers=0,
+                out_of_service_computers=0,
+                total_computers=12,
+            ),
+        )
+E       AssertionError: Lab(n[51 chars]ters=6, off_computers=4, in_use_computers=1, o[41 chars]s=11) != Lab(n[51 chars]ters=11, off_computers=1, in_use_computers=0, [42 chars]s=12)
+
+tests/lab_test.py:92: AssertionError</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_handle_invalid_lab_id" time="1.158"><failure message="Failed: DID NOT RAISE &lt;class 'pittapi.lab.LabAPIError'&gt;">self = &lt;tests.lab_test.LabTest testMethod=test_handle_invalid_lab_id&gt;
+
+    @responses.activate
+    def test_handle_invalid_lab_id(self):
+        responses.add(
+            responses.GET,
+            create_test_url("CATH_G27"),
+            body="Resource not found",
+            status=404,
+        )
+    
+&gt;       with pytest.raises(
+            lab.LabAPIError,
+            match="The Lab ID was invalid. Please open a GitHub issue so we can resolve this.",
+        ):
+E       Failed: DID NOT RAISE &lt;class 'pittapi.lab.LabAPIError'&gt;
+
+tests/lab_test.py:234: Failed</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_handle_unexpected_fetch_err" time="1.138"><failure message="Failed: DID NOT RAISE &lt;class 'pittapi.lab.LabAPIError'&gt;">self = &lt;tests.lab_test.LabTest testMethod=test_handle_unexpected_fetch_err&gt;
+
+    @responses.activate
+    def test_handle_unexpected_fetch_err(self):
+        responses.add(
+            responses.GET,
+            create_test_url("CATH_G27"),
+            body="Unauthorized",
+            status=401,
+        )
+    
+&gt;       with pytest.raises(
+            lab.LabAPIError,
+            match="An unexpected error occurred while fetching lab data: Unauthorized",
+        ):
+E       Failed: DID NOT RAISE &lt;class 'pittapi.lab.LabAPIError'&gt;
+
+tests/lab_test.py:249: Failed</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_invalid_lab_name" time="0.002" /><testcase classname="tests.laundry_test.LaundryTest" name="test_get_building_status_holland" time="0.009" /><testcase classname="tests.laundry_test.LaundryTest" name="test_get_building_status_towers" time="0.007" /><testcase classname="tests.laundry_test.LaundryTest" name="test_get_laundry_machine_statuses_holland" time="0.005" /><testcase classname="tests.laundry_test.LaundryTest" name="test_get_laundry_machine_statuses_towers" time="0.006" /><testcase classname="tests.library_test.LibraryTest" name="test_get_documents" time="0.007" /><testcase classname="tests.library_test.StudyRoomTest" name="test_hillman_total_reserved" time="0.006" /><testcase classname="tests.library_test.StudyRoomTest" name="test_reserved_hillman_times" time="0.005" /><testcase classname="tests.people_test.PeopleTest" name="test_people_get_person" time="0.017" /><testcase classname="tests.people_test.PeopleTest" name="test_people_get_person_none" time="0.004" /><testcase classname="tests.people_test.PeopleTest" name="test_people_get_person_too_many" time="0.003" /><testcase classname="tests.shuttle_test.ShuttleTest" name="test_get_map_vehicle_points" time="0.003" /><testcase classname="tests.shuttle_test.ShuttleTest" name="test_get_route_stop_arrivals" time="0.004" /><testcase classname="tests.shuttle_test.ShuttleTest" name="test_get_routes" time="0.003" /><testcase classname="tests.shuttle_test.ShuttleTest" name="test_vehicle_route_stop_estimates" time="0.004" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_football_record" time="0.002" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_football_record_offseason" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_football_standings" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_mens_basketball_record" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_mens_basketball_record_offseason" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_mens_basketball_standings" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_next_football_game" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_next_football_game_offseason" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_next_mens_basketball_game" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_next_mens_basketball_game_offseason" time="0.001" /><testcase classname="tests.status_test.StatusTest" name="test_get_status" time="0.005" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info" time="0.014" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_convert_input" time="0.013" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_failing_header_requests" time="0.006" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_failing_subject_map_requests" time="0.034" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_invalid_course_num" time="0.011" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_invalid_section_num" time="0.011" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_invalid_subject" time="0.012" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_missing_instructor_and_section_num" time="0.011" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_no_headers" time="0.002" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_deduce_section" time="0.018" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_failing_courses_requests" time="0.035" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_instructor" time="0.016" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_invalid_course" time="0.013" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_invalid_instructor" time="0.014" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_invalid_section_num" time="0.014" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_no_textbook" time="0.016" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_not_enough_info" time="0.013" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_section_num" time="0.016" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_textbook_no_info" time="0.017" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_courses" time="0.021" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_courses_failing_courses_requests" time="0.037" /><testcase classname="tests.textbook_test.TextbookTest" name="test_textbook_from_json" time="0.001" /><testcase classname="tests.textbook_test.TextbookTest" name="test_textbook_from_json_all_empty" time="0.000" /></testsuite></testsuites>

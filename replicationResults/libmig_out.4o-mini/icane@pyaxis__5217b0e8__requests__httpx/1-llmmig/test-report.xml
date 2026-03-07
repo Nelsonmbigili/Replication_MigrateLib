@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="28" time="15.620" timestamp="2026-03-05T13:11:53.545387+04:00" hostname="nelsonmbigili.local"><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_uri_type" time="0.002" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_read" time="1.280" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_metadata_extract" time="3.092" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_metadata_split_to_dict" time="1.571" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_get_dimensions" time="1.654" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_build_dataframe" time="1.550" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_parse" time="4.405"><failure message="AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'">def test_parse():
+        """Should parse a pc-axis into a dataframe and a metadata dictionary"""
+        parsed_pcaxis = pyaxis.parse(
+            'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/'
+            '14001.px?nocab=1',
+            encoding='ISO-8859-15')
+&gt;       assert parsed_pcaxis['DATA'].dtypes['DATA'] == 'object'
+E       AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'
+
+pyaxis/test/integration/test_pyaxis.py:104: AssertionError</failure></testcase><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_http_error" time="0.700"><failure message="AttributeError: module 'httpx' has no attribute 'ConnectionError'">uri = 'https://www.ine.es/jaxi', encoding = 'windows-1252', timeout = 10
+
+    def read(uri, encoding, timeout=10):
+        """Read a text file from file system or URL.
+    
+        Args:
+            uri (str): file name or URL
+            encoding (str): charset encoding
+            timeout (int): request timeout; optional
+    
+        Returns:
+            raw_pcaxis (str): file contents.
+    
+        """
+        raw_pcaxis = ''
+    
+        if uri_type(uri) == 'URL':
+            try:
+                response = httpx.get(uri, timeout=timeout)  # Changed from requests.get to httpx.get
+&gt;               response.raise_for_status()
+
+pyaxis/pyaxis.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404 Not Found]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '404 Not Found' for url 'https://www.ine.es/jaxi'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError
+
+During handling of the above exception, another exception occurred:
+
+    def test_http_error():
+        """Using parse() with a non-existent URL should return a 404."""
+        url = 'https://www.ine.es/jaxi'
+        with pytest.raises(httpx.HTTPStatusError):
+&gt;           pyaxis.parse(url, encoding='windows-1252')
+
+pyaxis/test/integration/test_pyaxis.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyaxis/pyaxis.py:140: in parse
+    pc_axis = read(uri, encoding, timeout)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+uri = 'https://www.ine.es/jaxi', encoding = 'windows-1252', timeout = 10
+
+    def read(uri, encoding, timeout=10):
+        """Read a text file from file system or URL.
+    
+        Args:
+            uri (str): file name or URL
+            encoding (str): charset encoding
+            timeout (int): request timeout; optional
+    
+        Returns:
+            raw_pcaxis (str): file contents.
+    
+        """
+        raw_pcaxis = ''
+    
+        if uri_type(uri) == 'URL':
+            try:
+                response = httpx.get(uri, timeout=timeout)  # Changed from requests.get to httpx.get
+                response.raise_for_status()
+                raw_pcaxis = response.text  # Removed response.encoding assignment
+                response.close()
+            except httpx.ConnectTimeout as connect_timeout:  # Changed exception handling
+                logger.error('ConnectionTimeout = %s', str(connect_timeout))
+                raise
+&gt;           except httpx.ConnectionError as connection_error:
+                   ^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'httpx' has no attribute 'ConnectionError'
+
+pyaxis/pyaxis.py:93: AttributeError</failure></testcase><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_connection_error" time="0.022"><failure message="AttributeError: module 'httpx' has no attribute 'ConnectionError'">@contextlib.contextmanager
+    def map_httpcore_exceptions() -&gt; typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+&gt;           yield
+
+.venv/lib/python3.11/site-packages/httpx/_transports/default.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/httpx/_transports/default.py:250: in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py:256: in handle_request
+    raise exc from None
+.venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py:236: in handle_request
+    response = connection.handle_request(
+.venv/lib/python3.11/site-packages/httpcore/_sync/connection.py:101: in handle_request
+    raise exc
+.venv/lib/python3.11/site-packages/httpcore/_sync/connection.py:78: in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/httpcore/_sync/connection.py:124: in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/httpcore/_backends/sync.py:207: in connect_tcp
+    with map_exceptions(exc_map):
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:155: in __exit__
+    self.gen.throw(typ, value, traceback)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+map = {&lt;class 'TimeoutError'&gt;: &lt;class 'httpcore.ConnectTimeout'&gt;, &lt;class 'OSError'&gt;: &lt;class 'httpcore.ConnectError'&gt;}
+
+    @contextlib.contextmanager
+    def map_exceptions(map: ExceptionMapping) -&gt; typing.Iterator[None]:
+        try:
+            yield
+        except Exception as exc:  # noqa: PIE786
+            for from_exc, to_exc in map.items():
+                if isinstance(exc, from_exc):
+&gt;                   raise to_exc(exc) from exc
+E                   httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+.venv/lib/python3.11/site-packages/httpcore/_exceptions.py:14: ConnectError
+
+The above exception was the direct cause of the following exception:
+
+uri = 'https://www.ine.net/jaxiT3/files/t/es/px/1001.px'
+encoding = 'windows-1252', timeout = 10
+
+    def read(uri, encoding, timeout=10):
+        """Read a text file from file system or URL.
+    
+        Args:
+            uri (str): file name or URL
+            encoding (str): charset encoding
+            timeout (int): request timeout; optional
+    
+        Returns:
+            raw_pcaxis (str): file contents.
+    
+        """
+        raw_pcaxis = ''
+    
+        if uri_type(uri) == 'URL':
+            try:
+&gt;               response = httpx.get(uri, timeout=timeout)  # Changed from requests.get to httpx.get
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+pyaxis/pyaxis.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/httpx/_api.py:195: in get
+    return request(
+.venv/lib/python3.11/site-packages/httpx/_api.py:109: in request
+    return client.request(
+.venv/lib/python3.11/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+.venv/lib/python3.11/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+.venv/lib/python3.11/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/httpx/_transports/default.py:249: in handle_request
+    with map_httpcore_exceptions():
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:155: in __exit__
+    self.gen.throw(typ, value, traceback)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @contextlib.contextmanager
+    def map_httpcore_exceptions() -&gt; typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+            yield
+        except Exception as exc:
+            mapped_exc = None
+    
+            for from_exc, to_exc in HTTPCORE_EXC_MAP.items():
+                if not isinstance(exc, from_exc):
+                    continue
+                # We want to map to the most specific exception we can find.
+                # Eg if `exc` is an `httpcore.ReadTimeout`, we want to map to
+                # `httpx.ReadTimeout`, not just `httpx.TimeoutException`.
+                if mapped_exc is None or issubclass(to_exc, mapped_exc):
+                    mapped_exc = to_exc
+    
+            if mapped_exc is None:  # pragma: no cover
+                raise
+    
+            message = str(exc)
+&gt;           raise mapped_exc(message) from exc
+E           httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+.venv/lib/python3.11/site-packages/httpx/_transports/default.py:118: ConnectError
+
+During handling of the above exception, another exception occurred:
+
+    def test_connection_error():
+        """Using parse() with a wrong URL should return a connection error."""
+        url = 'https://www.ine.net/jaxiT3/files/t/es/px/1001.px'
+    
+        with pytest.raises(httpx.ConnectError):
+&gt;           pyaxis.parse(url, encoding='windows-1252')
+
+pyaxis/test/integration/test_pyaxis.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyaxis/pyaxis.py:140: in parse
+    pc_axis = read(uri, encoding, timeout)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+uri = 'https://www.ine.net/jaxiT3/files/t/es/px/1001.px'
+encoding = 'windows-1252', timeout = 10
+
+    def read(uri, encoding, timeout=10):
+        """Read a text file from file system or URL.
+    
+        Args:
+            uri (str): file name or URL
+            encoding (str): charset encoding
+            timeout (int): request timeout; optional
+    
+        Returns:
+            raw_pcaxis (str): file contents.
+    
+        """
+        raw_pcaxis = ''
+    
+        if uri_type(uri) == 'URL':
+            try:
+                response = httpx.get(uri, timeout=timeout)  # Changed from requests.get to httpx.get
+                response.raise_for_status()
+                raw_pcaxis = response.text  # Removed response.encoding assignment
+                response.close()
+            except httpx.ConnectTimeout as connect_timeout:  # Changed exception handling
+                logger.error('ConnectionTimeout = %s', str(connect_timeout))
+                raise
+&gt;           except httpx.ConnectionError as connection_error:
+                   ^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'httpx' has no attribute 'ConnectionError'
+
+pyaxis/pyaxis.py:93: AttributeError</failure></testcase><testcase classname="pyaxis.test.unit.test_json_stat" name="test_to_json_stat" time="0.095" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_uri_type" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_read" time="0.001" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_metadata_extract" time="0.001" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_metadata_split_to_dict" time="0.001" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_metadata_split_dict_quotation_marks" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_split_ignore_quotation_marks" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_get_dimensions" time="0.001" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_get_codes" time="0.001" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_build_dataframe" time="0.020" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_make_unique_list" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_brackets_stripper" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_multilingual_checker" time="0.013" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_get_default_lang" time="0.011" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_metadata_dict_maker" time="0.012" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_translation_dict_maker" time="0.011" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_multilingual_parse" time="0.011" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_parse" time="0.022"><failure message="AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'">def test_parse():
+        """Should parse a pc-axis into a dataframe and a metadata dictionary"""
+        parsed_pcaxis = pyaxis.parse(
+            data_path + '14001.px',
+            encoding='ISO-8859-15')
+&gt;       assert parsed_pcaxis['DATA'].dtypes['DATA'] == 'object'
+E       AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'
+
+pyaxis/test/unit/test_pyaxis.py:222: AssertionError</failure></testcase><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_statistical_disclosure" time="0.005"><failure message="AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'">def test_statistical_disclosure():
+        """Should parse a pc-axis with statistical disclosure into a dataframe.
+    
+        Uses convenient Na or NaN representations and a metadata dict.
+        """
+        parsed_pcaxis = pyaxis.parse(
+            data_path + '27067.px',
+            encoding='ISO-8859-2')
+&gt;       assert parsed_pcaxis['DATA'].dtypes['DATA'] == 'object'
+E       AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'
+
+pyaxis/test/unit/test_pyaxis.py:240: AssertionError</failure></testcase></testsuite></testsuites>
