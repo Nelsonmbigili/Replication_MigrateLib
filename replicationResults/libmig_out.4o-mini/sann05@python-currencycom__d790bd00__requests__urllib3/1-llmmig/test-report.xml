@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="3" failures="18" skipped="1" tests="47" time="0.541" timestamp="2026-03-10T16:28:18.305102+04:00" hostname="nelsonmbigili.local"><testcase classname="integration_tests.rest.test_account.TestAccount" name="test_base" time="0.001"><error message="failed on setup with &quot;OSError: Missing required environmental variables: API_KEY, API_SECRET&quot;">@pytest.fixture(scope="session", autouse=True)
+    def check_env_variables():
+        required_vars = [API_KEY_VAR, API_SECRET_VAR]
+        missing_vars = []
+        for var in required_vars:
+            if var not in os.environ:
+                missing_vars.append(var)
+    
+        if len(missing_vars) &gt; 0:
+&gt;           raise EnvironmentError("Missing required environmental variables: "
+                                   f"{', '.join(missing_vars)}")
+E           OSError: Missing required environmental variables: API_KEY, API_SECRET
+
+integration_tests/rest/conftest.py:20: OSError</error></testcase><testcase classname="integration_tests.rest.test_account.TestAccount" name="test_show_balances_without_0" time="0.000"><error message="failed on setup with &quot;OSError: Missing required environmental variables: API_KEY, API_SECRET&quot;">@pytest.fixture(scope="session", autouse=True)
+    def check_env_variables():
+        required_vars = [API_KEY_VAR, API_SECRET_VAR]
+        missing_vars = []
+        for var in required_vars:
+            if var not in os.environ:
+                missing_vars.append(var)
+    
+        if len(missing_vars) &gt; 0:
+&gt;           raise EnvironmentError("Missing required environmental variables: "
+                                   f"{', '.join(missing_vars)}")
+E           OSError: Missing required environmental variables: API_KEY, API_SECRET
+
+integration_tests/rest/conftest.py:20: OSError</error></testcase><testcase classname="integration_tests.rest.test_account.TestAccount" name="test_show_balances_with_0" time="0.000"><error message="failed on setup with &quot;OSError: Missing required environmental variables: API_KEY, API_SECRET&quot;">@pytest.fixture(scope="session", autouse=True)
+    def check_env_variables():
+        required_vars = [API_KEY_VAR, API_SECRET_VAR]
+        missing_vars = []
+        for var in required_vars:
+            if var not in os.environ:
+                missing_vars.append(var)
+    
+        if len(missing_vars) &gt; 0:
+&gt;           raise EnvironmentError("Missing required environmental variables: "
+                                   f"{', '.join(missing_vars)}")
+E           OSError: Missing required environmental variables: API_KEY, API_SECRET
+
+integration_tests/rest/conftest.py:20: OSError</error></testcase><testcase classname="tests.test_client.TestClient" name="test_not_called" time="0.063" /><testcase classname="tests.test_client.TestClient" name="test_get_server_time" time="0.001"><failure message="TypeError: Client._get() missing 1 required positional argument: 'url'">self = &lt;tests.test_client.TestClient object at 0x1034167d0&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x1035c1190&gt;
+
+    def test_get_server_time(self, monkeypatch):
+&gt;       self.client.get_server_time()
+
+tests/test_client.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @staticmethod
+    def get_server_time():
+        """
+        Test connectivity to the API and get the current server time.
+    
+        :return: dict object
+        Response:
+        {
+          "serverTime": 1499827319559
+        }
+        """
+&gt;       return Client._get(CurrencyComConstants.SERVER_TIME_ENDPOINT)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Client._get() missing 1 required positional argument: 'url'
+
+currencycom/client.py:776: TypeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_exchange_info" time="0.001"><failure message="TypeError: Client._get() missing 1 required positional argument: 'url'">self = &lt;tests.test_client.TestClient object at 0x103416e50&gt;
+
+    def test_get_exchange_info(self):
+&gt;       self.client.get_exchange_info()
+
+tests/test_client.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @staticmethod
+    def get_exchange_info():
+        """
+        Current exchange trading rules and symbol information.
+    
+        :return: dict object
+        Response:
+        {
+          "timezone": "UTC",
+          "serverTime": 1577178958852,
+          "rateLimits": [
+            {
+              //These are defined in the `ENUM definitions`
+              // section under `Rate Limiters (rateLimitType)`.
+              //All limits are optional
+            }
+          ],
+            "symbols": [
+                {
+                    "symbol": "DPW",
+                    "name":"Deutsche Post",
+                    "status": "TRADING",
+                    "baseAsset": "DPW",
+                    "baseAssetPrecision": 3,
+                    "quoteAsset": "EUR",
+                    "quotePrecision": 3,
+                    "orderTypes": [
+                        "LIMIT",
+                        "MARKET"
+                    ],
+                    "icebergAllowed": false,
+                    "filters": [],
+                    "marginTradingAllowed": true,
+                    "spotTradingAllowed": true
+                },
+          ]
+        }
+        """
+&gt;       return Client._get(CurrencyComConstants.EXCHANGE_INFORMATION_ENDPOINT)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Client._get() missing 1 required positional argument: 'url'
+
+currencycom/client.py:372: TypeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_order_book_default" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x103417550&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x1035f96d0&gt;
+
+    def test_get_order_book_default(self, monkeypatch):
+        val_lim_mock = MagicMock()
+        monkeypatch.setattr(self.client, '_validate_limit', val_lim_mock)
+        symbol = 'TEST'
+&gt;       self.client.get_order_book(symbol)
+
+tests/test_client.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:331: in get_order_book
+    return self._get(CurrencyComConstants.ORDER_BOOK_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x1035fbd10&gt;
+kwargs = {'limit': 100, 'symbol': 'TEST', 'timestamp': 1773145698490}
+t = 1773145698490
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_order_book_with_limit" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x103417c50&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10364bc90&gt;
+
+    def test_get_order_book_with_limit(self, monkeypatch):
+        val_lim_mock = MagicMock()
+        limit = 500
+        monkeypatch.setattr(self.client, '_validate_limit', val_lim_mock)
+        symbol = 'TEST'
+&gt;       self.client.get_order_book(symbol, limit)
+
+tests/test_client.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:331: in get_order_book
+    return self._get(CurrencyComConstants.ORDER_BOOK_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x103649bd0&gt;
+kwargs = {'limit': 500, 'symbol': 'TEST', 'timestamp': 1773145698509}
+t = 1773145698509
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_default" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x1034283d0&gt;
+
+    def test_get_agg_trades_default(self):
+        symbol = 'TEST'
+&gt;       self.client.get_agg_trades(symbol)
+
+tests/test_client.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:271: in get_agg_trades
+    return self._get(CurrencyComConstants.AGGREGATE_TRADE_LIST_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x1036d7650&gt;
+kwargs = {'limit': 500, 'symbol': 'TEST', 'timestamp': 1773145698527}
+t = 1773145698527
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_limit_set" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x103428b10&gt;
+
+    def test_get_agg_trades_limit_set(self):
+        symbol = 'TEST'
+        limit = 20
+&gt;       self.client.get_agg_trades(symbol, limit=limit)
+
+tests/test_client.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:271: in get_agg_trades
+    return self._get(CurrencyComConstants.AGGREGATE_TRADE_LIST_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x10373a250&gt;
+kwargs = {'limit': 20, 'symbol': 'TEST', 'timestamp': 1773145698546}
+t = 1773145698546
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_max_limit" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x103429250&gt;
+
+    def test_get_agg_trades_max_limit(self):
+        symbol = 'TEST'
+        limit = CurrencyComConstants.AGG_TRADES_MAX_LIMIT
+&gt;       self.client.get_agg_trades(symbol, limit=limit)
+
+tests/test_client.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:271: in get_agg_trades
+    return self._get(CurrencyComConstants.AGGREGATE_TRADE_LIST_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x1036fed10&gt;
+kwargs = {'limit': 1000, 'symbol': 'TEST', 'timestamp': 1773145698565}
+t = 1773145698565
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_exceed_limit" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_only_start_time_set" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x103429090&gt;
+
+    def test_get_agg_trades_only_start_time_set(self):
+        symbol = 'TEST'
+        start_time = datetime(2019, 1, 1, 1, 1, 1)
+&gt;       self.client.get_agg_trades(symbol, start_time=start_time)
+
+tests/test_client.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:271: in get_agg_trades
+    return self._get(CurrencyComConstants.AGGREGATE_TRADE_LIST_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x1036d6cd0&gt;
+kwargs = {'limit': 500, 'startTime': 1546290061000, 'symbol': 'TEST', 'timestamp': 1773145698585}
+t = 1773145698585
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_only_end_time_set" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x103429cd0&gt;
+
+    def test_get_agg_trades_only_end_time_set(self):
+        symbol = 'TEST'
+        end_time = datetime(2019, 1, 1, 1, 1, 1)
+&gt;       self.client.get_agg_trades(symbol, end_time=end_time)
+
+tests/test_client.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:271: in get_agg_trades
+    return self._get(CurrencyComConstants.AGGREGATE_TRADE_LIST_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x1036da610&gt;
+kwargs = {'endTime': 1546290061000, 'limit': 500, 'symbol': 'TEST', 'timestamp': 1773145698603}
+t = 1773145698603
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_both_time_set" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x10342a050&gt;
+
+    def test_get_agg_trades_both_time_set(self):
+        symbol = 'TEST'
+        start_time = datetime(2019, 1, 1, 1, 1, 1)
+        end_time = datetime(2019, 1, 1, 1, 1, 20)
+&gt;       self.client.get_agg_trades(symbol,
+                                   start_time=start_time,
+                                   end_time=end_time)
+
+tests/test_client.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:271: in get_agg_trades
+    return self._get(CurrencyComConstants.AGGREGATE_TRADE_LIST_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x10372fdd0&gt;
+kwargs = {'endTime': 1546290080000, 'limit': 500, 'startTime': 1546290061000, 'symbol': 'TEST', ...}
+t = 1773145698621
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_agg_trades_both_time_set_exceed_max_range" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_klines_default" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x10342a7d0&gt;
+
+    def test_get_klines_default(self):
+        symbol = 'TEST'
+&gt;       self.client.get_klines(symbol, CandlesticksChartInervals.DAY)
+
+tests/test_client.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:418: in get_klines
+    return self._get(CurrencyComConstants.KLINES_DATA_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x1036a8150&gt;
+kwargs = {'interval': '1d', 'limit': 500, 'symbol': 'TEST', 'timestamp': 1773145698641}
+t = 1773145698641
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_with_limit" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x10342ae50&gt;
+
+    def test_get_klines_with_limit(self):
+        symbol = 'TEST'
+        limit = 123
+&gt;       self.client.get_klines(symbol, CandlesticksChartInervals.DAY,
+                               limit=limit)
+
+tests/test_client.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:418: in get_klines
+    return self._get(CurrencyComConstants.KLINES_DATA_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x1037847d0&gt;
+kwargs = {'interval': '1d', 'limit': 123, 'symbol': 'TEST', 'timestamp': 1773145698659}
+t = 1773145698659
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_max_limit" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x10342b4d0&gt;
+
+    def test_get_klines_max_limit(self):
+        symbol = 'TEST'
+        limit = CurrencyComConstants.KLINES_MAX_LIMIT
+&gt;       self.client.get_klines(symbol, CandlesticksChartInervals.DAY,
+                               limit=limit)
+
+tests/test_client.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:418: in get_klines
+    return self._get(CurrencyComConstants.KLINES_DATA_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x103763350&gt;
+kwargs = {'interval': '1d', 'limit': 1000, 'symbol': 'TEST', 'timestamp': 1773145698677}
+t = 1773145698677
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_exceed_max_limit" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_klines_with_startTime" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x103438210&gt;
+
+    def test_get_klines_with_startTime(self):
+        symbol = 'TEST'
+        start_date = datetime(2020, 1, 1)
+&gt;       self.client.get_klines(symbol,
+                               CandlesticksChartInervals.DAY,
+                               start_time=start_date)
+
+tests/test_client.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:418: in get_klines
+    return self._get(CurrencyComConstants.KLINES_DATA_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x1036defd0&gt;
+kwargs = {'interval': '1d', 'limit': 500, 'startTime': 1577822400000, 'symbol': 'TEST', ...}
+t = 1773145698703
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_with_endTime" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x103438950&gt;
+
+    def test_get_klines_with_endTime(self):
+        symbol = 'TEST'
+        end_time = datetime(2020, 1, 1)
+&gt;       self.client.get_klines(symbol,
+                               CandlesticksChartInervals.DAY,
+                               end_time=end_time)
+
+tests/test_client.py:189: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:418: in get_klines
+    return self._get(CurrencyComConstants.KLINES_DATA_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x1036c1c90&gt;
+kwargs = {'endTime': 1577822400000, 'interval': '1d', 'limit': 500, 'symbol': 'TEST', ...}
+t = 1773145698721
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_klines_with_startTime_and_endTime" time="0.001"><failure message="AttributeError: 'function' object has no attribute 'urlencode'">self = &lt;tests.test_client.TestClient object at 0x103439090&gt;
+
+    def test_get_klines_with_startTime_and_endTime(self):
+        symbol = 'TEST'
+        start_time = datetime(2020, 1, 1)
+        end_time = datetime(2021, 1, 1)
+&gt;       self.client.get_klines(symbol,
+                               CandlesticksChartInervals.DAY,
+                               start_time=start_time,
+                               end_time=end_time)
+
+tests/test_client.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+currencycom/client.py:418: in get_klines
+    return self._get(CurrencyComConstants.KLINES_DATA_ENDPOINT,
+currencycom/client.py:161: in _get
+    fields=self._get_params_with_signature(**kwargs),
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;currencycom.client.Client object at 0x103746050&gt;
+kwargs = {'endTime': 1609444800000, 'interval': '1d', 'limit': 500, 'startTime': 1577822400000, ...}
+t = 1773145698739
+
+    def _get_params_with_signature(self, **kwargs):
+        t = self._to_epoch_miliseconds(datetime.now())
+        kwargs['timestamp'] = t
+&gt;       body = urllib3.request.urlencode(kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'function' object has no attribute 'urlencode'
+
+currencycom/client.py:148: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_24h_price_change_default" time="0.001"><failure message="TypeError: Client._get() missing 1 required positional argument: 'url'">self = &lt;tests.test_client.TestClient object at 0x1034397d0&gt;
+
+    def test_get_24h_price_change_default(self):
+&gt;       self.client.get_24h_price_change()
+
+tests/test_client.py:218: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+symbol = None
+
+    @staticmethod
+    def get_24h_price_change(symbol=None):
+        """
+        24-hour rolling window price change statistics. Careful when accessing
+        this with no symbol.
+        If the symbol is not sent, tickers for all symbols will be returned in
+        an array.
+        :param symbol:
+        :return: dict object
+    
+        Response:
+        {
+          "symbol": "LTC/USD",
+          "priceChange": "0.88",
+          "priceChangePercent": "1.49",
+          "weightedAvgPrice": "59.29",
+          "prevClosePrice": "58.37",
+          "lastPrice": "59.25",
+          "lastQty": "220.0",
+          "bidPrice": "59.25",
+          "askPrice": "59.32",
+          "openPrice": "58.37",
+          "highPrice": "61.39",
+          "lowPrice": "58.37",
+          "volume": "22632",
+          "quoteVolume": "440.0",
+          "openTime": 1580169600000,
+          "closeTime": 1580205307222,
+          "firstId": 0,
+          "lastId": 0,
+          "count": 0
+        }
+    
+        OR
+    
+        {
+          "symbol": "LTC/USD",
+          "priceChange": null,
+          "priceChangePercent": null,
+          "weightedAvgPrice": "59.29",
+          "prevClosePrice": null,
+          "lastPrice": "59.23",
+          "lastQty": "220.0",
+          "bidPrice": "59.23",
+          "askPrice": "59.35",
+          "openPrice": null,
+          "highPrice": null,
+          "lowPrice": null,
+          "volume": null,
+          "quoteVolume": "432.18",
+          "openTime": 0,
+          "closeTime": 0,
+          "firstId": 0,
+          "lastId": 0,
+          "count": 0
+        }
+        """
+&gt;       return Client._get(CurrencyComConstants.PRICE_CHANGE_24H_ENDPOINT,
+                           params={'symbol': symbol} if symbol else {})
+E       TypeError: Client._get() missing 1 required positional argument: 'url'
+
+currencycom/client.py:762: TypeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_get_24h_price_change_with_symbol" time="0.001"><failure message="TypeError: Client._get() missing 1 required positional argument: 'url'">self = &lt;tests.test_client.TestClient object at 0x103439f10&gt;
+
+    def test_get_24h_price_change_with_symbol(self):
+        symbol = 'TEST'
+&gt;       self.client.get_24h_price_change(symbol)
+
+tests/test_client.py:226: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+symbol = 'TEST'
+
+    @staticmethod
+    def get_24h_price_change(symbol=None):
+        """
+        24-hour rolling window price change statistics. Careful when accessing
+        this with no symbol.
+        If the symbol is not sent, tickers for all symbols will be returned in
+        an array.
+        :param symbol:
+        :return: dict object
+    
+        Response:
+        {
+          "symbol": "LTC/USD",
+          "priceChange": "0.88",
+          "priceChangePercent": "1.49",
+          "weightedAvgPrice": "59.29",
+          "prevClosePrice": "58.37",
+          "lastPrice": "59.25",
+          "lastQty": "220.0",
+          "bidPrice": "59.25",
+          "askPrice": "59.32",
+          "openPrice": "58.37",
+          "highPrice": "61.39",
+          "lowPrice": "58.37",
+          "volume": "22632",
+          "quoteVolume": "440.0",
+          "openTime": 1580169600000,
+          "closeTime": 1580205307222,
+          "firstId": 0,
+          "lastId": 0,
+          "count": 0
+        }
+    
+        OR
+    
+        {
+          "symbol": "LTC/USD",
+          "priceChange": null,
+          "priceChangePercent": null,
+          "weightedAvgPrice": "59.29",
+          "prevClosePrice": null,
+          "lastPrice": "59.23",
+          "lastQty": "220.0",
+          "bidPrice": "59.23",
+          "askPrice": "59.35",
+          "openPrice": null,
+          "highPrice": null,
+          "lowPrice": null,
+          "volume": null,
+          "quoteVolume": "432.18",
+          "openTime": 0,
+          "closeTime": 0,
+          "firstId": 0,
+          "lastId": 0,
+          "count": 0
+        }
+        """
+&gt;       return Client._get(CurrencyComConstants.PRICE_CHANGE_24H_ENDPOINT,
+                           params={'symbol': symbol} if symbol else {})
+E       TypeError: Client._get() missing 1 required positional argument: 'url'
+
+currencycom/client.py:762: TypeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_new_order_default_buy" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_new_order_default_sell" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_new_order_invalid_recv_window" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_new_order_default_limit" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_new_order_incorrect_limit_no_price" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_new_order_incorrect_limit_no_time_in_force" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_cancel_order_default_order_id" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_cancel_order_default_client_order_id" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_cancel_order_default_no_id" time="0.000"><skipped type="pytest.skip" message="order_id param became mandatory">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sann05@python-currencycom__d790bd00__requests__urllib3/tests/test_client.py:381: order_id param became mandatory</skipped></testcase><testcase classname="tests.test_client.TestClient" name="test_cancel_order_invalid_recv_window" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_open_orders_default" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_open_orders_with_symbol" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_open_orders_invalid_recv_window" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_account_info_default" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_account_info_invalid_recv_window" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_default" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_with_start_time" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_with_end_time" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_with_start_and_end_times" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_incorrect_recv_window" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test_get_account_trade_list_incorrect_limit" time="0.001" /><testcase classname="tests.test_client.TestClient" name="test__to_epoch_miliseconds_default" time="0.001" /></testsuite></testsuites>

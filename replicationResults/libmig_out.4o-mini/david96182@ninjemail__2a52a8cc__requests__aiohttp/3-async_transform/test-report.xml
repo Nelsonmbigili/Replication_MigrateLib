@@ -1,0 +1,1550 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="8" failures="21" skipped="0" tests="85" time="1.238" timestamp="2026-03-10T05:44:23.865567+04:00" hostname="nelsonmbigili.local"><testcase classname="ninjemail.tests.test_email_gmail" name="test_create_account_firefox_and_getsmscode" time="0.063" /><testcase classname="ninjemail.tests.test_email_gmail" name="test_create_account_chrome_and_smspool" time="0.003"><failure message="RuntimeError: no running event loop">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10897f790&gt;
+
+    def test_create_account_chrome_and_smspool(monkeypatch):
+        monkeypatch.setattr('sms_services.smspool.SMSPool.get_phone', mock_get_phone_smspool)
+        monkeypatch.setattr('sms_services.smspool.SMSPool.get_code', mock_get_code)
+    
+        driver = create_driver('chrome')
+        # Test data
+        sms_key = {
+            "name": "smspool",
+            "data": {
+                "token": "your_api_key",
+            }
+        }
+        username = "testuser"
+        password = "testpassword"
+        first_name = "John"
+        last_name = "Doe"
+        month = "1"
+        day = "1"
+        year = "2000"
+    
+&gt;       email, password = create_account(driver, sms_key, username, password, first_name, last_name, month, day, year)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_email_gmail.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/email_providers/gmail.py:59: in create_account
+    sms_provider = get_sms_instance(sms_key, 'google')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ninjemail/sms_services/__init__.py:30: in get_sms_instance
+    sms_provider = smspool.SMSPool(**data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+ninjemail/sms_services/smspool.py:43: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x108930e50&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</failure></testcase><testcase classname="ninjemail.tests.test_email_gmail" name="test_create_account_chrome_and_fivesim" time="0.019" /><testcase classname="ninjemail.tests.test_email_gmail" name="test_create_account_phone_fail" time="0.015" /><testcase classname="ninjemail.tests.test_email_gmail" name="test_create_account_code_fail" time="0.003"><failure message="AssertionError: Regex pattern did not match.&#10;  Expected regex: 'Failed to retreive code'&#10;  Actual message: 'no running event loop'">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x108b91c50&gt;
+
+    def test_create_account_code_fail(monkeypatch):
+        monkeypatch.setattr('sms_services.smspool.SMSPool.get_phone', mock_get_phone_smspool)
+        monkeypatch.setattr('sms_services.smspool.SMSPool.get_code', mock_get_code_fail)
+    
+        driver = create_driver('firefox')
+        # Test data
+        sms_key = {
+            "name": "smspool",
+            "data": {
+                "token": "your_api_key",
+            }
+        }
+        username = "testuser"
+        password = "testpassword"
+        first_name = "John"
+        last_name = "Doe"
+        month = "1"
+        day = "1"
+        year = "2000"
+    
+        with pytest.raises(Exception, match="Failed to retreive code"):
+&gt;           email, password = create_account(driver, sms_key, username, password, first_name, last_name, month, day, year)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_email_gmail.py:193: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/email_providers/gmail.py:59: in create_account
+    sms_provider = get_sms_instance(sms_key, 'google')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ninjemail/sms_services/__init__.py:30: in get_sms_instance
+    sms_provider = smspool.SMSPool(**data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+ninjemail/sms_services/smspool.py:43: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x108b60150&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x108b91c50&gt;
+
+    def test_create_account_code_fail(monkeypatch):
+        monkeypatch.setattr('sms_services.smspool.SMSPool.get_phone', mock_get_phone_smspool)
+        monkeypatch.setattr('sms_services.smspool.SMSPool.get_code', mock_get_code_fail)
+    
+        driver = create_driver('firefox')
+        # Test data
+        sms_key = {
+            "name": "smspool",
+            "data": {
+                "token": "your_api_key",
+            }
+        }
+        username = "testuser"
+        password = "testpassword"
+        first_name = "John"
+        last_name = "Doe"
+        month = "1"
+        day = "1"
+        year = "2000"
+    
+&gt;       with pytest.raises(Exception, match="Failed to retreive code"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Failed to retreive code'
+E         Actual message: 'no running event loop'
+
+ninjemail/tests/test_email_gmail.py:192: AssertionError</failure></testcase><testcase classname="ninjemail.tests.test_email_outlook" name="test_create_account_firefox" time="0.016" /><testcase classname="ninjemail.tests.test_email_outlook" name="test_create_account_chrome" time="0.016" /><testcase classname="ninjemail.tests.test_email_outlook" name="test_create_hotmail_account" time="0.032" /><testcase classname="ninjemail.tests.test_email_yahoo" name="test_create_account_firefox_and_getsmscode" time="0.014" /><testcase classname="ninjemail.tests.test_email_yahoo" name="test_create_account_chrome_and_smspool" time="0.003"><failure message="RuntimeError: no running event loop">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x108857bd0&gt;
+
+    def test_create_account_chrome_and_smspool(monkeypatch):
+        monkeypatch.setattr('sms_services.smspool.SMSPool.get_phone', mock_get_phone_smspool)
+        monkeypatch.setattr('sms_services.smspool.SMSPool.get_code', mock_get_code)
+    
+        driver = create_driver('chrome')
+        # Test data
+        sms_key = {
+            "name": "smspool",
+            "data": {
+                "token": "your_api_key",
+            }
+        }
+        username = "testuser"
+        password = "testpassword"
+        first_name = "John"
+        last_name = "Doe"
+        month = "1"
+        day = "1"
+        year = "2000"
+        myyahoo = False
+    
+&gt;       email, password = create_account(driver, sms_key, username, password, first_name, last_name, month, day, year, myyahoo)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_email_yahoo.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/email_providers/yahoo.py:43: in create_account
+    sms_provider = get_sms_instance(sms_key, 'yahoo')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ninjemail/sms_services/__init__.py:30: in get_sms_instance
+    sms_provider = smspool.SMSPool(**data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+ninjemail/sms_services/smspool.py:43: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x108a11c90&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</failure></testcase><testcase classname="ninjemail.tests.test_email_yahoo" name="test_create_account_firefox_and_fivesim" time="0.013" /><testcase classname="ninjemail.tests.test_email_yahoo" name="test_create_myyahoo_account" time="0.003"><failure message="RuntimeError: no running event loop">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x10883a4d0&gt;
+
+    def test_create_myyahoo_account(monkeypatch):
+        monkeypatch.setattr('sms_services.smspool.SMSPool.get_phone', mock_get_phone_smspool)
+        monkeypatch.setattr('sms_services.smspool.SMSPool.get_code', mock_get_code)
+    
+        driver = create_driver('chrome')
+        # Test data
+    
+        sms_key = {
+            "name": "smspool",
+            "data": {
+                "token": "your_api_key",
+            }
+        }
+        username = "testuser"
+        password = "testpassword"
+        first_name = "John"
+        last_name = "Doe"
+        month = "1"
+        day = "1"
+        year = "2000"
+        myyahoo = True
+    
+&gt;       email, password = create_account(driver, sms_key, username, password, first_name, last_name, month, day, year, myyahoo)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_email_yahoo.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/email_providers/yahoo.py:43: in create_account
+    sms_provider = get_sms_instance(sms_key, 'yahoo')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ninjemail/sms_services/__init__.py:30: in get_sms_instance
+    sms_provider = smspool.SMSPool(**data)
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+ninjemail/sms_services/smspool.py:43: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x108bbdf90&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</failure></testcase><testcase classname="ninjemail.tests.test_manager" name="test_init_valid_browser" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_init_valid_browser_undetected_chrome" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_init_invalid_browser" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_get_proxy_with_provided_proxy" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_get_proxy_with_auto_proxy_success" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_get_proxy_with_auto_proxy_failure" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_get_captcha_key_valid_provider" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_get_captcha_key_invalid_provider" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_get_captcha_key_no_key_for_provider" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_get_sms_key_with_keys" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_get_sms_key_no_keys" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_create_outlook_account" time="0.002" /><testcase classname="ninjemail.tests.test_manager" name="test_create_outlook_account_no_info" time="0.003" /><testcase classname="ninjemail.tests.test_manager" name="test_create_outlook_account_with_proxy" time="0.002" /><testcase classname="ninjemail.tests.test_manager" name="test_create_outlook_account_no_captcha_key" time="0.001" /><testcase classname="ninjemail.tests.test_manager" name="test_create_gmail_account" time="0.002" /><testcase classname="ninjemail.tests.test_manager" name="test_create_gmail_account_no_info" time="0.002" /><testcase classname="ninjemail.tests.test_manager" name="test_create_gmail_account_with_proxy" time="0.002" /><testcase classname="ninjemail.tests.test_manager" name="test_create_gmail_account_no_sms_key" time="0.002" /><testcase classname="ninjemail.tests.test_manager" name="test_create_yahoo_account" time="0.002" /><testcase classname="ninjemail.tests.test_manager" name="test_create_yahoo_account_no_info" time="0.002" /><testcase classname="ninjemail.tests.test_manager" name="test_create_yahoo_account_with_proxy" time="0.002" /><testcase classname="ninjemail.tests.test_manager" name="test_create_yahoo_account_no_captcha_key" time="0.000" /><testcase classname="ninjemail.tests.test_manager" name="test_create_yahoo_account_no_sms_key" time="0.001" /><testcase classname="ninjemail.tests.test_sms_5sim" name="test_request_success" time="0.005"><failure message="TypeError: 'coroutine' object does not support the asynchronous context manager protocol">mock_aiohttp_get = &lt;AsyncMock name='get' id='4441758288'&gt;
+fivesim = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x108bccb90&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_request_success(mock_aiohttp_get, fivesim):
+&gt;       response = await fivesim.request("some_command")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_5sim.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x108bccb90&gt;
+cmd = 'some_command'
+
+    async def request(self, cmd):
+        """
+        Sends a GET request to the 5Sim API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        headers = {
+                'Authorization': 'Bearer ' + self.token,
+                }
+    
+        async with aiohttp.ClientSession() as session:
+&gt;           async with session.get(self.API_URL + cmd, headers=headers) as res:
+E           TypeError: 'coroutine' object does not support the asynchronous context manager protocol
+
+ninjemail/sms_services/fivesim.py:66: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_5sim" name="test_request_failure" time="0.004"><failure message="TypeError: 'coroutine' object does not support the asynchronous context manager protocol">mock_aiohttp_get = &lt;AsyncMock name='get' id='4441148496'&gt;
+fivesim = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x108a056d0&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_request_failure(mock_aiohttp_get, fivesim):
+        mock_aiohttp_get.return_value.__aenter__.return_value.raise_for_status.side_effect = aiohttp.ClientError
+        with pytest.raises(APIError):
+&gt;           await fivesim.request("some_command")
+
+ninjemail/tests/test_sms_5sim.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x108a056d0&gt;
+cmd = 'some_command'
+
+    async def request(self, cmd):
+        """
+        Sends a GET request to the 5Sim API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        headers = {
+                'Authorization': 'Bearer ' + self.token,
+                }
+    
+        async with aiohttp.ClientSession() as session:
+&gt;           async with session.get(self.API_URL + cmd, headers=headers) as res:
+E           TypeError: 'coroutine' object does not support the asynchronous context manager protocol
+
+ninjemail/sms_services/fivesim.py:66: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_5sim" name="test_get_phone" time="0.004"><failure message="TypeError: 'coroutine' object does not support the asynchronous context manager protocol">mock_aiohttp_get = &lt;AsyncMock name='get' id='4433563088'&gt;
+fivesim = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x1089d0c90&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_get_phone(mock_aiohttp_get, fivesim):
+        mock_aiohttp_get.return_value.__aenter__.return_value.json.return_value = {
+            "phone": "+1234567890",
+            "id": "order123"
+        }
+&gt;       phone, order_id = await fivesim.get_phone()
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_5sim.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/fivesim.py:94: in get_phone
+    data = await self.request(cmd=cmd)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x1089d0c90&gt;
+cmd = 'buy/activation/usa/any/service_id'
+
+    async def request(self, cmd):
+        """
+        Sends a GET request to the 5Sim API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        headers = {
+                'Authorization': 'Bearer ' + self.token,
+                }
+    
+        async with aiohttp.ClientSession() as session:
+&gt;           async with session.get(self.API_URL + cmd, headers=headers) as res:
+E           TypeError: 'coroutine' object does not support the asynchronous context manager protocol
+
+ninjemail/sms_services/fivesim.py:66: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_5sim" name="test_get_code" time="0.004"><failure message="TypeError: 'coroutine' object does not support the asynchronous context manager protocol">mock_aiohttp_get = &lt;AsyncMock name='get' id='4417166608'&gt;
+fivesim = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x108b7a310&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_get_code(mock_aiohttp_get, fivesim):
+        mock_aiohttp_get.return_value.__aenter__.return_value.json.return_value = {
+            "sms": [{"code" :"12345"}]
+        }
+&gt;       code = await fivesim.get_code("order123")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_5sim.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/fivesim.py:126: in get_code
+    res = await self.request(cmd=cmd)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x108b7a310&gt;
+cmd = '/check/order123'
+
+    async def request(self, cmd):
+        """
+        Sends a GET request to the 5Sim API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        headers = {
+                'Authorization': 'Bearer ' + self.token,
+                }
+    
+        async with aiohttp.ClientSession() as session:
+&gt;           async with session.get(self.API_URL + cmd, headers=headers) as res:
+E           TypeError: 'coroutine' object does not support the asynchronous context manager protocol
+
+ninjemail/sms_services/fivesim.py:66: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_5sim" name="test_get_phone_with_prefix" time="0.004"><failure message="TypeError: 'coroutine' object does not support the asynchronous context manager protocol">mock_aiohttp_get = &lt;AsyncMock name='get' id='4417161232'&gt;
+fivesim = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x1087962d0&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_get_phone_with_prefix(mock_aiohttp_get, fivesim):
+        mock_aiohttp_get.return_value.__aenter__.return_value.json.return_value = {
+            "phone": "+1234567890",
+            "id": "order123"
+        }
+&gt;       phone, order_id = await fivesim.get_phone(send_prefix=True)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_5sim.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/fivesim.py:94: in get_phone
+    data = await self.request(cmd=cmd)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x1087962d0&gt;
+cmd = 'buy/activation/usa/any/service_id'
+
+    async def request(self, cmd):
+        """
+        Sends a GET request to the 5Sim API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        headers = {
+                'Authorization': 'Bearer ' + self.token,
+                }
+    
+        async with aiohttp.ClientSession() as session:
+&gt;           async with session.get(self.API_URL + cmd, headers=headers) as res:
+E           TypeError: 'coroutine' object does not support the asynchronous context manager protocol
+
+ninjemail/sms_services/fivesim.py:66: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_5sim" name="test_request_error_response" time="0.004"><failure message="TypeError: 'coroutine' object does not support the asynchronous context manager protocol">mock_aiohttp_get = &lt;AsyncMock name='get' id='4440054032'&gt;
+fivesim = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x1089f1110&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_request_error_response(mock_aiohttp_get, fivesim):
+        mock_aiohttp_get.return_value.__aenter__.return_value.raise_for_status.side_effect = aiohttp.ClientError
+        with pytest.raises(APIError):
+&gt;           await fivesim.request("some_command")
+
+ninjemail/tests/test_sms_5sim.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x1089f1110&gt;
+cmd = 'some_command'
+
+    async def request(self, cmd):
+        """
+        Sends a GET request to the 5Sim API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        headers = {
+                'Authorization': 'Bearer ' + self.token,
+                }
+    
+        async with aiohttp.ClientSession() as session:
+&gt;           async with session.get(self.API_URL + cmd, headers=headers) as res:
+E           TypeError: 'coroutine' object does not support the asynchronous context manager protocol
+
+ninjemail/sms_services/fivesim.py:66: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_5sim" name="test_get_phone_error_response" time="0.004"><failure message="TypeError: 'coroutine' object does not support the asynchronous context manager protocol">mock_aiohttp_get = &lt;AsyncMock name='get' id='4440887952'&gt;
+fivesim = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x108c32990&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_get_phone_error_response(mock_aiohttp_get, fivesim):
+        mock_aiohttp_get.return_value.__aenter__.return_value.raise_for_status.side_effect = aiohttp.ClientError
+    
+        with pytest.raises(APIError):
+&gt;           await fivesim.get_phone()
+
+ninjemail/tests/test_sms_5sim.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/fivesim.py:94: in get_phone
+    data = await self.request(cmd=cmd)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x108c32990&gt;
+cmd = 'buy/activation/usa/any/service_id'
+
+    async def request(self, cmd):
+        """
+        Sends a GET request to the 5Sim API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        headers = {
+                'Authorization': 'Bearer ' + self.token,
+                }
+    
+        async with aiohttp.ClientSession() as session:
+&gt;           async with session.get(self.API_URL + cmd, headers=headers) as res:
+E           TypeError: 'coroutine' object does not support the asynchronous context manager protocol
+
+ninjemail/sms_services/fivesim.py:66: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_5sim" name="test_request_error_no_free_phones" time="0.004"><failure message="TypeError: 'coroutine' object does not support the asynchronous context manager protocol">mock_aiohttp_get = &lt;AsyncMock name='get' id='4441153168'&gt;
+fivesim = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x108a8c1d0&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_request_error_no_free_phones(mock_aiohttp_get, fivesim):
+        mock_response = mock_aiohttp_get.return_value.__aenter__.return_value
+        mock_response.text = "no free phones"
+    
+        with pytest.raises(APIError) as exc_info:
+&gt;           await fivesim.request('no_phone')
+
+ninjemail/tests/test_sms_5sim.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x108a8c1d0&gt;
+cmd = 'no_phone'
+
+    async def request(self, cmd):
+        """
+        Sends a GET request to the 5Sim API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        headers = {
+                'Authorization': 'Bearer ' + self.token,
+                }
+    
+        async with aiohttp.ClientSession() as session:
+&gt;           async with session.get(self.API_URL + cmd, headers=headers) as res:
+E           TypeError: 'coroutine' object does not support the asynchronous context manager protocol
+
+ninjemail/sms_services/fivesim.py:66: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_5sim" name="test_request_error_not_enough_balance" time="0.004"><failure message="TypeError: 'coroutine' object does not support the asynchronous context manager protocol">mock_aiohttp_get = &lt;AsyncMock name='get' id='4442010320'&gt;
+fivesim = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x108b0f290&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_request_error_not_enough_balance(mock_aiohttp_get, fivesim):
+        mock_response = mock_aiohttp_get.return_value.__aenter__.return_value
+        mock_response.text = "not enough user balance"
+    
+        with pytest.raises(APIError) as exc_info:
+&gt;           await fivesim.request('no_balance')
+
+ninjemail/tests/test_sms_5sim.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x108b0f290&gt;
+cmd = 'no_balance'
+
+    async def request(self, cmd):
+        """
+        Sends a GET request to the 5Sim API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        headers = {
+                'Authorization': 'Bearer ' + self.token,
+                }
+    
+        async with aiohttp.ClientSession() as session:
+&gt;           async with session.get(self.API_URL + cmd, headers=headers) as res:
+E           TypeError: 'coroutine' object does not support the asynchronous context manager protocol
+
+ninjemail/sms_services/fivesim.py:66: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_5sim" name="test_get_code_error_response" time="0.004"><failure message="assert &quot;'coroutine' ...ager protocol&quot; == 'Test exception'&#10;  &#10;  - Test exception&#10;  + 'coroutine' object does not support the asynchronous context manager protocol">mock_aiohttp_get = &lt;AsyncMock name='get' id='4441243856'&gt;
+mock_time_sleep = &lt;MagicMock name='sleep' id='4440346576'&gt;
+fivesim = &lt;ninjemail.sms_services.fivesim.FiveSim object at 0x108aa7990&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_get_code_error_response(mock_aiohttp_get, mock_time_sleep, fivesim):
+        mock_time_sleep.side_effect = Exception("Test exception")
+        mock_aiohttp_get.return_value.__aenter__.return_value.json.return_value = {
+            "status": "CANCELLED",
+            "sms": []
+        }
+        with pytest.raises(Exception) as exc_info:
+            await fivesim.get_code("order123")
+&gt;       assert str(exc_info.value) == "Test exception"
+E       assert "'coroutine' ...ager protocol" == 'Test exception'
+E         
+E         - Test exception
+E         + 'coroutine' object does not support the asynchronous context manager protocol
+
+ninjemail/tests/test_sms_5sim.py:120: AssertionError</failure></testcase><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_initialization" time="0.000" /><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_generate_generic" time="0.000" /><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_get_endpoint" time="0.000" /><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_request" time="0.003"><failure message="TypeError: object str can't be used in 'await' expression">mock_post = &lt;MagicMock name='post' id='4440777232'&gt;
+gs = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x108c58050&gt;
+
+    @pytest.mark.asyncio
+    @patch("aiohttp.ClientSession.post")
+    async def test_request(mock_post, gs):
+        mock_post.return_value.__aenter__.return_value.raise_for_status = MagicMock()
+        mock_post.return_value.__aenter__.return_value.text = MagicMock(return_value="Success")
+&gt;       response = await gs.request(action="getmobile")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_getsmscode.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x108c58050&gt;
+kwargs = {'action': 'getmobile'}
+session = &lt;aiohttp.client.ClientSession object at 0x108aeba10&gt;
+res = &lt;AsyncMock name='post().__aenter__()' id='4441295824'&gt;
+
+    async def request(self, **kwargs):
+        """
+        Sends a POST request to the GetsmsCode API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        if self.country not in {"us", "cn"}:
+            kwargs["cocode"] = self.country
+    
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                    self.API_URL,
+                    data=dict(
+                        username=self.user,
+                        token=self.token,
+                        pid=self.project,
+                        **kwargs,
+                        )
+                    ) as res:
+                res.raise_for_status()
+&gt;               text = await res.text()
+                       ^^^^^^^^^^^^^^^^
+E               TypeError: object str can't be used in 'await' expression
+
+ninjemail/sms_services/getsmscode.py:113: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_get_phone" time="0.003"><failure message="TypeError: object str can't be used in 'await' expression">mock_post = &lt;MagicMock name='post' id='4441131344'&gt;
+gs = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x108b67e50&gt;
+
+    @pytest.mark.asyncio
+    @patch("aiohttp.ClientSession.post")
+    async def test_get_phone(mock_post, gs):
+        mock_post.return_value.__aenter__.return_value.raise_for_status = MagicMock()
+        mock_post.return_value.__aenter__.return_value.text = MagicMock(return_value="234567")
+&gt;       phone = await gs.get_phone()
+                ^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_getsmscode.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/getsmscode.py:138: in get_phone
+    data = await self.request(**data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x108b67e50&gt;
+kwargs = {'action': 'getmobile'}
+session = &lt;aiohttp.client.ClientSession object at 0x108b12a50&gt;
+res = &lt;AsyncMock name='post().__aenter__()' id='4441143888'&gt;
+
+    async def request(self, **kwargs):
+        """
+        Sends a POST request to the GetsmsCode API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        if self.country not in {"us", "cn"}:
+            kwargs["cocode"] = self.country
+    
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                    self.API_URL,
+                    data=dict(
+                        username=self.user,
+                        token=self.token,
+                        pid=self.project,
+                        **kwargs,
+                        )
+                    ) as res:
+                res.raise_for_status()
+&gt;               text = await res.text()
+                       ^^^^^^^^^^^^^^^^
+E               TypeError: object str can't be used in 'await' expression
+
+ninjemail/sms_services/getsmscode.py:113: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_get_phone_with_prefix" time="0.003"><failure message="TypeError: object str can't be used in 'await' expression">mock_post = &lt;MagicMock name='post' id='4439051216'&gt;
+gs = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x10892d750&gt;
+
+    @pytest.mark.asyncio
+    @patch("aiohttp.ClientSession.post")
+    async def test_get_phone_with_prefix(mock_post, gs):
+        mock_post.return_value.__aenter__.return_value.raise_for_status = MagicMock()
+        mock_post.return_value.__aenter__.return_value.text = MagicMock(return_value="1234567")
+&gt;       phone = await gs.get_phone(send_prefix=True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_getsmscode.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/getsmscode.py:138: in get_phone
+    data = await self.request(**data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x10892d750&gt;
+kwargs = {'action': 'getmobile'}
+session = &lt;aiohttp.client.ClientSession object at 0x108b52690&gt;
+res = &lt;AsyncMock name='post().__aenter__()' id='4439062352'&gt;
+
+    async def request(self, **kwargs):
+        """
+        Sends a POST request to the GetsmsCode API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        if self.country not in {"us", "cn"}:
+            kwargs["cocode"] = self.country
+    
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                    self.API_URL,
+                    data=dict(
+                        username=self.user,
+                        token=self.token,
+                        pid=self.project,
+                        **kwargs,
+                        )
+                    ) as res:
+                res.raise_for_status()
+&gt;               text = await res.text()
+                       ^^^^^^^^^^^^^^^^
+E               TypeError: object str can't be used in 'await' expression
+
+ninjemail/sms_services/getsmscode.py:113: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_get_code" time="0.003"><failure message="TypeError: object str can't be used in 'await' expression">mock_post = &lt;MagicMock name='post' id='4440800016'&gt;
+gs = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x108b50b50&gt;
+
+    @pytest.mark.asyncio
+    @patch("aiohttp.ClientSession.post")
+    async def test_get_code(mock_post, gs):
+        mock_post.return_value.__aenter__.return_value.raise_for_status = MagicMock()
+        mock_post.return_value.__aenter__.return_value.text = MagicMock(return_value="Success|12345")
+&gt;       code = await gs.get_code("1234567")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_getsmscode.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/getsmscode.py:169: in get_code
+    text = await self.request(**data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x108b50b50&gt;
+kwargs = {'action': 'getsms', 'mobile': '1234567'}
+session = &lt;aiohttp.client.ClientSession object at 0x1088cba10&gt;
+res = &lt;AsyncMock name='post().__aenter__()' id='4438784080'&gt;
+
+    async def request(self, **kwargs):
+        """
+        Sends a POST request to the GetsmsCode API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        if self.country not in {"us", "cn"}:
+            kwargs["cocode"] = self.country
+    
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                    self.API_URL,
+                    data=dict(
+                        username=self.user,
+                        token=self.token,
+                        pid=self.project,
+                        **kwargs,
+                        )
+                    ) as res:
+                res.raise_for_status()
+&gt;               text = await res.text()
+                       ^^^^^^^^^^^^^^^^
+E               TypeError: object str can't be used in 'await' expression
+
+ninjemail/sms_services/getsmscode.py:113: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_request_failure" time="0.001" /><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_api_error_response_message" time="0.001"><failure message="TypeError: ClientResponseError.__init__() got an unexpected keyword argument 'request'">mock_post = &lt;MagicMock name='post' id='4439625936'&gt;
+gs = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x1089f6c90&gt;
+
+    @pytest.mark.asyncio
+    @patch("aiohttp.ClientSession.post")
+    async def test_api_error_response_message(mock_post, gs):
+&gt;       mock_post.return_value.__aenter__.return_value.raise_for_status.side_effect = aiohttp.ClientResponseError(
+            request=MagicMock(), status=400)
+E       TypeError: ClientResponseError.__init__() got an unexpected keyword argument 'request'
+
+ninjemail/tests/test_sms_getsmscode.py:85: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_no_code_found" time="0.003"><failure message="TypeError: object str can't be used in 'await' expression">mock_post = &lt;MagicMock name='post' id='4439631376'&gt;
+gs = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x108695550&gt;
+
+    @pytest.mark.asyncio
+    @patch("aiohttp.ClientSession.post")
+    async def test_no_code_found(mock_post, gs):
+        mock_post.return_value.__aenter__.return_value.text = MagicMock(return_value="Success|")
+        with pytest.raises(AssertionError):
+&gt;           await gs.get_code("1234567")
+
+ninjemail/tests/test_sms_getsmscode.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/getsmscode.py:169: in get_code
+    text = await self.request(**data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x108695550&gt;
+kwargs = {'action': 'getsms', 'mobile': '1234567'}
+session = &lt;aiohttp.client.ClientSession object at 0x1088b9550&gt;
+res = &lt;AsyncMock name='post().__aenter__()' id='4437566160'&gt;
+
+    async def request(self, **kwargs):
+        """
+        Sends a POST request to the GetsmsCode API with the provided arguments.
+    
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+    
+        Returns:
+            str: The API response text.
+    
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        if self.country not in {"us", "cn"}:
+            kwargs["cocode"] = self.country
+    
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                    self.API_URL,
+                    data=dict(
+                        username=self.user,
+                        token=self.token,
+                        pid=self.project,
+                        **kwargs,
+                        )
+                    ) as res:
+                res.raise_for_status()
+&gt;               text = await res.text()
+                       ^^^^^^^^^^^^^^^^
+E               TypeError: object str can't be used in 'await' expression
+
+ninjemail/sms_services/getsmscode.py:113: TypeError</failure></testcase><testcase classname="ninjemail.tests.test_sms_getsmscode" name="test_request_timeout" time="0.001"><failure message="NameError: name 'asyncio' is not defined">mock_post = &lt;MagicMock name='post' id='4438187664'&gt;
+gs = &lt;ninjemail.sms_services.getsmscode.GetsmsCode object at 0x1088954d0&gt;
+
+    @pytest.mark.asyncio
+    @patch("aiohttp.ClientSession.post")
+    async def test_request_timeout(mock_post, gs):
+&gt;       mock_post.side_effect = asyncio.TimeoutError()
+                                ^^^^^^^
+E       NameError: name 'asyncio' is not defined
+
+ninjemail/tests/test_sms_getsmscode.py:102: NameError</failure></testcase><testcase classname="ninjemail.tests.test_sms_smspool" name="test_request_success" time="0.002"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">@pytest.fixture
+    def sms_pool():
+&gt;       return SMSPool(service="service_id", token="api_key", country="hk")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_smspool.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/smspool.py:43: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1089f4450&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="ninjemail.tests.test_sms_smspool" name="test_request_failure" time="0.002"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">@pytest.fixture
+    def sms_pool():
+&gt;       return SMSPool(service="service_id", token="api_key", country="hk")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_smspool.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/smspool.py:43: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x108887350&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="ninjemail.tests.test_sms_smspool" name="test_get_phone" time="0.002"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">@pytest.fixture
+    def sms_pool():
+&gt;       return SMSPool(service="service_id", token="api_key", country="hk")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_smspool.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/smspool.py:43: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x108b2f790&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="ninjemail.tests.test_sms_smspool" name="test_get_code" time="0.002"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">@pytest.fixture
+    def sms_pool():
+&gt;       return SMSPool(service="service_id", token="api_key", country="hk")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_smspool.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/smspool.py:43: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x108b10ed0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="ninjemail.tests.test_sms_smspool" name="test_get_phone_with_prefix" time="0.002"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">@pytest.fixture
+    def sms_pool():
+&gt;       return SMSPool(service="service_id", token="api_key", country="hk")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_smspool.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/smspool.py:43: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1088eca10&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="ninjemail.tests.test_sms_smspool" name="test_request_error_response" time="0.002"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">@pytest.fixture
+    def sms_pool():
+&gt;       return SMSPool(service="service_id", token="api_key", country="hk")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_smspool.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/smspool.py:43: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x108ab4810&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="ninjemail.tests.test_sms_smspool" name="test_get_phone_error_response" time="0.002"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">@pytest.fixture
+    def sms_pool():
+&gt;       return SMSPool(service="service_id", token="api_key", country="hk")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_smspool.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/smspool.py:43: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x108924110&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="ninjemail.tests.test_sms_smspool" name="test_get_code_error_response" time="0.003"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">@pytest.fixture
+    def sms_pool():
+&gt;       return SMSPool(service="service_id", token="api_key", country="hk")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ninjemail/tests/test_sms_smspool.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ninjemail/sms_services/smspool.py:43: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x108ad83d0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="ninjemail.tests.test_utils.TestCountryProvider" name="test_country_returns_string" time="0.001" /><testcase classname="ninjemail.tests.test_utils.TestGetBirthdate" name="test_birthdate_split_correctly" time="0.000" /><testcase classname="ninjemail.tests.test_utils.TestGetBirthdate" name="test_birthdate_split_invalid_format" time="0.000" /><testcase classname="ninjemail.tests.test_utils.TestGenerateMissingInfo" name="test_generate_all_missing" time="0.001" /><testcase classname="ninjemail.tests.test_utils.TestGenerateMissingInfo" name="test_generate_partial_missing" time="0.001" /><testcase classname="ninjemail.tests.test_utils.TestGenerateMissingInfo" name="test_uses_faker_for_generated_data" time="0.004" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_create_firefox_driver_no_proxy_no_captcha" time="0.001" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_create_chrome_driver_no_proxy_no_captcha" time="0.001" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_create_undetected_chrome_driver" time="0.001" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_create_undetected_chrome_driver_with_proxy_and_capsolver" time="0.002" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_create_undetected_chrome_driver_with_proxy_and_nopecha" time="0.001" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_create_undetected_chrome_driver_with_auth_proxy_and_nopecha" time="0.001" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_create_undetected_chrome_driver_with_auth_proxy" time="0.001" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_create_firefox_driver_with_proxy" time="0.001" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_create_chrome_driver_with_proxy" time="0.001" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_create_chrome_driver_with_auth_proxy" time="0.001" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_create_chrome_driver_with_proxy_and_nopecha" time="0.001" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_create_chrome_driver_with_proxy_and_capsolver" time="0.001" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_create_firefox_driver_with_captcha_extension" time="0.004" /><testcase classname="ninjemail.tests.test_webdriver_utils" name="test_unsupported_browser" time="0.001" /></testsuite></testsuites>

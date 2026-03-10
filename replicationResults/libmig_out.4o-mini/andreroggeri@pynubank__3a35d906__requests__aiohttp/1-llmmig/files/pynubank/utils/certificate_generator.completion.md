@@ -1,0 +1,111 @@
+### Explanation of Changes
+
+To migrate the code from using the `requests` library to the `aiohttp` library, several key changes were made:
+
+1. **Asynchronous Functions**: The methods that make HTTP requests (`request_code` and `exchange_certs`) were modified to be asynchronous. This requires the use of the `async def` syntax and the `await` keyword when calling asynchronous functions.
+
+2. **HTTP Client Initialization**: Instead of using a synchronous `HttpClient`, we now create an instance of `aiohttp.ClientSession` to handle HTTP requests asynchronously.
+
+3. **Making Requests**: The `raw_post` method from the `HttpClient` class was replaced with `session.post` from `aiohttp`, which is an asynchronous method. The response handling was adjusted accordingly.
+
+4. **Response Handling**: The response from `aiohttp` is awaited, and the JSON data is accessed using `await response.json()`.
+
+5. **Error Handling**: The error handling logic remains similar, but it is now wrapped in asynchronous functions.
+
+Here is the modified code:
+
+```python
+from typing import Optional
+import OpenSSL
+from OpenSSL.crypto import X509
+from pynubank import NuException, NuRequestException
+from pynubank.utils.discovery import Discovery
+import aiohttp
+import asyncio
+
+class CertificateGenerator:
+
+    def __init__(self, login, password, device_id, encrypted_code=None, http_client: Optional[aiohttp.ClientSession] = None):
+        self.login = login
+        self.password = password
+        self.device_id = device_id
+        self.encrypted_code = encrypted_code
+        self.key1 = self._generate_key()
+        self.key2 = self._generate_key()
+        self.http = aiohttp.ClientSession() if http_client is None else http_client
+        discovery = Discovery(self.http)
+        self.url = discovery.get_app_url('gen_certificate')
+
+    async def request_code(self) -> str:
+        async with self.http.post(self.url, json=self._get_payload()) as response:
+            if response.status != 401 or 'WWW-Authenticate' not in response.headers:
+                raise NuException('Authentication code request failed.')
+
+            auth_header = response.headers.get('WWW-Authenticate')
+            parsed = self._parse_authenticate_headers(auth_header)
+            self.encrypted_code = parsed.get('device-authorization_encrypted-code')
+
+            return parsed.get('sent-to')
+
+    async def exchange_certs(self, code: str):
+        if not self.encrypted_code:
+            raise NuException('No encrypted code found. Did you call `request_code` before exchanging certs ?')
+
+        payload = self._get_payload()
+        payload['code'] = code
+        payload['encrypted-code'] = self.encrypted_code
+
+        async with self.http.post(self.url, json=payload) as response:
+            if response.status != 200:
+                raise NuRequestException(response)
+
+            data = await response.json()
+
+            cert1 = self._parse_cert(data['certificate'])
+            cert2 = self._parse_cert(data['certificate_crypto'])
+
+            return self._gen_cert(self.key1, cert1), self._gen_cert(self.key2, cert2)
+
+    def _get_payload(self):
+        return {
+            'login': self.login,
+            'password': self.password,
+            'public_key': self._get_public_key(self.key1),
+            'public_key_crypto': self._get_public_key(self.key2),
+            'model': f'PyNubank Client ({self.device_id})',
+            'device_id': self.device_id
+        }
+
+    def _parse_cert(self, content: str) -> X509:
+        return OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, content.encode())
+
+    def _gen_cert(self, key, cert):
+        p12 = OpenSSL.crypto.PKCS12()
+        p12.set_privatekey(key)
+        p12.set_certificate(cert)
+
+        return p12
+
+    def _generate_key(self):
+        key = OpenSSL.crypto.PKey()
+        key.generate_key(OpenSSL.crypto.TYPE_RSA, 2048)
+
+        return key
+
+    def _get_public_key(self, key) -> str:
+        return OpenSSL.crypto.dump_publickey(OpenSSL.crypto.FILETYPE_PEM, key).decode()
+
+    def _parse_authenticate_headers(self, header_content: str) -> dict:
+        chunks = header_content.split(',')
+        parsed = {}
+        for chunk in chunks:
+            key, value = chunk.split('=')
+            key = key.strip().replace(' ', '_')
+            value = value.replace('"', '')
+            parsed[key] = value
+
+        return parsed
+```
+
+### Note
+- The `asyncio` library is typically used to run asynchronous code, so you may need to ensure that the calling context of these methods is also asynchronous.

@@ -1,0 +1,117 @@
+mig: pymike00@tinychat__cade1f91__requests__urllib3__cade1f91__requests__urllib3
+repo: pymike00@tinychat__cade1f91__requests__urllib3
+commit: cade1f9146c7d7a57ec0d0248d13ca3478f8012d
+source: requests
+target: urllib3
+premig:
+  name: premig
+  status: finished
+  source_version: 2.31.0
+  target_version: 2.1.0
+  finished_at: '2026-03-09 20:08:54'
+  project_coverage: 89.58630527817404
+  total_tests: 21
+  passed_tests: 21
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 67.6923076923077
+  files:
+  - path: tests/llms/test_anthropic_client.py
+    file_change_coverage: 85.71428571428571
+    covered_changed_lines: 4,10,12,16-18,21,53,55,59-61
+    uncovered_changed_lines: 19-20
+  - path: tests/llms/test_cohere_client.py
+    file_change_coverage: 38.46153846153846
+    covered_changed_lines: 4,10,12,27,29
+    uncovered_changed_lines: 15-17,24-25,32-34
+  - path: tests/llms/test_google_client.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 4,10,13,17-19,53,55,59-61
+    uncovered_changed_lines: ''
+  - path: tests/llms/test_mistral_client.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 5,11,14,18-20,50,52,56-58
+    uncovered_changed_lines: ''
+  - path: tests/llms/test_openai_client.py
+    file_change_coverage: 84.61538461538461
+    covered_changed_lines: 4,9,18-21,52,54,58-60
+    uncovered_changed_lines: 13,17
+  - path: tests/llms/test_together_client.py
+    file_change_coverage: 86.66666666666667
+    covered_changed_lines: 4,11,20-23,37,54,56,60-62,64
+    uncovered_changed_lines: 15,19
+  - path: tinychat/llms/anthropic.py
+    file_change_coverage: 50.0
+    covered_changed_lines: 4,25,45,52
+    uncovered_changed_lines: 46,49-50,54
+  - path: tinychat/llms/cohere.py
+    file_change_coverage: 33.333333333333336
+    covered_changed_lines: 4-5,21,87
+    uncovered_changed_lines: 25,32-33,36-37,39-40,89
+  - path: tinychat/llms/google.py
+    file_change_coverage: 55.55555555555556
+    covered_changed_lines: 4,48,65,72,76
+    uncovered_changed_lines: 66,69-70,74
+  - path: tinychat/llms/mistral.py
+    file_change_coverage: 50.0
+    covered_changed_lines: 4,22,31,38
+    uncovered_changed_lines: 32,35-36,40
+  - path: tinychat/llms/openai.py
+    file_change_coverage: 50.0
+    covered_changed_lines: 4,25,35,42
+    uncovered_changed_lines: 36,39-40,44
+  - path: tinychat/llms/together.py
+    file_change_coverage: 50.0
+    covered_changed_lines: 4,25,35,42
+    uncovered_changed_lines: 36,39-40,44
+  test_diffs:
+  - test_id: tests/llms/test_cohere_client.py::TestCohereClientStreaming::test_perform_stream_request_failure
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ValueError
+    error_message: 'ValueError: invalid format: ''tinychat.llms.cohere.urllib3.PoolManager()'''
+  - test_id: tests/llms/test_cohere_client.py::TestCohereClientStreaming::test_perform_stream_request_success
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ValueError
+    error_message: 'ValueError: invalid format: ''tinychat.llms.cohere.urllib3.PoolManager()'''
+  - test_id: tests/llms/test_cohere_handler.py::TestCohereHandlerStreaming::test_stream_response_success
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: ''list'' object has no attribute ''stream'''
+  - test_id: tests/llms/test_openai_client.py::TestOpenAIClientStreaming::test_perform_stream_request_failure
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: ''Server responded with an error. Status Code:
+      400'' not found in "Server responded with an error. Status Code: <MagicMock
+      name=''PoolManager().request().status'' id=''4569664976''>"'
+  - test_id: tests/llms/test_openai_client.py::TestOpenAIClientStreaming::test_perform_stream_request_success
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ValueError
+    error_message: 'ValueError: Server responded with an error. Status Code: <MagicMock
+      name=''PoolManager().request().status'' id=''4569662416''>'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

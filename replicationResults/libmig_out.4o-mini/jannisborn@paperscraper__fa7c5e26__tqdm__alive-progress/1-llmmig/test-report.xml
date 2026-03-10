@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="14" skipped="4" tests="47" time="187.261" timestamp="2026-03-09T00:57:11.845751+04:00" hostname="nelsonmbigili.local"><testcase classname="paperscraper.citations.tests.test_self_references.TestSelfReferences" name="test_single_doi" time="1.019"><failure message="assert False&#10; +  where False = isinstance(0, float)">self = &lt;paperscraper.citations.tests.test_self_references.TestSelfReferences object at 0x111fee950&gt;
+dois = ['10.1038/s43586-024-00334-2', '10.1038/s41586-023-06600-9', '10.1016/j.neunet.2014.09.003']
+
+    def test_single_doi(self, dois):
+        for relative in [True, False]:
+            result = self_references(dois[0], relative=relative)
+            assert isinstance(result, dict)
+            assert len(result) &gt; 0
+            for doi, self_cite_dict in result.items():
+                assert isinstance(doi, str)
+                assert isinstance(self_cite_dict, dict)
+                for author, self_cites in self_cite_dict.items():
+                    assert isinstance(author, str)
+                    if relative:
+&gt;                       assert isinstance(self_cites, float)
+E                       assert False
+E                        +  where False = isinstance(0, float)
+
+paperscraper/citations/tests/test_self_references.py:32: AssertionError</failure></testcase><testcase classname="paperscraper.citations.tests.test_self_references.TestSelfReferences" name="test_multiple_dois" time="3.901" /><testcase classname="paperscraper.citations.tests.test_self_references.TestSelfReferences" name="test_compare_async_and_sync_performance" time="5.684" /><testcase classname="paperscraper.pubmed.tests.test_pubmed.TestPubMed" name="test_get_and_dump_pubmed" time="19.455" /><testcase classname="paperscraper.pubmed.tests.test_pubmed.TestPubMed" name="test_email" time="24.018" /><testcase classname="paperscraper.scholar.tests.test_scholar.TestScholar" name="test_citations" time="33.956"><skipped type="pytest.skip" message="Skipping test due to MaxTriesExceededException">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/jannisborn@paperscraper__fa7c5e26__tqdm__alive-progress/paperscraper/scholar/tests/test_scholar.py:24: Skipping test due to MaxTriesExceededException</skipped></testcase><testcase classname="paperscraper.scholar.tests.test_scholar.TestScholar" name="test_dump_search" time="26.846"><skipped type="pytest.skip" message="Skipping test due to MaxTriesExceededException">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/jannisborn@paperscraper__fa7c5e26__tqdm__alive-progress/paperscraper/scholar/tests/test_scholar.py:24: Skipping test due to MaxTriesExceededException</skipped></testcase><testcase classname="paperscraper.scholar.tests.test_scholar.TestScholar" name="test_basic_search" time="24.090"><skipped type="pytest.skip" message="Skipping test due to MaxTriesExceededException">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/jannisborn@paperscraper__fa7c5e26__tqdm__alive-progress/paperscraper/scholar/tests/test_scholar.py:24: Skipping test due to MaxTriesExceededException</skipped></testcase><testcase classname="paperscraper.scholar.tests.test_scholar.TestScholar" name="test_bad_search" time="28.796"><skipped type="pytest.skip" message="Skipping test due to MaxTriesExceededException">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/jannisborn@paperscraper__fa7c5e26__tqdm__alive-progress/paperscraper/scholar/tests/test_scholar.py:24: Skipping test due to MaxTriesExceededException</skipped></testcase><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_dump_existence_initial" time="0.001"><failure message="AssertionError: Initial length of QUERY_FN_DICT should be 2&#10;assert 3 == 2&#10; +  where 3 = len({'arxiv': &lt;function get_and_dump_arxiv_papers at 0x1119763e0&gt;, 'medrxiv': &lt;bound method XRXivQuery.search_keywords of ...r.xrxiv.xrxiv_query.XRXivQuery object at 0x1060d7490&gt;&gt;, 'pubmed': &lt;function get_and_dump_pubmed_papers at 0x1119c5ee0&gt;})">self = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d75350&gt;
+
+    def test_dump_existence_initial(self):
+        # This test checks the initial state, should be run first if order matters
+&gt;       assert len(QUERY_FN_DICT) == 2, "Initial length of QUERY_FN_DICT should be 2"
+E       AssertionError: Initial length of QUERY_FN_DICT should be 2
+E       assert 3 == 2
+E        +  where 3 = len({'arxiv': &lt;function get_and_dump_arxiv_papers at 0x1119763e0&gt;, 'medrxiv': &lt;bound method XRXivQuery.search_keywords of ...r.xrxiv.xrxiv_query.XRXivQuery object at 0x1060d7490&gt;&gt;, 'pubmed': &lt;function get_and_dump_pubmed_papers at 0x1119c5ee0&gt;})
+
+paperscraper/tests/test_dump.py:26: AssertionError</failure></testcase><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_medrxiv" time="0.095"><failure message="AssertionError: medrxiv should still be running after 15 seconds&#10;assert False&#10; +  where False = run_function_with_timeout(&lt;function medrxiv at 0x123e65800&gt;, 15)&#10; +    where run_function_with_timeout = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d76650&gt;.run_function_with_timeout">self = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d76650&gt;
+setup_medrxiv = &lt;function medrxiv at 0x123e65800&gt;
+
+    @pytest.mark.timeout(30)
+    def test_medrxiv(self, setup_medrxiv):
+        # Check that the function runs for at least 15 seconds
+&gt;       assert self.run_function_with_timeout(
+            setup_medrxiv, 15
+        ), "medrxiv should still be running after 15 seconds"
+E       AssertionError: medrxiv should still be running after 15 seconds
+E       assert False
+E        +  where False = run_function_with_timeout(&lt;function medrxiv at 0x123e65800&gt;, 15)
+E        +    where run_function_with_timeout = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d76650&gt;.run_function_with_timeout
+
+paperscraper/tests/test_dump.py:60: AssertionError</failure></testcase><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_biorxiv" time="0.010"><failure message="AssertionError: biorxiv should still be running after 15 seconds&#10;assert False&#10; +  where False = run_function_with_timeout(&lt;function TestDumper.setup_biorxiv.&lt;locals&gt;.&lt;lambda&gt; at 0x12769c180&gt;, 15)&#10; +    where run_function_with_timeout = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d78450&gt;.run_function_with_timeout">self = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d78450&gt;
+setup_biorxiv = &lt;function TestDumper.setup_biorxiv.&lt;locals&gt;.&lt;lambda&gt; at 0x12769c180&gt;
+
+    @pytest.mark.timeout(30)
+    def test_biorxiv(self, setup_biorxiv):
+        # Check that the function runs for at least 15 seconds
+&gt;       assert self.run_function_with_timeout(
+            setup_biorxiv, 15
+        ), "biorxiv should still be running after 15 seconds"
+E       AssertionError: biorxiv should still be running after 15 seconds
+E       assert False
+E        +  where False = run_function_with_timeout(&lt;function TestDumper.setup_biorxiv.&lt;locals&gt;.&lt;lambda&gt; at 0x12769c180&gt;, 15)
+E        +    where run_function_with_timeout = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d78450&gt;.run_function_with_timeout
+
+paperscraper/tests/test_dump.py:67: AssertionError</failure></testcase><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_chemrxiv" time="0.001"><failure message="AssertionError: chemrxiv should still be running after 15 seconds&#10;assert False&#10; +  where False = run_function_with_timeout(&lt;function chemrxiv at 0x1040240e0&gt;, 15)&#10; +    where run_function_with_timeout = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d79010&gt;.run_function_with_timeout">self = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d79010&gt;
+setup_chemrxiv = &lt;function chemrxiv at 0x1040240e0&gt;
+
+    @pytest.mark.timeout(30)
+    def test_chemrxiv(self, setup_chemrxiv):
+        # Check that the function runs for at least 15 seconds
+&gt;       assert self.run_function_with_timeout(
+            setup_chemrxiv, 15
+        ), "chemrxiv should still be running after 15 seconds"
+E       AssertionError: chemrxiv should still be running after 15 seconds
+E       assert False
+E        +  where False = run_function_with_timeout(&lt;function chemrxiv at 0x1040240e0&gt;, 15)
+E        +    where run_function_with_timeout = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d79010&gt;.run_function_with_timeout
+
+paperscraper/tests/test_dump.py:74: AssertionError</failure></testcase><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_chemrxiv_date" time="0.000"><failure message="TypeError: object of type 'generator' has no len()">self = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d79850&gt;
+
+    def test_chemrxiv_date(self):
+&gt;       chemrxiv(begin_date="2024-06-01", end_date="2024-06-02")
+
+paperscraper/tests/test_dump.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+paperscraper/get_dumps/chemrxiv.py:43: in chemrxiv
+    download_full(save_folder, api)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+save_dir = '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/jannisborn@paperscraper__fa7c5e26__tqdm__alive-progress/paperscraper/server_dumps'
+api = &lt;paperscraper.get_dumps.utils.chemrxiv.chemrxiv_api.ChemrxivAPI object at 0x137f4b710&gt;
+
+    def download_full(save_dir: str, api: Optional[ChemrxivAPI] = None) -&gt; None:
+        if api is None:
+            api = ChemrxivAPI()
+    
+        os.makedirs(save_dir, exist_ok=True)
+&gt;       with alive_bar(len(api.all_preprints())) as bar:  # Changed to alive_bar
+                       ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: object of type 'generator' has no len()
+
+paperscraper/get_dumps/utils/chemrxiv/utils.py:135: TypeError</failure></testcase><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_biorxiv_date" time="0.000"><failure message="TypeError: object of type 'generator' has no len()">self = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d79650&gt;
+
+    def test_biorxiv_date(self):
+&gt;       biorxiv(begin_date="2024-06-01", end_date="2024-06-02")
+
+paperscraper/tests/test_dump.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+begin_date = '2024-06-01', end_date = '2024-06-02'
+save_path = '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/jannisborn@paperscraper__fa7c5e26__tqdm__alive-progress/paperscraper/server_dumps/biorxiv_2026-03-09.jsonl'
+max_retries = 10
+
+    def biorxiv(
+        begin_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        save_path: str = save_path,
+        max_retries: int = 10,
+    ):
+        """Fetches papers from biorxiv based on time range, i.e., begin_date and end_date.
+        If the begin_date and end_date are not provided, papers will be fetched from biorxiv
+        from the launch date of biorxiv until the current date. The fetched papers will be
+        stored in jsonl format in save_path.
+    
+        Args:
+            begin_date (str, optional): begin date expressed as YYYY-MM-DD.
+                Defaults to None, i.e., earliest possible.
+            end_date (str, optional): end date expressed as YYYY-MM-DD.
+                Defaults to None, i.e., today.
+            save_path (str, optional): Path where the dump is stored.
+                Defaults to save_path.
+            max_retries (int, optional): Number of retries when API shows connection issues.
+                Defaults to 10.
+        """
+        # create API client
+        api = BioRxivApi(max_retries=max_retries)
+    
+        # dump all papers
+        with open(save_path, "w") as fp:
+            papers = api.get_papers(begin_date=begin_date, end_date=end_date)
+&gt;           with alive_bar(len(papers)) as bar:  # Using alive_bar for progress
+                           ^^^^^^^^^^^
+E           TypeError: object of type 'generator' has no len()
+
+paperscraper/get_dumps/biorxiv.py:47: TypeError</failure></testcase><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_dumping" time="0.044"><failure message="TypeError: '_GeneratorContextManager' object is not iterable">self = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d7a890&gt;
+
+    def test_dumping(self):
+        queries = [[covid19, ai, mi]]
+&gt;       dump_queries(queries, "tmpdir")
+
+paperscraper/tests/test_dump.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+paperscraper/__init__.py:42: in dump_queries
+    f(keyword, output_filepath=os.path.join(dump_root, db, filename))
+paperscraper/arxiv/arxiv.py:93: in get_and_dump_arxiv_papers
+    papers = get_arxiv_papers(query, fields, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+query = '(all:COVID-19 OR all:SARS-CoV-2) AND (all:Artificial intelligence OR all:Deep learning OR all:Machine learning) AND (all:Medical imaging)'
+fields = ['title', 'authors', 'date', 'abstract', 'journal', 'doi']
+max_results = 99999, client_options = {'num_retries': 10}, search_options = {}
+
+    def get_arxiv_papers(
+        query: str,
+        fields: List = ["title", "authors", "date", "abstract", "journal", "doi"],
+        max_results: int = 99999,
+        client_options: Dict = {"num_retries": 10},
+        search_options: Dict = dict(),
+    ) -&gt; pd.DataFrame:
+        """
+        Performs arxiv API request of a given query and returns list of papers with
+        fields as desired.
+    
+        Args:
+            query (str): Query to arxiv API. Needs to match the arxiv API notation.
+            fields (List[str]): List of strings with fields to keep in output.
+            max_results (int): Maximal number of results, defaults to 99999.
+            client_options (Dict): Optional arguments for `arxiv.Client`. E.g.:
+                page_size (int), delay_seconds (int), num_retries (int).
+                NOTE: Decreasing 'num_retries' will speed up processing but might
+                result in more frequent 'UnexpectedEmptyPageErrors'.
+            search_options (Dict): Optional arguments for `arxiv.Search`. E.g.:
+                id_list (List), sort_by, or sort_order.
+    
+        Returns:
+            pd.DataFrame: One row per paper.
+    
+        """
+        client = arxiv.Client(**client_options)
+        search = arxiv.Search(query=query, max_results=max_results, **search_options)
+        results = client.results(search)
+    
+        processed = pd.DataFrame(
+&gt;           [
+                {
+                    arxiv_field_mapper.get(key, key): process_fields.get(
+                        arxiv_field_mapper.get(key, key), lambda x: x
+                    )(value)
+                    for key, value in vars(paper).items()
+                    if arxiv_field_mapper.get(key, key) in fields and key != "doi"
+                }
+                for paper in alive_bar(results, title=f"Processing {query}")
+            ]
+        )
+E       TypeError: '_GeneratorContextManager' object is not iterable
+
+paperscraper/arxiv/arxiv.py:57: TypeError</failure></testcase><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_arxiv_dumping" time="0.000"><failure message="TypeError: '_GeneratorContextManager' object is not iterable">self = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d7b250&gt;
+
+    def test_arxiv_dumping(self):
+        query = [covid19, ai, mi]
+&gt;       get_and_dump_arxiv_papers(query, output_filepath="covid19_ai_imaging.jsonl")
+
+paperscraper/tests/test_dump.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+paperscraper/arxiv/arxiv.py:93: in get_and_dump_arxiv_papers
+    papers = get_arxiv_papers(query, fields, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+query = '(all:COVID-19 OR all:SARS-CoV-2) AND (all:Artificial intelligence OR all:Deep learning OR all:Machine learning) AND (all:Medical imaging)'
+fields = ['title', 'authors', 'date', 'abstract', 'journal', 'doi']
+max_results = 99999, client_options = {'num_retries': 10}, search_options = {}
+
+    def get_arxiv_papers(
+        query: str,
+        fields: List = ["title", "authors", "date", "abstract", "journal", "doi"],
+        max_results: int = 99999,
+        client_options: Dict = {"num_retries": 10},
+        search_options: Dict = dict(),
+    ) -&gt; pd.DataFrame:
+        """
+        Performs arxiv API request of a given query and returns list of papers with
+        fields as desired.
+    
+        Args:
+            query (str): Query to arxiv API. Needs to match the arxiv API notation.
+            fields (List[str]): List of strings with fields to keep in output.
+            max_results (int): Maximal number of results, defaults to 99999.
+            client_options (Dict): Optional arguments for `arxiv.Client`. E.g.:
+                page_size (int), delay_seconds (int), num_retries (int).
+                NOTE: Decreasing 'num_retries' will speed up processing but might
+                result in more frequent 'UnexpectedEmptyPageErrors'.
+            search_options (Dict): Optional arguments for `arxiv.Search`. E.g.:
+                id_list (List), sort_by, or sort_order.
+    
+        Returns:
+            pd.DataFrame: One row per paper.
+    
+        """
+        client = arxiv.Client(**client_options)
+        search = arxiv.Search(query=query, max_results=max_results, **search_options)
+        results = client.results(search)
+    
+        processed = pd.DataFrame(
+&gt;           [
+                {
+                    arxiv_field_mapper.get(key, key): process_fields.get(
+                        arxiv_field_mapper.get(key, key), lambda x: x
+                    )(value)
+                    for key, value in vars(paper).items()
+                    if arxiv_field_mapper.get(key, key) in fields and key != "doi"
+                }
+                for paper in alive_bar(results, title=f"Processing {query}")
+            ]
+        )
+E       TypeError: '_GeneratorContextManager' object is not iterable
+
+paperscraper/arxiv/arxiv.py:57: TypeError</failure></testcase><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_dump_existence" time="0.002"><failure message="AssertionError: Expected QUERY_FN_DICT to be updated by previous tests&#10;assert 2 &gt; 2&#10; +  where 2 = len({'arxiv': &lt;function get_and_dump_arxiv_papers at 0x1119763e0&gt;, 'pubmed': &lt;function get_and_dump_pubmed_papers at 0x1119c5ee0&gt;})">self = &lt;paperscraper.tests.test_dump.TestDumper object at 0x115d7b210&gt;
+
+    def test_dump_existence(self):
+        importlib.reload(load_dumps_module)
+        from paperscraper.load_dumps import QUERY_FN_DICT
+&gt;       assert len(QUERY_FN_DICT) &gt; 2, "Expected QUERY_FN_DICT to be updated by previous tests"
+E       AssertionError: Expected QUERY_FN_DICT to be updated by previous tests
+E       assert 2 &gt; 2
+E        +  where 2 = len({'arxiv': &lt;function get_and_dump_arxiv_papers at 0x1119763e0&gt;, 'pubmed': &lt;function get_and_dump_pubmed_papers at 0x1119c5ee0&gt;})
+
+paperscraper/tests/test_dump.py:97: AssertionError</failure></testcase><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_basic_search" time="1.303" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_fuzzy_search" time="1.208" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_sort_by_score" time="1.228" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_impact_factor_filtering" time="1.222" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_return_all_fields" time="3.558" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_quantum_information_search" time="1.222"><failure message="AssertionError: Number of results does not match&#10;assert 7 == 4&#10; +  where 7 = len([{'factor': 25.7, 'journal': 'Innovation', 'score': 70}, {'factor': 22.5, 'journal': 'Exploration', 'score': 74}, {'fa... {'factor': 8.6, 'journal': 'International Journal of Applied Earth Observation and Geoinformation', 'score': 76}, ...])&#10; +  and   4 = len([{'factor': 33.2, 'journal': 'Innovation', 'score': 70}, {'factor': 22.7, 'journal': 'InfoMat', 'score': 71}, {'factor': 14.7, 'journal': 'Information Fusion', 'score': 71}, {'factor': 9.3, 'journal': 'PRX Quantum', 'score': 78}])">self = &lt;paperscraper.tests.test_impactor.TestImpactor object at 0x124e5c050&gt;
+impactor = &lt;paperscraper.impact.Impactor object at 0x126217990&gt;
+
+    def test_quantum_information_search(self, impactor):
+        expected_results = [
+            {"journal": "Innovation", "factor": 33.2, "score": 70},
+            {"journal": "InfoMat", "factor": 22.7, "score": 71},
+            {"journal": "Information Fusion", "factor": 14.7, "score": 71},
+            {"journal": "PRX Quantum", "factor": 9.3, "score": 78},
+        ]
+    
+        results = impactor.search(
+            "Quantum information", threshold=70, sort_by="factor", min_impact=8
+        )
+    
+        # Ensure that the results match the expected results
+&gt;       assert len(results) == len(expected_results), "Number of results does not match"
+E       AssertionError: Number of results does not match
+E       assert 7 == 4
+E        +  where 7 = len([{'factor': 25.7, 'journal': 'Innovation', 'score': 70}, {'factor': 22.5, 'journal': 'Exploration', 'score': 74}, {'fa... {'factor': 8.6, 'journal': 'International Journal of Applied Earth Observation and Geoinformation', 'score': 76}, ...])
+E        +  and   4 = len([{'factor': 33.2, 'journal': 'Innovation', 'score': 70}, {'factor': 22.7, 'journal': 'InfoMat', 'score': 71}, {'factor': 14.7, 'journal': 'Information Fusion', 'score': 71}, {'factor': 9.3, 'journal': 'PRX Quantum', 'score': 78}])
+
+paperscraper/tests/test_impactor.py:61: AssertionError</failure></testcase><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_type_error" time="0.335" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_value_error" time="0.295" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_nlm_id" time="1.237" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_basic_search" time="1.906"><failure message="AssertionError: assert False&#10; +  where False = &lt;function exists at 0x10107b420&gt;('kinases.pdf')&#10; +    where &lt;function exists at 0x10107b420&gt; = &lt;module 'posixpath' (frozen)&gt;.exists&#10; +      where &lt;module 'posixpath' (frozen)&gt; = os.path">self = &lt;paperscraper.tests.test_pdf.TestPDF object at 0x124ef99d0&gt;
+
+    def test_basic_search(self):
+        paper_data = {"doi": "10.48550/arXiv.2207.03928"}
+        save_pdf(paper_data, filepath="gt4sd.pdf", save_metadata=True)
+        assert os.path.exists("gt4sd.pdf")
+        assert os.path.exists("gt4sd.json")
+        os.remove("gt4sd.pdf")
+        os.remove("gt4sd.json")
+    
+        # # chemrxiv
+        paper_data = {"doi": "10.26434/chemrxiv-2021-np7xj-v4"}
+        save_pdf(paper_data, filepath="kinases.pdf", save_metadata=True)
+&gt;       assert os.path.exists("kinases.pdf")
+E       AssertionError: assert False
+E        +  where False = &lt;function exists at 0x10107b420&gt;('kinases.pdf')
+E        +    where &lt;function exists at 0x10107b420&gt; = &lt;module 'posixpath' (frozen)&gt;.exists
+E        +      where &lt;module 'posixpath' (frozen)&gt; = os.path
+
+paperscraper/tests/test_pdf.py:35: AssertionError</failure></testcase><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_missing_doi" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_invalid_metadata_type" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_missing_doi_key" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_invalid_filepath_type" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_incorrect_filepath_extension" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_incorrect_filepath_type" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_nonexistent_directory_in_filepath" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_network_issues_on_doi_url_request" time="0.002" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_missing_pdf_url_in_meta_tags" time="0.002" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_network_issues_on_pdf_url_request" time="0.002" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump_without_path" time="0.003" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump_wrong_type" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump_wrong_output_type" time="0.000" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump_wrong_suffix" time="0.000" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump_wrong_key" time="0.000" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump_wrong_key_type" time="0.000" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump" time="2.854" /><testcase classname="paperscraper.xrxiv.tests.test_xrxiv.TestXRXiv" name="test_get_medrxiv" time="0.004"><failure message="TypeError: object of type 'generator' has no len()">self = &lt;paperscraper.xrxiv.tests.test_xrxiv.TestXRXiv object at 0x124efced0&gt;
+
+    def test_get_medrxiv(self):
+&gt;       medrxiv(
+            begin_date="2020-05-01",
+            end_date="2020-05-10",
+            save_path="medrix_tmp_dump.jsonl",
+        )
+
+paperscraper/xrxiv/tests/test_xrxiv.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+begin_date = '2020-05-01', end_date = '2020-05-10'
+save_path = 'medrix_tmp_dump.jsonl', max_retries = 10
+
+    def medrxiv(
+        begin_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        save_path: str = save_path,
+        max_retries: int = 10,
+    ):
+        """Fetches papers from medrxiv based on time range, i.e., begin_date and end_date.
+        If the begin_date and end_date are not provided, then papers will be fetched from
+        medrxiv starting from the launch date of medrxiv until current date. The fetched
+        papers will be stored in jsonl format in save_path.
+    
+        Args:
+            begin_date (str, optional): begin date expressed as YYYY-MM-DD.
+                Defaults to None, i.e., earliest possible.
+            end_date (str, optional): end date expressed as YYYY-MM-DD.
+                Defaults to None, i.e., today.
+            save_path (str, optional): Path where the dump is stored.
+                Defaults to save_path.
+            max_retries (int, optional): Number of retries when API shows connection issues.
+                Defaults to 10.
+        """
+        # create API client
+        api = MedRxivApi(max_retries=max_retries)
+        # dump all papers
+        with open(save_path, "w") as fp:
+&gt;           with alive_bar(len(api.get_papers(begin_date=begin_date, end_date=end_date))) as bar:  # Changed to alive_bar
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: object of type 'generator' has no len()
+
+paperscraper/get_dumps/medrxiv.py:43: TypeError</failure></testcase><testcase classname="paperscraper.xrxiv.tests.test_xrxiv.TestXRXiv" name="test_xriv_querier" time="0.002"><failure message="KeyError: 'title'">self = &lt;paperscraper.xrxiv.tests.test_xrxiv.TestXRXiv object at 0x124f0e1d0&gt;
+
+    def test_xriv_querier(self):
+        querier = XRXivQuery("medrix_tmp_dump.jsonl")
+        query = [covid19, ai, mi]
+&gt;       querier.search_keywords(query, output_filepath="covid19_ai_imaging.jsonl")
+
+paperscraper/xrxiv/tests/test_xrxiv.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+paperscraper/xrxiv/xrxiv_query.py:68: in search_keywords
+    field_data = self.df[field].str.lower()
+                 ^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/pandas/core/frame.py:4378: in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = RangeIndex(start=0, stop=0, step=1), key = 'title'
+
+    def get_loc(self, key) -&gt; int:
+        """
+        Get integer location for requested label.
+    
+        Parameters
+        ----------
+        key : int or float
+            Label to locate. Integer-like floats (e.g. 3.0) are accepted and
+            treated as the corresponding integer. Non-integer floats and other
+            non-integer labels are not valid and will raise KeyError or
+            InvalidIndexError.
+    
+        Returns
+        -------
+        int
+            Integer location of the label within the RangeIndex.
+    
+        Raises
+        ------
+        KeyError
+            If the label is not present in the RangeIndex or the label is a
+            non-integer value.
+        InvalidIndexError
+            If the label is of an invalid type for the RangeIndex.
+    
+        See Also
+        --------
+        RangeIndex.get_slice_bound : Calculate slice bound that corresponds to
+            given label.
+        RangeIndex.get_indexer : Computes indexer and mask for new index given
+            the current index.
+        RangeIndex.get_non_unique : Returns indexer and masks for new index given
+            the current index.
+        RangeIndex.get_indexer_for : Returns an indexer even when non-unique.
+    
+        Examples
+        --------
+        &gt;&gt;&gt; idx = pd.RangeIndex(5)
+        &gt;&gt;&gt; idx.get_loc(3)
+        3
+    
+        &gt;&gt;&gt; idx = pd.RangeIndex(2, 10, 2)  # values [2, 4, 6, 8]
+        &gt;&gt;&gt; idx.get_loc(6)
+        2
+        """
+        if is_integer(key) or (is_float(key) and key.is_integer()):
+            new_key = int(key)
+            try:
+                return self._range.index(new_key)
+            except ValueError as err:
+                raise KeyError(key) from err
+        if isinstance(key, Hashable):
+&gt;           raise KeyError(key)
+E           KeyError: 'title'
+
+.venv/lib/python3.11/site-packages/pandas/core/indexes/range.py:525: KeyError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,34 @@
+## Running premig
+creating venv at /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/jacob-y@django-clean-architecture__103d89e4__requests__aiohttp/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 1 files
+### migrating modules/Application/PluginAdaptors/HTTPMixin.py
+### running tests
+- test finished with status 1, cov finished with status 0
+### test diff with round premig
+- `tests/Unit/Application/test_paypal_adaptor.py::PayPalAdaptorTest::test_capture: passed != failed`
+- `tests/Unit/Application/test_paypal_adaptor.py::PayPalAdaptorTest::test_create: passed != failed`
+- `tests/Unit/Application/test_paypal_adaptor.py::PayPalAdaptorTest::test_status: passed != failed`
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+### Finding async transforms
+- Found 16 functions to mark async including 9 tests
+- Found 19 calls to await
+- 5 files requires transformation
+- transforming modules/Domain/Services/PayPalService.py
+- transforming modules/Application/PluginAdaptors/HTTPMixin.py
+- transforming tests/Unit/Application/test_paypal_adaptor.py
+- transforming tests/Unit/Domain/test_paypal_service.py
+- transforming modules/Application/PluginAdaptors/PayPal/PayPalPluginAdaptor.py
+### running tests
+- test finished with status 0, cov finished with status 0
+- no test diff
+### test diff with round premig
+- async_transform finished

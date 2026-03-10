@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="15" time="3.353" timestamp="2026-03-08T14:07:57.046072+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest" name="test_capture" time="1.406"><failure message="Exception: HTTP 401 error while calling https://api-m.sandbox.paypal.com/v1/oauth2/token">response = &lt;Response [401 Unauthorized]&gt;
+
+    @staticmethod
+    def _process_response(response: httpx.Response) -&gt; dict:
+        try:
+&gt;           response.raise_for_status()  # Raises an HTTPStatusError for bad responses
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+modules/Application/PluginAdaptors/HTTPMixin.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [401 Unauthorized]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '401 Unauthorized' for url 'https://api-m.sandbox.paypal.com/v1/oauth2/token'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest testMethod=test_capture&gt;
+mock_get = &lt;MagicMock name='get' id='4407659728'&gt;
+mock_post = &lt;MagicMock name='post' id='4439779024'&gt;
+
+    @mock.patch('requests.post', side_effect=mocked_requests_post)
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_capture(self, mock_get, mock_post):
+        payment = Payment(
+            1000,
+            'EUR',
+            '1234',
+            '4H120426JX758114N',
+            payment_method=PaymentMethod.PAYPAL
+        )
+&gt;       self._service.capture(payment)
+
+tests/Unit/Application/test_paypal_adaptor.py:486: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+modules/Domain/Services/PayPalService.py:23: in capture
+    self.status(payment)
+modules/Domain/Services/PayPalService.py:19: in status
+    self.paypal_plugin.get_access_token()
+modules/Application/PluginAdaptors/PayPal/PayPalPluginAdaptor.py:21: in get_access_token
+    response = GetAccessTokenResponse(request.send())
+                                      ^^^^^^^^^^^^^^
+modules/Application/PluginAdaptors/HTTPMixin.py:16: in send
+    return self._post()
+           ^^^^^^^^^^^^
+modules/Application/PluginAdaptors/HTTPMixin.py:27: in _post
+    return self._process_response(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;Response [401 Unauthorized]&gt;
+
+    @staticmethod
+    def _process_response(response: httpx.Response) -&gt; dict:
+        try:
+            response.raise_for_status()  # Raises an HTTPStatusError for bad responses
+            return response.json()
+        except HTTPStatusError:
+&gt;           raise Exception(f"HTTP {response.status_code} error while calling {response.url}")
+E           Exception: HTTP 401 error while calling https://api-m.sandbox.paypal.com/v1/oauth2/token
+
+modules/Application/PluginAdaptors/HTTPMixin.py:38: Exception</failure></testcase><testcase classname="tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest" name="test_create" time="0.393"><failure message="Exception: HTTP 401 error while calling https://api-m.sandbox.paypal.com/v1/oauth2/token">response = &lt;Response [401 Unauthorized]&gt;
+
+    @staticmethod
+    def _process_response(response: httpx.Response) -&gt; dict:
+        try:
+&gt;           response.raise_for_status()  # Raises an HTTPStatusError for bad responses
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+modules/Application/PluginAdaptors/HTTPMixin.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [401 Unauthorized]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '401 Unauthorized' for url 'https://api-m.sandbox.paypal.com/v1/oauth2/token'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest testMethod=test_create&gt;
+mock_post = &lt;MagicMock name='post' id='4441562640'&gt;
+
+    @mock.patch('requests.post', side_effect=mocked_requests_post)
+    def test_create(self, mock_post):
+        payment = Payment(
+            1000,
+            'EUR',
+            '1234',
+            None,
+            'FAKE_RETURN_URL',
+            payment_method=PaymentMethod.PAYPAL
+        )
+        payer = Payer(
+            'John',
+            'Doe',
+            'demo-customer@example.com',
+            '1 Rue des Roses',
+            '2nd Floor',
+            'Nantes',
+            'FR',
+            '44230',
+            'fr'
+        )
+&gt;       self._service.pay(payment, payer)
+
+tests/Unit/Application/test_paypal_adaptor.py:463: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+modules/Domain/Services/PayPalService.py:15: in pay
+    self.paypal_plugin.get_access_token()
+modules/Application/PluginAdaptors/PayPal/PayPalPluginAdaptor.py:21: in get_access_token
+    response = GetAccessTokenResponse(request.send())
+                                      ^^^^^^^^^^^^^^
+modules/Application/PluginAdaptors/HTTPMixin.py:16: in send
+    return self._post()
+           ^^^^^^^^^^^^
+modules/Application/PluginAdaptors/HTTPMixin.py:27: in _post
+    return self._process_response(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;Response [401 Unauthorized]&gt;
+
+    @staticmethod
+    def _process_response(response: httpx.Response) -&gt; dict:
+        try:
+            response.raise_for_status()  # Raises an HTTPStatusError for bad responses
+            return response.json()
+        except HTTPStatusError:
+&gt;           raise Exception(f"HTTP {response.status_code} error while calling {response.url}")
+E           Exception: HTTP 401 error while calling https://api-m.sandbox.paypal.com/v1/oauth2/token
+
+modules/Application/PluginAdaptors/HTTPMixin.py:38: Exception</failure></testcase><testcase classname="tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest" name="test_status" time="0.456"><failure message="Exception: HTTP 401 error while calling https://api-m.sandbox.paypal.com/v1/oauth2/token">response = &lt;Response [401 Unauthorized]&gt;
+
+    @staticmethod
+    def _process_response(response: httpx.Response) -&gt; dict:
+        try:
+&gt;           response.raise_for_status()  # Raises an HTTPStatusError for bad responses
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+modules/Application/PluginAdaptors/HTTPMixin.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [401 Unauthorized]&gt;
+
+    def raise_for_status(self) -&gt; Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+&gt;       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '401 Unauthorized' for url 'https://api-m.sandbox.paypal.com/v1/oauth2/token'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401
+
+.venv/lib/python3.11/site-packages/httpx/_models.py:829: HTTPStatusError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest testMethod=test_status&gt;
+mock_get = &lt;MagicMock name='get' id='4439651344'&gt;
+mock_post = &lt;MagicMock name='post' id='4409288144'&gt;
+
+    @mock.patch('requests.post', side_effect=mocked_requests_post)
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_status(self, mock_get, mock_post):
+        payment = Payment(
+            1000,
+            'EUR',
+            '1234',
+            '4H120426JX758114N',
+            payment_method=PaymentMethod.PAYPAL
+        )
+&gt;       self._service.status(payment)
+
+tests/Unit/Application/test_paypal_adaptor.py:509: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+modules/Domain/Services/PayPalService.py:19: in status
+    self.paypal_plugin.get_access_token()
+modules/Application/PluginAdaptors/PayPal/PayPalPluginAdaptor.py:21: in get_access_token
+    response = GetAccessTokenResponse(request.send())
+                                      ^^^^^^^^^^^^^^
+modules/Application/PluginAdaptors/HTTPMixin.py:16: in send
+    return self._post()
+           ^^^^^^^^^^^^
+modules/Application/PluginAdaptors/HTTPMixin.py:27: in _post
+    return self._process_response(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;Response [401 Unauthorized]&gt;
+
+    @staticmethod
+    def _process_response(response: httpx.Response) -&gt; dict:
+        try:
+            response.raise_for_status()  # Raises an HTTPStatusError for bad responses
+            return response.json()
+        except HTTPStatusError:
+&gt;           raise Exception(f"HTTP {response.status_code} error while calling {response.url}")
+E           Exception: HTTP 401 error while calling https://api-m.sandbox.paypal.com/v1/oauth2/token
+
+modules/Application/PluginAdaptors/HTTPMixin.py:38: Exception</failure></testcase><testcase classname="tests.Unit.Application.test_stripe_adaptor.StripeAdaptorTest" name="test_card" time="0.005" /><testcase classname="tests.Unit.Domain.test_paypal_service.PayPalServiceTest" name="test_capture" time="0.001" /><testcase classname="tests.Unit.Domain.test_paypal_service.PayPalServiceTest" name="test_pay" time="0.000" /><testcase classname="tests.Unit.Domain.test_paypal_service.PayPalServiceTest" name="test_status" time="0.000" /><testcase classname="tests.Unit.Domain.test_stripe_service.StripeServiceTest" name="test_capture" time="0.001" /><testcase classname="tests.Unit.Domain.test_stripe_service.StripeServiceTest" name="test_pay" time="0.000" /><testcase classname="tests.Unit.Domain.test_stripe_service.StripeServiceTest" name="test_status" time="0.000" /><testcase classname="tests.Unit.Entities.test_card.CardTest" name="test_invalid_card_number" time="0.001" /><testcase classname="tests.Unit.Entities.test_card.CardTest" name="test_invalid_card_year" time="0.000" /><testcase classname="tests.Unit.Entities.test_card.CardTest" name="test_valid_card" time="0.000" /><testcase classname="tests.Unit.Entities.test_payment.PaymentTest" name="test_amount_too_high" time="0.001" /><testcase classname="tests.Unit.Entities.test_payment.PaymentTest" name="test_card_invalid_numbers" time="0.001" /></testsuite></testsuites>

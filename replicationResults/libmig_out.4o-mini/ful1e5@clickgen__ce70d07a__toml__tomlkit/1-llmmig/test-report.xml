@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="42" time="2.675" timestamp="2026-03-09T12:27:22.021172+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.packer.test_windows_packer" name="test_windows_packer_with_cur" time="0.005" /><testcase classname="tests.packer.test_windows_packer" name="test_windows_packer_with_ani" time="0.002" /><testcase classname="tests.packer.test_x11_packer" name="test_x11_packer" time="0.001" /><testcase classname="tests.parser.test_base_parser" name="test_base_parser" time="0.001" /><testcase classname="tests.parser.test_png_parser" name="test_single_png_parser" time="0.014" /><testcase classname="tests.parser.test_png_parser" name="test_single_png_parser_default_args" time="0.005" /><testcase classname="tests.parser.test_png_parser" name="test_single_png_parser_can_parse" time="0.001" /><testcase classname="tests.parser.test_png_parser" name="test_single_png_parser_raises_01" time="0.001" /><testcase classname="tests.parser.test_png_parser" name="test_single_png_parser_raises_size_error_for_canvasing" time="0.001" /><testcase classname="tests.parser.test_png_parser" name="test_multi_png_parser" time="0.002" /><testcase classname="tests.parser.test_png_parser" name="test_multi_png_parser_can_parse" time="0.001" /><testcase classname="tests.scripts.test_clickgen_script" name="test_clickgen_all_cursor_build" time="0.010" /><testcase classname="tests.scripts.test_clickgen_script" name="test_clickgen_x11_build" time="0.006" /><testcase classname="tests.scripts.test_clickgen_script" name="test_clickgen_windows_build" time="0.007" /><testcase classname="tests.scripts.test_clickgen_script" name="test_clickgen_raises" time="0.003"><failure message="assert 'Error occurred while processing sample.toml' in 'Error occurred while processing migratelib:\nTraceback (most recent call last):\n  File &quot;/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/src/clickgen/scripts/clickgen.py&quot;, line 93, in main\n    cursor = open_blob(blobs, hotspot, args.sizes, args.delay)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File &quot;/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/src/clickgen/parser/__init__.py&quot;, line 23, in open_blob\n    raise ValueError(&quot;Unsupported file format&quot;)\nValueError: Unsupported file format\n'&#10; +  where 'Error occurred while processing migratelib:\nTraceback (most recent call last):\n  File &quot;/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/src/clickgen/scripts/clickgen.py&quot;, line 93, in main\n    cursor = open_blob(blobs, hotspot, args.sizes, args.delay)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File &quot;/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/src/clickgen/parser/__init__.py&quot;, line 23, in open_blob\n    raise ValueError(&quot;Unsupported file format&quot;)\nValueError: Unsupported file format\n' = CaptureResult(out='', err='Error occurred while processing migratelib:\nTraceback (most recent call last):\n  File &quot;/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/src/clickgen/scripts/clickgen.py&quot;, line 93, in main\n    cursor = open_blob(blobs, hotspot, args.sizes, args.delay)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File &quot;/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/src/clickgen/parser/__init__.py&quot;, line 23, in open_blob\n    raise ValueError(&quot;Unsupported file format&quot;)\nValueError: Unsupported file format\n').err">capsys = &lt;_pytest.capture.CaptureFixture object at 0x1078a7f50&gt;
+samples_dir = PosixPath('/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/samples')
+x11_tmp_dir = PosixPath('/private/var/folders/01/v7wkp0nx73l4tyy9v0_96rgh0000gn/T/pytest-of-nelsonmbigili/pytest-79/x11_tmp2')
+hotspot = (100, 105)
+
+    def test_clickgen_raises(capsys, samples_dir, x11_tmp_dir, hotspot):
+        fp = samples_dir / "sample.toml"
+        with open(fp, "rb") as f:
+            with mock.patch(
+                "argparse.ArgumentParser.parse_args",
+                return_value=argparse.Namespace(
+                    files=[f],
+                    output=x11_tmp_dir,
+                    hotspot_x=hotspot[0],
+                    hotspot_y=hotspot[1],
+                    sizes=SIZES,
+                    delay=DELAY,
+                    platform="all",
+                ),
+            ):
+                main()
+                captured = capsys.readouterr()
+&gt;               assert "Error occurred while processing sample.toml" in captured.err
+E               assert 'Error occurred while processing sample.toml' in 'Error occurred while processing migratelib:\nTraceback (most recent call last):\n  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/src/clickgen/scripts/clickgen.py", line 93, in main\n    cursor = open_blob(blobs, hotspot, args.sizes, args.delay)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/src/clickgen/parser/__init__.py", line 23, in open_blob\n    raise ValueError("Unsupported file format")\nValueError: Unsupported file format\n'
+E                +  where 'Error occurred while processing migratelib:\nTraceback (most recent call last):\n  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/src/clickgen/scripts/clickgen.py", line 93, in main\n    cursor = open_blob(blobs, hotspot, args.sizes, args.delay)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/src/clickgen/parser/__init__.py", line 23, in open_blob\n    raise ValueError("Unsupported file format")\nValueError: Unsupported file format\n' = CaptureResult(out='', err='Error occurred while processing migratelib:\nTraceback (most recent call last):\n  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/src/clickgen/scripts/clickgen.py", line 93, in main\n    cursor = open_blob(blobs, hotspot, args.sizes, args.delay)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/src/clickgen/parser/__init__.py", line 23, in open_blob\n    raise ValueError("Unsupported file format")\nValueError: Unsupported file format\n').err
+
+tests/scripts/test_clickgen_script.py:79: AssertionError</failure></testcase><testcase classname="tests.scripts.test_ctgen_script" name="test_get_kwargs" time="0.000" /><testcase classname="tests.scripts.test_ctgen_script" name="test_cwd" time="0.000" /><testcase classname="tests.scripts.test_ctgen_script" name="test_ctgen_file_exception" time="0.012" /><testcase classname="tests.scripts.test_ctgen_script" name="test_ctgen_with_x11_platform" time="0.003" /><testcase classname="tests.scripts.test_ctgen_script" name="test_ctgen_with_windows_platform" time="0.003" /><testcase classname="tests.test_configparser" name="test_parse_theme_section" time="0.000" /><testcase classname="tests.test_configparser" name="test_parse_theme_section_with_kwargs" time="0.000" /><testcase classname="tests.test_configparser" name="test_win_size_deprecation_message" time="0.001" /><testcase classname="tests.test_configparser" name="test_x11_sizes_deprecation_message" time="0.001" /><testcase classname="tests.test_configparser" name="test_parse_config_section" time="0.000" /><testcase classname="tests.test_configparser" name="test_parse_config_section_with_absolute_paths" time="0.000" /><testcase classname="tests.test_configparser" name="test_parse_config_section_with_kwargs" time="0.000" /><testcase classname="tests.test_configparser" name="test_parse_toml_file" time="0.000"><failure message="AttributeError: 'str' object has no attribute 'read'">samples_dir = PosixPath('/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/samples')
+
+    def test_parse_toml_file(samples_dir: Path):
+        fp = samples_dir / "sample.toml"
+&gt;       c: ClickgenConfig = parse_toml_file(fp)
+                            ^^^^^^^^^^^^^^^^^^^
+
+tests/test_configparser.py:163: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/clickgen/configparser.py:151: in parse_toml_file
+    d: Dict[str, Any] = tomlkit.load(file.read())
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fp = "[theme]\nname = 'Sample'\ncomment = 'This is sample cursor theme'\nwebsite = 'https://www.example.com/'\n\n[config]\n...inter2]\npng = 'wait-*.png'\nwin_name = 'Work'\nx11_name = 'wait2'\nx_hotspot = 100\ny_hotspot = 100\nwin_sizes = 32\n"
+
+    def load(fp: IO[str] | IO[bytes]) -&gt; TOMLDocument:
+        """
+        Load toml document from a file-like object.
+        """
+&gt;       return parse(fp.read())
+                     ^^^^^^^
+E       AttributeError: 'str' object has no attribute 'read'
+
+.venv/lib/python3.11/site-packages/tomlkit/api.py:77: AttributeError</failure></testcase><testcase classname="tests.test_configparser" name="test_parse_yaml_file" time="0.554" /><testcase classname="tests.test_configparser" name="test_parse_json_file" time="0.547" /><testcase classname="tests.test_configparser" name="test_parse_config_files" time="1.100"><failure message="AttributeError: 'str' object has no attribute 'read'">samples_dir = PosixPath('/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/ful1e5@clickgen__ce70d07a__toml__tomlkit/samples')
+
+    def test_parse_config_files(samples_dir: Path):
+        for ext in ["json", "yaml", "toml"]:
+            fp = samples_dir / f"sample.{ext}"
+&gt;           c: ClickgenConfig = parse_config_file(fp)
+                                ^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_configparser.py:182: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/clickgen/configparser.py:196: in parse_config_file
+    config = parse_toml_file(fp, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/clickgen/configparser.py:151: in parse_toml_file
+    d: Dict[str, Any] = tomlkit.load(file.read())
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fp = "[theme]\nname = 'Sample'\ncomment = 'This is sample cursor theme'\nwebsite = 'https://www.example.com/'\n\n[config]\n...inter2]\npng = 'wait-*.png'\nwin_name = 'Work'\nx11_name = 'wait2'\nx_hotspot = 100\ny_hotspot = 100\nwin_sizes = 32\n"
+
+    def load(fp: IO[str] | IO[bytes]) -&gt; TOMLDocument:
+        """
+        Load toml document from a file-like object.
+        """
+&gt;       return parse(fp.read())
+                     ^^^^^^^
+E       AttributeError: 'str' object has no attribute 'read'
+
+.venv/lib/python3.11/site-packages/tomlkit/api.py:77: AttributeError</failure></testcase><testcase classname="tests.test_configparser" name="test_parse_cursor_section_handles_png_not_found_exception" time="0.000" /><testcase classname="tests.test_cursors" name="test_cursor_image" time="0.001" /><testcase classname="tests.test_cursors" name="test_cursor_frame" time="0.001" /><testcase classname="tests.test_parser" name="test_open_blob" time="0.012" /><testcase classname="tests.writer.test_windows_writer" name="test_windows_cur_writer" time="0.004" /><testcase classname="tests.writer.test_windows_writer" name="test_windows_cur_writer_re_canvas" time="0.005" /><testcase classname="tests.writer.test_windows_writer" name="test_windows_cur_writer_raises" time="0.003" /><testcase classname="tests.writer.test_windows_writer" name="test_windows_ani_writer" time="0.007" /><testcase classname="tests.writer.test_windows_writer" name="test_windows_writer" time="0.010" /><testcase classname="tests.writer.test_x11_writer" name="test_static_xcursor_file_formate" time="0.002" /><testcase classname="tests.writer.test_x11_writer" name="test_animated_xcursor_file_formate" time="0.003" /></testsuite></testsuites>

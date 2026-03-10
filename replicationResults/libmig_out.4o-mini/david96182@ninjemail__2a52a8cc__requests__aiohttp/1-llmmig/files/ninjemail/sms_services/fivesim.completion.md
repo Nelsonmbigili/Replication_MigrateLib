@@ -1,0 +1,155 @@
+### Explanation of Changes
+
+To migrate the code from using the `requests` library to the `aiohttp` library, several key changes were made:
+
+1. **Importing aiohttp**: The `requests` library was replaced with `aiohttp` for asynchronous HTTP requests.
+2. **Asynchronous Functions**: The `request`, `get_phone`, and `get_code` methods were modified to be asynchronous (`async def`) to accommodate the asynchronous nature of `aiohttp`.
+3. **Session Management**: An `aiohttp.ClientSession` was created to manage connections, which is necessary for making requests with `aiohttp`.
+4. **Awaiting Requests**: The `requests.get` call was replaced with `session.get`, and the response handling was updated to use `await` for asynchronous execution.
+5. **Error Handling**: The error handling was adjusted to work with the `aiohttp` response object.
+
+Here is the modified code:
+
+```python
+import logging
+import re
+import time
+import aiohttp
+import asyncio
+
+PREFIXES = {
+        "usa":"1",
+        }
+
+class APIError(Exception):
+    pass
+
+class FiveSim:
+    """
+    This class provides functionalities to interact with the 5Sim API to obtain phone numbers and SMS verification codes.
+
+    Attributes:
+        token (str): Your 5Sim api key.
+        service (str): 5Sim service name.
+        country (str, optional): The country name for the phone number. Defaults to 'usa'.
+
+    Methods:
+        request(kwargs): Sends a GET request to the 5Sim API with the provided arguments.
+        get_phone(send_prefix=False): Purchases a phone number from the 5Sim API.
+            - send_prefix (bool, optional): Specifies whether to return the phone number with or without the prefix. Defaults to False.
+        get_code(phone): Retrieves the SMS verification code sent to the provided phone number.
+
+    Exceptions:
+        APIError: Raised when an error occurs while interacting with the 5Sim API.
+    """
+
+    _last_phone = None
+    code_patt = re.compile(r"([0-9]{5,6})")
+
+    def __init__(
+            self,
+            service,
+            token,
+            country='usa',
+            ):
+        self.token = token
+        self.service = service
+        self.country = country
+        self.prefix = PREFIXES.get(self.country) or ''
+        self.API_URL = "https://5sim.net/v1/user/"
+
+    async def request(self, cmd):
+        """
+        Sends a GET request to the 5Sim API with the provided arguments.
+
+        Args:
+            kwargs (dict): Additional arguments to be included in the request body.
+
+        Returns:
+            str: The API response text.
+
+        Raises:
+            APIError: If the API returns an error message.
+        """
+        headers = {
+                'Authorization': 'Bearer ' + self.token,
+                } 
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(self.API_URL + cmd, headers=headers) as res:
+                if res.status != 200:
+                    raise APIError(f"HTTP error: {res.status}")
+
+                response_text = await res.text()
+                if response_text == "no free phones":
+                    raise APIError('5Sim has no free phones')
+                if response_text == "not enough user balance":
+                    raise APIError("Not enough balance")
+
+                return await res.json()
+
+    async def get_phone(self, send_prefix=False):
+        """
+        Purchases a phone number from the 5Sim API.
+
+        Args:
+            send_prefix (bool, optional): Specifies whether to return the phone number with or without the prefix. Defaults to False.
+
+        Returns:
+            str: The retrieved phone number, optionally with the prefix removed and the order id of the purchased phone number.
+
+        Raises:
+            APIError: If an error occurs while retrieving the phone number.
+        """
+        logging.info("Getting a phone number")
+
+        cmd = 'buy/activation/' + self.country + '/any/' + self.service
+        data = await self.request(cmd=cmd)
+
+        self._last_phone = data
+        phone_number = data['phone'] 
+        phone_number = phone_number.removeprefix('+')
+        order_id = data['id']
+
+        logging.info("Got phone: %s", phone_number)
+
+        if not send_prefix:
+            phone_number = phone_number.removeprefix('1')
+        return phone_number, order_id
+
+    async def get_code(self, order_id):
+        """
+        Retrieves the SMS verification code sent to the provided phone number.
+
+        Args:
+            order_id (str): The order_id to retrieve the code for the sms.
+
+        Returns:
+            str: The extracted SMS verification code.
+
+        Raises:
+            APIError: If an error occurs while retrieving the code.
+            AssertionError: If no code is found in the API response.
+        """
+        logging.info("Getting the verification code")
+
+        cmd = '/check/' + str(order_id)
+        received = False
+        while not received:
+            res = await self.request(cmd=cmd)
+            if res['sms']:
+                received = True
+            elif res['status'] in ['CANCELED', 'TIMEOUT', 'BANNED']:
+                raise APIError('Error getting verification code, order status: %s' % res['status'])
+            else:
+                logging.info("Retrying...")
+                await asyncio.sleep(10)
+
+        sms = res['sms']
+        code = sms[0]['code']
+
+        logging.info("Got code %s", code)
+        return code
+```
+
+This code now uses `aiohttp` for asynchronous HTTP requests, allowing for non-blocking operations which can be beneficial in applications that require high concurrency.

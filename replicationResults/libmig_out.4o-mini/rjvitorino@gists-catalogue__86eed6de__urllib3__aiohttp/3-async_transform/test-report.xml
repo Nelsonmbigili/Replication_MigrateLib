@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="7" time="1.362" timestamp="2026-03-07T18:05:09.677461+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_utils" name="test_fetch_gists" time="0.235"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.github.com:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')]">self = &lt;aiohttp.connector.TCPConnector object at 0x1082d7310&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x1082e0b10&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'api.github.com', 'ssl': &lt;ssl.SSLContext object at 0x107f81880&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+&gt;               return await self._loop.create_connection(*args, **kwargs, sock=sock)
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x105273490&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+mock_get = &lt;MagicMock name='get' id='4431374288'&gt;
+
+    @pytest.mark.asyncio
+    @patch("requests.get")
+    async def test_fetch_gists(mock_get):
+        mock_response = MagicMock()
+        mock_response.json.return_value = [example_gist_data]
+        mock_get.return_value = mock_response
+&gt;       gists = await fetch_gists()
+
+tests/test_utils.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/utils.py:117: in fetch_gists
+    async with session.get(GITHUB_API, headers=HEADERS) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x1082d7310&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x1082e0b10&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'api.github.com', 'ssl': &lt;ssl.SSLContext object at 0x107f81880&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.github.com:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1315: ClientConnectorCertificateError</failure></testcase><testcase classname="tests.test_utils" name="test_fetch_gist_content" time="0.189"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host gist.githubusercontent.com:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')]">self = &lt;aiohttp.connector.TCPConnector object at 0x108444590&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x1084458d0&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'gist.githubusercontent.com', 'ssl': &lt;ssl.SSLContext object at 0x107f81880&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+&gt;               return await self._loop.create_connection(*args, **kwargs, sock=sock)
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x108449890&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+mock_get = &lt;MagicMock name='get' id='4433721744'&gt;
+
+    @pytest.mark.asyncio
+    @patch("requests.get")
+    async def test_fetch_gist_content(mock_get):
+        mock_response = MagicMock()
+        mock_response.text = "print('Hello, world!')"
+        mock_get.return_value = mock_response
+&gt;       content = await fetch_gist_content(
+            "https://gist.githubusercontent.com/rjvitorino/dfef5433066c061954d29d1b15202290/raw/54a0207aaf64e70e57a2063795b0a1c88a6b046c/file1.py"
+        )
+
+tests/test_utils.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/utils.py:141: in fetch_gist_content
+    async with session.get(raw_url) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x108444590&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x1084458d0&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'gist.githubusercontent.com', 'ssl': &lt;ssl.SSLContext object at 0x107f81880&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host gist.githubusercontent.com:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1315: ClientConnectorCertificateError</failure></testcase><testcase classname="tests.test_utils" name="test_format_date" time="0.001" /><testcase classname="tests.test_utils" name="test_generate_folder_name" time="0.001" /><testcase classname="tests.test_utils" name="test_save_gist_files" time="0.003" /><testcase classname="tests.test_utils" name="test_create_gist_index" time="0.002"><failure message="TypeError: Value after * must be an iterable, not async_generator">mock_file = &lt;MagicMock name='open' id='4432525648'&gt;
+
+    @pytest.mark.asyncio
+    @patch("builtins.open", new_callable=mock_open)
+    async def test_create_gist_index(mock_file):
+&gt;       await create_gist_index(example_gist)
+
+tests/test_utils.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+gist = Gist(url='', forks_url='', commits_url='', id='1', node_id='', git_pull_url='', git_push_url='', html_url='', files={'...mments=0, comments_url='', owner={'login': 'rjvitorino', 'html_url': 'https://github.com/rjvitorino'}, truncated=False)
+
+    async def create_gist_index(gist: Gist) -&gt; str:
+        """
+        Create or update the index.md file for a gist.
+    
+        Args:
+            gist (Gist): The Gist object.
+    
+        Returns:
+            folder_name (str): The folder name of the gist
+        """
+        folder_name = await generate_folder_name(gist)
+        gist_dir = Path("gists") / folder_name
+        gist_dir.mkdir(parents=True, exist_ok=True)
+    
+&gt;       index_content = [
+            f"# {folder_name}",
+            "",
+            f"**Gist file**: [{gist.html_url}]({gist.html_url})",
+            "",
+            f"**Description**: {gist.description}",
+            "",
+            *(
+                f"## {filename}\n\n```{fileinfo.language}\n{await fetch_gist_content(fileinfo.raw_url)}\n```"
+                for filename, fileinfo in gist.files.items()
+            ),
+        ]
+E       TypeError: Value after * must be an iterable, not async_generator
+
+scripts/utils.py:251: TypeError</failure></testcase><testcase classname="tests.test_utils" name="test_update_readme" time="0.008" /></testsuite></testsuites>

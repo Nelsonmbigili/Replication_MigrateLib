@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="20" time="4.630" timestamp="2026-03-09T21:11:28.682025+04:00" hostname="nelsonmbigili.local"><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_assert_lang_or_custom_emb" time="0.001" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_dim_100" time="0.930" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_dim_25" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_dim_50" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_model_download" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_vs_1000" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_vs_10000" time="0.058" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_emb_vs_5000" time="0.029" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_encode_decode_many_roundtrip" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_encode_decode_roundtrip" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_encode_ids_decode_ids_many_roundtrip" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_encode_ids_decode_ids_roundtrip" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_gensim_import" time="0.000" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pad_index" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pad_lookup" time="0.007" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pickle" time="0.009" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pickle_custom_cache_dir" time="0.001"><failure message="OSError: Not found: &quot;&lt;coroutine object http_get at 0x11dc19a80&gt;&quot;: No such file or directory Error #2">self = &lt;bpemb.tests.bpemb_test.BPEmbTest testMethod=test_pickle_custom_cache_dir&gt;
+
+    def test_pickle_custom_cache_dir(self):
+        import pickle
+        from tempfile import mkdtemp
+        from pathlib import Path
+&gt;       bpemb = BPEmb(lang="en", vs=1000, dim=25, cache_dir=mkdtemp())
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bpemb/tests/bpemb_test.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bpemb/bpemb.py:175: in __init__
+    self.spm = sentencepiece_load(self.model_file)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/util.py:13: in sentencepiece_load
+    spm.Load(str(file))
+.venv/lib/python3.11/site-packages/sentencepiece/__init__.py:961: in Load
+    return self.LoadFromFile(model_file)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;sentencepiece.SentencePieceProcessor; proxy of &lt;Swig Object of type 'sentencepiece::SentencePieceProcessor *' at 0x11dc574e0&gt; &gt;
+arg = '&lt;coroutine object http_get at 0x11dc19a80&gt;'
+
+    def LoadFromFile(self, arg):
+&gt;       return _sentencepiece.SentencePieceProcessor_LoadFromFile(self, arg)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: Not found: "&lt;coroutine object http_get at 0x11dc19a80&gt;": No such file or directory Error #2
+
+.venv/lib/python3.11/site-packages/sentencepiece/__init__.py:316: OSError</failure></testcase><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_pickle_custom_no_cache" time="0.001"><failure message="OSError: Not found: &quot;&lt;coroutine object http_get at 0x11dc1a260&gt;&quot;: No such file or directory Error #2">self = &lt;bpemb.tests.bpemb_test.BPEmbTest testMethod=test_pickle_custom_no_cache&gt;
+
+    def test_pickle_custom_no_cache(self):
+        import pickle
+        from tempfile import mkdtemp
+        from pathlib import Path
+        import shutil
+        cache_dir = mkdtemp()
+&gt;       bpemb = BPEmb(lang="en", vs=1000, dim=25, cache_dir=cache_dir)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+bpemb/tests/bpemb_test.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+bpemb/bpemb.py:175: in __init__
+    self.spm = sentencepiece_load(self.model_file)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+bpemb/util.py:13: in sentencepiece_load
+    spm.Load(str(file))
+.venv/lib/python3.11/site-packages/sentencepiece/__init__.py:961: in Load
+    return self.LoadFromFile(model_file)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;sentencepiece.SentencePieceProcessor; proxy of &lt;Swig Object of type 'sentencepiece::SentencePieceProcessor *' at 0x11eb32760&gt; &gt;
+arg = '&lt;coroutine object http_get at 0x11dc1a260&gt;'
+
+    def LoadFromFile(self, arg):
+&gt;       return _sentencepiece.SentencePieceProcessor_LoadFromFile(self, arg)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OSError: Not found: "&lt;coroutine object http_get at 0x11dc1a260&gt;": No such file or directory Error #2
+
+.venv/lib/python3.11/site-packages/sentencepiece/__init__.py:316: OSError</failure></testcase><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_segmentation_only" time="0.001" /><testcase classname="bpemb.tests.bpemb_test.BPEmbTest" name="test_sentencepiece_import" time="0.000" /></testsuite></testsuites>

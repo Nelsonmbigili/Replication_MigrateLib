@@ -1,0 +1,172 @@
+{
+  "exitcode": 1,
+  "summary": {
+    "failed": 1,
+    "passed": 1,
+    "total": 2,
+    "collected": 2
+  },
+  "collectors": [
+    {
+      "nodeid": "",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": ".",
+          "type": "Dir"
+        }
+      ]
+    },
+    {
+      "nodeid": "docs/examples/images",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "docs/examples",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "docs/examples/images",
+          "type": "Dir"
+        }
+      ]
+    },
+    {
+      "nodeid": "docs",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "docs/examples",
+          "type": "Dir"
+        }
+      ]
+    },
+    {
+      "nodeid": "fcmeans",
+      "outcome": "passed",
+      "result": []
+    },
+    {
+      "nodeid": "tests/test_fcm.py",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "tests/test_fcm.py::test_u_creation",
+          "type": "Function",
+          "lineno": 11
+        },
+        {
+          "nodeid": "tests/test_fcm.py::test_dont_fit",
+          "type": "Function",
+          "lineno": 18
+        }
+      ]
+    },
+    {
+      "nodeid": "tests",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "tests/test_fcm.py",
+          "type": "Module"
+        }
+      ]
+    },
+    {
+      "nodeid": ".",
+      "outcome": "passed",
+      "result": [
+        {
+          "nodeid": "docs",
+          "type": "Dir"
+        },
+        {
+          "nodeid": "fcmeans",
+          "type": "Package"
+        },
+        {
+          "nodeid": "tests",
+          "type": "Package"
+        }
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "nodeid": "tests/test_fcm.py::test_u_creation",
+      "lineno": 11,
+      "outcome": "failed",
+      "keywords": [
+        "test_u_creation",
+        "test_fcm.py",
+        "tests",
+        "omadson@fuzzy-c-means__c1195969__tqdm__alive-progress",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "failed",
+        "crash": {
+          "path": "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/omadson@fuzzy-c-means__c1195969__tqdm__alive-progress/.venv/lib/python3.11/site-packages/alive_progress/core/progress.py",
+          "lineno": 123,
+          "message": "ValueError: Invalid config key: 'enabled'"
+        },
+        "traceback": [
+          {
+            "path": "tests/test_fcm.py",
+            "lineno": 15,
+            "message": ""
+          },
+          {
+            "path": ".venv/lib/python3.11/site-packages/pydantic/validate_call_decorator.py",
+            "lineno": 58,
+            "message": "in wrapper_function"
+          },
+          {
+            "path": ".venv/lib/python3.11/site-packages/pydantic/_internal/_validate_call.py",
+            "lineno": 81,
+            "message": "in __call__"
+          },
+          {
+            "path": "fcmeans/main.py",
+            "lineno": 72,
+            "message": "in fit"
+          },
+          {
+            "path": ".venv/lib/python3.11/site-packages/alive_progress/core/progress.py",
+            "lineno": 123,
+            "message": "ValueError"
+          }
+        ],
+        "longrepr": "def test_u_creation():\n        \"\"\"Test if its generate u matrix\"\"\"\n        fcm = FCM()\n>       fcm.fit(X)\n\ntests/test_fcm.py:15: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n.venv/lib/python3.11/site-packages/pydantic/validate_call_decorator.py:58: in wrapper_function\n    return validate_call_wrapper(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n.venv/lib/python3.11/site-packages/pydantic/_internal/_validate_call.py:81: in __call__\n    res = self.__pydantic_validator__.validate_python(pydantic_core.ArgsKwargs(args, kwargs))\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nfcmeans/main.py:72: in fit\n    with alive_bar(self.max_iter, title=\"Training\", enabled=self.verbose) as bar:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ntotal = 150, calibrate = None, options = {'enabled': False, 'title': 'Training'}\n\n    def alive_bar(total: Optional[int] = None, *, calibrate: Optional[int] = None, **options: Any):\n        \"\"\"An alive progress bar to keep track of lengthy operations.\n        It has a spinner indicator, elapsed time, throughput and ETA.\n        When the operation finishes, a receipt is displayed with statistics.\n    \n        If the code is executed in a headless environment, ie without a\n        connected tty, all features are disabled but the final receipt.\n    \n        Another cool feature is that it tracks the actual count in regard of the\n        expected count. So it will look different if you send more (or less) than\n        expected.\n    \n        Also, the bar installs a hook in the system print function that cleans\n        any garbage out of the terminal, allowing you to print() effortlessly\n        while using the bar.\n    \n        Use it like this:\n    \n        >>> from alive_progress import alive_bar\n        ... with alive_bar(123, title='Title') as bar:  # <-- expected total and bar title\n        ...     for item in <iterable>:\n        ...         # process item\n        ...         bar()  # makes the bar go forward\n    \n        The `bar()` method should be called whenever you want the bar to go forward.\n        You usually call it in every iteration, but you could do it only when some\n        criteria match, depending on what you want to monitor.\n    \n        While in a progress bar context, you have two ways to output messages:\n          - the usual Python `print()` statement, which will properly clean the line,\n            print an enriched message (including the current bar position) and\n            continue the bar right below it;\n          - the `bar.text('message')` call, which sets a situational message right within\n            the bar, usually to display something about the items being processed or the\n            phase the processing is in.\n    \n        If the bar is over or underused, it will warn you!\n        To test all supported scenarios, you can do this:\n        >>> for x in 1000, 1500, 700, 0:\n        ...    with alive_bar(x) as bar:\n        ...        for i in range(1000):\n        ...            time.sleep(.005)\n        ...            bar()\n        Expected results are these (but you have to see them in motion!):\n    |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1000/1000 [100%] in 6.0s (167.93/s)\n    |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b\u26a0            | (!) 1000/1500 [67%] in 6.0s (167.57/s)\n    |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2717 (!) 1000/700 [143%] in 6.0s (167.96/s)\n    |\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1000 in 5.8s (171.91/s)\n    \n        Args:\n            total (Optional[int]): the total expected count\n            calibrate (float): maximum theoretical throughput to calibrate animation speed\n            **options: custom configuration options, which override the global configuration:\n                title (Optional[str]): an optional, always visible bar title\n                length (int): the number of cols to render the actual bar in alive_bar\n                max_cols (int): the maximum cols to use if not possible to fetch it, like in jupyter\n                spinner (Union[None, str, object]): the spinner style to be rendered next to the bar\n                    accepts a predefined spinner name, a custom spinner factory, or None\n                bar (Union[None, str, object]): the bar style to be rendered in known modes\n                    accepts a predefined bar name, a custom bar factory, or None\n                unknown (Union[str, object]): the bar style to be rendered in the unknown mode\n                    accepts a predefined spinner name, or a custom spinner factory (cannot be None)\n                theme (str): a set of matching spinner, bar and unknown\n                    accepts a predefined theme name\n                force_tty (Optional[int|bool]): forces a specific kind of terminal:\n                    False -> disables animations, keeping only the the final receipt\n                    True -> enables animations, and auto-detects Jupyter Notebooks!\n                    None (default) -> auto select, according to the terminal/Jupyter\n                file (object): use `sys.stdout`, `sys.stderr`, or a similar `TextIOWrapper` object\n                disable (bool): if True, completely disables all output, do not install hooks\n                manual (bool): set to manually control the bar position\n                enrich_print (bool): enriches print() and logging messages with the bar position\n                enrich_offset (int): the offset to apply to enrich_print\n                receipt (bool): prints the nice final receipt, disables if False\n                receipt_text (bool): set to repeat the last text message in the final receipt\n                monitor (bool|str): configures the monitor widget `152/200 [76%]`\n                    send a string with `{count}`, `{total}` and `{percent}` to customize it\n                elapsed (bool|str): configures the elapsed time widget `in 12s`\n                    send a string with `{elapsed}` to customize it\n                stats (bool|str): configures the stats widget `(~12s, 123.4/s)`\n                    send a string with `{rate}` and `{eta}` to customize it\n                monitor_end (bool|str): configures the monitor widget within final receipt\n                    same as monitor, the default format is dynamic, it inherits monitor's one\n                elapsed_end (bool|str): configures the elapsed time widget within final receipt\n                    same as elapsed, the default format is dynamic, it inherits elapsed's one\n                stats_end (bool|str): configures the stats widget within final receipt\n                    send a string with `{rate}` to customize it (no relation to stats)\n                title_length (int): fixes the title lengths, or 0 for unlimited\n                    title will be truncated if longer, and a cool ellipsis \"\u2026\" will appear at the end\n                spinner_length (int): forces the spinner length, or `0` for its natural one\n                refresh_secs (int): forces the refresh period, `0` for the reactive visual feedback\n                ctrl_c (bool): if False, disables CTRL+C (captures it)\n                dual_line (bool): if True, places the text below the bar\n                unit (str): any text that labels your entities\n                scale (any): the scaling to apply to units: 'SI', 'IEC', 'SI2'\n                precision (int): how many decimals do display when scaling\n        \"\"\"\n    \n        try:\n            config = config_handler(**options)\n        except Exception as e:\n>           raise type(e)(str(e)) from None\nE           ValueError: Invalid config key: 'enabled'\n\n.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:123: ValueError"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    },
+    {
+      "nodeid": "tests/test_fcm.py::test_dont_fit",
+      "lineno": 18,
+      "outcome": "passed",
+      "keywords": [
+        "test_dont_fit",
+        "test_fcm.py",
+        "tests",
+        "omadson@fuzzy-c-means__c1195969__tqdm__alive-progress",
+        ""
+      ],
+      "setup": {
+        "outcome": "passed"
+      },
+      "call": {
+        "outcome": "passed"
+      },
+      "teardown": {
+        "outcome": "passed"
+      }
+    }
+  ]
+}

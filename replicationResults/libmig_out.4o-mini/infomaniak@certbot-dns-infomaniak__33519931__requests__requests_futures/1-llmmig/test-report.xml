@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="11" time="1.325" timestamp="2026-03-09T12:13:10.545915+04:00" hostname="nelsonmbigili.local"><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_cleanup" time="0.018" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_get_chall_pref" time="0.002" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_more_info" time="0.001" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_parser_arguments" time="0.001" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.AuthenticatorTest" name="test_perform" time="1.009" /><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_add_txt_record" time="0.005"><failure message="AttributeError: 'FuturesSession' object has no attribute 'add_response'">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record&gt;
+
+    def test_add_txt_record(self):
+        """add_txt_record with normal params should succeed"""
+&gt;       self._register_response(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            data=[
+                {
+                    "id": 654321,
+                    "account_id": 1234,
+                    "service_id": 14,
+                    "service_name": "domain",
+                    "customer_name": DOMAIN,
+                }
+            ],
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record&gt;
+url = '/1/product?service_name=domain&amp;customer_name=example.com'
+data = [{'account_id': 1234, 'customer_name': 'example.com', 'id': 654321, 'service_id': 14, ...}]
+method = 'GET'
+
+    def _register_response(self, url, data=None, method='GET'):
+        """Registers a reply in the requests mock
+    
+        :param str url: url to register response
+        :param dict data: data to return
+        :param str method: method for which response is registered (default to all)
+        """
+        resp = {"result": "success", "data": data}
+&gt;       self.session.add_response(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+            method,
+            self.client.baseUrl + url,
+            json=resp,
+        )
+E       AttributeError: 'FuturesSession' object has no attribute 'add_response'
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:105: AttributeError</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_add_txt_record_fail_to_authenticate" time="0.001"><failure message="AttributeError: 'FuturesSession' object has no attribute 'add_response'">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record_fail_to_authenticate&gt;
+
+    def test_add_txt_record_fail_to_authenticate(self):
+        """add_txt_record with wrong token should fail"""
+&gt;       self._register_error(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            "not_authorized",
+            "Authorization required",
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record_fail_to_authenticate&gt;
+url = '/1/product?service_name=domain&amp;customer_name=example.com'
+code = 'not_authorized', description = 'Authorization required'
+
+    def _register_error(self, url, code, description):
+        """Registers an error reply in the requests mock
+    
+        :param str url: url to register response
+        :param int code: error code
+        :param str description: error description
+        """
+        resp = {"result": "error", "error": {"code": code, "description": description}}
+&gt;       self.session.add_response(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+            'GET',
+            self.client.baseUrl + url,
+            json=resp,
+        )
+E       AttributeError: 'FuturesSession' object has no attribute 'add_response'
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:119: AttributeError</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_add_txt_record_fail_to_find_domain" time="0.001"><failure message="AttributeError: 'FuturesSession' object has no attribute 'add_response'">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record_fail_to_find_domain&gt;
+
+    def test_add_txt_record_fail_to_find_domain(self):
+        """add_txt_record with non existing domain should fail"""
+&gt;       self._register_response(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            data=[],
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:146: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_add_txt_record_fail_to_find_domain&gt;
+url = '/1/product?service_name=domain&amp;customer_name=example.com', data = []
+method = 'GET'
+
+    def _register_response(self, url, data=None, method='GET'):
+        """Registers a reply in the requests mock
+    
+        :param str url: url to register response
+        :param dict data: data to return
+        :param str method: method for which response is registered (default to all)
+        """
+        resp = {"result": "success", "data": data}
+&gt;       self.session.add_response(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+            method,
+            self.client.baseUrl + url,
+            json=resp,
+        )
+E       AttributeError: 'FuturesSession' object has no attribute 'add_response'
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:105: AttributeError</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_del_txt_record" time="0.001"><failure message="AttributeError: 'FuturesSession' object has no attribute 'add_response'">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record&gt;
+
+    def test_del_txt_record(self):
+        """del_txt_record with normal params should succeed"""
+&gt;       self._register_response(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            data=[
+                {
+                    "id": "654321",
+                    "account_id": "1234",
+                    "service_id": "14",
+                    "service_name": "domain",
+                    "customer_name": DOMAIN,
+                }
+            ],
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record&gt;
+url = '/1/product?service_name=domain&amp;customer_name=example.com'
+data = [{'account_id': '1234', 'customer_name': 'example.com', 'id': '654321', 'service_id': '14', ...}]
+method = 'GET'
+
+    def _register_response(self, url, data=None, method='GET'):
+        """Registers a reply in the requests mock
+    
+        :param str url: url to register response
+        :param dict data: data to return
+        :param str method: method for which response is registered (default to all)
+        """
+        resp = {"result": "success", "data": data}
+&gt;       self.session.add_response(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+            method,
+            self.client.baseUrl + url,
+            json=resp,
+        )
+E       AttributeError: 'FuturesSession' object has no attribute 'add_response'
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:105: AttributeError</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_del_txt_record_fail_to_authenticate" time="0.000"><failure message="AttributeError: 'FuturesSession' object has no attribute 'add_response'">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record_fail_to_authenticate&gt;
+
+    def test_del_txt_record_fail_to_authenticate(self):
+        """del_txt_recod with wrong token should fail"""
+&gt;       self._register_error(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            "not_authorized",
+            "Authorization required",
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record_fail_to_authenticate&gt;
+url = '/1/product?service_name=domain&amp;customer_name=example.com'
+code = 'not_authorized', description = 'Authorization required'
+
+    def _register_error(self, url, code, description):
+        """Registers an error reply in the requests mock
+    
+        :param str url: url to register response
+        :param int code: error code
+        :param str description: error description
+        """
+        resp = {"result": "error", "error": {"code": code, "description": description}}
+&gt;       self.session.add_response(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+            'GET',
+            self.client.baseUrl + url,
+            json=resp,
+        )
+E       AttributeError: 'FuturesSession' object has no attribute 'add_response'
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:119: AttributeError</failure></testcase><testcase classname="certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest" name="test_del_txt_record_fail_to_find_domain" time="0.000"><failure message="AttributeError: 'FuturesSession' object has no attribute 'add_response'">self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record_fail_to_find_domain&gt;
+
+    def test_del_txt_record_fail_to_find_domain(self):
+        """del_txt_record with non existing domain should fail"""
+&gt;       self._register_response(
+            "/1/product?service_name=domain&amp;customer_name={domain}".format(domain=DOMAIN),
+            data=[],
+        )
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:214: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;certbot_dns_infomaniak.dns_infomaniak_test.APIDomainTest testMethod=test_del_txt_record_fail_to_find_domain&gt;
+url = '/1/product?service_name=domain&amp;customer_name=example.com', data = []
+method = 'GET'
+
+    def _register_response(self, url, data=None, method='GET'):
+        """Registers a reply in the requests mock
+    
+        :param str url: url to register response
+        :param dict data: data to return
+        :param str method: method for which response is registered (default to all)
+        """
+        resp = {"result": "success", "data": data}
+&gt;       self.session.add_response(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+            method,
+            self.client.baseUrl + url,
+            json=resp,
+        )
+E       AttributeError: 'FuturesSession' object has no attribute 'add_response'
+
+certbot_dns_infomaniak/dns_infomaniak_test.py:105: AttributeError</failure></testcase></testsuite></testsuites>

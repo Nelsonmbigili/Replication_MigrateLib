@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="4" tests="47" time="622.899" timestamp="2026-03-09T00:00:07.825082+04:00" hostname="nelsonmbigili.local"><testcase classname="paperscraper.citations.tests.test_self_references.TestSelfReferences" name="test_single_doi" time="1.124"><failure message="assert False&#10; +  where False = isinstance(0, float)">self = &lt;paperscraper.citations.tests.test_self_references.TestSelfReferences object at 0x11225fdd0&gt;
+dois = ['10.1038/s43586-024-00334-2', '10.1038/s41586-023-06600-9', '10.1016/j.neunet.2014.09.003']
+
+    def test_single_doi(self, dois):
+        for relative in [True, False]:
+            result = self_references(dois[0], relative=relative)
+            assert isinstance(result, dict)
+            assert len(result) &gt; 0
+            for doi, self_cite_dict in result.items():
+                assert isinstance(doi, str)
+                assert isinstance(self_cite_dict, dict)
+                for author, self_cites in self_cite_dict.items():
+                    assert isinstance(author, str)
+                    if relative:
+&gt;                       assert isinstance(self_cites, float)
+E                       assert False
+E                        +  where False = isinstance(0, float)
+
+paperscraper/citations/tests/test_self_references.py:32: AssertionError</failure></testcase><testcase classname="paperscraper.citations.tests.test_self_references.TestSelfReferences" name="test_multiple_dois" time="4.520" /><testcase classname="paperscraper.citations.tests.test_self_references.TestSelfReferences" name="test_compare_async_and_sync_performance" time="6.531" /><testcase classname="paperscraper.pubmed.tests.test_pubmed.TestPubMed" name="test_get_and_dump_pubmed" time="15.489" /><testcase classname="paperscraper.pubmed.tests.test_pubmed.TestPubMed" name="test_email" time="29.842" /><testcase classname="paperscraper.scholar.tests.test_scholar.TestScholar" name="test_citations" time="108.533"><skipped type="pytest.skip" message="Skipping test due to MaxTriesExceededException">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/jannisborn@paperscraper__fa7c5e26__tqdm__alive-progress/paperscraper/scholar/tests/test_scholar.py:24: Skipping test due to MaxTriesExceededException</skipped></testcase><testcase classname="paperscraper.scholar.tests.test_scholar.TestScholar" name="test_dump_search" time="25.400"><skipped type="pytest.skip" message="Skipping test due to MaxTriesExceededException">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/jannisborn@paperscraper__fa7c5e26__tqdm__alive-progress/paperscraper/scholar/tests/test_scholar.py:24: Skipping test due to MaxTriesExceededException</skipped></testcase><testcase classname="paperscraper.scholar.tests.test_scholar.TestScholar" name="test_basic_search" time="27.258"><skipped type="pytest.skip" message="Skipping test due to MaxTriesExceededException">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/jannisborn@paperscraper__fa7c5e26__tqdm__alive-progress/paperscraper/scholar/tests/test_scholar.py:24: Skipping test due to MaxTriesExceededException</skipped></testcase><testcase classname="paperscraper.scholar.tests.test_scholar.TestScholar" name="test_bad_search" time="24.644"><skipped type="pytest.skip" message="Skipping test due to MaxTriesExceededException">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/jannisborn@paperscraper__fa7c5e26__tqdm__alive-progress/paperscraper/scholar/tests/test_scholar.py:24: Skipping test due to MaxTriesExceededException</skipped></testcase><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_dump_existence_initial" time="0.001" /><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_medrxiv" time="15.009" /><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_biorxiv" time="15.013" /><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_chemrxiv" time="0.438"><failure message="AssertionError: chemrxiv should still be running after 15 seconds&#10;assert False&#10; +  where False = run_function_with_timeout(&lt;function chemrxiv at 0x113b07240&gt;, 15)&#10; +    where run_function_with_timeout = &lt;paperscraper.tests.test_dump.TestDumper object at 0x113b53d90&gt;.run_function_with_timeout">self = &lt;paperscraper.tests.test_dump.TestDumper object at 0x113b53d90&gt;
+setup_chemrxiv = &lt;function chemrxiv at 0x113b07240&gt;
+
+    @pytest.mark.timeout(30)
+    def test_chemrxiv(self, setup_chemrxiv):
+        # Check that the function runs for at least 15 seconds
+&gt;       assert self.run_function_with_timeout(
+            setup_chemrxiv, 15
+        ), "chemrxiv should still be running after 15 seconds"
+E       AssertionError: chemrxiv should still be running after 15 seconds
+E       assert False
+E        +  where False = run_function_with_timeout(&lt;function chemrxiv at 0x113b07240&gt;, 15)
+E        +    where run_function_with_timeout = &lt;paperscraper.tests.test_dump.TestDumper object at 0x113b53d90&gt;.run_function_with_timeout
+
+paperscraper/tests/test_dump.py:74: AssertionError</failure></testcase><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_chemrxiv_date" time="0.271"><failure message="requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://chemrxiv.org/engage/chemrxiv/public-api/v1/items?limit=50&amp;skip=0&amp;searchDateFrom=2024-06-01&amp;searchDateTo=2024-06-02">self = &lt;paperscraper.tests.test_dump.TestDumper object at 0x113b501d0&gt;
+
+    def test_chemrxiv_date(self):
+&gt;       chemrxiv(begin_date="2024-06-01", end_date="2024-06-02")
+
+paperscraper/tests/test_dump.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+paperscraper/get_dumps/chemrxiv.py:43: in chemrxiv
+    download_full(save_folder, api)
+paperscraper/get_dumps/utils/chemrxiv/utils.py:132: in download_full
+    for preprint in tqdm(api.all_preprints()):
+.venv/lib/python3.11/site-packages/tqdm/std.py:1181: in __iter__
+    for obj in iterable:
+paperscraper/get_dumps/utils/chemrxiv/chemrxiv_api.py:103: in query_generator
+    r.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [403]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://chemrxiv.org/engage/chemrxiv/public-api/v1/items?limit=50&amp;skip=0&amp;searchDateFrom=2024-06-01&amp;searchDateTo=2024-06-02
+
+.venv/lib/python3.11/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_biorxiv_date" time="83.474" /><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_dumping" time="128.972" /><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_arxiv_dumping" time="46.783" /><testcase classname="paperscraper.tests.test_dump.TestDumper" name="test_dump_existence" time="0.194" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_basic_search" time="1.307" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_fuzzy_search" time="1.231" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_sort_by_score" time="1.257" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_impact_factor_filtering" time="1.249" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_return_all_fields" time="3.569" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_quantum_information_search" time="1.263"><failure message="AssertionError: Number of results does not match&#10;assert 7 == 4&#10; +  where 7 = len([{'factor': 25.7, 'journal': 'Innovation', 'score': 70}, {'factor': 22.5, 'journal': 'Exploration', 'score': 74}, {'fa... {'factor': 8.6, 'journal': 'International Journal of Applied Earth Observation and Geoinformation', 'score': 76}, ...])&#10; +  and   4 = len([{'factor': 33.2, 'journal': 'Innovation', 'score': 70}, {'factor': 22.7, 'journal': 'InfoMat', 'score': 71}, {'factor': 14.7, 'journal': 'Information Fusion', 'score': 71}, {'factor': 9.3, 'journal': 'PRX Quantum', 'score': 78}])">self = &lt;paperscraper.tests.test_impactor.TestImpactor object at 0x1145fba50&gt;
+impactor = &lt;paperscraper.impact.Impactor object at 0x1223f7510&gt;
+
+    def test_quantum_information_search(self, impactor):
+        expected_results = [
+            {"journal": "Innovation", "factor": 33.2, "score": 70},
+            {"journal": "InfoMat", "factor": 22.7, "score": 71},
+            {"journal": "Information Fusion", "factor": 14.7, "score": 71},
+            {"journal": "PRX Quantum", "factor": 9.3, "score": 78},
+        ]
+    
+        results = impactor.search(
+            "Quantum information", threshold=70, sort_by="factor", min_impact=8
+        )
+    
+        # Ensure that the results match the expected results
+&gt;       assert len(results) == len(expected_results), "Number of results does not match"
+E       AssertionError: Number of results does not match
+E       assert 7 == 4
+E        +  where 7 = len([{'factor': 25.7, 'journal': 'Innovation', 'score': 70}, {'factor': 22.5, 'journal': 'Exploration', 'score': 74}, {'fa... {'factor': 8.6, 'journal': 'International Journal of Applied Earth Observation and Geoinformation', 'score': 76}, ...])
+E        +  and   4 = len([{'factor': 33.2, 'journal': 'Innovation', 'score': 70}, {'factor': 22.7, 'journal': 'InfoMat', 'score': 71}, {'factor': 14.7, 'journal': 'Information Fusion', 'score': 71}, {'factor': 9.3, 'journal': 'PRX Quantum', 'score': 78}])
+
+paperscraper/tests/test_impactor.py:61: AssertionError</failure></testcase><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_type_error" time="0.304" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_value_error" time="0.299" /><testcase classname="paperscraper.tests.test_impactor.TestImpactor" name="test_nlm_id" time="1.266" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_basic_search" time="3.241"><failure message="AssertionError: assert False&#10; +  where False = &lt;function exists at 0x102d5b420&gt;('kinases.pdf')&#10; +    where &lt;function exists at 0x102d5b420&gt; = &lt;module 'posixpath' (frozen)&gt;.exists&#10; +      where &lt;module 'posixpath' (frozen)&gt; = os.path">self = &lt;paperscraper.tests.test_pdf.TestPDF object at 0x11543e0d0&gt;
+
+    def test_basic_search(self):
+        paper_data = {"doi": "10.48550/arXiv.2207.03928"}
+        save_pdf(paper_data, filepath="gt4sd.pdf", save_metadata=True)
+        assert os.path.exists("gt4sd.pdf")
+        assert os.path.exists("gt4sd.json")
+        os.remove("gt4sd.pdf")
+        os.remove("gt4sd.json")
+    
+        # # chemrxiv
+        paper_data = {"doi": "10.26434/chemrxiv-2021-np7xj-v4"}
+        save_pdf(paper_data, filepath="kinases.pdf", save_metadata=True)
+&gt;       assert os.path.exists("kinases.pdf")
+E       AssertionError: assert False
+E        +  where False = &lt;function exists at 0x102d5b420&gt;('kinases.pdf')
+E        +    where &lt;function exists at 0x102d5b420&gt; = &lt;module 'posixpath' (frozen)&gt;.exists
+E        +      where &lt;module 'posixpath' (frozen)&gt; = os.path
+
+paperscraper/tests/test_pdf.py:35: AssertionError</failure></testcase><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_missing_doi" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_invalid_metadata_type" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_missing_doi_key" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_invalid_filepath_type" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_incorrect_filepath_extension" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_incorrect_filepath_type" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_nonexistent_directory_in_filepath" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_network_issues_on_doi_url_request" time="0.003" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_missing_pdf_url_in_meta_tags" time="0.003" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_network_issues_on_pdf_url_request" time="0.003" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump_without_path" time="0.002" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump_wrong_type" time="0.000" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump_wrong_output_type" time="0.000" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump_wrong_suffix" time="0.000" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump_wrong_key" time="0.000" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump_wrong_key_type" time="0.001" /><testcase classname="paperscraper.tests.test_pdf.TestPDF" name="test_save_pdf_from_dump" time="3.428" /><testcase classname="paperscraper.xrxiv.tests.test_xrxiv.TestXRXiv" name="test_get_medrxiv" time="39.571" /><testcase classname="paperscraper.xrxiv.tests.test_xrxiv.TestXRXiv" name="test_xriv_querier" time="0.078" /></testsuite></testsuites>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="2" time="0.443" timestamp="2026-03-08T15:12:17.850101+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_fcm" name="test_u_creation" time="0.045"><failure message="ValueError: Invalid config key: 'enabled'">def test_u_creation():
+        """Test if its generate u matrix"""
+        fcm = FCM()
+&gt;       fcm.fit(X)
+
+tests/test_fcm.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/pydantic/validate_call_decorator.py:58: in wrapper_function
+    return validate_call_wrapper(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/pydantic/_internal/_validate_call.py:81: in __call__
+    res = self.__pydantic_validator__.validate_python(pydantic_core.ArgsKwargs(args, kwargs))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fcmeans/main.py:72: in fit
+    with alive_bar(self.max_iter, title="Training", enabled=self.verbose) as bar:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+total = 150, calibrate = None, options = {'enabled': False, 'title': 'Training'}
+
+    def alive_bar(total: Optional[int] = None, *, calibrate: Optional[int] = None, **options: Any):
+        """An alive progress bar to keep track of lengthy operations.
+        It has a spinner indicator, elapsed time, throughput and ETA.
+        When the operation finishes, a receipt is displayed with statistics.
+    
+        If the code is executed in a headless environment, ie without a
+        connected tty, all features are disabled but the final receipt.
+    
+        Another cool feature is that it tracks the actual count in regard of the
+        expected count. So it will look different if you send more (or less) than
+        expected.
+    
+        Also, the bar installs a hook in the system print function that cleans
+        any garbage out of the terminal, allowing you to print() effortlessly
+        while using the bar.
+    
+        Use it like this:
+    
+        &gt;&gt;&gt; from alive_progress import alive_bar
+        ... with alive_bar(123, title='Title') as bar:  # &lt;-- expected total and bar title
+        ...     for item in &lt;iterable&gt;:
+        ...         # process item
+        ...         bar()  # makes the bar go forward
+    
+        The `bar()` method should be called whenever you want the bar to go forward.
+        You usually call it in every iteration, but you could do it only when some
+        criteria match, depending on what you want to monitor.
+    
+        While in a progress bar context, you have two ways to output messages:
+          - the usual Python `print()` statement, which will properly clean the line,
+            print an enriched message (including the current bar position) and
+            continue the bar right below it;
+          - the `bar.text('message')` call, which sets a situational message right within
+            the bar, usually to display something about the items being processed or the
+            phase the processing is in.
+    
+        If the bar is over or underused, it will warn you!
+        To test all supported scenarios, you can do this:
+        &gt;&gt;&gt; for x in 1000, 1500, 700, 0:
+        ...    with alive_bar(x) as bar:
+        ...        for i in range(1000):
+        ...            time.sleep(.005)
+        ...            bar()
+        Expected results are these (but you have to see them in motion!):
+    |████████████████████████████████████████| 1000/1000 [100%] in 6.0s (167.93/s)
+    |██████████████████████████▋⚠            | (!) 1000/1500 [67%] in 6.0s (167.57/s)
+    |████████████████████████████████████████✗ (!) 1000/700 [143%] in 6.0s (167.96/s)
+    |████████████████████████████████████████| 1000 in 5.8s (171.91/s)
+    
+        Args:
+            total (Optional[int]): the total expected count
+            calibrate (float): maximum theoretical throughput to calibrate animation speed
+            **options: custom configuration options, which override the global configuration:
+                title (Optional[str]): an optional, always visible bar title
+                length (int): the number of cols to render the actual bar in alive_bar
+                max_cols (int): the maximum cols to use if not possible to fetch it, like in jupyter
+                spinner (Union[None, str, object]): the spinner style to be rendered next to the bar
+                    accepts a predefined spinner name, a custom spinner factory, or None
+                bar (Union[None, str, object]): the bar style to be rendered in known modes
+                    accepts a predefined bar name, a custom bar factory, or None
+                unknown (Union[str, object]): the bar style to be rendered in the unknown mode
+                    accepts a predefined spinner name, or a custom spinner factory (cannot be None)
+                theme (str): a set of matching spinner, bar and unknown
+                    accepts a predefined theme name
+                force_tty (Optional[int|bool]): forces a specific kind of terminal:
+                    False -&gt; disables animations, keeping only the the final receipt
+                    True -&gt; enables animations, and auto-detects Jupyter Notebooks!
+                    None (default) -&gt; auto select, according to the terminal/Jupyter
+                file (object): use `sys.stdout`, `sys.stderr`, or a similar `TextIOWrapper` object
+                disable (bool): if True, completely disables all output, do not install hooks
+                manual (bool): set to manually control the bar position
+                enrich_print (bool): enriches print() and logging messages with the bar position
+                enrich_offset (int): the offset to apply to enrich_print
+                receipt (bool): prints the nice final receipt, disables if False
+                receipt_text (bool): set to repeat the last text message in the final receipt
+                monitor (bool|str): configures the monitor widget `152/200 [76%]`
+                    send a string with `{count}`, `{total}` and `{percent}` to customize it
+                elapsed (bool|str): configures the elapsed time widget `in 12s`
+                    send a string with `{elapsed}` to customize it
+                stats (bool|str): configures the stats widget `(~12s, 123.4/s)`
+                    send a string with `{rate}` and `{eta}` to customize it
+                monitor_end (bool|str): configures the monitor widget within final receipt
+                    same as monitor, the default format is dynamic, it inherits monitor's one
+                elapsed_end (bool|str): configures the elapsed time widget within final receipt
+                    same as elapsed, the default format is dynamic, it inherits elapsed's one
+                stats_end (bool|str): configures the stats widget within final receipt
+                    send a string with `{rate}` to customize it (no relation to stats)
+                title_length (int): fixes the title lengths, or 0 for unlimited
+                    title will be truncated if longer, and a cool ellipsis "…" will appear at the end
+                spinner_length (int): forces the spinner length, or `0` for its natural one
+                refresh_secs (int): forces the refresh period, `0` for the reactive visual feedback
+                ctrl_c (bool): if False, disables CTRL+C (captures it)
+                dual_line (bool): if True, places the text below the bar
+                unit (str): any text that labels your entities
+                scale (any): the scaling to apply to units: 'SI', 'IEC', 'SI2'
+                precision (int): how many decimals do display when scaling
+        """
+    
+        try:
+            config = config_handler(**options)
+        except Exception as e:
+&gt;           raise type(e)(str(e)) from None
+E           ValueError: Invalid config key: 'enabled'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:123: ValueError</failure></testcase><testcase classname="tests.test_fcm" name="test_dont_fit" time="0.000" /></testsuite></testsuites>

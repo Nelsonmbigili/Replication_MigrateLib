@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="14" time="12.840" timestamp="2026-03-07T18:05:28.283813+04:00" hostname="nelsonmbigili.local"><testcase classname="common.test_helpers" name="test_write_feeds_file" time="0.001" /><testcase classname="common.test_helpers" name="test_write_podcasts_changelog" time="0.001" /><testcase classname="common.test_helpers" name="test_get_podcasts_config" time="0.001" /><testcase classname="common.test_psapi" name="test_get_podcast_metadata" time="0.695" /><testcase classname="common.test_psapi" name="test_get_podcast_episodes" time="0.346" /><testcase classname="common.test_psapi" name="test_get_all_podcast_episodes" time="0.713" /><testcase classname="common.test_psapi" name="test_get_all_podcast_episodes_all_seasons" time="2.620" /><testcase classname="common.test_psapi" name="test_get_episode_manifest" time="0.865" /><testcase classname="common.test_psapi" name="test_get_latest_podcast_season" time="0.198"><failure message="AssertionError: assert '1' == '2023'&#10;  &#10;  - 2023&#10;  + 1">def test_get_latest_podcast_season():
+        podcast_id = "kongerekka"
+    
+        metadata = psapi.get_podcast_metadata(podcast_id)
+        latest_season = metadata["_links"]["seasons"][0]["name"]
+    
+&gt;       assert latest_season == "2023"
+E       AssertionError: assert '1' == '2023'
+E         
+E         - 2023
+E         + 1
+
+common/test_psapi.py:73: AssertionError</failure></testcase><testcase classname="common.test_psapi" name="test_get_podcast_episodes_by_season" time="0.249"><failure message="TypeError: object of type 'NoneType' has no len()">def test_get_podcast_episodes_by_season():
+        podcast_id = "kongerekka"
+        season_id = "2020"
+    
+        episodes = psapi.get_podcast_episodes(podcast_id, season_id)
+    
+&gt;       assert len(episodes) == 10
+E       TypeError: object of type 'NoneType' has no len()
+
+common/test_psapi.py:81: TypeError</failure></testcase><testcase classname="common.test_psapi" name="test_get_all_podcasts" time="0.836" /><testcase classname="test_discover_feeds" name="test_update_podcasts_config" time="1.981" /><testcase classname="test_generate_feeds" name="test_get_podcast" time="0.495"><failure message="assert None">def test_get_podcast():
+        feeds_dir = "tests/rss"
+        os.makedirs(feeds_dir, exist_ok=True)
+    
+        podcast_id = "kongerekka"
+        season_id = "2020"
+    
+        podcast = get_podcast(podcast_id, season_id, feeds_dir, 10)
+&gt;       assert podcast
+E       assert None
+
+test_generate_feeds.py:13: AssertionError</failure></testcase><testcase classname="test_generate_feeds" name="test_get_podcast_void" time="0.330" /></testsuite></testsuites>

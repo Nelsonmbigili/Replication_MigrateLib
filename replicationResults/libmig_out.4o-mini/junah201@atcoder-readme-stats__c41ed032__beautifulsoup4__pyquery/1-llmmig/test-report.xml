@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="7" time="3.068" timestamp="2026-03-07T20:58:57.361273+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_utils" name="test_get_user_data[tourist-True]" time="0.598"><failure message="ValueError: invalid literal for int() with base 10: '4229 ― King (+171 to promote)'">username = 'tourist', is_valid = True
+
+    @pytest.mark.parametrize(
+        "username, is_valid",
+        [
+            (
+                "tourist",
+                True
+            ),
+            (
+                "junah",
+                True
+            ),
+            (
+                "invalid_username_20240701",
+                False
+            )
+        ]
+    )
+    def test_get_user_data(username, is_valid):
+&gt;       user_data = get_user_data(username)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_utils.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'tourist'
+
+    def get_user_data(username: str) -&gt; Optional[UserData]:
+        """Get user data from atcoder"""
+        url = f"https://atcoder.jp/users/{username}"
+        response = requests.get(url)
+    
+        doc = pq(response.text)
+    
+        # user not found
+        if doc("div.alert.alert-danger").length &gt; 0:
+            return None
+    
+        user_data = doc("table.dl-table.mt-2 &gt; tr")
+    
+        # user is unrated
+        if user_data.length == 0:
+            return UserData(username, "Unrated", 0, 0, "Unrated", 0)
+    
+        rank = user_data.eq(0).find("td").text()
+        rating = int(user_data.eq(1).find("td &gt; span").text())
+&gt;       highest_rating = int(user_data.eq(2).find("td &gt; span").text())
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: '4229 ― King (+171 to promote)'
+
+layers/util_layer/python/utils.py:81: ValueError</failure></testcase><testcase classname="tests.test_utils" name="test_get_user_data[junah-True]" time="0.254"><failure message="ValueError: invalid literal for int() with base 10: '1022 ― 5 Kyu (+178 to promote)'">username = 'junah', is_valid = True
+
+    @pytest.mark.parametrize(
+        "username, is_valid",
+        [
+            (
+                "tourist",
+                True
+            ),
+            (
+                "junah",
+                True
+            ),
+            (
+                "invalid_username_20240701",
+                False
+            )
+        ]
+    )
+    def test_get_user_data(username, is_valid):
+&gt;       user_data = get_user_data(username)
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_utils.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'junah'
+
+    def get_user_data(username: str) -&gt; Optional[UserData]:
+        """Get user data from atcoder"""
+        url = f"https://atcoder.jp/users/{username}"
+        response = requests.get(url)
+    
+        doc = pq(response.text)
+    
+        # user not found
+        if doc("div.alert.alert-danger").length &gt; 0:
+            return None
+    
+        user_data = doc("table.dl-table.mt-2 &gt; tr")
+    
+        # user is unrated
+        if user_data.length == 0:
+            return UserData(username, "Unrated", 0, 0, "Unrated", 0)
+    
+        rank = user_data.eq(0).find("td").text()
+        rating = int(user_data.eq(1).find("td &gt; span").text())
+&gt;       highest_rating = int(user_data.eq(2).find("td &gt; span").text())
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: '1022 ― 5 Kyu (+178 to promote)'
+
+layers/util_layer/python/utils.py:81: ValueError</failure></testcase><testcase classname="tests.test_utils" name="test_get_user_data[invalid_username_20240701-False]" time="0.620" /><testcase classname="tests.test_v1_generate_badge" name="test_v1_generate_badge[tourist]" time="0.273"><failure message="ValueError: invalid literal for int() with base 10: '4229 ― King (+171 to promote)'">username = 'tourist'
+
+    @pytest.mark.parametrize(
+        "username",
+        [
+            (
+                "tourist"
+            ),
+            (
+                "junah"
+            )
+        ]
+    )
+    def test_v1_generate_badge(username):
+&gt;       response = lambda_handler(
+            {
+                "queryStringParameters": {
+                    "name": username
+                }
+            },
+            {}
+        )
+
+tests/test_v1_generate_badge.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+lambdas/v1/generate_badge/main.py:192: in lambda_handler
+    user_data = utils.get_user_data(username)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'tourist'
+
+    def get_user_data(username: str) -&gt; Optional[UserData]:
+        """Get user data from atcoder"""
+        url = f"https://atcoder.jp/users/{username}"
+        response = requests.get(url)
+    
+        doc = pq(response.text)
+    
+        # user not found
+        if doc("div.alert.alert-danger").length &gt; 0:
+            return None
+    
+        user_data = doc("table.dl-table.mt-2 &gt; tr")
+    
+        # user is unrated
+        if user_data.length == 0:
+            return UserData(username, "Unrated", 0, 0, "Unrated", 0)
+    
+        rank = user_data.eq(0).find("td").text()
+        rating = int(user_data.eq(1).find("td &gt; span").text())
+&gt;       highest_rating = int(user_data.eq(2).find("td &gt; span").text())
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: '4229 ― King (+171 to promote)'
+
+layers/util_layer/python/utils.py:81: ValueError</failure></testcase><testcase classname="tests.test_v1_generate_badge" name="test_v1_generate_badge[junah]" time="0.354"><failure message="ValueError: invalid literal for int() with base 10: '1022 ― 5 Kyu (+178 to promote)'">username = 'junah'
+
+    @pytest.mark.parametrize(
+        "username",
+        [
+            (
+                "tourist"
+            ),
+            (
+                "junah"
+            )
+        ]
+    )
+    def test_v1_generate_badge(username):
+&gt;       response = lambda_handler(
+            {
+                "queryStringParameters": {
+                    "name": username
+                }
+            },
+            {}
+        )
+
+tests/test_v1_generate_badge.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+lambdas/v1/generate_badge/main.py:192: in lambda_handler
+    user_data = utils.get_user_data(username)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'junah'
+
+    def get_user_data(username: str) -&gt; Optional[UserData]:
+        """Get user data from atcoder"""
+        url = f"https://atcoder.jp/users/{username}"
+        response = requests.get(url)
+    
+        doc = pq(response.text)
+    
+        # user not found
+        if doc("div.alert.alert-danger").length &gt; 0:
+            return None
+    
+        user_data = doc("table.dl-table.mt-2 &gt; tr")
+    
+        # user is unrated
+        if user_data.length == 0:
+            return UserData(username, "Unrated", 0, 0, "Unrated", 0)
+    
+        rank = user_data.eq(0).find("td").text()
+        rating = int(user_data.eq(1).find("td &gt; span").text())
+&gt;       highest_rating = int(user_data.eq(2).find("td &gt; span").text())
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: '1022 ― 5 Kyu (+178 to promote)'
+
+layers/util_layer/python/utils.py:81: ValueError</failure></testcase><testcase classname="tests.test_v2_generate_badge" name="test_v2_generate_badge[tourist]" time="0.314"><failure message="ValueError: invalid literal for int() with base 10: '4229 ― King (+171 to promote)'">username = 'tourist'
+
+    @pytest.mark.parametrize(
+        "username",
+        [
+            (
+                "tourist"
+            ),
+            (
+                "junah"
+            )
+        ]
+    )
+    def test_v2_generate_badge(username):
+&gt;       response = lambda_handler(
+            {
+                "queryStringParameters": {
+                    "name": username
+                }
+            },
+            {}
+        )
+
+tests/test_v2_generate_badge.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+lambdas/v2/generate_badge/main.py:162: in lambda_handler
+    user_data = utils.get_user_data(username)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'tourist'
+
+    def get_user_data(username: str) -&gt; Optional[UserData]:
+        """Get user data from atcoder"""
+        url = f"https://atcoder.jp/users/{username}"
+        response = requests.get(url)
+    
+        doc = pq(response.text)
+    
+        # user not found
+        if doc("div.alert.alert-danger").length &gt; 0:
+            return None
+    
+        user_data = doc("table.dl-table.mt-2 &gt; tr")
+    
+        # user is unrated
+        if user_data.length == 0:
+            return UserData(username, "Unrated", 0, 0, "Unrated", 0)
+    
+        rank = user_data.eq(0).find("td").text()
+        rating = int(user_data.eq(1).find("td &gt; span").text())
+&gt;       highest_rating = int(user_data.eq(2).find("td &gt; span").text())
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: '4229 ― King (+171 to promote)'
+
+layers/util_layer/python/utils.py:81: ValueError</failure></testcase><testcase classname="tests.test_v2_generate_badge" name="test_v2_generate_badge[junah]" time="0.249"><failure message="ValueError: invalid literal for int() with base 10: '1022 ― 5 Kyu (+178 to promote)'">username = 'junah'
+
+    @pytest.mark.parametrize(
+        "username",
+        [
+            (
+                "tourist"
+            ),
+            (
+                "junah"
+            )
+        ]
+    )
+    def test_v2_generate_badge(username):
+&gt;       response = lambda_handler(
+            {
+                "queryStringParameters": {
+                    "name": username
+                }
+            },
+            {}
+        )
+
+tests/test_v2_generate_badge.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+lambdas/v2/generate_badge/main.py:162: in lambda_handler
+    user_data = utils.get_user_data(username)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'junah'
+
+    def get_user_data(username: str) -&gt; Optional[UserData]:
+        """Get user data from atcoder"""
+        url = f"https://atcoder.jp/users/{username}"
+        response = requests.get(url)
+    
+        doc = pq(response.text)
+    
+        # user not found
+        if doc("div.alert.alert-danger").length &gt; 0:
+            return None
+    
+        user_data = doc("table.dl-table.mt-2 &gt; tr")
+    
+        # user is unrated
+        if user_data.length == 0:
+            return UserData(username, "Unrated", 0, 0, "Unrated", 0)
+    
+        rank = user_data.eq(0).find("td").text()
+        rating = int(user_data.eq(1).find("td &gt; span").text())
+&gt;       highest_rating = int(user_data.eq(2).find("td &gt; span").text())
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: '1022 ― 5 Kyu (+178 to promote)'
+
+layers/util_layer/python/utils.py:81: ValueError</failure></testcase></testsuite></testsuites>

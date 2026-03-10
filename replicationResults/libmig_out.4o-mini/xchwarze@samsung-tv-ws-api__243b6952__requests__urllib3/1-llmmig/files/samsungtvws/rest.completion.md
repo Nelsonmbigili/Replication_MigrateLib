@@ -1,0 +1,82 @@
+### Explanation of Changes
+
+To migrate the code from using the `requests` library to the `urllib3` library, the following changes were made:
+
+1. **Import Statement**: The import statement for `requests` was replaced with `urllib3`.
+2. **Creating a Pool Manager**: A `PoolManager` instance from `urllib3` was created to handle the HTTP connections.
+3. **Making Requests**: The methods for making HTTP requests (`post`, `put`, `delete`, `get`) were changed to use the corresponding methods from the `urllib3` `PoolManager` instance.
+4. **Handling Responses**: The response handling was adjusted to access the response data correctly using `response.data.decode('utf-8')` instead of `response.text`.
+5. **Error Handling**: The error handling was updated to catch `urllib3.exceptions.HTTPError` instead of `requests.ConnectionError`.
+
+Here is the modified code:
+
+```python
+"""
+SamsungTVWS - Samsung Smart TV WS API wrapper
+
+Copyright (C) 2019 DSR! <xchwarze@gmail.com>
+
+SPDX-License-Identifier: LGPL-3.0
+"""
+
+import logging
+from typing import Any, Dict, Optional
+import urllib3
+from urllib3.exceptions import HTTPError
+
+from . import connection, exceptions, helper
+
+_LOGGING = logging.getLogger(__name__)
+
+class SamsungTVRest(connection.SamsungTVWSBaseConnection):
+    def __init__(
+        self,
+        host: str,
+        port: int = 8001,
+        timeout: Optional[float] = None,
+    ) -> None:
+        super().__init__(
+            host,
+            endpoint="",
+            port=port,
+            timeout=timeout,
+        )
+        self.http = urllib3.PoolManager()
+
+    def _rest_request(self, target: str, method: str = "GET") -> Dict[str, Any]:
+        url = self._format_rest_url(target)
+        try:
+            if method == "POST":
+                response = self.http.request("POST", url, timeout=self.timeout)
+            elif method == "PUT":
+                response = self.http.request("PUT", url, timeout=self.timeout)
+            elif method == "DELETE":
+                response = self.http.request("DELETE", url, timeout=self.timeout)
+            else:
+                response = self.http.request("GET", url, timeout=self.timeout)
+            return helper.process_api_response(response.data.decode('utf-8'))
+        except HTTPError as err:
+            raise exceptions.HttpApiError(
+                "TV unreachable or feature not supported on this model."
+            ) from err
+
+    def rest_device_info(self) -> Dict[str, Any]:
+        _LOGGING.debug("Get device info via rest api")
+        return self._rest_request("")
+
+    def rest_app_status(self, app_id: str) -> Dict[str, Any]:
+        _LOGGING.debug("Get app %s status via rest api", app_id)
+        return self._rest_request("applications/" + app_id)
+
+    def rest_app_run(self, app_id: str) -> Dict[str, Any]:
+        _LOGGING.debug("Run app %s via rest api", app_id)
+        return self._rest_request("applications/" + app_id, "POST")
+
+    def rest_app_close(self, app_id: str) -> Dict[str, Any]:
+        _LOGGING.debug("Close app %s via rest api", app_id)
+        return self._rest_request("applications/" + app_id, "DELETE")
+
+    def rest_app_install(self, app_id: str) -> Dict[str, Any]:
+        _LOGGING.debug("Install app %s via rest api", app_id)
+        return self._rest_request("applications/" + app_id, "PUT")
+```

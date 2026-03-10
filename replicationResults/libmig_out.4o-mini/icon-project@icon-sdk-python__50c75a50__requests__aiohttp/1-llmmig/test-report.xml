@@ -1,0 +1,2845 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="60" skipped="4" tests="134" time="5.076" timestamp="2026-03-09T23:57:26.328410+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.api_call.test_call.TestCall" name="test_call" time="0.003"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_call.test_call.TestCall testMethod=test_call&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4384558032'&gt;
+
+    def test_call(self, _make_id):
+    
+        # with from
+        test_call = CallBuilder() \
+            .from_(self.setting["from"]) \
+            .to(self.setting["to"]) \
+            .method("getStepCosts") \
+            .params({}) \
+            .build()
+    
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                "jsonrpc": "2.0",
+                "method": "icx_call",
+                "id": 1234,
+                "params": {
+                    "to": self.setting["to"],
+                    "dataType": "call",
+                    "data": {
+                        "method": "getStepCosts"
+                    },
+                    "from": self.setting["from"]
+                }
+            }
+    
+            m.post(self.matcher, json=response_json)
+            result = self.icon_service.call(test_call)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_call/test_call.py:55: AttributeError</failure></testcase><testcase classname="tests.api_call.test_call.TestCall" name="test_call_without_from" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_call.test_call.TestCall testMethod=test_call_without_from&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4388165008'&gt;
+
+    def test_call_without_from(self, _make_id):
+        test_call = CallBuilder() \
+            .to(self.setting["to"]) \
+            .method("getStepCosts") \
+            .build()
+    
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                "jsonrpc": "2.0",
+                "method": "icx_call",
+                "id": 1234,
+                "params": {
+                    "to": self.setting["to"],
+                    "dataType": "call",
+                    "data": {
+                        "method": "getStepCosts"
+                    },
+                }
+            }
+            m.post(self.matcher, json=response_json)
+            result = self.icon_service.call(test_call)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_call/test_call.py:107: AttributeError</failure></testcase><testcase classname="tests.api_call.test_call.TestCall" name="test_call_without_params" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_call.test_call.TestCall testMethod=test_call_without_params&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4349737616'&gt;
+
+    def test_call_without_params(self, _make_id):
+        test_call = CallBuilder() \
+            .from_(self.setting["from"]) \
+            .to(self.setting["to"]) \
+            .method("getStepCosts") \
+            .build()
+    
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                "jsonrpc": "2.0",
+                "method": "icx_call",
+                "id": 1234,
+                "params": {
+                    "to": self.setting["to"],
+                    "dataType": "call",
+                    "data": {
+                        "method": "getStepCosts"
+                    },
+                    "from": self.setting["from"]
+                }
+            }
+            m.post(self.matcher, json=response_json)
+            result = self.icon_service.call(test_call)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_call/test_call.py:82: AttributeError</failure></testcase><testcase classname="tests.api_debug.test_estimate_step.TestEstimateStep" name="test_estimate_step_with_call_transaction" time="0.001"><failure message="TypeError: int() can't convert non-string with explicit base">self = &lt;tests.api_debug.test_estimate_step.TestEstimateStep testMethod=test_estimate_step_with_call_transaction&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4388668944'&gt;
+
+    def test_estimate_step_with_call_transaction(self, _make_id):
+        params = {"addr_to": self.setting["to"], "value": 1000000}
+        call_transaction = (CallTransactionBuilder()
+            .from_(self.setting["from"])
+            .to("cx4d6f646441a3f9c9b91019c9b98e3c342cceb114")
+            .nid(self.setting["nid"])
+            .timestamp(self.setting["timestamp"])
+            .nonce(self.setting["nonce"])
+            .method("transfer")
+            .params(params)
+            .build())
+        with requests_mock.Mocker() as m:
+            expected_step = 155_160
+    
+            expected_request = {
+                'jsonrpc': '2.0',
+                'method': 'debug_estimateStep',
+                'id': 1234,
+                'params': {
+                    'from': self.setting["from"],
+                    'nid': hex(self.setting["nid"]),
+                    'nonce': hex(self.setting["nonce"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'to': "cx4d6f646441a3f9c9b91019c9b98e3c342cceb114",
+                    'version': hex(self.version),
+                    'dataType': 'call',
+                    'data': {
+                        'method': 'transfer',
+                        'params': {
+                            'addr_to': 'hx5bfdb090f43a808005ffc27c25b213145e80b7cd',
+                            'value': '0xf4240'
+                        }
+                    }
+                }
+            }
+    
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': hex(expected_step),
+                'id': 1234
+            }
+            m.post(self.matcher, json=response_json)
+&gt;           result = self.icon_service.estimate_step(call_transaction)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_debug/test_estimate_step.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;iconsdk.icon_service.IconService object at 0x10595f890&gt;
+transaction = &lt;iconsdk.builder.transaction_builder.CallTransaction object at 0x10595cd50&gt;
+full_response = False
+
+    def estimate_step(self, transaction: Transaction, full_response: bool = False) -&gt; int:
+        """
+        Returns an estimated step of how much step is necessary to allow the transaction to complete.
+    
+        :param transaction: a raw transaction
+        :param full_response: a boolean indicating whether or not it returns refined data
+        :return: an estimated step
+        """
+        if not isinstance(transaction, Transaction):
+            raise DataTypeException("Transaction object is unrecognized.")
+    
+        params = {
+            "version": convert_int_to_hex_str(transaction.version) if transaction.version else "0x3",
+            "from": transaction.from_,
+            "to": transaction.to,
+            "timestamp": convert_int_to_hex_str(transaction.timestamp) if transaction.timestamp else get_timestamp(),
+            "nid": convert_int_to_hex_str(transaction.nid) if transaction.nid else "0x1"
+        }
+    
+        if transaction.value is not None:
+            params["value"] = convert_int_to_hex_str(transaction.value)
+    
+        if transaction.nonce is not None:
+            params["nonce"] = convert_int_to_hex_str(transaction.nonce)
+    
+        if transaction.data_type is not None:
+            params["dataType"] = transaction.data_type
+    
+        if transaction.data is not None:
+            params["data"] = transaction.data
+    
+        result = self.__provider.make_request('debug_estimateStep', params, full_response)
+&gt;       return result if full_response else int(result, 16)
+                                            ^^^^^^^^^^^^^^^
+E       TypeError: int() can't convert non-string with explicit base
+
+iconsdk/icon_service.py:352: TypeError</failure></testcase><testcase classname="tests.api_debug.test_estimate_step.TestEstimateStep" name="test_estimate_step_with_deploy_transaction" time="0.001"><failure message="TypeError: int() can't convert non-string with explicit base">self = &lt;tests.api_debug.test_estimate_step.TestEstimateStep testMethod=test_estimate_step_with_deploy_transaction&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4385918032'&gt;
+
+    def test_estimate_step_with_deploy_transaction(self, _make_id):
+        param = {"init_supply": 10000}
+        deploy_transaction = (DeployTransactionBuilder()
+            .from_(self.setting["from"])
+            .to(self.setting["to_install"])
+            .step_limit(self.setting["step_limit"])
+            .nid(self.setting["nid"])
+            .nonce(self.setting["nonce"])
+            .timestamp(self.setting["timestamp"])
+            .content_type(self.setting["content_type"])
+            .content(self.setting["content_install"])
+            .params(param)
+            .version(3)
+            .build())
+    
+        with requests_mock.Mocker() as m:
+            expected_step = 1_042_767_600
+            expected_request = {
+                'jsonrpc': '2.0',
+                'method': 'debug_estimateStep',
+                'id': 1234,
+                'params': {
+                    'from': self.setting["from"],
+                    'nid': hex(self.setting["nid"]),
+                    'nonce': hex(self.setting["nonce"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'to': self.setting["to_install"],
+                    'version': hex(self.version),
+                    'data': {
+                        'contentType': self.setting["content_type"],
+                        'content': f'0x{self.setting["content_install"].hex()}',
+                        'params': {'init_supply': hex(param["init_supply"])}
+                    },
+                    'dataType': 'deploy'
+                }
+            }
+    
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': hex(expected_step),
+                'id': 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+&gt;           result = self.icon_service.estimate_step(deploy_transaction)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_debug/test_estimate_step.py:151: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;iconsdk.icon_service.IconService object at 0x10595f890&gt;
+transaction = &lt;iconsdk.builder.transaction_builder.DeployTransaction object at 0x1054f6690&gt;
+full_response = False
+
+    def estimate_step(self, transaction: Transaction, full_response: bool = False) -&gt; int:
+        """
+        Returns an estimated step of how much step is necessary to allow the transaction to complete.
+    
+        :param transaction: a raw transaction
+        :param full_response: a boolean indicating whether or not it returns refined data
+        :return: an estimated step
+        """
+        if not isinstance(transaction, Transaction):
+            raise DataTypeException("Transaction object is unrecognized.")
+    
+        params = {
+            "version": convert_int_to_hex_str(transaction.version) if transaction.version else "0x3",
+            "from": transaction.from_,
+            "to": transaction.to,
+            "timestamp": convert_int_to_hex_str(transaction.timestamp) if transaction.timestamp else get_timestamp(),
+            "nid": convert_int_to_hex_str(transaction.nid) if transaction.nid else "0x1"
+        }
+    
+        if transaction.value is not None:
+            params["value"] = convert_int_to_hex_str(transaction.value)
+    
+        if transaction.nonce is not None:
+            params["nonce"] = convert_int_to_hex_str(transaction.nonce)
+    
+        if transaction.data_type is not None:
+            params["dataType"] = transaction.data_type
+    
+        if transaction.data is not None:
+            params["data"] = transaction.data
+    
+        result = self.__provider.make_request('debug_estimateStep', params, full_response)
+&gt;       return result if full_response else int(result, 16)
+                                            ^^^^^^^^^^^^^^^
+E       TypeError: int() can't convert non-string with explicit base
+
+iconsdk/icon_service.py:352: TypeError</failure></testcase><testcase classname="tests.api_debug.test_estimate_step.TestEstimateStep" name="test_estimate_step_with_deposit_transaction_add" time="0.001"><failure message="TypeError: int() can't convert non-string with explicit base">self = &lt;tests.api_debug.test_estimate_step.TestEstimateStep testMethod=test_estimate_step_with_deposit_transaction_add&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389801616'&gt;
+
+    def test_estimate_step_with_deposit_transaction_add(self, _make_id):
+        deposit_value = 100_000_000_000_000_000_000
+        deposit_transaction = (DepositTransactionBuilder()
+            .from_(self.setting["from"])
+            .to("cx4d6f646441a3f9c9b91019c9b98e3c342cceb114")
+            .nid(self.setting["nid"])
+            .timestamp(self.setting["timestamp"])
+            .nonce(self.setting["nonce"])
+            .value(deposit_value)
+            .action("add")
+            .build())
+        with requests_mock.Mocker() as m:
+            expected_step = 103_200
+    
+            expected_request = {
+                'jsonrpc': '2.0',
+                'method': 'debug_estimateStep',
+                'id': 1234,
+                'params': {
+                    'from': self.setting["from"],
+                    'nid': hex(self.setting["nid"]),
+                    'nonce': hex(self.setting["nonce"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'to': "cx4d6f646441a3f9c9b91019c9b98e3c342cceb114",
+                    'version': hex(self.version),
+                    'value': hex(deposit_value),
+                    'dataType': 'deposit',
+                    'data': {
+                        'action': 'add'
+                    }
+                }
+            }
+    
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': hex(expected_step),
+                'id': 1234
+            }
+            m.post(self.matcher, json=response_json)
+&gt;           result = self.icon_service.estimate_step(deposit_transaction)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_debug/test_estimate_step.py:245: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;iconsdk.icon_service.IconService object at 0x10595f890&gt;
+transaction = &lt;iconsdk.builder.transaction_builder.DepositTransaction object at 0x105a73850&gt;
+full_response = False
+
+    def estimate_step(self, transaction: Transaction, full_response: bool = False) -&gt; int:
+        """
+        Returns an estimated step of how much step is necessary to allow the transaction to complete.
+    
+        :param transaction: a raw transaction
+        :param full_response: a boolean indicating whether or not it returns refined data
+        :return: an estimated step
+        """
+        if not isinstance(transaction, Transaction):
+            raise DataTypeException("Transaction object is unrecognized.")
+    
+        params = {
+            "version": convert_int_to_hex_str(transaction.version) if transaction.version else "0x3",
+            "from": transaction.from_,
+            "to": transaction.to,
+            "timestamp": convert_int_to_hex_str(transaction.timestamp) if transaction.timestamp else get_timestamp(),
+            "nid": convert_int_to_hex_str(transaction.nid) if transaction.nid else "0x1"
+        }
+    
+        if transaction.value is not None:
+            params["value"] = convert_int_to_hex_str(transaction.value)
+    
+        if transaction.nonce is not None:
+            params["nonce"] = convert_int_to_hex_str(transaction.nonce)
+    
+        if transaction.data_type is not None:
+            params["dataType"] = transaction.data_type
+    
+        if transaction.data is not None:
+            params["data"] = transaction.data
+    
+        result = self.__provider.make_request('debug_estimateStep', params, full_response)
+&gt;       return result if full_response else int(result, 16)
+                                            ^^^^^^^^^^^^^^^
+E       TypeError: int() can't convert non-string with explicit base
+
+iconsdk/icon_service.py:352: TypeError</failure></testcase><testcase classname="tests.api_debug.test_estimate_step.TestEstimateStep" name="test_estimate_step_with_deposit_transaction_withdraw" time="0.001"><failure message="TypeError: int() can't convert non-string with explicit base">self = &lt;tests.api_debug.test_estimate_step.TestEstimateStep testMethod=test_estimate_step_with_deposit_transaction_withdraw&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4349851024'&gt;
+
+    def test_estimate_step_with_deposit_transaction_withdraw(self, _make_id):
+        withdraw_amount = 100
+        deposit_transaction = (DepositTransactionBuilder()
+            .from_(self.setting["from"])
+            .to("cx4d6f646441a3f9c9b91019c9b98e3c342cceb114")
+            .nid(self.setting["nid"])
+            .timestamp(self.setting["timestamp"])
+            .nonce(self.setting["nonce"])
+            .action("withdraw")
+            .amount(withdraw_amount)
+            .build())
+        with requests_mock.Mocker() as m:
+            expected_step = 155_160
+    
+            expected_request = {
+                'jsonrpc': '2.0',
+                'method': 'debug_estimateStep',
+                'id': 1234,
+                'params': {
+                    'from': self.setting["from"],
+                    'nid': hex(self.setting["nid"]),
+                    'nonce': hex(self.setting["nonce"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'to': "cx4d6f646441a3f9c9b91019c9b98e3c342cceb114",
+                    'version': hex(self.version),
+                    'dataType': 'deposit',
+                    'data': {
+                        'action': 'withdraw',
+                        'amount': hex(withdraw_amount)
+                    }
+                }
+            }
+    
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': hex(expected_step),
+                'id': 1234
+            }
+            m.post(self.matcher, json=response_json)
+&gt;           result = self.icon_service.estimate_step(deposit_transaction)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_debug/test_estimate_step.py:290: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;iconsdk.icon_service.IconService object at 0x10595f890&gt;
+transaction = &lt;iconsdk.builder.transaction_builder.DepositTransaction object at 0x105974310&gt;
+full_response = False
+
+    def estimate_step(self, transaction: Transaction, full_response: bool = False) -&gt; int:
+        """
+        Returns an estimated step of how much step is necessary to allow the transaction to complete.
+    
+        :param transaction: a raw transaction
+        :param full_response: a boolean indicating whether or not it returns refined data
+        :return: an estimated step
+        """
+        if not isinstance(transaction, Transaction):
+            raise DataTypeException("Transaction object is unrecognized.")
+    
+        params = {
+            "version": convert_int_to_hex_str(transaction.version) if transaction.version else "0x3",
+            "from": transaction.from_,
+            "to": transaction.to,
+            "timestamp": convert_int_to_hex_str(transaction.timestamp) if transaction.timestamp else get_timestamp(),
+            "nid": convert_int_to_hex_str(transaction.nid) if transaction.nid else "0x1"
+        }
+    
+        if transaction.value is not None:
+            params["value"] = convert_int_to_hex_str(transaction.value)
+    
+        if transaction.nonce is not None:
+            params["nonce"] = convert_int_to_hex_str(transaction.nonce)
+    
+        if transaction.data_type is not None:
+            params["dataType"] = transaction.data_type
+    
+        if transaction.data is not None:
+            params["data"] = transaction.data
+    
+        result = self.__provider.make_request('debug_estimateStep', params, full_response)
+&gt;       return result if full_response else int(result, 16)
+                                            ^^^^^^^^^^^^^^^
+E       TypeError: int() can't convert non-string with explicit base
+
+iconsdk/icon_service.py:352: TypeError</failure></testcase><testcase classname="tests.api_debug.test_estimate_step.TestEstimateStep" name="test_estimate_step_with_message_transaction" time="0.001"><failure message="TypeError: int() can't convert non-string with explicit base">self = &lt;tests.api_debug.test_estimate_step.TestEstimateStep testMethod=test_estimate_step_with_message_transaction&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4387314256'&gt;
+
+    def test_estimate_step_with_message_transaction(self, _make_id):
+        # Checks if making an instance of message transaction correctly
+        message_transaction = (MessageTransactionBuilder()
+            .from_(self.setting["from"])
+            .to(self.setting["to"])
+            .step_limit(self.setting["step_limit"])
+            .timestamp(self.setting["timestamp"])
+            .nid(self.setting["nid"])
+            .nonce(self.setting["nonce"])
+            .data(self.setting["data"])
+            .build())
+    
+        with requests_mock.Mocker() as m:
+            expected_step = 102_400
+            expected_request = {
+                'jsonrpc': '2.0',
+                'method': 'debug_estimateStep',
+                'id': 1234,
+                'params': {
+                    'from': self.setting["from"],
+                    'nid': hex(self.setting["nid"]),
+                    'nonce': hex(self.setting["nonce"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'to': self.setting["to"],
+                    'version': hex(self.version),
+                    'data': self.setting["data"],
+                    'dataType': 'message'
+                }
+            }
+    
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': hex(expected_step),
+                'id': 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+&gt;           result = self.icon_service.estimate_step(message_transaction)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_debug/test_estimate_step.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;iconsdk.icon_service.IconService object at 0x10595f890&gt;
+transaction = &lt;iconsdk.builder.transaction_builder.MessageTransaction object at 0x105695d90&gt;
+full_response = False
+
+    def estimate_step(self, transaction: Transaction, full_response: bool = False) -&gt; int:
+        """
+        Returns an estimated step of how much step is necessary to allow the transaction to complete.
+    
+        :param transaction: a raw transaction
+        :param full_response: a boolean indicating whether or not it returns refined data
+        :return: an estimated step
+        """
+        if not isinstance(transaction, Transaction):
+            raise DataTypeException("Transaction object is unrecognized.")
+    
+        params = {
+            "version": convert_int_to_hex_str(transaction.version) if transaction.version else "0x3",
+            "from": transaction.from_,
+            "to": transaction.to,
+            "timestamp": convert_int_to_hex_str(transaction.timestamp) if transaction.timestamp else get_timestamp(),
+            "nid": convert_int_to_hex_str(transaction.nid) if transaction.nid else "0x1"
+        }
+    
+        if transaction.value is not None:
+            params["value"] = convert_int_to_hex_str(transaction.value)
+    
+        if transaction.nonce is not None:
+            params["nonce"] = convert_int_to_hex_str(transaction.nonce)
+    
+        if transaction.data_type is not None:
+            params["dataType"] = transaction.data_type
+    
+        if transaction.data is not None:
+            params["data"] = transaction.data
+    
+        result = self.__provider.make_request('debug_estimateStep', params, full_response)
+&gt;       return result if full_response else int(result, 16)
+                                            ^^^^^^^^^^^^^^^
+E       TypeError: int() can't convert non-string with explicit base
+
+iconsdk/icon_service.py:352: TypeError</failure></testcase><testcase classname="tests.api_debug.test_estimate_step.TestEstimateStep" name="test_estimate_step_with_send_icx_transaction" time="0.001"><failure message="TypeError: int() can't convert non-string with explicit base">self = &lt;tests.api_debug.test_estimate_step.TestEstimateStep testMethod=test_estimate_step_with_send_icx_transaction&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389819216'&gt;
+
+    def test_estimate_step_with_send_icx_transaction(self, _make_id):
+        icx_transaction = (TransactionBuilder()
+            .from_(self.setting["from"])
+            .to(self.setting["to"])
+            .value(self.setting["value"])
+            .timestamp(self.setting["timestamp"])
+            .step_limit(self.setting["step_limit"])
+            .nid(self.setting["nid"])
+            .nonce(self.setting["nonce"])
+            .version(self.version)
+            .build())
+    
+        with requests_mock.Mocker() as m:
+            expected_step = 100_000
+            expected_request = {
+                'jsonrpc': '2.0',
+                'method': 'debug_estimateStep',
+                'id': 1234,
+                'params': {
+                    'from': self.setting["from"],
+                    'nid': hex(self.setting["nid"]),
+                    'nonce': hex(self.setting["nonce"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'to': self.setting["to"],
+                    'value': hex(self.setting["value"]),
+                    'version': hex(self.version)
+                }
+            }
+    
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': hex(expected_step),
+                'id': 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+&gt;           result = self.icon_service.estimate_step(icx_transaction)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_debug/test_estimate_step.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;iconsdk.icon_service.IconService object at 0x10595f890&gt;
+transaction = &lt;iconsdk.builder.transaction_builder.Transaction object at 0x105a77f90&gt;
+full_response = False
+
+    def estimate_step(self, transaction: Transaction, full_response: bool = False) -&gt; int:
+        """
+        Returns an estimated step of how much step is necessary to allow the transaction to complete.
+    
+        :param transaction: a raw transaction
+        :param full_response: a boolean indicating whether or not it returns refined data
+        :return: an estimated step
+        """
+        if not isinstance(transaction, Transaction):
+            raise DataTypeException("Transaction object is unrecognized.")
+    
+        params = {
+            "version": convert_int_to_hex_str(transaction.version) if transaction.version else "0x3",
+            "from": transaction.from_,
+            "to": transaction.to,
+            "timestamp": convert_int_to_hex_str(transaction.timestamp) if transaction.timestamp else get_timestamp(),
+            "nid": convert_int_to_hex_str(transaction.nid) if transaction.nid else "0x1"
+        }
+    
+        if transaction.value is not None:
+            params["value"] = convert_int_to_hex_str(transaction.value)
+    
+        if transaction.nonce is not None:
+            params["nonce"] = convert_int_to_hex_str(transaction.nonce)
+    
+        if transaction.data_type is not None:
+            params["dataType"] = transaction.data_type
+    
+        if transaction.data is not None:
+            params["data"] = transaction.data
+    
+        result = self.__provider.make_request('debug_estimateStep', params, full_response)
+&gt;       return result if full_response else int(result, 16)
+                                            ^^^^^^^^^^^^^^^
+E       TypeError: int() can't convert non-string with explicit base
+
+iconsdk/icon_service.py:352: TypeError</failure></testcase><testcase classname="tests.api_debug.test_get_trace.TestGetTrace" name="test_get_trace" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_debug.test_get_trace.TestGetTrace testMethod=test_get_trace&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4385254928'&gt;
+
+    def test_get_trace(self, _make_id):
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'debug_getTrace',
+                'params': {
+                    'txHash': TestGetTrace.TX_HASH
+                }
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": {"logs": [], "status": "0x1"},
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+            self.icon_service.get_trace(TestGetTrace.TX_HASH)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_debug/test_get_trace.py:46: AttributeError</failure></testcase><testcase classname="tests.api_debug.test_get_trace.TestGetTrace" name="test_get_trace_invalid" time="0.001" /><testcase classname="tests.api_full_response.test_get_balance.TestFullResponseGetBalance" name="test_get_balance_full_response" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_full_response.test_get_balance.TestFullResponseGetBalance testMethod=test_get_balance_full_response&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389838224'&gt;
+
+    def test_get_balance_full_response(self, _make_id):
+    
+        # get_balance with full_response
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'jsonrpc': '2.0',
+                'method': 'icx_getBalance',
+                'id': 1234,
+                'params': {
+                    'address': self.setting['from']
+                }
+            }
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': hex(self.setting['value']),
+                'id': 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+            result_dict = self.icon_service.get_balance(self.setting['from'], full_response=True)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_full_response/test_get_balance.py:50: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_get_balance.TestFullResponseGetBalance" name="test_get_balance_invalid" time="0.001" /><testcase classname="tests.api_full_response.test_get_block_by_hash.TestFullResponseGetBlockByHash" name="test_get_block_by_hash_full_response" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_full_response.test_get_block_by_hash.TestFullResponseGetBlockByHash testMethod=test_get_block_by_hash_full_response&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389844496'&gt;
+
+    def test_get_block_by_hash_full_response(self, _make_id):
+        # used valid hash and got and valid block
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'jsonrpc': '2.0',
+                'method': 'icx_getBlockByHash',
+                'id': 1234,
+                'params': {
+                    'hash': self.block_hash
+                }
+            }
+    
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': self.block,
+                'id': 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+            result_dict = self.icon_service.get_block(self.block_hash, full_response=True)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_full_response/test_get_block_by_hash.py:50: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_get_block_by_hash.TestFullResponseGetBlockByHash" name="test_get_block_by_wrong_hash" time="0.001"><failure message="AttributeError: 'coroutine' object has no attribute 'keys'">self = &lt;tests.api_full_response.test_get_block_by_hash.TestFullResponseGetBlockByHash testMethod=test_get_block_by_wrong_hash&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4349845648'&gt;
+
+    def test_get_block_by_wrong_hash(self, _make_id):
+        # used invalid hash and got and invalid block
+    
+        invalid_block_hash = "0x033f8d96045eb8301fd17cf078c28ae58a3ba329f6ada5cf128ee56dc2af26f7"
+        with requests_mock.Mocker() as m:
+            response_json = {
+                'jsonrpc': '2.0',
+                'error': {
+                    "code": -32602,
+                    "message": "fail wrong block hash"
+                },
+                'id': 1234
+            }
+    
+            m.post(self.matcher, json=response_json, status_code=400)
+            result_dict = self.icon_service.get_block(invalid_block_hash, full_response=True)
+&gt;           self.assertEqual(result_dict.keys(), result_error_v3.keys())
+                             ^^^^^^^^^^^^^^^^
+E           AttributeError: 'coroutine' object has no attribute 'keys'
+
+tests/api_full_response/test_get_block_by_hash.py:74: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_get_block_by_height.TestFullResponseGetBlockByHeight" name="test_get_block_by_height_full_response" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_full_response.test_get_block_by_height.TestFullResponseGetBlockByHeight testMethod=test_get_block_by_height_full_response&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389780688'&gt;
+
+    def test_get_block_by_height_full_response(self, _make_id):
+        # used valid hash and got and valid block
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'jsonrpc': '2.0',
+                'method': 'icx_getBlockByHeight',
+                'id': 1234,
+                'params': {
+                    'height': hex(self.block_height)
+                }
+            }
+    
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': self.block,
+                'id': 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+            result_dict = self.icon_service.get_block(self.block_height, full_response=True)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_full_response/test_get_block_by_height.py:50: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_get_block_by_height.TestFullResponseGetBlockByHeight" name="test_get_block_by_wrong_height" time="0.001"><failure message="AttributeError: 'coroutine' object has no attribute 'keys'">self = &lt;tests.api_full_response.test_get_block_by_height.TestFullResponseGetBlockByHeight testMethod=test_get_block_by_wrong_height&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389775056'&gt;
+
+    def test_get_block_by_wrong_height(self, _make_id):
+        # used invalid hash and got and invalid block
+    
+        invalid_block_height = 5
+        with requests_mock.Mocker() as m:
+            response_json = {
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "fail wrong block height"
+                },
+                "id": 1234
+            }
+    
+            m.post(self.matcher, json=response_json, status_code=400)
+            result_dict = self.icon_service.get_block(invalid_block_height, full_response=True)
+&gt;           self.assertEqual(result_dict.keys(), result_error_v3.keys())
+                             ^^^^^^^^^^^^^^^^
+E           AttributeError: 'coroutine' object has no attribute 'keys'
+
+tests/api_full_response/test_get_block_by_height.py:74: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_get_last_block.TestFullResponseGetBlockByHeight" name="test_get_last_block_full_response" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_full_response.test_get_last_block.TestFullResponseGetBlockByHeight testMethod=test_get_last_block_full_response&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4385991888'&gt;
+
+    def test_get_last_block_full_response(self, _make_id):
+        # used valid hash and got and valid block
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'jsonrpc': '2.0',
+                'method': 'icx_getLastBlock',
+                'id': 1234,
+            }
+    
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': self.block,
+                'id': 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+            result_dict = self.icon_service.get_block("latest", full_response=True)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_full_response/test_get_last_block.py:47: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_get_score_api.TestFullResponseGetScoreAPI" name="test_get_score_api_by_wrong_address" time="0.001"><failure message="AttributeError: 'coroutine' object has no attribute 'keys'">self = &lt;tests.api_full_response.test_get_score_api.TestFullResponseGetScoreAPI testMethod=test_get_score_api_by_wrong_address&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389835920'&gt;
+
+    def test_get_score_api_by_wrong_address(self, _make_id):
+        with requests_mock.Mocker() as m:
+            wrong_address = "cxb0776ee37f5b45bfaea8cff1d8232fbb6122ec32"
+    
+            response_json: dict = {
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32002,
+                    "message": f"SCORE not found: {wrong_address}"
+                },
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json, status_code=400)
+            result_dict = self.icon_service.get_score_api(wrong_address, full_response=True)
+&gt;           self.assertEqual(result_dict.keys(), result_error_v3.keys())
+                             ^^^^^^^^^^^^^^^^
+E           AttributeError: 'coroutine' object has no attribute 'keys'
+
+tests/api_full_response/test_get_score_api.py:65: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_get_score_api.TestFullResponseGetScoreAPI" name="test_get_score_api_full_response" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_full_response.test_get_score_api.TestFullResponseGetScoreAPI testMethod=test_get_score_api_full_response&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389833552'&gt;
+
+    def test_get_score_api_full_response(self, _make_id):
+        governance_address = "cx0000000000000000000000000000000000000001"
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getScoreApi',
+                'params': {
+                    'address': governance_address
+                }
+            }
+    
+            m.post(self.matcher, json=response_governance_json)
+            result_dict = self.icon_service.get_score_api(governance_address, full_response=True)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_full_response/test_get_score_api.py:44: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_get_total_supply.TesFullResponseGetTotalSupply" name="test_get_total_supply" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_full_response.test_get_total_supply.TesFullResponseGetTotalSupply testMethod=test_get_total_supply&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4385986768'&gt;
+
+    def test_get_total_supply(self, _make_id):
+        with requests_mock.Mocker() as m:
+            supply = 1_000_000_000
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getTotalSupply',
+            }
+    
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': hex(supply),
+                'id': 1234
+            }
+            m.post(self.matcher, json=response_json)
+            result_dict = self.icon_service.get_total_supply(full_response=True)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_full_response/test_get_total_supply.py:45: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_get_transaction_by_hash.TestFullResponseGetTransactionByHash" name="test_get_transaction_by_hash" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_full_response.test_get_transaction_by_hash.TestFullResponseGetTransactionByHash testMethod=test_get_transaction_by_hash&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389519696'&gt;
+
+    def test_get_transaction_by_hash(self, _make_id):
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getTransactionByHash',
+                'params': {
+                    'txHash': self.transaction_hash
+                }
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": self.transaction,
+                "id": 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+            result_dict = self.icon_service.get_transaction(self.transaction_hash, full_response=True)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_full_response/test_get_transaction_by_hash.py:47: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_get_transaction_by_hash.TestFullResponseGetTransactionByHash" name="test_get_transaction_wrong_hash" time="0.001"><failure message="AttributeError: 'coroutine' object has no attribute 'keys'">self = &lt;tests.api_full_response.test_get_transaction_by_hash.TestFullResponseGetTransactionByHash testMethod=test_get_transaction_wrong_hash&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4351476816'&gt;
+
+    def test_get_transaction_wrong_hash(self, _make_id):
+        with requests_mock.Mocker() as m:
+            wrong_tx_hash = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+            response_json = {
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "Invalid params txHash"
+                },
+                "id": 1234
+            }
+    
+            m.post(self.matcher, json=response_json, status_code=400)
+            result_dict = self.icon_service.get_block(wrong_tx_hash, full_response=True)
+&gt;           self.assertEqual(result_dict.keys(), result_error_v3.keys())
+                             ^^^^^^^^^^^^^^^^
+E           AttributeError: 'coroutine' object has no attribute 'keys'
+
+tests/api_full_response/test_get_transaction_by_hash.py:68: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_get_transaction_result.TestGetTransactionResult" name="test_get_transaction_result" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_full_response.test_get_transaction_result.TestGetTransactionResult testMethod=test_get_transaction_result&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4388313872'&gt;
+
+    def test_get_transaction_result(self, _make_id):
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getTransactionResult',
+                'params': {
+                    'txHash': self.transaction_hash
+                }
+            }
+    
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": self.receipt,
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+            result_dict = self.icon_service.get_transaction_result(self.transaction_hash, full_response=True)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_full_response/test_get_transaction_result.py:47: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_get_transaction_result.TestGetTransactionResult" name="test_get_transaction_result_wrong_hash" time="0.001"><failure message="AttributeError: 'coroutine' object has no attribute 'keys'">self = &lt;tests.api_full_response.test_get_transaction_result.TestGetTransactionResult testMethod=test_get_transaction_result_wrong_hash&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4387983312'&gt;
+
+    def test_get_transaction_result_wrong_hash(self, _make_id):
+        wrong_tx_hash: str = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+        with requests_mock.Mocker() as m:
+            response_json = {
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "Invalid params txHash"
+                },
+                "id": 1234
+            }
+    
+            m.post(self.matcher, json=response_json, status_code=400)
+            result_dict = self.icon_service.get_block(wrong_tx_hash, full_response=True)
+&gt;           self.assertEqual(result_dict.keys(), result_error_v3.keys())
+                             ^^^^^^^^^^^^^^^^
+E           AttributeError: 'coroutine' object has no attribute 'keys'
+
+tests/api_full_response/test_get_transaction_result.py:68: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_send_call.TesFullResponseSendDeploy" name="test_send_call" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_full_response.test_send_call.TesFullResponseSendDeploy testMethod=test_send_call&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4388680336'&gt;
+
+    def test_send_call(self, _make_id):
+        call_transaction_without_step_limit = CallTransactionBuilder()\
+            .from_(self.setting["from"])\
+            .to(self.setting["to"]) \
+            .nid(self.setting["nid"])\
+            .step_limit(self.setting["step_limit"])\
+            .nonce(self.setting["nonce"]) \
+            .method(self.setting["method"])\
+            .params(self.setting["params_call"])\
+            .build()
+        signed_transaction = SignedTransaction(call_transaction_without_step_limit, self.wallet)
+    
+        with requests_mock.Mocker() as m:
+            response_json = {
+                'jsonrpc': '2.0',
+                'id': 1234,
+                'result': '0x4bf74e6aeeb43bde5dc8d5b62537a33ac8eb7605ebbdb51b015c1881b45b3aed'
+            }
+    
+            m.post(self.matcher, json=response_json)
+            result_dict = self.icon_service.send_transaction(signed_transaction, full_response=True)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_full_response/test_send_call.py:51: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_send_call.TesFullResponseSendDeploy" name="test_send_call_wrong_address" time="0.001"><failure message="AttributeError: 'coroutine' object has no attribute 'keys'">self = &lt;tests.api_full_response.test_send_call.TesFullResponseSendDeploy testMethod=test_send_call_wrong_address&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389399248'&gt;
+
+    def test_send_call_wrong_address(self, _make_id):
+        wrong_address = "hx5bfdb090f43a808005ffc27c25b213145e8"
+        call_transaction_without_step_limit = CallTransactionBuilder() \
+            .from_(self.setting["from"]) \
+            .to(wrong_address) \
+            .nid(self.setting["nid"]) \
+            .step_limit(self.setting["step_limit"]) \
+            .nonce(self.setting["nonce"]) \
+            .method(self.setting["method"]) \
+            .params(self.setting["params_call"]) \
+            .build()
+        signed_transaction = SignedTransaction(call_transaction_without_step_limit, self.wallet)
+    
+        with requests_mock.Mocker() as m:
+            response_json = {
+                'jsonrpc': '2.0',
+                'id': 1234,
+                'error': {
+                    'code': -32601,
+                    'message': 'Method not found'
+                }
+            }
+    
+            m.post(self.matcher, json=response_json)
+            result_dict = self.icon_service.send_transaction(signed_transaction, full_response=True)
+&gt;           self.assertEqual(result_error_v3.keys(), result_dict.keys())
+                                                     ^^^^^^^^^^^^^^^^
+E           AttributeError: 'coroutine' object has no attribute 'keys'
+
+tests/api_full_response/test_send_call.py:82: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_send_deploy.TesFullResponseSendDeploy" name="test_deploy_wrong_address" time="0.001"><failure message="AttributeError: 'coroutine' object has no attribute 'keys'">self = &lt;tests.api_full_response.test_send_deploy.TesFullResponseSendDeploy testMethod=test_deploy_wrong_address&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4388779600'&gt;
+
+    def test_deploy_wrong_address(self, _make_id):
+        wrong_address = "hx5bfdb090f43a808005ffc27c25b213145e8"
+        deploy_transaction = DeployTransactionBuilder() \
+            .from_(self.setting["from"]) \
+            .to(wrong_address) \
+            .step_limit(self.setting["step_limit"]) \
+            .nid(self.setting["nid"]) \
+            .nonce(self.setting["nonce"]) \
+            .content_type(self.setting["content_type"]) \
+            .content(self.setting["content_install"]) \
+            .params(self.setting["params_install"]) \
+            .build()
+        signed_transaction = SignedTransaction(deploy_transaction, self.wallet)
+    
+        with requests_mock.Mocker() as m:
+            response_json = {
+                'jsonrpc': '2.0',
+                'id': 1234,
+                'error': {
+                    "code": -32600,
+                    "message": f'Not a system SCORE {wrong_address}'
+                }
+            }
+    
+            m.post(self.matcher, json=response_json, status_code=400)
+            result_dict = self.icon_service.send_transaction(signed_transaction, full_response=True)
+&gt;           self.assertEqual(result_error_v3.keys(), result_dict.keys())
+                                                     ^^^^^^^^^^^^^^^^
+E           AttributeError: 'coroutine' object has no attribute 'keys'
+
+tests/api_full_response/test_send_deploy.py:85: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_send_deploy.TesFullResponseSendDeploy" name="test_send_deploy" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_full_response.test_send_deploy.TesFullResponseSendDeploy testMethod=test_send_deploy&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389781584'&gt;
+
+    def test_send_deploy(self, _make_id):
+        deploy_transaction = DeployTransactionBuilder() \
+            .from_(self.setting["from"]) \
+            .to(self.setting["to_install"]) \
+            .step_limit(self.setting["step_limit"]) \
+            .nid(self.setting["nid"]) \
+            .nonce(self.setting["nonce"]) \
+            .content_type(self.setting["content_type"]) \
+            .content(self.setting["content_install"]) \
+            .params(self.setting["params_install"]) \
+            .build()
+        signed_transaction = SignedTransaction(deploy_transaction, self.wallet)
+    
+        with requests_mock.Mocker() as m:
+            response_json = {
+                "jsonrpc": "2.0",
+                "id": 1234,
+                "result": "0x4bf74e6aeeb43bde5dc8d5b62537a33ac8eb7605ebbdb51b015c1881b45b3aed"
+            }
+    
+            m.post(self.matcher, json=response_json)
+            result_dict = self.icon_service.send_transaction(signed_transaction, full_response=True)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_full_response/test_send_deploy.py:53: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_send_deposit.TesFullResponseSendDeposit" name="test_add_deposit" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_full_response.test_send_deposit.TesFullResponseSendDeposit testMethod=test_add_deposit&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389833168'&gt;
+
+    def test_add_deposit(self, _make_id):
+        # transaction instance for add action
+        action = "add"
+        deposit_transaction = DepositTransactionBuilder() \
+            .from_(self.setting["from"]) \
+            .to(self.setting["to"]) \
+            .value(self.setting["value"]) \
+            .timestamp(self.setting["timestamp"]) \
+            .step_limit(self.setting["step_limit"]) \
+            .nid(self.setting["nid"]) \
+            .nonce(self.setting["nonce"]) \
+            .action(action) \
+            .build()
+        signed_transaction = SignedTransaction(deposit_transaction, self.wallet)
+    
+        with requests_mock.Mocker() as m:
+            tx_hash = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_sendTransaction',
+                'params': {
+                    'data': {
+                        'action': action
+                    },
+                    'dataType': 'deposit',
+                    'from': self.setting["from"],
+                    'nid': hex(self.setting["nid"]),
+                    'nonce': hex(self.setting["nonce"]),
+                    'signature': signed_transaction.signed_transaction_dict["signature"],
+                    'stepLimit': hex(self.setting["step_limit"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'to': self.setting["to"],
+                    'value': hex(self.setting["value"]),
+                    'version': hex(3)
+                }
+            }
+    
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": tx_hash,
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+            result_dict = self.icon_service.send_transaction(signed_transaction, full_response=True)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_full_response/test_send_deposit.py:76: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_send_message.TestFullResponseSendMessage" name="test_send_message" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_full_response.test_send_message.TestFullResponseSendMessage testMethod=test_send_message&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389555792'&gt;
+
+    def test_send_message(self, _make_id):
+        message_transaction = MessageTransactionBuilder() \
+            .from_(self.setting["from"]) \
+            .to(self.setting["to"]) \
+            .step_limit(self.setting["step_limit"]) \
+            .nid(self.setting["nid"]) \
+            .nonce(self.setting["nonce"]) \
+            .data(self.setting["data"]) \
+            .timestamp(self.setting["timestamp"]) \
+            .build()
+    
+        tx_dict = SignedTransaction.convert_tx_to_jsonrpc_request(message_transaction)
+        self.assertTrue(is_message_transaction(tx_dict))
+        signed_transaction = SignedTransaction(message_transaction, self.wallet)
+    
+        with requests_mock.Mocker() as m:
+            tx_hash = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_sendTransaction',
+                'params': {
+                    'data': self.setting["data"],
+                    'dataType': 'message',
+                    'from': self.setting["from"],
+                    'nid': hex(self.setting["nid"]),
+                    'nonce': hex(self.setting["nonce"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'signature': signed_transaction.signed_transaction_dict["signature"],
+                    'stepLimit': hex(self.setting["step_limit"]),
+                    'to': self.setting["to"],
+                    'version': hex(3)
+                }
+            }
+    
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': tx_hash,
+                'id': 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+            result_dict = self.icon_service.send_transaction(signed_transaction, full_response=True)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_full_response/test_send_message.py:75: AttributeError</failure></testcase><testcase classname="tests.api_full_response.test_send_transfer.TestFullResponseSendTransfer" name="test_send_transfer" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_full_response.test_send_transfer.TestFullResponseSendTransfer testMethod=test_send_transfer&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4349847120'&gt;
+
+    def test_send_transfer(self, _make_id):
+        icx_transaction = TransactionBuilder() \
+            .from_(self.setting["from"]) \
+            .to(self.setting["to"]) \
+            .value(self.setting["value"]) \
+            .step_limit(self.setting["step_limit"]) \
+            .nid(3) \
+            .nonce(self.setting["nonce"]) \
+            .version(3) \
+            .timestamp(self.setting["timestamp"]) \
+            .build()
+    
+        signed_transaction = SignedTransaction(icx_transaction, self.wallet)
+    
+        with requests_mock.Mocker() as m:
+            response_json: dict = {
+                "jsonrpc": "2.0",
+                "result": "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238",
+                "id": 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+            result_dict = self.icon_service.send_transaction(signed_transaction, full_response=True)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_full_response/test_send_transfer.py:55: AttributeError</failure></testcase><testcase classname="tests.api_get.test_btp2.TestBTP2" name="test_get_btp_header" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_get.test_btp2.TestBTP2 testMethod=test_get_btp_header&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389778832'&gt;
+
+    def test_get_btp_header(self, _make_id):
+        func = self.icon_service.get_btp_header
+        method = "btp_getHeader"
+        params = {
+            'height': self.HEIGHT,
+            'network_id': self.ID,
+        }
+&gt;       self.run_test(_make_id, func, method, params)
+
+tests/api_get/test_btp2.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;tests.api_get.test_btp2.TestBTP2 testMethod=test_get_btp_header&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389778832'&gt;
+func = &lt;bound method IconService.get_btp_header of &lt;iconsdk.icon_service.IconService object at 0x105a6a7d0&gt;&gt;
+method = 'btp_getHeader', params = {'height': 100, 'network_id': 1}
+
+    def run_test(self, _make_id, func: callable, method: str, params: dict):
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': method,
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": hex(0),
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+            if params is not None:
+                expected_request['params'] = self.convert_param(params)
+                func(**params)
+            else:
+                func()
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_get/test_btp2.py:64: AttributeError</failure></testcase><testcase classname="tests.api_get.test_btp2.TestBTP2" name="test_get_btp_messages" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_get.test_btp2.TestBTP2 testMethod=test_get_btp_messages&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389339472'&gt;
+
+    def test_get_btp_messages(self, _make_id):
+        func = self.icon_service.get_btp_messages
+        method = "btp_getMessages"
+        params = {
+            'height': self.HEIGHT,
+            'network_id': self.ID,
+        }
+&gt;       self.run_test(_make_id, func, method, params)
+
+tests/api_get/test_btp2.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;tests.api_get.test_btp2.TestBTP2 testMethod=test_get_btp_messages&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389339472'&gt;
+func = &lt;bound method IconService.get_btp_messages of &lt;iconsdk.icon_service.IconService object at 0x105a6a7d0&gt;&gt;
+method = 'btp_getMessages', params = {'height': 100, 'network_id': 1}
+
+    def run_test(self, _make_id, func: callable, method: str, params: dict):
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': method,
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": hex(0),
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+            if params is not None:
+                expected_request['params'] = self.convert_param(params)
+                func(**params)
+            else:
+                func()
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_get/test_btp2.py:64: AttributeError</failure></testcase><testcase classname="tests.api_get.test_btp2.TestBTP2" name="test_get_btp_network_info" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_get.test_btp2.TestBTP2 testMethod=test_get_btp_network_info&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4385249232'&gt;
+
+    def test_get_btp_network_info(self, _make_id):
+        func = self.icon_service.get_btp_network_info
+        method = "btp_getNetworkInfo"
+        params = {'id': self.ID}
+&gt;       self.run_test(_make_id, func, method, params)
+
+tests/api_get/test_btp2.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;tests.api_get.test_btp2.TestBTP2 testMethod=test_get_btp_network_info&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4385249232'&gt;
+func = &lt;bound method IconService.get_btp_network_info of &lt;iconsdk.icon_service.IconService object at 0x105a6a7d0&gt;&gt;
+method = 'btp_getNetworkInfo', params = {'id': 1}
+
+    def run_test(self, _make_id, func: callable, method: str, params: dict):
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': method,
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": hex(0),
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+            if params is not None:
+                expected_request['params'] = self.convert_param(params)
+                func(**params)
+            else:
+                func()
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_get/test_btp2.py:64: AttributeError</failure></testcase><testcase classname="tests.api_get.test_btp2.TestBTP2" name="test_get_btp_network_type_info" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_get.test_btp2.TestBTP2 testMethod=test_get_btp_network_type_info&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4388672976'&gt;
+
+    def test_get_btp_network_type_info(self, _make_id):
+        func = self.icon_service.get_btp_network_type_info
+        method = "btp_getNetworkTypeInfo"
+        params = {'id': self.ID}
+&gt;       self.run_test(_make_id, func, method, params)
+
+tests/api_get/test_btp2.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;tests.api_get.test_btp2.TestBTP2 testMethod=test_get_btp_network_type_info&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4388672976'&gt;
+func = &lt;bound method IconService.get_btp_network_type_info of &lt;iconsdk.icon_service.IconService object at 0x105a6a7d0&gt;&gt;
+method = 'btp_getNetworkTypeInfo', params = {'id': 1}
+
+    def run_test(self, _make_id, func: callable, method: str, params: dict):
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': method,
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": hex(0),
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+            if params is not None:
+                expected_request['params'] = self.convert_param(params)
+                func(**params)
+            else:
+                func()
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_get/test_btp2.py:64: AttributeError</failure></testcase><testcase classname="tests.api_get.test_btp2.TestBTP2" name="test_get_btp_proof" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_get.test_btp2.TestBTP2 testMethod=test_get_btp_proof&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4349733648'&gt;
+
+    def test_get_btp_proof(self, _make_id):
+        func = self.icon_service.get_btp_proof
+        method = "btp_getProof"
+        params = {
+            'height': self.HEIGHT,
+            'network_id': self.ID,
+        }
+&gt;       self.run_test(_make_id, func, method, params)
+
+tests/api_get/test_btp2.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;tests.api_get.test_btp2.TestBTP2 testMethod=test_get_btp_proof&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4349733648'&gt;
+func = &lt;bound method IconService.get_btp_proof of &lt;iconsdk.icon_service.IconService object at 0x105a6a7d0&gt;&gt;
+method = 'btp_getProof', params = {'height': 100, 'network_id': 1}
+
+    def run_test(self, _make_id, func: callable, method: str, params: dict):
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': method,
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": hex(0),
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+            if params is not None:
+                expected_request['params'] = self.convert_param(params)
+                func(**params)
+            else:
+                func()
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_get/test_btp2.py:64: AttributeError</failure></testcase><testcase classname="tests.api_get.test_btp2.TestBTP2" name="test_get_btp_source_information" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_get.test_btp2.TestBTP2 testMethod=test_get_btp_source_information&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389900048'&gt;
+
+    def test_get_btp_source_information(self, _make_id):
+        func = self.icon_service.get_btp_source_information
+        method = "btp_getSourceInformation"
+        params = None
+&gt;       self.run_test(_make_id, func, method, params)
+
+tests/api_get/test_btp2.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;tests.api_get.test_btp2.TestBTP2 testMethod=test_get_btp_source_information&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389900048'&gt;
+func = &lt;bound method IconService.get_btp_source_information of &lt;iconsdk.icon_service.IconService object at 0x105a6a7d0&gt;&gt;
+method = 'btp_getSourceInformation', params = None
+
+    def run_test(self, _make_id, func: callable, method: str, params: dict):
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': method,
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": hex(0),
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+            if params is not None:
+                expected_request['params'] = self.convert_param(params)
+                func(**params)
+            else:
+                func()
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_get/test_btp2.py:64: AttributeError</failure></testcase><testcase classname="tests.api_get.test_get_balance.TestGetBalance" name="test_get_balance_from_wallet" time="0.001"><failure message="iconsdk.exception.DataTypeException: Value type must be str. Got: &lt;coroutine object HTTPProvider.make_request at 0x1035471c0&gt;">self = &lt;tests.api_get.test_get_balance.TestGetBalance testMethod=test_get_balance_from_wallet&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389935248'&gt;
+
+    def test_get_balance_from_wallet(self, _make_id):
+        # case 0: get balance from wallet or score successfully.
+        with requests_mock.Mocker() as m:
+            expected_result = 0
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getBalance',
+                'params': {
+                    'address': self.setting["from"]
+                }
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": hex(0),
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+&gt;           result = self.icon_service.get_balance(self.setting["from"])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_get/test_get_balance.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:158: in get_balance
+    return int(remove_0x_prefix(result), 16)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/hexadecimal.py:37: in remove_0x_prefix
+    if is_0x_prefixed(value):
+       ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = &lt;coroutine object HTTPProvider.make_request at 0x1035471c0&gt;
+
+    def is_0x_prefixed(value: str) -&gt; bool:
+        if not is_str(value):
+&gt;           raise DataTypeException("Value type must be str. Got: {0}".format(repr(value)))
+E           iconsdk.exception.DataTypeException: Value type must be str. Got: &lt;coroutine object HTTPProvider.make_request at 0x1035471c0&gt;
+
+iconsdk/utils/hexadecimal.py:32: DataTypeException</failure></testcase><testcase classname="tests.api_get.test_get_balance.TestGetBalance" name="test_get_balance_invalid" time="0.001" /><testcase classname="tests.api_get.test_get_block_by_hash.TestGetBlockByHash" name="test_get_block_by_hash" time="0.001"><failure message="TypeError: 'coroutine' object is not subscriptable">self = &lt;tests.api_get.test_get_block_by_hash.TestGetBlockByHash testMethod=test_get_block_by_hash&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389781456'&gt;
+
+    def test_get_block_by_hash(self, _make_id):
+        with requests_mock.Mocker() as m:
+            block_hash = "0x033f8d96045eb8301fd17cf078c28ae58a3ba329f6ada5cf128ee56dc2af26f7"
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getBlockByHash',
+                'params': {
+                    'hash': block_hash
+                }
+            }
+    
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": {
+                    "version": "0.1a",
+                    "prev_block_hash": "cf43b3fd45981431a0e64f79d07bfcf703e064b73b802c5f32834eec72142190",
+                    "merkle_tree_root_hash": "375540830d475a73b704cf8dee9fa9eba2798f9d2af1fa55a85482e48daefd3b",
+                    "time_stamp": 1516819217223222,
+                    "confirmed_transaction_list": [
+                        {
+                            "from": "hx54f7853dc6481b670caf69c5a27c7c8fe5be8269",
+                            "to": "hx49a23bd156932485471f582897bf1bec5f875751",
+                            "value": "0x56bc75e2d63100000",
+                            "fee": "0x2386f26fc10000",
+                            "nonce": "0x1",
+                            "tx_hash": "375540830d475a73b704cf8dee9fa9eba2798f9d2af1fa55a85482e48daefd3b",
+                            "signature": "bjarKeF3izGy469dpSciP3TT9caBQVYgHdaNgjY+8wJTOVSFm4o/ODXycFOdXUJcIwqvcE9If8x6Zmgt//XmkQE=",
+                            "method": "icx_sendTransaction"
+                        }
+                    ],
+                    "block_hash": "3add53134014e940f6f6010173781c4d8bd677d9931a697f962483e04a685e5c",
+                    "height": 1,
+                    "peer_id": "hx7e1a1ece096ef3fa44ac9692394c2e11d0017e4a",
+                    "signature": "liAIa7aPYvBRdZAdBz6zt2Gc9vVo/4+gkDz5uscS8Mw+B5gkp6zQeHhD5sNpyWcIsq5c9OxwOCUaBp0vu8eAgwE=",
+                    "next_leader": ""
+                },
+                "id": 1234
+            }
+    
+            # case 0: when hash value of latest block is valid
+            m.post(self.matcher, json=response_json)
+&gt;           result = self.icon_service.get_block(block_hash)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_get/test_get_block_by_hash.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:112: in get_block
+    block_template = get_block_template_to_convert_transactions_for_genesis(result, block_template)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+block = &lt;coroutine object HTTPProvider.make_request at 0x10564e560&gt;
+block_template = {'block_hash': &lt;ValueType.hex_hash_number: 6&gt;, 'confirmed_transaction_list': [{'CHANGE': {'method': RemoveKey(), 'tx_h... &lt;ValueType.int: 2&gt;, ...}], 'height': &lt;ValueType.int: 2&gt;, 'merkle_tree_root_hash': &lt;ValueType.hex_hash_number: 6&gt;, ...}
+
+    def get_block_template_to_convert_transactions_for_genesis(block, block_template):
+        buf_block_template = copy.deepcopy(block_template)
+&gt;       if block["height"] == 0:
+           ^^^^^^^^^^^^^^^
+E       TypeError: 'coroutine' object is not subscriptable
+
+iconsdk/utils/converter.py:165: TypeError</failure></testcase><testcase classname="tests.api_get.test_get_block_by_hash.TestGetBlockByHash" name="test_get_block_by_wrong_hash" time="0.001"><failure message="TypeError: 'coroutine' object is not subscriptable">self = &lt;tests.api_get.test_get_block_by_hash.TestGetBlockByHash testMethod=test_get_block_by_wrong_hash&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4388671440'&gt;
+
+    def test_get_block_by_wrong_hash(self, _make_id):
+        with requests_mock.Mocker() as m:
+            invalid_block_hash = "0x033f8d96045eb8301fd17cf078c28ae58a3ba329f6ada5cf128ee56dc2af26f7"
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getBlockByHash',
+                'params': {
+                    'hash': invalid_block_hash
+                }
+            }
+    
+            response_json = {
+                'id': 1234,
+                "jsonrpc": "2.0",
+                "error": {
+                     "code": -32602,
+                     "message": "fail wrong block hash"
+                 },
+            }
+            m.post(self.matcher, json=response_json, status_code=400)
+&gt;           self.assertRaises(JSONRPCException, self.icon_service.get_block, invalid_block_hash)
+
+tests/api_get/test_get_block_by_hash.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:112: in get_block
+    block_template = get_block_template_to_convert_transactions_for_genesis(result, block_template)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_block_template_to_convert_transactions_for_genesis(block, block_template):
+        buf_block_template = copy.deepcopy(block_template)
+&gt;       if block["height"] == 0:
+           ^^^^^^^^^^^^^^^
+E       TypeError: 'coroutine' object is not subscriptable
+
+iconsdk/utils/converter.py:165: TypeError</failure></testcase><testcase classname="tests.api_get.test_get_block_by_height.TestGetBlockByHeight" name="test_get_block_by_height" time="0.001"><failure message="TypeError: 'coroutine' object is not subscriptable">self = &lt;tests.api_get.test_get_block_by_height.TestGetBlockByHeight testMethod=test_get_block_by_height&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4388779152'&gt;
+
+    def test_get_block_by_height(self, _make_id):
+        with requests_mock.Mocker() as m:
+            height = 1
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getBlockByHeight',
+                'params': {
+                    'height': hex(height)
+                }
+            }
+    
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": {
+                    "version": "0.1a",
+                    "prev_block_hash": "cf43b3fd45981431a0e64f79d07bfcf703e064b73b802c5f32834eec72142190",
+                    "merkle_tree_root_hash": "375540830d475a73b704cf8dee9fa9eba2798f9d2af1fa55a85482e48daefd3b",
+                    "time_stamp": 1516819217223222,
+                    "confirmed_transaction_list": [
+                        {
+                            "from": "hx54f7853dc6481b670caf69c5a27c7c8fe5be8269",
+                            "to": "hx49a23bd156932485471f582897bf1bec5f875751",
+                            "value": "0x56bc75e2d63100000",
+                            "fee": "0x2386f26fc10000",
+                            "nonce": "0x1",
+                            "tx_hash": "375540830d475a73b704cf8dee9fa9eba2798f9d2af1fa55a85482e48daefd3b",
+                            "signature": "bjarKeF3izGy469dpSciP3TT9caBQVYgHdaNgjY+8wJTOVSFm4o/ODXycFOdXUJcIwqvcE9If8x6Zmgt//XmkQE=",
+                            "method": "icx_sendTransaction"
+                        }
+                    ],
+                    "block_hash": "3add53134014e940f6f6010173781c4d8bd677d9931a697f962483e04a685e5c",
+                    "height": 1,
+                    "peer_id": "hx7e1a1ece096ef3fa44ac9692394c2e11d0017e4a",
+                    "signature": "liAIa7aPYvBRdZAdBz6zt2Gc9vVo/4+gkDz5uscS8Mw+B5gkp6zQeHhD5sNpyWcIsq5c9OxwOCUaBp0vu8eAgwE=",
+                    "next_leader": ""
+                },
+                "id": 1234
+            }
+            # case 0: when height is 0
+            m.post(self.matcher, json=response_json)
+&gt;           result = self.icon_service.get_block(height)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_get/test_get_block_by_height.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:112: in get_block
+    block_template = get_block_template_to_convert_transactions_for_genesis(result, block_template)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+block = &lt;coroutine object HTTPProvider.make_request at 0x10564d000&gt;
+block_template = {'block_hash': &lt;ValueType.hex_hash_number: 6&gt;, 'confirmed_transaction_list': [{'CHANGE': {'method': RemoveKey(), 'tx_h... &lt;ValueType.int: 2&gt;, ...}], 'height': &lt;ValueType.int: 2&gt;, 'merkle_tree_root_hash': &lt;ValueType.hex_hash_number: 6&gt;, ...}
+
+    def get_block_template_to_convert_transactions_for_genesis(block, block_template):
+        buf_block_template = copy.deepcopy(block_template)
+&gt;       if block["height"] == 0:
+           ^^^^^^^^^^^^^^^
+E       TypeError: 'coroutine' object is not subscriptable
+
+iconsdk/utils/converter.py:165: TypeError</failure></testcase><testcase classname="tests.api_get.test_get_block_by_height.TestGetBlockByHeight" name="test_get_block_by_height_invalid" time="0.001" /><testcase classname="tests.api_get.test_get_block_by_height.TestGetBlockByHeight" name="test_get_block_by_wrong_height" time="0.001"><failure message="TypeError: 'coroutine' object is not subscriptable">self = &lt;tests.api_get.test_get_block_by_height.TestGetBlockByHeight testMethod=test_get_block_by_wrong_height&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389354832'&gt;
+
+    def test_get_block_by_wrong_height(self, _make_id):
+        with requests_mock.Mocker() as m:
+            wrong_height = 5
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getBlockByHeight',
+                'params': {
+                    'height': hex(wrong_height)
+                }
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "fail wrong block hash"
+                },
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json, status_code=400)
+&gt;           self.assertRaises(JSONRPCException, self.icon_service.get_block, wrong_height)
+
+tests/api_get/test_get_block_by_height.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:112: in get_block
+    block_template = get_block_template_to_convert_transactions_for_genesis(result, block_template)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_block_template_to_convert_transactions_for_genesis(block, block_template):
+        buf_block_template = copy.deepcopy(block_template)
+&gt;       if block["height"] == 0:
+           ^^^^^^^^^^^^^^^
+E       TypeError: 'coroutine' object is not subscriptable
+
+iconsdk/utils/converter.py:165: TypeError</failure></testcase><testcase classname="tests.api_get.test_get_last_block.TestGetLastBlock" name="test_get_block_by_height" time="0.001"><failure message="TypeError: 'coroutine' object is not subscriptable">self = &lt;tests.api_get.test_get_last_block.TestGetLastBlock testMethod=test_get_block_by_height&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389413136'&gt;
+
+    def test_get_block_by_height(self, _make_id):
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getLastBlock',
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": {
+                    "version": "0.1a",
+                    "prev_block_hash": "cf43b3fd45981431a0e64f79d07bfcf703e064b73b802c5f32834eec72142190",
+                    "merkle_tree_root_hash": "375540830d475a73b704cf8dee9fa9eba2798f9d2af1fa55a85482e48daefd3b",
+                    "time_stamp": 1516819217223222,
+                    "confirmed_transaction_list": [
+                        {
+                            "from": "hx54f7853dc6481b670caf69c5a27c7c8fe5be8269",
+                            "to": "hx49a23bd156932485471f582897bf1bec5f875751",
+                            "value": "0x56bc75e2d63100000",
+                            "fee": "0x2386f26fc10000",
+                            "nonce": "0x1",
+                            "tx_hash": "375540830d475a73b704cf8dee9fa9eba2798f9d2af1fa55a85482e48daefd3b",
+                            "signature": "bjarKeF3izGy469dpSciP3TT9caBQVYgHdaNgjY+8wJTOVSFm4o/ODXycFOdXUJcIwqvcE9If8x6Zmgt//XmkQE=",
+                            "method": "icx_sendTransaction"
+                        }
+                    ],
+                    "block_hash": "3add53134014e940f6f6010173781c4d8bd677d9931a697f962483e04a685e5c",
+                    "height": 1,
+                    "peer_id": "hx7e1a1ece096ef3fa44ac9692394c2e11d0017e4a",
+                    "signature": "liAIa7aPYvBRdZAdBz6zt2Gc9vVo/4+gkDz5uscS8Mw+B5gkp6zQeHhD5sNpyWcIsq5c9OxwOCUaBp0vu8eAgwE=",
+                    "next_leader": ""
+                },
+                "id": 1234
+            }
+            # case 0: when param is `latest`
+            m.post(self.matcher, json=response_json)
+&gt;           result = self.icon_service.get_block("latest")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_get/test_get_last_block.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:112: in get_block
+    block_template = get_block_template_to_convert_transactions_for_genesis(result, block_template)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+block = &lt;coroutine object HTTPProvider.make_request at 0x10564cee0&gt;
+block_template = {'block_hash': &lt;ValueType.hex_hash_number: 6&gt;, 'confirmed_transaction_list': [{'CHANGE': {'method': RemoveKey(), 'tx_h... &lt;ValueType.int: 2&gt;, ...}], 'height': &lt;ValueType.int: 2&gt;, 'merkle_tree_root_hash': &lt;ValueType.hex_hash_number: 6&gt;, ...}
+
+    def get_block_template_to_convert_transactions_for_genesis(block, block_template):
+        buf_block_template = copy.deepcopy(block_template)
+&gt;       if block["height"] == 0:
+           ^^^^^^^^^^^^^^^
+E       TypeError: 'coroutine' object is not subscriptable
+
+iconsdk/utils/converter.py:165: TypeError</failure></testcase><testcase classname="tests.api_get.test_get_last_block.TestGetLastBlock" name="test_get_last_block_invalid" time="0.001" /><testcase classname="tests.api_get.test_get_score_api.TestGetScoreApi" name="test_get_score_api" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_get.test_get_score_api.TestGetScoreApi testMethod=test_get_score_api&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389597072'&gt;
+
+    def test_get_score_api(self, _make_id):
+        with requests_mock.Mocker() as m:
+            governance_address = "cx0000000000000000000000000000000000000001"
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getScoreApi',
+                'params': {
+                    'address': governance_address
+                }
+            }
+    
+            m.post(self.matcher, json=response_governance_json)
+            # case 0: when getting score apis successfully
+            result = self.icon_service.get_score_api(governance_address)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_get/test_get_score_api.py:44: AttributeError</failure></testcase><testcase classname="tests.api_get.test_get_score_api.TestGetScoreApi" name="test_get_score_api_by_wrong_address" time="0.001"><failure message="AssertionError: JSONRPCException not raised by get_score_api">self = &lt;tests.api_get.test_get_score_api.TestGetScoreApi testMethod=test_get_score_api_by_wrong_address&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389768208'&gt;
+
+    def test_get_score_api_by_wrong_address(self, _make_id):
+        with requests_mock.Mocker() as m:
+            wrong_address = "cxb0776ee37f5b45bfaea8cff1d8232fbb6122ec32"
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getScoreApi',
+                'params': {
+                    'address': wrong_address
+                }
+            }
+    
+            response_json: dict = {
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32002,
+                    "message": f"SCORE not found: {wrong_address}"
+                },
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json, status_code=400)
+            # case 3: when the address is not score id
+&gt;           self.assertRaises(JSONRPCException, self.icon_service.get_score_api, wrong_address)
+E           AssertionError: JSONRPCException not raised by get_score_api
+
+tests/api_get/test_get_score_api.py:84: AssertionError</failure></testcase><testcase classname="tests.api_get.test_get_score_api.TestGetScoreApi" name="test_get_score_api_invalid" time="0.001" /><testcase classname="tests.api_get.test_get_total_supply.TestGetTotalSupply" name="test_get_total_supply" time="0.001"><failure message="iconsdk.exception.DataTypeException: Value type must be str. Got: &lt;coroutine object HTTPProvider.make_request at 0x10564db40&gt;">self = &lt;tests.api_get.test_get_total_supply.TestGetTotalSupply testMethod=test_get_total_supply&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389571280'&gt;
+
+    def test_get_total_supply(self, _make_id):
+        with requests_mock.Mocker() as m:
+            supply = 1_000_000_000
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getTotalSupply',
+            }
+    
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': hex(supply),
+                'id': 1234
+            }
+            m.post(self.matcher, json=response_json)
+            # case 0: when calling the method successfully
+&gt;           result = self.icon_service.get_total_supply()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_get/test_get_total_supply.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:136: in get_total_supply
+    return int(remove_0x_prefix(result), 16)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/hexadecimal.py:37: in remove_0x_prefix
+    if is_0x_prefixed(value):
+       ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = &lt;coroutine object HTTPProvider.make_request at 0x10564db40&gt;
+
+    def is_0x_prefixed(value: str) -&gt; bool:
+        if not is_str(value):
+&gt;           raise DataTypeException("Value type must be str. Got: {0}".format(repr(value)))
+E           iconsdk.exception.DataTypeException: Value type must be str. Got: &lt;coroutine object HTTPProvider.make_request at 0x10564db40&gt;
+
+iconsdk/utils/hexadecimal.py:32: DataTypeException</failure></testcase><testcase classname="tests.api_get.test_get_transaction_by_hash.TestGetTransactionByHash" name="test_get_transaction_by_hash" time="0.001"><failure message="TypeError: cannot pickle 'coroutine' object">self = &lt;tests.api_get.test_get_transaction_by_hash.TestGetTransactionByHash testMethod=test_get_transaction_by_hash&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4390538896'&gt;
+
+    def test_get_transaction_by_hash(self, _make_id):
+        with requests_mock.Mocker() as m:
+            tx_hash = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getTransactionByHash',
+                'params': {
+                    'txHash': tx_hash
+                }
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": {
+                    "version": "0x3",
+                    "from": self.setting["from"],
+                    "to": self.setting["to"],
+                    "stepLimit": hex(self.setting["step_limit"]),
+                    "value": "0x470de4df820000",
+                    "nid": hex(self.setting["nid"]),
+                    "timestamp": "1517999520286000",
+                    "signature": "sILBL1MPwOou8ItM4s0Vqx21l62QyucgTLsEQ51BGi5v/IJ1hOCT/P/rz1V1pDSGAnTQ7rGw9rSOVM5TAGbJOAE=",
+                    "method": "icx_sendTransaction",
+                    "txHash": tx_hash,
+                    "txIndex": "0x0",
+                    "blockHeight": "0xa",
+                    "blockHash": "0x9a39a75d7075687f746d61191baf1a1ff3b5bc0acc4a8df0bb872e53e13cdc17"
+                },
+                "id": 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+            # case 0: when tx_hash is valid
+&gt;           result = self.icon_service.get_transaction(tx_hash)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_get/test_get_transaction_by_hash.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:256: in get_transaction
+    result = convert(result, TRANSACTION)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:45: in convert
+    return_value = _change_key(return_value, return_template["CHANGE"])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:71: in _change_key
+    new_obj = copy.copy(obj)
+              ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x = &lt;coroutine object HTTPProvider.make_request at 0x10564d900&gt;
+
+    def copy(x):
+        """Shallow copy operation on arbitrary Python objects.
+    
+        See the module's __doc__ string for more info.
+        """
+    
+        cls = type(x)
+    
+        copier = _copy_dispatch.get(cls)
+        if copier:
+            return copier(x)
+    
+        if issubclass(cls, type):
+            # treat it as a regular class:
+            return _copy_immutable(x)
+    
+        copier = getattr(cls, "__copy__", None)
+        if copier is not None:
+            return copier(x)
+    
+        reductor = dispatch_table.get(cls)
+        if reductor is not None:
+            rv = reductor(x)
+        else:
+            reductor = getattr(x, "__reduce_ex__", None)
+            if reductor is not None:
+&gt;               rv = reductor(4)
+                     ^^^^^^^^^^^
+E               TypeError: cannot pickle 'coroutine' object
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/copy.py:92: TypeError</failure></testcase><testcase classname="tests.api_get.test_get_transaction_by_hash.TestGetTransactionByHash" name="test_get_transaction_invalid" time="0.001" /><testcase classname="tests.api_get.test_get_transaction_by_hash.TestGetTransactionByHash" name="test_get_transaction_wrong_hash" time="0.001"><failure message="TypeError: cannot pickle 'coroutine' object">self = &lt;tests.api_get.test_get_transaction_by_hash.TestGetTransactionByHash testMethod=test_get_transaction_wrong_hash&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4391378896'&gt;
+
+    def test_get_transaction_wrong_hash(self, _make_id):
+        with requests_mock.Mocker() as m:
+            wrong_tx_hash = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+            response_json = {
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "Invalid params txHash"
+                },
+                "id": 1234
+            }
+    
+            m.post(self.matcher, json=response_json, status_code=400)
+&gt;           self.assertRaises(JSONRPCException, self.icon_service.get_transaction, wrong_tx_hash)
+
+tests/api_get/test_get_transaction_by_hash.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:256: in get_transaction
+    result = convert(result, TRANSACTION)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:45: in convert
+    return_value = _change_key(return_value, return_template["CHANGE"])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:71: in _change_key
+    new_obj = copy.copy(obj)
+              ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def copy(x):
+        """Shallow copy operation on arbitrary Python objects.
+    
+        See the module's __doc__ string for more info.
+        """
+    
+        cls = type(x)
+    
+        copier = _copy_dispatch.get(cls)
+        if copier:
+            return copier(x)
+    
+        if issubclass(cls, type):
+            # treat it as a regular class:
+            return _copy_immutable(x)
+    
+        copier = getattr(cls, "__copy__", None)
+        if copier is not None:
+            return copier(x)
+    
+        reductor = dispatch_table.get(cls)
+        if reductor is not None:
+            rv = reductor(x)
+        else:
+            reductor = getattr(x, "__reduce_ex__", None)
+            if reductor is not None:
+&gt;               rv = reductor(4)
+                     ^^^^^^^^^^^
+E               TypeError: cannot pickle 'coroutine' object
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/copy.py:92: TypeError</failure></testcase><testcase classname="tests.api_get.test_get_transaction_result.TestGetTransactionResult" name="test_get_transaction_result" time="0.001"><failure message="TypeError: cannot pickle 'coroutine' object">self = &lt;tests.api_get.test_get_transaction_result.TestGetTransactionResult testMethod=test_get_transaction_result&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4390814992'&gt;
+
+    def test_get_transaction_result(self, _make_id):
+        tx_hash: str = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getTransactionResult',
+                'params': {
+                    'txHash': tx_hash
+                }
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": {
+                    "txHash": "0x33db06f38424207daa69c9df153649fd3913c21e162f16f4839c9c3318e44388",
+                    "blockHeight": "0x13f",
+                    "blockHash": "0x069e8a2431ae2c7e55924af477be87518476aa1eb1b2e7d1ee8d61d7874ea907",
+                    "txIndex": "0x1",
+                    "to": "cx0000000000000000000000000000000000000000",
+                    "stepUsed": "0x263b8",
+                    "stepPrice": "0x2540be400",
+                    "cumulativeStepUsed": "0x263b8",
+                    "eventLogs": [
+                        {
+                            "scoreAddress": "cx0000000000000000000000000000000000000000",
+                            "indexed": [
+                                "PRepSet(Address)"
+                            ],
+                            "data": [
+                                "hx86aba2210918a9b116973f3c4b27c41a54d5dafe"
+                            ]
+                        }
+                    ],
+                    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000080000000000000000000000000000000000000000000000000000000000020000000000000008000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                    "status": "0x1"
+                },
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+&gt;           result = self.icon_service.get_transaction_result(tx_hash)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_get/test_get_transaction_result.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:214: in get_transaction_result
+    result = convert(result, TRANSACTION_RESULT)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:45: in convert
+    return_value = _change_key(return_value, return_template["CHANGE"])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:71: in _change_key
+    new_obj = copy.copy(obj)
+              ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x = &lt;coroutine object HTTPProvider.make_request at 0x10591b1c0&gt;
+
+    def copy(x):
+        """Shallow copy operation on arbitrary Python objects.
+    
+        See the module's __doc__ string for more info.
+        """
+    
+        cls = type(x)
+    
+        copier = _copy_dispatch.get(cls)
+        if copier:
+            return copier(x)
+    
+        if issubclass(cls, type):
+            # treat it as a regular class:
+            return _copy_immutable(x)
+    
+        copier = getattr(cls, "__copy__", None)
+        if copier is not None:
+            return copier(x)
+    
+        reductor = dispatch_table.get(cls)
+        if reductor is not None:
+            rv = reductor(x)
+        else:
+            reductor = getattr(x, "__reduce_ex__", None)
+            if reductor is not None:
+&gt;               rv = reductor(4)
+                     ^^^^^^^^^^^
+E               TypeError: cannot pickle 'coroutine' object
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/copy.py:92: TypeError</failure></testcase><testcase classname="tests.api_get.test_get_transaction_result.TestGetTransactionResult" name="test_get_transaction_result_invalid" time="0.001" /><testcase classname="tests.api_get.test_get_transaction_result.TestGetTransactionResult" name="test_get_transaction_result_wrong_hash" time="0.001"><failure message="TypeError: cannot pickle 'coroutine' object">self = &lt;tests.api_get.test_get_transaction_result.TestGetTransactionResult testMethod=test_get_transaction_result_wrong_hash&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4391084432'&gt;
+
+    def test_get_transaction_result_wrong_hash(self, _make_id):
+        wrong_tx_hash: str = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getTransactionResult',
+                'params': {
+                    'txHash': wrong_tx_hash
+                }
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "Invalid params txHash"
+                },
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json, status_code=400)
+            # case 4: when tx_hash is invalid - not exist
+&gt;           self.assertRaises(JSONRPCException, self.icon_service.get_transaction_result, wrong_tx_hash)
+
+tests/api_get/test_get_transaction_result.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:214: in get_transaction_result
+    result = convert(result, TRANSACTION_RESULT)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:45: in convert
+    return_value = _change_key(return_value, return_template["CHANGE"])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:71: in _change_key
+    new_obj = copy.copy(obj)
+              ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def copy(x):
+        """Shallow copy operation on arbitrary Python objects.
+    
+        See the module's __doc__ string for more info.
+        """
+    
+        cls = type(x)
+    
+        copier = _copy_dispatch.get(cls)
+        if copier:
+            return copier(x)
+    
+        if issubclass(cls, type):
+            # treat it as a regular class:
+            return _copy_immutable(x)
+    
+        copier = getattr(cls, "__copy__", None)
+        if copier is not None:
+            return copier(x)
+    
+        reductor = dispatch_table.get(cls)
+        if reductor is not None:
+            rv = reductor(x)
+        else:
+            reductor = getattr(x, "__reduce_ex__", None)
+            if reductor is not None:
+&gt;               rv = reductor(4)
+                     ^^^^^^^^^^^
+E               TypeError: cannot pickle 'coroutine' object
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/copy.py:92: TypeError</failure></testcase><testcase classname="tests.api_get.test_wait_transaction_result.TestWaitTransactionResult" name="test_wait_transaction_result" time="0.001"><failure message="TypeError: cannot pickle 'coroutine' object">self = &lt;tests.api_get.test_wait_transaction_result.TestWaitTransactionResult testMethod=test_wait_transaction_result&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4391429200'&gt;
+
+    def test_wait_transaction_result(self, _make_id):
+        tx_hash: str = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_waitTransactionResult',
+                'params': {
+                    'txHash': tx_hash
+                }
+            }
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": {
+                    "txHash": "0x33db06f38424207daa69c9df153649fd3913c21e162f16f4839c9c3318e44388",
+                    "blockHeight": "0x13f",
+                    "blockHash": "0x069e8a2431ae2c7e55924af477be87518476aa1eb1b2e7d1ee8d61d7874ea907",
+                    "txIndex": "0x1",
+                    "to": "cx0000000000000000000000000000000000000000",
+                    "stepUsed": "0x263b8",
+                    "stepPrice": "0x2540be400",
+                    "cumulativeStepUsed": "0x263b8",
+                    "eventLogs": [
+                        {
+                            "scoreAddress": "cx0000000000000000000000000000000000000000",
+                            "indexed": [
+                                "PRepSet(Address)"
+                            ],
+                            "data": [
+                                "hx86aba2210918a9b116973f3c4b27c41a54d5dafe"
+                            ]
+                        }
+                    ],
+                    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000080000000000000000000000000000000000000000000000000000000000020000000000000008000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                    "status": "0x1"
+                },
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+&gt;           self.icon_service.wait_transaction_result(tx_hash)
+
+tests/api_get/test_wait_transaction_result.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:236: in wait_transaction_result
+    result = convert(result, TRANSACTION_RESULT)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:45: in convert
+    return_value = _change_key(return_value, return_template["CHANGE"])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:71: in _change_key
+    new_obj = copy.copy(obj)
+              ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x = &lt;coroutine object HTTPProvider.make_request at 0x1058044c0&gt;
+
+    def copy(x):
+        """Shallow copy operation on arbitrary Python objects.
+    
+        See the module's __doc__ string for more info.
+        """
+    
+        cls = type(x)
+    
+        copier = _copy_dispatch.get(cls)
+        if copier:
+            return copier(x)
+    
+        if issubclass(cls, type):
+            # treat it as a regular class:
+            return _copy_immutable(x)
+    
+        copier = getattr(cls, "__copy__", None)
+        if copier is not None:
+            return copier(x)
+    
+        reductor = dispatch_table.get(cls)
+        if reductor is not None:
+            rv = reductor(x)
+        else:
+            reductor = getattr(x, "__reduce_ex__", None)
+            if reductor is not None:
+&gt;               rv = reductor(4)
+                     ^^^^^^^^^^^
+E               TypeError: cannot pickle 'coroutine' object
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/copy.py:92: TypeError</failure></testcase><testcase classname="tests.api_get.test_wait_transaction_result.TestWaitTransactionResult" name="test_wait_transaction_result_invalid" time="0.001" /><testcase classname="tests.api_send.test_send_deposit.TestSendDeposit" name="test_add_deposit" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'text'">self = &lt;tests.api_send.test_send_deposit.TestSendDeposit testMethod=test_add_deposit&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4390357392'&gt;
+
+    def test_add_deposit(self, _make_id):
+        # transaction instance for add action
+        action = "add"
+        deposit_transaction = DepositTransactionBuilder() \
+            .from_(self.setting["from"]) \
+            .to(self.setting["to"]) \
+            .value(self.setting["value"]) \
+            .timestamp(self.setting["timestamp"]) \
+            .step_limit(self.setting["step_limit"]) \
+            .nid(self.setting["nid"]) \
+            .nonce(self.setting["nonce"]) \
+            .action("add") \
+            .build()
+        signed_transaction = SignedTransaction(deposit_transaction, self.wallet)
+    
+        with requests_mock.Mocker() as m:
+            tx_hash = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_sendTransaction',
+                'params': {
+                    'data': {
+                        'action': action
+                    },
+                    'dataType': 'deposit',
+                    'from': self.setting["from"],
+                    'nid': hex(self.setting["nid"]),
+                    'nonce': hex(self.setting["nonce"]),
+                    'signature': signed_transaction.signed_transaction_dict["signature"],
+                    'stepLimit': hex(self.setting["step_limit"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'to': self.setting["to"],
+                    'value': hex(self.setting["value"]),
+                    'version': hex(3)
+                }
+            }
+    
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": tx_hash,
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+            result = self.icon_service.send_transaction(signed_transaction)
+&gt;           actual_request = json.loads(m._adapter.last_request.text)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'text'
+
+tests/api_send/test_send_deposit.py:60: AttributeError</failure></testcase><testcase classname="tests.api_send.test_send_deposit.TestSendDeposit" name="test_withdraw_deposit" time="0.001"><failure message="iconsdk.exception.DataTypeException: Value type must be str. Got: &lt;coroutine object HTTPProvider.make_request at 0x10564d900&gt;">self = &lt;tests.api_send.test_send_deposit.TestSendDeposit testMethod=test_withdraw_deposit&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4391092048'&gt;
+
+    def test_withdraw_deposit(self, _make_id):
+        # transaction instance for withdraw action
+        action = 'withdraw'
+        withdraw_transaction = DepositTransactionBuilder() \
+            .from_(self.setting["from"]) \
+            .to(self.setting["to"]) \
+            .step_limit(self.setting["step_limit"]) \
+            .timestamp(self.setting["timestamp"]) \
+            .nid(self.setting["nid"]) \
+            .nonce(self.setting["nonce"]) \
+            .id(self.setting["id"]) \
+            .action(action) \
+            .build()
+        signed_transaction = SignedTransaction(withdraw_transaction, self.wallet)
+    
+        with requests_mock.Mocker() as m:
+            tx_hash = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_sendTransaction',
+                'params': {
+                    'data': {
+                        'action': action,
+                        'id': self.setting["id"],
+                    },
+                    'dataType': 'deposit',
+                    'from': self.setting["from"],
+                    'nid': hex(self.setting["nid"]),
+                    'nonce': hex(self.setting["nonce"]),
+                    'signature': signed_transaction.signed_transaction_dict["signature"],
+                    'stepLimit': hex(self.setting["step_limit"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'to': self.setting["to"],
+                    'version': hex(3)
+                }
+            }
+    
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": tx_hash,
+                "id": 1234
+            }
+            # Checks if sending transaction correctly
+            m.post(self.matcher, json=response_json)
+            result = self.icon_service.send_transaction(signed_transaction)
+&gt;           self.assertTrue(is_T_HASH(result))
+                            ^^^^^^^^^^^^^^^^^
+
+tests/api_send/test_send_deposit.py:115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/utils/validation.py:92: in is_T_HASH
+    if is_0x_prefixed(value) and len(remove_0x_prefix(value)) == 64:
+       ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = &lt;coroutine object HTTPProvider.make_request at 0x10564d900&gt;
+
+    def is_0x_prefixed(value: str) -&gt; bool:
+        if not is_str(value):
+&gt;           raise DataTypeException("Value type must be str. Got: {0}".format(repr(value)))
+E           iconsdk.exception.DataTypeException: Value type must be str. Got: &lt;coroutine object HTTPProvider.make_request at 0x10564d900&gt;
+
+iconsdk/utils/hexadecimal.py:32: DataTypeException</failure></testcase><testcase classname="tests.api_send.test_send_message.TestSendMessage" name="test_get_block" time="0.001"><failure message="TypeError: 'coroutine' object is not subscriptable">self = &lt;tests.api_send.test_send_message.TestSendMessage testMethod=test_get_block&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4390403792'&gt;
+
+    def test_get_block(self, _make_id):
+        with requests_mock.Mocker() as m:
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": {
+                    "version": "0.5",
+                    "height": int('0x13f', 16),
+                    "signature": "yO4YWy0+pM6IFad3exORZWhFD+4RLNSmhCwzIc5aJ3wfazGJH2e2sBWtGRDjiVK+xnw7SDWVUzik/aq3DmJLeQE=",
+                    "prev_block_hash": "6399543b290eef968b68f88459190a4d6aedba1a3fafcc5169dc20184d01932a",
+                    "merkle_tree_root_hash": "72bd9b1572a608e9108c285fbe7b34e3e814a1b263dd76065bd90e5b43d390f3",
+                    "time_stamp": 1612856659125677,
+                    "confirmed_transaction_list": [
+                        {
+                            "version": "0x3",
+                            "timestamp": "0x5bae2743da5ad",
+                            "dataType": "base",
+                            "data": {
+                                "prep": {
+                                    "irep": "0x21e19e0c9bab2400000",
+                                    "rrep": "0x1b0",
+                                    "totalDelegation": "0x105e700bc013de49eb56d3e",
+                                    "value": "0x2b2609c5e9b67ee3"
+                                },
+                                "result": {
+                                    "coveredByFee": "0x228c61981e4800",
+                                    "coveredByOverIssuedICX": "0x0",
+                                    "issue": "0x2b037d64519836e3"
+                                }
+                            },
+                            "txHash": "0xd92cce2a115d74544f2561db73a7b525cbb11b2cc95c0691acedfa2cd637fe44"
+                        },
+                        {
+                            "version": "0x3",
+                            "from": self.setting['from'],
+                            "to": self.setting['to'],
+                            "value": self.setting['value'],
+                            "stepLimit": self.setting['step_limit'],
+                            "nid": self.setting['nid'],
+                            "timestamp": self.setting['nid'],
+                            "nonce": self.setting['nonce'],
+                            "signature": "gc5mS40dRlqs7qndNDhOZFDU/V6KpGAWc10zcXM4ukp1p7sCFKkMzJY0dVmzxIyE67cW8ybbcgjUa/Bp+yf0JwE=",
+                            "txHash": "0x33db06f38424207daa69c9df153649fd3913c21e162f16f4839c9c3318e44388",
+                            'data': self.setting['data']
+                        }
+                    ],
+                    "block_hash": "1ad6d9651bc6038ff330cda87ddefecfa7674d441a4aa7de164237ad43006e22",
+                    "peer_id": "hx49ce06eab947cb5ba2475781044d305af9d8d9d5",
+                    "next_leader": "hx49ce06eab947cb5ba2475781044d305af9d8d9d5"
+                },
+                "id": 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+&gt;           result = self.icon_service.get_block(int('0x13f', 16))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_send/test_send_message.py:167: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:112: in get_block
+    block_template = get_block_template_to_convert_transactions_for_genesis(result, block_template)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+block = &lt;coroutine object HTTPProvider.make_request at 0x10564f2e0&gt;
+block_template = {'block_hash': &lt;ValueType.hex_hash_number: 6&gt;, 'confirmed_transaction_list': [{'CHANGE': {'method': RemoveKey(), 'tx_h... &lt;ValueType.int: 2&gt;, ...}], 'height': &lt;ValueType.int: 2&gt;, 'merkle_tree_root_hash': &lt;ValueType.hex_hash_number: 6&gt;, ...}
+
+    def get_block_template_to_convert_transactions_for_genesis(block, block_template):
+        buf_block_template = copy.deepcopy(block_template)
+&gt;       if block["height"] == 0:
+           ^^^^^^^^^^^^^^^
+E       TypeError: 'coroutine' object is not subscriptable
+
+iconsdk/utils/converter.py:165: TypeError</failure></testcase><testcase classname="tests.api_send.test_send_message.TestSendMessage" name="test_get_transaction_result" time="0.001"><failure message="TypeError: cannot pickle 'coroutine' object">self = &lt;tests.api_send.test_send_message.TestSendMessage testMethod=test_get_transaction_result&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4390882256'&gt;
+
+    def test_get_transaction_result(self, _make_id):
+        with requests_mock.Mocker() as m:
+            tx_hash = "0x33db06f38424207daa69c9df153649fd3913c21e162f16f4839c9c3318e44388"
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_getTransactionResult',
+                'params': {
+                    'txHash': tx_hash
+                }
+            }
+    
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": {
+                    "txHash": "0x33db06f38424207daa69c9df153649fd3913c21e162f16f4839c9c3318e44388",
+                    "blockHeight": "0x13f",
+                    "blockHash": "0x069e8a2431ae2c7e55924af477be87518476aa1eb1b2e7d1ee8d61d7874ea907",
+                    "txIndex": "0x1",
+                    "to": self.setting['to'],
+                    "stepUsed": "0x263b8",
+                    "stepPrice": "0x2540be400",
+                    "cumulativeStepUsed": "0x263b8",
+                    "eventLogs": [],
+                    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000080000000000000000000000000000000000000000000000000000000000020000000000000008000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                    "status": "0x1"
+                },
+                "id": 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+&gt;           result = self.icon_service.get_transaction_result(tx_hash)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/api_send/test_send_message.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:214: in get_transaction_result
+    result = convert(result, TRANSACTION_RESULT)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:45: in convert
+    return_value = _change_key(return_value, return_template["CHANGE"])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:71: in _change_key
+    new_obj = copy.copy(obj)
+              ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x = &lt;coroutine object HTTPProvider.make_request at 0x10564e320&gt;
+
+    def copy(x):
+        """Shallow copy operation on arbitrary Python objects.
+    
+        See the module's __doc__ string for more info.
+        """
+    
+        cls = type(x)
+    
+        copier = _copy_dispatch.get(cls)
+        if copier:
+            return copier(x)
+    
+        if issubclass(cls, type):
+            # treat it as a regular class:
+            return _copy_immutable(x)
+    
+        copier = getattr(cls, "__copy__", None)
+        if copier is not None:
+            return copier(x)
+    
+        reductor = dispatch_table.get(cls)
+        if reductor is not None:
+            rv = reductor(x)
+        else:
+            reductor = getattr(x, "__reduce_ex__", None)
+            if reductor is not None:
+&gt;               rv = reductor(4)
+                     ^^^^^^^^^^^
+E               TypeError: cannot pickle 'coroutine' object
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/copy.py:92: TypeError</failure></testcase><testcase classname="tests.api_send.test_send_message.TestSendMessage" name="test_invalid" time="0.001"><failure message="AssertionError: JSONRPCException not raised by send_transaction">self = &lt;tests.api_send.test_send_message.TestSendMessage testMethod=test_invalid&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4390606224'&gt;
+
+    def test_invalid(self, _make_id):
+        # When data is not hex string
+        with requests_mock.Mocker() as m:
+            message_transaction = MessageTransactionBuilder() \
+                .from_(self.setting["from"]) \
+                .to(self.setting["to"]) \
+                .step_limit(self.setting["step_limit"]) \
+                .nid(self.setting["nid"]) \
+                .nonce(self.setting["nonce"]) \
+                .data("test")
+    
+            # Raise DataTypeException
+            self.assertRaises(DataTypeException, message_transaction.build)
+    
+            response_json = {
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "Server error"
+                },
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json, status_code=400)
+            # When address is wrong
+            message_transaction = MessageTransactionBuilder().from_(self.setting["from"]).to(self.setting["to"][2:]) \
+                .step_limit(self.setting["step_limit"]).nid(self.setting["nid"]).data(self.setting["data"]).build()
+            signed_transaction = SignedTransaction(message_transaction, self.wallet)
+&gt;           self.assertRaises(JSONRPCException, self.icon_service.send_transaction, signed_transaction)
+E           AssertionError: JSONRPCException not raised by send_transaction
+
+tests/api_send/test_send_message.py:198: AssertionError</failure></testcase><testcase classname="tests.api_send.test_send_message.TestSendMessage" name="test_send_message" time="0.001"><failure message="iconsdk.exception.DataTypeException: Value type must be str. Got: &lt;coroutine object HTTPProvider.make_request at 0x10564d360&gt;">self = &lt;tests.api_send.test_send_message.TestSendMessage testMethod=test_send_message&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4391422032'&gt;
+
+    def test_send_message(self, _make_id):
+        message_transaction = MessageTransactionBuilder() \
+            .from_(self.setting["from"]) \
+            .to(self.setting["to"]) \
+            .step_limit(self.setting["step_limit"]) \
+            .nid(self.setting["nid"]) \
+            .nonce(self.setting["nonce"]) \
+            .data(self.setting["data"]) \
+            .timestamp(self.setting["timestamp"]) \
+            .build()
+    
+        tx_dict = SignedTransaction.convert_tx_to_jsonrpc_request(message_transaction)
+        self.assertTrue(is_message_transaction(tx_dict))
+        signed_transaction = SignedTransaction(message_transaction, self.wallet)
+    
+        with requests_mock.Mocker() as m:
+            tx_hash = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_sendTransaction',
+                'params': {
+                    'data': self.setting["data"],
+                    'dataType': 'message',
+                    'from': self.setting["from"],
+                    'nid': hex(self.setting["nid"]),
+                    'nonce': hex(self.setting["nonce"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'signature': signed_transaction.signed_transaction_dict["signature"],
+                    'stepLimit': hex(self.setting["step_limit"]),
+                    'to': self.setting["to"],
+                    'version': hex(3)
+                }
+            }
+    
+            response_json = {
+                'jsonrpc': '2.0',
+                'result': tx_hash,
+                'id': 1234
+            }
+    
+            m.post(self.matcher, json=response_json)
+            result = self.icon_service.send_transaction(signed_transaction)
+&gt;           self.assertTrue(is_T_HASH(result))
+                            ^^^^^^^^^^^^^^^^^
+
+tests/api_send/test_send_message.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/utils/validation.py:92: in is_T_HASH
+    if is_0x_prefixed(value) and len(remove_0x_prefix(value)) == 64:
+       ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = &lt;coroutine object HTTPProvider.make_request at 0x10564d360&gt;
+
+    def is_0x_prefixed(value: str) -&gt; bool:
+        if not is_str(value):
+&gt;           raise DataTypeException("Value type must be str. Got: {0}".format(repr(value)))
+E           iconsdk.exception.DataTypeException: Value type must be str. Got: &lt;coroutine object HTTPProvider.make_request at 0x10564d360&gt;
+
+iconsdk/utils/hexadecimal.py:32: DataTypeException</failure></testcase><testcase classname="tests.api_send.test_send_transfer.TestSendTransfer" name="test_invalid_transfer1" time="0.001" /><testcase classname="tests.api_send.test_send_transfer.TestSendTransfer" name="test_invalid_transfer2" time="0.001"><failure message="AssertionError: JSONRPCException not raised by send_transaction">self = &lt;tests.api_send.test_send_transfer.TestSendTransfer testMethod=test_invalid_transfer2&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389345488'&gt;
+
+    def test_invalid_transfer2(self, _make_id):
+        icx_transaction = TransactionBuilder() \
+            .from_(self.setting["from"]) \
+            .to(self.setting["to"][2:]) \
+            .value(self.setting["value"]) \
+            .step_limit(self.setting["step_limit"]) \
+            .nid(self.setting["nid"]) \
+            .timestamp(self.setting["timestamp"]) \
+            .build()
+        signed_transaction = SignedTransaction(icx_transaction, self.wallet)
+    
+        with requests_mock.Mocker() as m:
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_sendTransaction',
+                'params': {
+                    'from': self.setting["from"],
+                    'to': self.setting["to"][2:],
+                    'nid': hex(self.setting["nid"]),
+                    'signature': signed_transaction.signed_transaction_dict["signature"],
+                    'stepLimit': hex(self.setting["step_limit"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'value': hex(self.setting["value"]),
+                    'version': '0x3'
+                }
+            }
+    
+            response_json = {
+                "jsonrpc": "2.0",
+                "error": {
+                    "code": -32602,
+                    "message": "Server error"
+                },
+                "id": 5
+            }
+    
+            m.post(self.matcher, json=response_json, status_code=500)
+&gt;           self.assertRaises(JSONRPCException, self.icon_service.send_transaction, signed_transaction)
+E           AssertionError: JSONRPCException not raised by send_transaction
+
+tests/api_send/test_send_transfer.py:126: AssertionError</failure></testcase><testcase classname="tests.api_send.test_send_transfer.TestSendTransfer" name="test_transfer" time="0.001"><failure message="iconsdk.exception.DataTypeException: Value type must be str. Got: &lt;coroutine object HTTPProvider.make_request at 0x10564c5e0&gt;">self = &lt;tests.api_send.test_send_transfer.TestSendTransfer testMethod=test_transfer&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389795408'&gt;
+
+    def test_transfer(self, _make_id):
+        icx_transaction = TransactionBuilder() \
+            .from_(self.setting["from"]) \
+            .to(self.setting["to"]) \
+            .value(self.setting["value"]) \
+            .step_limit(self.setting["step_limit"]) \
+            .nid(3) \
+            .nonce(self.setting["nonce"]) \
+            .version(3) \
+            .timestamp(self.setting["timestamp"]) \
+            .build()
+        tx_dict = SignedTransaction.convert_tx_to_jsonrpc_request(icx_transaction)
+        self.assertTrue(is_icx_transaction(tx_dict))
+        signed_transaction = SignedTransaction(icx_transaction, self.wallet)
+    
+        with requests_mock.Mocker() as m:
+            tx_hash: str = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_sendTransaction',
+                'params': {
+                    'from': self.setting["from"],
+                    'nid': hex(self.setting["nid"]),
+                    'nonce': hex(self.setting["nonce"]),
+                    'signature': signed_transaction.signed_transaction_dict["signature"],
+                    'stepLimit': hex(self.setting["step_limit"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'to': self.setting["to"],
+                    'value': hex(self.setting["value"]),
+                    'version': '0x3'
+                }
+            }
+    
+            response_json: dict = {
+                "jsonrpc": "2.0",
+                "result": tx_hash,
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+            result = self.icon_service.send_transaction(signed_transaction)
+&gt;           self.assertTrue(is_T_HASH(result))
+                            ^^^^^^^^^^^^^^^^^
+
+tests/api_send/test_send_transfer.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/utils/validation.py:92: in is_T_HASH
+    if is_0x_prefixed(value) and len(remove_0x_prefix(value)) == 64:
+       ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = &lt;coroutine object HTTPProvider.make_request at 0x10564c5e0&gt;
+
+    def is_0x_prefixed(value: str) -&gt; bool:
+        if not is_str(value):
+&gt;           raise DataTypeException("Value type must be str. Got: {0}".format(repr(value)))
+E           iconsdk.exception.DataTypeException: Value type must be str. Got: &lt;coroutine object HTTPProvider.make_request at 0x10564c5e0&gt;
+
+iconsdk/utils/hexadecimal.py:32: DataTypeException</failure></testcase><testcase classname="tests.api_send.test_send_tx_wait.TestSendAndWait" name="test_transfer" time="0.001"><failure message="TypeError: cannot pickle 'coroutine' object">self = &lt;tests.api_send.test_send_tx_wait.TestSendAndWait testMethod=test_transfer&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389595664'&gt;
+
+    def test_transfer(self, _make_id):
+        icx_transaction = TransactionBuilder() \
+            .from_(self.setting["from"]) \
+            .to(self.setting["to"]) \
+            .value(self.setting["value"]) \
+            .step_limit(self.setting["step_limit"]) \
+            .nid(3) \
+            .nonce(self.setting["nonce"]) \
+            .version(3) \
+            .timestamp(self.setting["timestamp"]) \
+            .build()
+        tx_dict = SignedTransaction.convert_tx_to_jsonrpc_request(icx_transaction)
+        self.assertTrue(is_icx_transaction(tx_dict))
+        signed_transaction = SignedTransaction(icx_transaction, self.wallet)
+    
+        with requests_mock.Mocker() as m:
+            tx_hash: str = "0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"
+            expected_request = {
+                'id': 1234,
+                'jsonrpc': '2.0',
+                'method': 'icx_sendTransactionAndWait',
+                'params': {
+                    'from': self.setting["from"],
+                    'nid': hex(self.setting["nid"]),
+                    'nonce': hex(self.setting["nonce"]),
+                    'signature': signed_transaction.signed_transaction_dict["signature"],
+                    'stepLimit': hex(self.setting["step_limit"]),
+                    'timestamp': hex(self.setting["timestamp"]),
+                    'to': self.setting["to"],
+                    'value': hex(self.setting["value"]),
+                    'version': '0x3'
+                }
+            }
+    
+            response_json: dict = {
+                "jsonrpc": "2.0",
+                "result": tx_hash,
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+&gt;           self.icon_service.send_transaction_and_wait(signed_transaction)
+
+tests/api_send/test_send_tx_wait.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:316: in send_transaction_and_wait
+    result = convert(result, TRANSACTION_RESULT)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:45: in convert
+    return_value = _change_key(return_value, return_template["CHANGE"])
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/converter.py:71: in _change_key
+    new_obj = copy.copy(obj)
+              ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+x = &lt;coroutine object HTTPProvider.make_request at 0x10564e560&gt;
+
+    def copy(x):
+        """Shallow copy operation on arbitrary Python objects.
+    
+        See the module's __doc__ string for more info.
+        """
+    
+        cls = type(x)
+    
+        copier = _copy_dispatch.get(cls)
+        if copier:
+            return copier(x)
+    
+        if issubclass(cls, type):
+            # treat it as a regular class:
+            return _copy_immutable(x)
+    
+        copier = getattr(cls, "__copy__", None)
+        if copier is not None:
+            return copier(x)
+    
+        reductor = dispatch_table.get(cls)
+        if reductor is not None:
+            rv = reductor(x)
+        else:
+            reductor = getattr(x, "__reduce_ex__", None)
+            if reductor is not None:
+&gt;               rv = reductor(4)
+                     ^^^^^^^^^^^
+E               TypeError: cannot pickle 'coroutine' object
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/copy.py:92: TypeError</failure></testcase><testcase classname="tests.api_send.test_signed_transaction.TestSignedTransaction" name="test_convert_tx_to_jsonrpc_request_for_add_deposit_transaction" time="0.001" /><testcase classname="tests.api_send.test_signed_transaction.TestSignedTransaction" name="test_convert_tx_to_jsonrpc_request_for_call_transaction" time="0.000" /><testcase classname="tests.api_send.test_signed_transaction.TestSignedTransaction" name="test_convert_tx_to_jsonrpc_request_for_deploy_transaction" time="0.000" /><testcase classname="tests.api_send.test_signed_transaction.TestSignedTransaction" name="test_convert_tx_to_jsonrpc_request_for_icx_transaction" time="0.000" /><testcase classname="tests.api_send.test_signed_transaction.TestSignedTransaction" name="test_convert_tx_to_jsonrpc_request_for_message_transaction" time="0.000" /><testcase classname="tests.api_send.test_signed_transaction.TestSignedTransaction" name="test_convert_tx_to_jsonrpc_request_for_withdraw_deposit_transaction" time="0.000" /><testcase classname="tests.api_send.test_signed_transaction.TestSignedTransaction" name="test_signed_transaction_with_call_transaction_without_step_limit" time="0.000" /><testcase classname="tests.api_send.test_signed_transaction.TestSignedTransaction" name="test_signed_transaction_with_deploy_transaction_without_step_limit" time="0.000" /><testcase classname="tests.api_send.test_signed_transaction.TestSignedTransaction" name="test_signed_transaction_with_deposit_transaction_of_add_action_without_step_limit" time="0.000" /><testcase classname="tests.api_send.test_signed_transaction.TestSignedTransaction" name="test_signed_transaction_with_deposit_transaction_of_deposit_action_without_step_limit" time="0.000" /><testcase classname="tests.api_send.test_signed_transaction.TestSignedTransaction" name="test_signed_transaction_with_icx_transaction_without_step_limit" time="0.000" /><testcase classname="tests.api_send.test_signed_transaction.TestSignedTransaction" name="test_signed_transaction_with_message_transaction_without_step_limit" time="0.000" /><testcase classname="tests.builder.test_call_builder.TestCallBuilder" name="test_make_call_builder" time="0.001" /><testcase classname="tests.builder.test_call_builder.TestCallBuilder" name="test_make_call_builder_changed" time="0.000" /><testcase classname="tests.builder.test_call_builder.TestCallBuilder" name="test_make_call_builder_from_dict_to_dict" time="0.000" /><testcase classname="tests.builder.test_transaction_builder.TestTransactionBuilder" name="test_deposit_transaction_id_and_amount_at_same_time_for_withdraw_action" time="0.001" /><testcase classname="tests.builder.test_transaction_builder.TestTransactionBuilder" name="test_deposit_transaction_to_dict_for_add_action" time="0.001" /><testcase classname="tests.builder.test_transaction_builder.TestTransactionBuilder" name="test_deposit_transaction_to_dict_for_withdraw_action" time="0.000" /><testcase classname="tests.builder.test_transaction_builder.TestTransactionBuilder" name="test_transaction_builder_from_dict" time="0.001" /><testcase classname="tests.converter.test_converter.TestConverter" name="test_converter_blocks" time="0.001"><skipped type="pytest.skip" message="TestConverter MUST work without network">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/icon-project@icon-sdk-python__50c75a50__requests__aiohttp/tests/converter/test_converter.py:123: TestConverter MUST work without network</skipped></testcase><testcase classname="tests.converter.test_converter.TestConverter" name="test_converter_transactions" time="0.000"><skipped type="pytest.skip" message="TestConverter MUST work without network">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/icon-project@icon-sdk-python__50c75a50__requests__aiohttp/tests/converter/test_converter.py:144: TestConverter MUST work without network</skipped></testcase><testcase classname="tests.converter.test_converter.TestConverter" name="test_converter_tx_results" time="0.000"><skipped type="pytest.skip" message="TestConverter MUST work without network">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/icon-project@icon-sdk-python__50c75a50__requests__aiohttp/tests/converter/test_converter.py:152: TestConverter MUST work without network</skipped></testcase><testcase classname="tests.converter.test_converter.TestConverter" name="test_integrate_converter" time="0.000"><skipped type="pytest.skip" message="TestConverter MUST work without network">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/icon-project@icon-sdk-python__50c75a50__requests__aiohttp/tests/converter/test_converter.py:158: TestConverter MUST work without network</skipped></testcase><testcase classname="tests.libs.test_in_memory_zip.TestInMemoryZip" name="test_in_memory_zip" time="0.001" /><testcase classname="tests.libs.test_serializer.TestSerializer" name="test_for_serialize_case_for_calling" time="0.000" /><testcase classname="tests.libs.test_serializer.TestSerializer" name="test_for_serialize_case_for_sending_normal_tx" time="0.000" /><testcase classname="tests.libs.test_signer.TestIcxSigner" name="test_verify_recoverable_sign" time="0.006" /><testcase classname="tests.providers.test_http_provider.TestHTTPProvider" name="test_set_http_provider_by_new_initializer_with_invalid_url" time="0.001" /><testcase classname="tests.providers.test_http_provider.TestHTTPProvider" name="test_set_http_provider_by_the_initializer_with_valid_url" time="0.001" /><testcase classname="tests.providers.test_http_provider.TestHTTPProvider" name="test_set_http_provider_with_param" time="0.000" /><testcase classname="tests.providers.test_http_provider.TestHTTPProvider" name="test_set_http_provider_with_request_kwargs" time="0.000" /><testcase classname="tests.utils.test_convert_type.TestConvertType" name="test_convert_hex_str_to_bytes" time="0.000" /><testcase classname="tests.utils.test_convert_type.TestConvertType" name="test_convert_negative_value_to_hex_str" time="0.000" /><testcase classname="tests.utils.test_convert_type.TestConvertType" name="test_convert_positive_value_to_hex_str" time="0.000" /><testcase classname="tests.utils.test_convert_type.TestConvertType" name="test_convert_zero_value_to_hex_str" time="0.000" /><testcase classname="tests.utils.test_hexadecimal.TestHexadecimal" name="test_is_hex_string_prefixed_with_0x" time="0.000" /><testcase classname="tests.utils.test_hexadecimal.TestHexadecimal" name="test_is_lowercase_hex_string" time="0.000" /><testcase classname="tests.utils.test_validation.TestValidation" name="test_method_has_keys" time="0.000" /><testcase classname="tests.utils.test_validation.TestValidation" name="test_method_validate_keystore_file" time="0.001" /><testcase classname="tests.utils.test_validation.TestValidation" name="test_validate_keystore_file_is_for_icon" time="0.001" /><testcase classname="tests.wallet.test_wallet.TestKeyWallet" name="test_get_public_key[True-True-str-33]" time="0.001" /><testcase classname="tests.wallet.test_wallet.TestKeyWallet" name="test_get_public_key[True-False-bytes-33]" time="0.001" /><testcase classname="tests.wallet.test_wallet.TestKeyWallet" name="test_get_public_key[False-True-str-65]" time="0.001" /><testcase classname="tests.wallet.test_wallet.TestKeyWallet" name="test_get_public_key[False-False-bytes-65]" time="0.001" /><testcase classname="tests.wallet.test_wallet.TestKeyWallet" name="test_get_private_key" time="0.000" /><testcase classname="tests.wallet.test_wallet.TestKeyWallet" name="test_private_key" time="0.000" /><testcase classname="tests.wallet.test_wallet.TestKeyWallet" name="test_public_key" time="0.000" /><testcase classname="tests.wallet.test_wallet.TestKeyWallet" name="test_to_dict" time="0.080" /><testcase classname="tests.wallet.test_wallet.TestKeyWallet" name="test_copy" time="0.000" /><testcase classname="tests.wallet.test_wallet.TestKeyWallet" name="test_hash" time="0.000" /><testcase classname="tests.wallet.test_wallet" name="test_public_key_to_address" time="0.000" /><testcase classname="tests.wallet.test_wallet" name="test_convert_public_key_format[True-True-33]" time="0.001" /><testcase classname="tests.wallet.test_wallet" name="test_convert_public_key_format[True-False-65]" time="0.000" /><testcase classname="tests.wallet.test_wallet" name="test_convert_public_key_format[False-True-33]" time="0.000" /><testcase classname="tests.wallet.test_wallet" name="test_convert_public_key_format[False-False-65]" time="0.000" /><testcase classname="tests.wallet.test_wallet_create.TestWalletCreate" name="test_wallet_create_successfully" time="0.000" /><testcase classname="tests.wallet.test_wallet_load_by_private_key.TestWalletLoadByPrivateKey" name="test_wallet_load_by_private_key" time="0.001" /><testcase classname="tests.wallet.test_wallet_load_from_keystore_file.TestWalletLoadFromKeystoreFile" name="test_wallet_load_and_call_api" time="0.056"><failure message="iconsdk.exception.DataTypeException: Value type must be str. Got: &lt;coroutine object HTTPProvider.make_request at 0x10587d120&gt;">self = &lt;tests.wallet.test_wallet_load_from_keystore_file.TestWalletLoadFromKeystoreFile testMethod=test_wallet_load_and_call_api&gt;
+_make_id = &lt;MagicMock name='_make_id' id='4389855632'&gt;
+
+    @patch('iconsdk.providers.http_provider.HTTPProvider._make_id', return_value=1234)
+    def test_wallet_load_and_call_api(self, _make_id):
+        """Case when loading a wallet and call an api."""
+        # Loads a wallet.
+        wallet = KeyWallet.load(self.TEST_KEYSTORE_FILE_PATH, self.TEST_KEYSTORE_FILE_PASSWORD)
+    
+        # Checks a wallet's address is correct.
+        self.assertEqual(wallet.get_address(), "hxfd7e4560ba363f5aabd32caac7317feeee70ea57")
+    
+        # Calls an api.
+        icon_service = IconService(HTTPProvider(BASE_DOMAIN_URL_V3_FOR_TEST, VERSION_FOR_TEST))
+        with requests_mock.Mocker() as m:
+            response_json = {
+                "jsonrpc": "2.0",
+                "result": hex(0),
+                "id": 1234
+            }
+            m.post(self.matcher, json=response_json)
+&gt;           balance = icon_service.get_balance(wallet.get_address())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/wallet/test_wallet_load_from_keystore_file.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+iconsdk/icon_service.py:158: in get_balance
+    return int(remove_0x_prefix(result), 16)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+iconsdk/utils/hexadecimal.py:37: in remove_0x_prefix
+    if is_0x_prefixed(value):
+       ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = &lt;coroutine object HTTPProvider.make_request at 0x10587d120&gt;
+
+    def is_0x_prefixed(value: str) -&gt; bool:
+        if not is_str(value):
+&gt;           raise DataTypeException("Value type must be str. Got: {0}".format(repr(value)))
+E           iconsdk.exception.DataTypeException: Value type must be str. Got: &lt;coroutine object HTTPProvider.make_request at 0x10587d120&gt;
+
+iconsdk/utils/hexadecimal.py:32: DataTypeException</failure></testcase><testcase classname="tests.wallet.test_wallet_load_from_keystore_file.TestWalletLoadFromKeystoreFile" name="test_wallet_load_from_invalid_directory" time="0.000" /><testcase classname="tests.wallet.test_wallet_load_from_keystore_file.TestWalletLoadFromKeystoreFile" name="test_wallet_load_from_keystore_file" time="0.103" /><testcase classname="tests.wallet.test_wallet_load_from_keystore_file.TestWalletLoadFromKeystoreFile" name="test_wallet_load_with_invalid_password" time="0.052" /><testcase classname="tests.wallet.test_wallet_store.TestWalletStore" name="test_wallet_store_on_the_wrong_path" time="0.034" /><testcase classname="tests.wallet.test_wallet_store.TestWalletStore" name="test_wallet_store_overwriting" time="0.068" /><testcase classname="tests.wallet.test_wallet_store.TestWalletStore" name="test_wallet_store_successfully" time="0.068" /><testcase classname="tests.wallet.test_wallet_store.TestWalletStore" name="test_wallet_store_with_wrong_password" time="0.036" /></testsuite></testsuites>

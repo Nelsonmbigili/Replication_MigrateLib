@@ -1,0 +1,909 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="37" time="0.521" timestamp="2026-03-09T21:06:51.524601+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.integration.resources.healt_check.test_health_check_resource.TestTodo" name="test_get" time="0.006"><failure message="TypeError: object Response can't be used in 'await' expression">self = &lt;tests.integration.resources.healt_check.test_health_check_resource.TestTodo object at 0x1069b5650&gt;
+test_app = &lt;starlette.testclient.TestClient object at 0x111369610&gt;
+
+    @pytest.mark.asyncio
+    async def test_get(self, test_app):
+&gt;       response = await test_app.get("/health-check")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: object Response can't be used in 'await' expression
+
+tests/integration/resources/healt_check/test_health_check_resource.py:9: TypeError</failure></testcase><testcase classname="tests.integration.resources.todo.test_todo_resource.TestTodo" name="test_get_todo_all" time="0.002"><failure message="aiohttp.client_exceptions.InvalidUrlClientError: /v1/todos">self = &lt;tests.integration.resources.todo.test_todo_resource.TestTodo object at 0x111369cd0&gt;
+test_app = &lt;starlette.testclient.TestClient object at 0x111478f10&gt;
+
+    @pytest.mark.asyncio
+    async def test_get_todo_all(self, test_app):
+        async with aiohttp.ClientSession() as session:
+&gt;           items, status_code = await self.fetch(session, 'GET', "/v1/todos")
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/resources/todo/test_todo_resource.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/resources/todo/test_todo_resource.py:9: in fetch
+    async with session.request(method, url, json=json) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x11147b250&gt;, method = 'GET'
+str_or_url = '/v1/todos'
+
+    async def _request(
+        self,
+        method: str,
+        str_or_url: StrOrURL,
+        *,
+        params: Query = None,
+        data: Any = None,
+        json: Any = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        allow_redirects: bool = True,
+        max_redirects: int = 10,
+        compress: Union[str, bool, None] = None,
+        chunked: Optional[bool] = None,
+        expect100: bool = False,
+        raise_for_status: Union[
+            None, bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = None,
+        read_until_eof: bool = True,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        timeout: Union[ClientTimeout, _SENTINEL] = sentinel,
+        verify_ssl: Optional[bool] = None,
+        fingerprint: Optional[bytes] = None,
+        ssl_context: Optional[SSLContext] = None,
+        ssl: Union[SSLContext, bool, Fingerprint] = True,
+        server_hostname: Optional[str] = None,
+        proxy_headers: Optional[LooseHeaders] = None,
+        trace_request_ctx: Optional[Mapping[str, Any]] = None,
+        read_bufsize: Optional[int] = None,
+        auto_decompress: Optional[bool] = None,
+        max_line_size: Optional[int] = None,
+        max_field_size: Optional[int] = None,
+        middlewares: Optional[Sequence[ClientMiddlewareType]] = None,
+    ) -&gt; ClientResponse:
+    
+        # NOTE: timeout clamps existing connect and read timeouts.  We cannot
+        # set the default to None because we need to detect if the user wants
+        # to use the existing timeouts by setting timeout to None.
+    
+        if self.closed:
+            raise RuntimeError("Session is closed")
+    
+        ssl = _merge_ssl_params(ssl, verify_ssl, ssl_context, fingerprint)
+    
+        if data is not None and json is not None:
+            raise ValueError(
+                "data and json parameters can not be used at the same time"
+            )
+        elif json is not None:
+            data = payload.JsonPayload(json, dumps=self._json_serialize)
+    
+        if not isinstance(chunked, bool) and chunked is not None:
+            warnings.warn("Chunk size is deprecated #1615", DeprecationWarning)
+    
+        redirects = 0
+        history: List[ClientResponse] = []
+        version = self._version
+        params = params or {}
+    
+        # Merge with default headers and transform to CIMultiDict
+        headers = self._prepare_headers(headers)
+    
+        try:
+            url = self._build_url(str_or_url)
+        except ValueError as e:
+            raise InvalidUrlClientError(str_or_url) from e
+    
+        assert self._connector is not None
+        if url.scheme not in self._connector.allowed_protocol_schema_set:
+            raise NonHttpUrlClientError(url)
+    
+        skip_headers: Optional[Iterable[istr]]
+        if skip_auto_headers is not None:
+            skip_headers = {
+                istr(i) for i in skip_auto_headers
+            } | self._skip_auto_headers
+        elif self._skip_auto_headers:
+            skip_headers = self._skip_auto_headers
+        else:
+            skip_headers = None
+    
+        if proxy is None:
+            proxy = self._default_proxy
+        if proxy_auth is None:
+            proxy_auth = self._default_proxy_auth
+    
+        if proxy is None:
+            proxy_headers = None
+        else:
+            proxy_headers = self._prepare_headers(proxy_headers)
+            try:
+                proxy = URL(proxy)
+            except ValueError as e:
+                raise InvalidURL(proxy) from e
+    
+        if timeout is sentinel:
+            real_timeout: ClientTimeout = self._timeout
+        else:
+            if not isinstance(timeout, ClientTimeout):
+                real_timeout = ClientTimeout(total=timeout)
+            else:
+                real_timeout = timeout
+        # timeout is cumulative for all request operations
+        # (request, redirects, responses, data consuming)
+        tm = TimeoutHandle(
+            self._loop, real_timeout.total, ceil_threshold=real_timeout.ceil_threshold
+        )
+        handle = tm.start()
+    
+        if read_bufsize is None:
+            read_bufsize = self._read_bufsize
+    
+        if auto_decompress is None:
+            auto_decompress = self._auto_decompress
+    
+        if max_line_size is None:
+            max_line_size = self._max_line_size
+    
+        if max_field_size is None:
+            max_field_size = self._max_field_size
+    
+        traces = [
+            Trace(
+                self,
+                trace_config,
+                trace_config.trace_config_ctx(trace_request_ctx=trace_request_ctx),
+            )
+            for trace_config in self._trace_configs
+        ]
+    
+        for trace in traces:
+            await trace.send_request_start(method, url.update_query(params), headers)
+    
+        timer = tm.timer()
+        try:
+            with timer:
+                # https://www.rfc-editor.org/rfc/rfc9112.html#name-retrying-requests
+                retry_persistent_connection = (
+                    self._retry_connection and method in IDEMPOTENT_METHODS
+                )
+                while True:
+                    url, auth_from_url = strip_auth_from_url(url)
+                    if not url.raw_host:
+                        # NOTE: Bail early, otherwise, causes `InvalidURL` through
+                        # NOTE: `self._request_class()` below.
+                        err_exc_cls = (
+                            InvalidUrlRedirectClientError
+                            if redirects
+                            else InvalidUrlClientError
+                        )
+&gt;                       raise err_exc_cls(url)
+E                       aiohttp.client_exceptions.InvalidUrlClientError: /v1/todos
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:639: InvalidUrlClientError</failure></testcase><testcase classname="tests.integration.resources.todo.test_todo_resource.TestTodo" name="test_get_todo_by_id" time="0.001"><failure message="aiohttp.client_exceptions.InvalidUrlClientError: /v1/todos/1">self = &lt;tests.integration.resources.todo.test_todo_resource.TestTodo object at 0x11136a490&gt;
+test_app = &lt;starlette.testclient.TestClient object at 0x111478f10&gt;
+
+    @pytest.mark.asyncio
+    async def test_get_todo_by_id(self, test_app):
+        async with aiohttp.ClientSession() as session:
+&gt;           item, status_code = await self.fetch(session, 'GET', "/v1/todos/1")
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/resources/todo/test_todo_resource.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/resources/todo/test_todo_resource.py:9: in fetch
+    async with session.request(method, url, json=json) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1113d3d50&gt;, method = 'GET'
+str_or_url = '/v1/todos/1'
+
+    async def _request(
+        self,
+        method: str,
+        str_or_url: StrOrURL,
+        *,
+        params: Query = None,
+        data: Any = None,
+        json: Any = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        allow_redirects: bool = True,
+        max_redirects: int = 10,
+        compress: Union[str, bool, None] = None,
+        chunked: Optional[bool] = None,
+        expect100: bool = False,
+        raise_for_status: Union[
+            None, bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = None,
+        read_until_eof: bool = True,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        timeout: Union[ClientTimeout, _SENTINEL] = sentinel,
+        verify_ssl: Optional[bool] = None,
+        fingerprint: Optional[bytes] = None,
+        ssl_context: Optional[SSLContext] = None,
+        ssl: Union[SSLContext, bool, Fingerprint] = True,
+        server_hostname: Optional[str] = None,
+        proxy_headers: Optional[LooseHeaders] = None,
+        trace_request_ctx: Optional[Mapping[str, Any]] = None,
+        read_bufsize: Optional[int] = None,
+        auto_decompress: Optional[bool] = None,
+        max_line_size: Optional[int] = None,
+        max_field_size: Optional[int] = None,
+        middlewares: Optional[Sequence[ClientMiddlewareType]] = None,
+    ) -&gt; ClientResponse:
+    
+        # NOTE: timeout clamps existing connect and read timeouts.  We cannot
+        # set the default to None because we need to detect if the user wants
+        # to use the existing timeouts by setting timeout to None.
+    
+        if self.closed:
+            raise RuntimeError("Session is closed")
+    
+        ssl = _merge_ssl_params(ssl, verify_ssl, ssl_context, fingerprint)
+    
+        if data is not None and json is not None:
+            raise ValueError(
+                "data and json parameters can not be used at the same time"
+            )
+        elif json is not None:
+            data = payload.JsonPayload(json, dumps=self._json_serialize)
+    
+        if not isinstance(chunked, bool) and chunked is not None:
+            warnings.warn("Chunk size is deprecated #1615", DeprecationWarning)
+    
+        redirects = 0
+        history: List[ClientResponse] = []
+        version = self._version
+        params = params or {}
+    
+        # Merge with default headers and transform to CIMultiDict
+        headers = self._prepare_headers(headers)
+    
+        try:
+            url = self._build_url(str_or_url)
+        except ValueError as e:
+            raise InvalidUrlClientError(str_or_url) from e
+    
+        assert self._connector is not None
+        if url.scheme not in self._connector.allowed_protocol_schema_set:
+            raise NonHttpUrlClientError(url)
+    
+        skip_headers: Optional[Iterable[istr]]
+        if skip_auto_headers is not None:
+            skip_headers = {
+                istr(i) for i in skip_auto_headers
+            } | self._skip_auto_headers
+        elif self._skip_auto_headers:
+            skip_headers = self._skip_auto_headers
+        else:
+            skip_headers = None
+    
+        if proxy is None:
+            proxy = self._default_proxy
+        if proxy_auth is None:
+            proxy_auth = self._default_proxy_auth
+    
+        if proxy is None:
+            proxy_headers = None
+        else:
+            proxy_headers = self._prepare_headers(proxy_headers)
+            try:
+                proxy = URL(proxy)
+            except ValueError as e:
+                raise InvalidURL(proxy) from e
+    
+        if timeout is sentinel:
+            real_timeout: ClientTimeout = self._timeout
+        else:
+            if not isinstance(timeout, ClientTimeout):
+                real_timeout = ClientTimeout(total=timeout)
+            else:
+                real_timeout = timeout
+        # timeout is cumulative for all request operations
+        # (request, redirects, responses, data consuming)
+        tm = TimeoutHandle(
+            self._loop, real_timeout.total, ceil_threshold=real_timeout.ceil_threshold
+        )
+        handle = tm.start()
+    
+        if read_bufsize is None:
+            read_bufsize = self._read_bufsize
+    
+        if auto_decompress is None:
+            auto_decompress = self._auto_decompress
+    
+        if max_line_size is None:
+            max_line_size = self._max_line_size
+    
+        if max_field_size is None:
+            max_field_size = self._max_field_size
+    
+        traces = [
+            Trace(
+                self,
+                trace_config,
+                trace_config.trace_config_ctx(trace_request_ctx=trace_request_ctx),
+            )
+            for trace_config in self._trace_configs
+        ]
+    
+        for trace in traces:
+            await trace.send_request_start(method, url.update_query(params), headers)
+    
+        timer = tm.timer()
+        try:
+            with timer:
+                # https://www.rfc-editor.org/rfc/rfc9112.html#name-retrying-requests
+                retry_persistent_connection = (
+                    self._retry_connection and method in IDEMPOTENT_METHODS
+                )
+                while True:
+                    url, auth_from_url = strip_auth_from_url(url)
+                    if not url.raw_host:
+                        # NOTE: Bail early, otherwise, causes `InvalidURL` through
+                        # NOTE: `self._request_class()` below.
+                        err_exc_cls = (
+                            InvalidUrlRedirectClientError
+                            if redirects
+                            else InvalidUrlClientError
+                        )
+&gt;                       raise err_exc_cls(url)
+E                       aiohttp.client_exceptions.InvalidUrlClientError: /v1/todos/1
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:639: InvalidUrlClientError</failure></testcase><testcase classname="tests.integration.resources.todo.test_todo_resource.TestTodo" name="test_add_todo" time="0.001"><failure message="aiohttp.client_exceptions.InvalidUrlClientError: /v1/todos">self = &lt;tests.integration.resources.todo.test_todo_resource.TestTodo object at 0x11136acd0&gt;
+test_app = &lt;starlette.testclient.TestClient object at 0x111478f10&gt;
+
+    @pytest.mark.asyncio
+    async def test_add_todo(self, test_app):
+        async with aiohttp.ClientSession() as session:
+&gt;           response, status_code = await self.fetch(session, 'POST', "/v1/todos", json={
+                "title": "title 3"
+            })
+
+tests/integration/resources/todo/test_todo_resource.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/resources/todo/test_todo_resource.py:9: in fetch
+    async with session.request(method, url, json=json) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x111463690&gt;, method = 'POST'
+str_or_url = '/v1/todos'
+
+    async def _request(
+        self,
+        method: str,
+        str_or_url: StrOrURL,
+        *,
+        params: Query = None,
+        data: Any = None,
+        json: Any = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        allow_redirects: bool = True,
+        max_redirects: int = 10,
+        compress: Union[str, bool, None] = None,
+        chunked: Optional[bool] = None,
+        expect100: bool = False,
+        raise_for_status: Union[
+            None, bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = None,
+        read_until_eof: bool = True,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        timeout: Union[ClientTimeout, _SENTINEL] = sentinel,
+        verify_ssl: Optional[bool] = None,
+        fingerprint: Optional[bytes] = None,
+        ssl_context: Optional[SSLContext] = None,
+        ssl: Union[SSLContext, bool, Fingerprint] = True,
+        server_hostname: Optional[str] = None,
+        proxy_headers: Optional[LooseHeaders] = None,
+        trace_request_ctx: Optional[Mapping[str, Any]] = None,
+        read_bufsize: Optional[int] = None,
+        auto_decompress: Optional[bool] = None,
+        max_line_size: Optional[int] = None,
+        max_field_size: Optional[int] = None,
+        middlewares: Optional[Sequence[ClientMiddlewareType]] = None,
+    ) -&gt; ClientResponse:
+    
+        # NOTE: timeout clamps existing connect and read timeouts.  We cannot
+        # set the default to None because we need to detect if the user wants
+        # to use the existing timeouts by setting timeout to None.
+    
+        if self.closed:
+            raise RuntimeError("Session is closed")
+    
+        ssl = _merge_ssl_params(ssl, verify_ssl, ssl_context, fingerprint)
+    
+        if data is not None and json is not None:
+            raise ValueError(
+                "data and json parameters can not be used at the same time"
+            )
+        elif json is not None:
+            data = payload.JsonPayload(json, dumps=self._json_serialize)
+    
+        if not isinstance(chunked, bool) and chunked is not None:
+            warnings.warn("Chunk size is deprecated #1615", DeprecationWarning)
+    
+        redirects = 0
+        history: List[ClientResponse] = []
+        version = self._version
+        params = params or {}
+    
+        # Merge with default headers and transform to CIMultiDict
+        headers = self._prepare_headers(headers)
+    
+        try:
+            url = self._build_url(str_or_url)
+        except ValueError as e:
+            raise InvalidUrlClientError(str_or_url) from e
+    
+        assert self._connector is not None
+        if url.scheme not in self._connector.allowed_protocol_schema_set:
+            raise NonHttpUrlClientError(url)
+    
+        skip_headers: Optional[Iterable[istr]]
+        if skip_auto_headers is not None:
+            skip_headers = {
+                istr(i) for i in skip_auto_headers
+            } | self._skip_auto_headers
+        elif self._skip_auto_headers:
+            skip_headers = self._skip_auto_headers
+        else:
+            skip_headers = None
+    
+        if proxy is None:
+            proxy = self._default_proxy
+        if proxy_auth is None:
+            proxy_auth = self._default_proxy_auth
+    
+        if proxy is None:
+            proxy_headers = None
+        else:
+            proxy_headers = self._prepare_headers(proxy_headers)
+            try:
+                proxy = URL(proxy)
+            except ValueError as e:
+                raise InvalidURL(proxy) from e
+    
+        if timeout is sentinel:
+            real_timeout: ClientTimeout = self._timeout
+        else:
+            if not isinstance(timeout, ClientTimeout):
+                real_timeout = ClientTimeout(total=timeout)
+            else:
+                real_timeout = timeout
+        # timeout is cumulative for all request operations
+        # (request, redirects, responses, data consuming)
+        tm = TimeoutHandle(
+            self._loop, real_timeout.total, ceil_threshold=real_timeout.ceil_threshold
+        )
+        handle = tm.start()
+    
+        if read_bufsize is None:
+            read_bufsize = self._read_bufsize
+    
+        if auto_decompress is None:
+            auto_decompress = self._auto_decompress
+    
+        if max_line_size is None:
+            max_line_size = self._max_line_size
+    
+        if max_field_size is None:
+            max_field_size = self._max_field_size
+    
+        traces = [
+            Trace(
+                self,
+                trace_config,
+                trace_config.trace_config_ctx(trace_request_ctx=trace_request_ctx),
+            )
+            for trace_config in self._trace_configs
+        ]
+    
+        for trace in traces:
+            await trace.send_request_start(method, url.update_query(params), headers)
+    
+        timer = tm.timer()
+        try:
+            with timer:
+                # https://www.rfc-editor.org/rfc/rfc9112.html#name-retrying-requests
+                retry_persistent_connection = (
+                    self._retry_connection and method in IDEMPOTENT_METHODS
+                )
+                while True:
+                    url, auth_from_url = strip_auth_from_url(url)
+                    if not url.raw_host:
+                        # NOTE: Bail early, otherwise, causes `InvalidURL` through
+                        # NOTE: `self._request_class()` below.
+                        err_exc_cls = (
+                            InvalidUrlRedirectClientError
+                            if redirects
+                            else InvalidUrlClientError
+                        )
+&gt;                       raise err_exc_cls(url)
+E                       aiohttp.client_exceptions.InvalidUrlClientError: /v1/todos
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:639: InvalidUrlClientError</failure></testcase><testcase classname="tests.integration.resources.todo.test_todo_resource.TestTodo" name="test_add_todo_should_return_unprocessable_when_invalid_entity" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.integration.resources.todo.test_todo_resource.TestTodo" name="test_update_todo" time="0.001"><failure message="aiohttp.client_exceptions.InvalidUrlClientError: /v1/todos/1">self = &lt;tests.integration.resources.todo.test_todo_resource.TestTodo object at 0x11136bbd0&gt;
+test_app = &lt;starlette.testclient.TestClient object at 0x111478f10&gt;
+
+    @pytest.mark.asyncio
+    async def test_update_todo(self, test_app):
+        async with aiohttp.ClientSession() as session:
+&gt;           response, status_code = await self.fetch(session, 'PUT', "/v1/todos/1", json={
+                "title": "title 1 updated"
+            })
+
+tests/integration/resources/todo/test_todo_resource.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/resources/todo/test_todo_resource.py:9: in fetch
+    async with session.request(method, url, json=json) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x111487650&gt;, method = 'PUT'
+str_or_url = '/v1/todos/1'
+
+    async def _request(
+        self,
+        method: str,
+        str_or_url: StrOrURL,
+        *,
+        params: Query = None,
+        data: Any = None,
+        json: Any = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        allow_redirects: bool = True,
+        max_redirects: int = 10,
+        compress: Union[str, bool, None] = None,
+        chunked: Optional[bool] = None,
+        expect100: bool = False,
+        raise_for_status: Union[
+            None, bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = None,
+        read_until_eof: bool = True,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        timeout: Union[ClientTimeout, _SENTINEL] = sentinel,
+        verify_ssl: Optional[bool] = None,
+        fingerprint: Optional[bytes] = None,
+        ssl_context: Optional[SSLContext] = None,
+        ssl: Union[SSLContext, bool, Fingerprint] = True,
+        server_hostname: Optional[str] = None,
+        proxy_headers: Optional[LooseHeaders] = None,
+        trace_request_ctx: Optional[Mapping[str, Any]] = None,
+        read_bufsize: Optional[int] = None,
+        auto_decompress: Optional[bool] = None,
+        max_line_size: Optional[int] = None,
+        max_field_size: Optional[int] = None,
+        middlewares: Optional[Sequence[ClientMiddlewareType]] = None,
+    ) -&gt; ClientResponse:
+    
+        # NOTE: timeout clamps existing connect and read timeouts.  We cannot
+        # set the default to None because we need to detect if the user wants
+        # to use the existing timeouts by setting timeout to None.
+    
+        if self.closed:
+            raise RuntimeError("Session is closed")
+    
+        ssl = _merge_ssl_params(ssl, verify_ssl, ssl_context, fingerprint)
+    
+        if data is not None and json is not None:
+            raise ValueError(
+                "data and json parameters can not be used at the same time"
+            )
+        elif json is not None:
+            data = payload.JsonPayload(json, dumps=self._json_serialize)
+    
+        if not isinstance(chunked, bool) and chunked is not None:
+            warnings.warn("Chunk size is deprecated #1615", DeprecationWarning)
+    
+        redirects = 0
+        history: List[ClientResponse] = []
+        version = self._version
+        params = params or {}
+    
+        # Merge with default headers and transform to CIMultiDict
+        headers = self._prepare_headers(headers)
+    
+        try:
+            url = self._build_url(str_or_url)
+        except ValueError as e:
+            raise InvalidUrlClientError(str_or_url) from e
+    
+        assert self._connector is not None
+        if url.scheme not in self._connector.allowed_protocol_schema_set:
+            raise NonHttpUrlClientError(url)
+    
+        skip_headers: Optional[Iterable[istr]]
+        if skip_auto_headers is not None:
+            skip_headers = {
+                istr(i) for i in skip_auto_headers
+            } | self._skip_auto_headers
+        elif self._skip_auto_headers:
+            skip_headers = self._skip_auto_headers
+        else:
+            skip_headers = None
+    
+        if proxy is None:
+            proxy = self._default_proxy
+        if proxy_auth is None:
+            proxy_auth = self._default_proxy_auth
+    
+        if proxy is None:
+            proxy_headers = None
+        else:
+            proxy_headers = self._prepare_headers(proxy_headers)
+            try:
+                proxy = URL(proxy)
+            except ValueError as e:
+                raise InvalidURL(proxy) from e
+    
+        if timeout is sentinel:
+            real_timeout: ClientTimeout = self._timeout
+        else:
+            if not isinstance(timeout, ClientTimeout):
+                real_timeout = ClientTimeout(total=timeout)
+            else:
+                real_timeout = timeout
+        # timeout is cumulative for all request operations
+        # (request, redirects, responses, data consuming)
+        tm = TimeoutHandle(
+            self._loop, real_timeout.total, ceil_threshold=real_timeout.ceil_threshold
+        )
+        handle = tm.start()
+    
+        if read_bufsize is None:
+            read_bufsize = self._read_bufsize
+    
+        if auto_decompress is None:
+            auto_decompress = self._auto_decompress
+    
+        if max_line_size is None:
+            max_line_size = self._max_line_size
+    
+        if max_field_size is None:
+            max_field_size = self._max_field_size
+    
+        traces = [
+            Trace(
+                self,
+                trace_config,
+                trace_config.trace_config_ctx(trace_request_ctx=trace_request_ctx),
+            )
+            for trace_config in self._trace_configs
+        ]
+    
+        for trace in traces:
+            await trace.send_request_start(method, url.update_query(params), headers)
+    
+        timer = tm.timer()
+        try:
+            with timer:
+                # https://www.rfc-editor.org/rfc/rfc9112.html#name-retrying-requests
+                retry_persistent_connection = (
+                    self._retry_connection and method in IDEMPOTENT_METHODS
+                )
+                while True:
+                    url, auth_from_url = strip_auth_from_url(url)
+                    if not url.raw_host:
+                        # NOTE: Bail early, otherwise, causes `InvalidURL` through
+                        # NOTE: `self._request_class()` below.
+                        err_exc_cls = (
+                            InvalidUrlRedirectClientError
+                            if redirects
+                            else InvalidUrlClientError
+                        )
+&gt;                       raise err_exc_cls(url)
+E                       aiohttp.client_exceptions.InvalidUrlClientError: /v1/todos/1
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:639: InvalidUrlClientError</failure></testcase><testcase classname="tests.integration.resources.todo.test_todo_resource.TestTodo" name="test_update_todo_should_return_unprocessable_when_invalid_entity" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.integration.resources.todo.test_todo_resource.TestTodo" name="test_delete_todo" time="0.001"><failure message="aiohttp.client_exceptions.InvalidUrlClientError: /v1/todos/1">self = &lt;tests.integration.resources.todo.test_todo_resource.TestTodo object at 0x11137cb90&gt;
+test_app = &lt;starlette.testclient.TestClient object at 0x111478f10&gt;
+
+    @pytest.mark.asyncio
+    async def test_delete_todo(self, test_app):
+        async with aiohttp.ClientSession() as session:
+&gt;           response, status_code = await self.fetch(session, 'DELETE', "/v1/todos/1")
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration/resources/todo/test_todo_resource.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/resources/todo/test_todo_resource.py:9: in fetch
+    async with session.request(method, url, json=json) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x111460410&gt;, method = 'DELETE'
+str_or_url = '/v1/todos/1'
+
+    async def _request(
+        self,
+        method: str,
+        str_or_url: StrOrURL,
+        *,
+        params: Query = None,
+        data: Any = None,
+        json: Any = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        allow_redirects: bool = True,
+        max_redirects: int = 10,
+        compress: Union[str, bool, None] = None,
+        chunked: Optional[bool] = None,
+        expect100: bool = False,
+        raise_for_status: Union[
+            None, bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = None,
+        read_until_eof: bool = True,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        timeout: Union[ClientTimeout, _SENTINEL] = sentinel,
+        verify_ssl: Optional[bool] = None,
+        fingerprint: Optional[bytes] = None,
+        ssl_context: Optional[SSLContext] = None,
+        ssl: Union[SSLContext, bool, Fingerprint] = True,
+        server_hostname: Optional[str] = None,
+        proxy_headers: Optional[LooseHeaders] = None,
+        trace_request_ctx: Optional[Mapping[str, Any]] = None,
+        read_bufsize: Optional[int] = None,
+        auto_decompress: Optional[bool] = None,
+        max_line_size: Optional[int] = None,
+        max_field_size: Optional[int] = None,
+        middlewares: Optional[Sequence[ClientMiddlewareType]] = None,
+    ) -&gt; ClientResponse:
+    
+        # NOTE: timeout clamps existing connect and read timeouts.  We cannot
+        # set the default to None because we need to detect if the user wants
+        # to use the existing timeouts by setting timeout to None.
+    
+        if self.closed:
+            raise RuntimeError("Session is closed")
+    
+        ssl = _merge_ssl_params(ssl, verify_ssl, ssl_context, fingerprint)
+    
+        if data is not None and json is not None:
+            raise ValueError(
+                "data and json parameters can not be used at the same time"
+            )
+        elif json is not None:
+            data = payload.JsonPayload(json, dumps=self._json_serialize)
+    
+        if not isinstance(chunked, bool) and chunked is not None:
+            warnings.warn("Chunk size is deprecated #1615", DeprecationWarning)
+    
+        redirects = 0
+        history: List[ClientResponse] = []
+        version = self._version
+        params = params or {}
+    
+        # Merge with default headers and transform to CIMultiDict
+        headers = self._prepare_headers(headers)
+    
+        try:
+            url = self._build_url(str_or_url)
+        except ValueError as e:
+            raise InvalidUrlClientError(str_or_url) from e
+    
+        assert self._connector is not None
+        if url.scheme not in self._connector.allowed_protocol_schema_set:
+            raise NonHttpUrlClientError(url)
+    
+        skip_headers: Optional[Iterable[istr]]
+        if skip_auto_headers is not None:
+            skip_headers = {
+                istr(i) for i in skip_auto_headers
+            } | self._skip_auto_headers
+        elif self._skip_auto_headers:
+            skip_headers = self._skip_auto_headers
+        else:
+            skip_headers = None
+    
+        if proxy is None:
+            proxy = self._default_proxy
+        if proxy_auth is None:
+            proxy_auth = self._default_proxy_auth
+    
+        if proxy is None:
+            proxy_headers = None
+        else:
+            proxy_headers = self._prepare_headers(proxy_headers)
+            try:
+                proxy = URL(proxy)
+            except ValueError as e:
+                raise InvalidURL(proxy) from e
+    
+        if timeout is sentinel:
+            real_timeout: ClientTimeout = self._timeout
+        else:
+            if not isinstance(timeout, ClientTimeout):
+                real_timeout = ClientTimeout(total=timeout)
+            else:
+                real_timeout = timeout
+        # timeout is cumulative for all request operations
+        # (request, redirects, responses, data consuming)
+        tm = TimeoutHandle(
+            self._loop, real_timeout.total, ceil_threshold=real_timeout.ceil_threshold
+        )
+        handle = tm.start()
+    
+        if read_bufsize is None:
+            read_bufsize = self._read_bufsize
+    
+        if auto_decompress is None:
+            auto_decompress = self._auto_decompress
+    
+        if max_line_size is None:
+            max_line_size = self._max_line_size
+    
+        if max_field_size is None:
+            max_field_size = self._max_field_size
+    
+        traces = [
+            Trace(
+                self,
+                trace_config,
+                trace_config.trace_config_ctx(trace_request_ctx=trace_request_ctx),
+            )
+            for trace_config in self._trace_configs
+        ]
+    
+        for trace in traces:
+            await trace.send_request_start(method, url.update_query(params), headers)
+    
+        timer = tm.timer()
+        try:
+            with timer:
+                # https://www.rfc-editor.org/rfc/rfc9112.html#name-retrying-requests
+                retry_persistent_connection = (
+                    self._retry_connection and method in IDEMPOTENT_METHODS
+                )
+                while True:
+                    url, auth_from_url = strip_auth_from_url(url)
+                    if not url.raw_host:
+                        # NOTE: Bail early, otherwise, causes `InvalidURL` through
+                        # NOTE: `self._request_class()` below.
+                        err_exc_cls = (
+                            InvalidUrlRedirectClientError
+                            if redirects
+                            else InvalidUrlClientError
+                        )
+&gt;                       raise err_exc_cls(url)
+E                       aiohttp.client_exceptions.InvalidUrlClientError: /v1/todos/1
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:639: InvalidUrlClientError</failure></testcase><testcase classname="tests.unit.data.todo.usecases.test_add_todo_data.TestAddTodoDataUseCase" name="test_handle_return_success" time="0.004" /><testcase classname="tests.unit.data.todo.usecases.test_delete_todo_by_id_data.TestDeleteTodoByIdDataUseCase" name="test_handle_return_success" time="0.001" /><testcase classname="tests.unit.data.todo.usecases.test_delete_todo_by_id_data.TestDeleteTodoByIdDataUseCase" name="test_handle_return_success_false_when_todo_is_not_exist" time="0.001" /><testcase classname="tests.unit.data.todo.usecases.test_get_todo_all_data.TestGetTodoAllDataUseCase" name="test_handle_return_empty_list" time="0.001" /><testcase classname="tests.unit.data.todo.usecases.test_get_todo_all_data.TestGetTodoAllDataUseCase" name="test_handle_return_list" time="0.001" /><testcase classname="tests.unit.data.todo.usecases.test_get_todo_all_data.TestGetTodoAllDataUseCase" name="test_request_cache_parameter" time="0.000" /><testcase classname="tests.unit.data.todo.usecases.test_get_todo_by_id.TestGetTodoByIdDataUseCase" name="test_handle_return_none_when_todo_is_not_exist" time="0.001" /><testcase classname="tests.unit.data.todo.usecases.test_get_todo_by_id.TestGetTodoByIdDataUseCase" name="test_handle_return_todo" time="0.001" /><testcase classname="tests.unit.data.todo.usecases.test_update_todo_data.TestUpdateTodoDataUseCase" name="test_handle_return_exception_when_todo_not_found" time="0.001" /><testcase classname="tests.unit.data.todo.usecases.test_update_todo_data.TestUpdateTodoDataUseCase" name="test_handle_return_success" time="0.001" /><testcase classname="tests.unit.notification.todo_transaction.test_remove_cache_subscriber.TestTodoRemoveCacheSubscriber" name="test_handle" time="0.001" /><testcase classname="tests.unit.notification.todo_transaction.test_transaction_log_subscriber.TestTransactionLogSubscriber" name="test_handle" time="0.001" /><testcase classname="tests.unit.resources.todo.usecases.test_add_todo.TestAddTodoUseCase" name="test_handle_return_success" time="0.001" /><testcase classname="tests.unit.resources.todo.usecases.test_add_todo.TestAddTodoUseCase" name="test_handle_return_success_false_when_data_response_is_not_successful" time="0.001" /><testcase classname="tests.unit.resources.todo.usecases.test_delete_todo_by_id.TestDeleteTodoByIdUseCase" name="test_handle_return_false_when_data_response_is_not_successful" time="0.001" /><testcase classname="tests.unit.resources.todo.usecases.test_delete_todo_by_id.TestDeleteTodoByIdUseCase" name="test_handle_return_success" time="0.001" /><testcase classname="tests.unit.resources.todo.usecases.test_get_todo_all.TestGetTodoByIdUseCase" name="test_handle_return_empty_list" time="0.001" /><testcase classname="tests.unit.resources.todo.usecases.test_get_todo_all.TestGetTodoByIdUseCase" name="test_handle_return_list" time="0.001" /><testcase classname="tests.unit.resources.todo.usecases.test_get_todo_by_id.TestGetTodoByIdUseCase" name="test_handle_return_none_when_data_response_is_none" time="0.001" /><testcase classname="tests.unit.resources.todo.usecases.test_get_todo_by_id.TestGetTodoByIdUseCase" name="test_handle_return_todo" time="0.001" /><testcase classname="tests.unit.resources.todo.usecases.test_update_todo.TestAddTodoUseCase" name="test_handle_return_false_when_data_response_is_not_successful" time="0.001" /><testcase classname="tests.unit.resources.todo.usecases.test_update_todo.TestAddTodoUseCase" name="test_handle_return_success" time="0.001" /><testcase classname="tests.unit.utils.test_cache_provider.TestCacheProvider" name="test_add" time="0.001" /><testcase classname="tests.unit.utils.test_cache_provider.TestCacheProvider" name="test_check_connection_is_not_success" time="0.001" /><testcase classname="tests.unit.utils.test_cache_provider.TestCacheProvider" name="test_check_connection_is_success" time="0.001" /><testcase classname="tests.unit.utils.test_cache_provider.TestCacheProvider" name="test_delete" time="0.001" /><testcase classname="tests.unit.utils.test_cache_provider.TestCacheProvider" name="test_exist" time="0.001" /><testcase classname="tests.unit.utils.test_cache_provider.TestCacheProvider" name="test_get" time="0.001" /><testcase classname="tests.unit.utils.test_cache_provider.TestCacheProvider" name="test_get_client_throw_exception_when_client_is_none" time="0.001" /></testsuite></testsuites>

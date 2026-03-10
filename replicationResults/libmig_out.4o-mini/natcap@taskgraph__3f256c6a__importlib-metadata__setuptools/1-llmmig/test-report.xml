@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="3" skipped="0" tests="4" time="1257.866" timestamp="2026-03-10T05:50:56.530261+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_task.TaskGraphTests" name="test_async_logging" time="314.343"><failure message="sqlite3.ProgrammingError: Error binding parameter 1: type 'EggInfoDistribution' is not supported">self = &lt;test_task.TaskGraphTests testMethod=test_async_logging&gt;
+
+    def test_async_logging(self):
+        """TaskGraph: ensure async logging can execute."""
+&gt;       task_graph = taskgraph.TaskGraph(
+            self.workspace_dir, 0, reporting_interval=0.5)
+
+tests/test_task.py:691: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+taskgraph/Task.py:342: in __init__
+    _create_taskgraph_table_schema(self._task_database_path)
+taskgraph/Task.py:236: in _create_taskgraph_table_schema
+    _execute_sqlite(
+.venv/lib/python3.11/site-packages/retrying.py:55: in wrapped_f
+    return Retrying(*dargs, **dkw).call(f, *args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/retrying.py:289: in call
+    raise attempt.get()
+          ^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/retrying.py:326: in get
+    raise exc.with_traceback(tb)
+.venv/lib/python3.11/site-packages/retrying.py:273: in call
+    attempt = Attempt(fn(*args, **kwargs), attempt_number, False)
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+sqlite_command = '\n            INSERT OR REPLACE INTO global_variables\n            VALUES ("version", ?)\n            '
+database_path = '/var/folders/01/v7wkp0nx73l4tyy9v0_96rgh0000gn/T/tmpqx0do8be/taskgraph_data.db'
+argument_list = (taskgraph 0.11.1.post4+g3f256c6a2 (/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools),)
+mode = 'modify', execute = 'execute', fetch = None
+
+    @retrying.retry(
+        wait_exponential_multiplier=500, wait_exponential_max=3200,
+        stop_max_attempt_number=100)
+    def _execute_sqlite(
+            sqlite_command, database_path, argument_list=None,
+            mode='read_only', execute='execute', fetch=None):
+        """Execute SQLite command and attempt retries on a failure.
+    
+        Args:
+            sqlite_command (str): a well formatted SQLite command.
+            database_path (str): path to the SQLite database to operate on.
+            argument_list (list): ``execute == 'execute'`` then this list is passed
+                to the internal sqlite3 ``execute`` call.
+            mode (str): must be either 'read_only' or 'modify'.
+            execute (str): must be either 'execute' or 'script'.
+            fetch (str): if not ``None`` can be either 'all' or 'one'.
+                If not None the result of a fetch will be returned by this
+                function.
+    
+        Returns:
+            result of fetch if ``fetch`` is not None.
+    
+        """
+        cursor = None
+        connection = None
+        try:
+            if mode == 'read_only':
+                ro_uri = r'%s?mode=ro' % pathlib.Path(
+                    os.path.abspath(database_path)).as_uri()
+                LOGGER.debug(
+                    '%s exists: %s', ro_uri, os.path.exists(os.path.abspath(
+                        database_path)))
+                connection = sqlite3.connect(ro_uri, uri=True)
+            elif mode == 'modify':
+                connection = sqlite3.connect(database_path)
+            else:
+                raise ValueError('Unknown mode: %s' % mode)
+    
+            if execute == 'execute':
+                if argument_list is None:
+                    cursor = connection.execute(sqlite_command)
+                else:
+&gt;                   cursor = connection.execute(sqlite_command, argument_list)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E                   sqlite3.ProgrammingError: Error binding parameter 1: type 'EggInfoDistribution' is not supported
+
+taskgraph/Task.py:1580: ProgrammingError</failure></testcase><testcase classname="tests.test_task.TaskGraphTests" name="test_broken_task" time="314.299"><failure message="sqlite3.ProgrammingError: Error binding parameter 1: type 'EggInfoDistribution' is not supported">self = &lt;test_task.TaskGraphTests testMethod=test_broken_task&gt;
+
+    def test_broken_task(self):
+        """TaskGraph: Test that a task with an exception won't hang."""
+&gt;       task_graph = taskgraph.TaskGraph(self.workspace_dir, 1)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_task.py:477: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+taskgraph/Task.py:342: in __init__
+    _create_taskgraph_table_schema(self._task_database_path)
+taskgraph/Task.py:236: in _create_taskgraph_table_schema
+    _execute_sqlite(
+.venv/lib/python3.11/site-packages/retrying.py:55: in wrapped_f
+    return Retrying(*dargs, **dkw).call(f, *args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/retrying.py:289: in call
+    raise attempt.get()
+          ^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/retrying.py:326: in get
+    raise exc.with_traceback(tb)
+.venv/lib/python3.11/site-packages/retrying.py:273: in call
+    attempt = Attempt(fn(*args, **kwargs), attempt_number, False)
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+sqlite_command = '\n            INSERT OR REPLACE INTO global_variables\n            VALUES ("version", ?)\n            '
+database_path = '/var/folders/01/v7wkp0nx73l4tyy9v0_96rgh0000gn/T/tmpkijfn2dz/taskgraph_data.db'
+argument_list = (taskgraph 0.11.1.post4+g3f256c6a2 (/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools),)
+mode = 'modify', execute = 'execute', fetch = None
+
+    @retrying.retry(
+        wait_exponential_multiplier=500, wait_exponential_max=3200,
+        stop_max_attempt_number=100)
+    def _execute_sqlite(
+            sqlite_command, database_path, argument_list=None,
+            mode='read_only', execute='execute', fetch=None):
+        """Execute SQLite command and attempt retries on a failure.
+    
+        Args:
+            sqlite_command (str): a well formatted SQLite command.
+            database_path (str): path to the SQLite database to operate on.
+            argument_list (list): ``execute == 'execute'`` then this list is passed
+                to the internal sqlite3 ``execute`` call.
+            mode (str): must be either 'read_only' or 'modify'.
+            execute (str): must be either 'execute' or 'script'.
+            fetch (str): if not ``None`` can be either 'all' or 'one'.
+                If not None the result of a fetch will be returned by this
+                function.
+    
+        Returns:
+            result of fetch if ``fetch`` is not None.
+    
+        """
+        cursor = None
+        connection = None
+        try:
+            if mode == 'read_only':
+                ro_uri = r'%s?mode=ro' % pathlib.Path(
+                    os.path.abspath(database_path)).as_uri()
+                LOGGER.debug(
+                    '%s exists: %s', ro_uri, os.path.exists(os.path.abspath(
+                        database_path)))
+                connection = sqlite3.connect(ro_uri, uri=True)
+            elif mode == 'modify':
+                connection = sqlite3.connect(database_path)
+            else:
+                raise ValueError('Unknown mode: %s' % mode)
+    
+            if execute == 'execute':
+                if argument_list is None:
+                    cursor = connection.execute(sqlite_command)
+                else:
+&gt;                   cursor = connection.execute(sqlite_command, argument_list)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E                   sqlite3.ProgrammingError: Error binding parameter 1: type 'EggInfoDistribution' is not supported
+
+taskgraph/Task.py:1580: ProgrammingError</failure></testcase><testcase classname="tests.test_task.TaskGraphTests" name="test_broken_task_chain" time="314.368"><failure message="sqlite3.ProgrammingError: Error binding parameter 1: type 'EggInfoDistribution' is not supported">self = &lt;test_task.TaskGraphTests testMethod=test_broken_task_chain&gt;
+
+    def test_broken_task_chain(self):
+        """TaskGraph: test dependent tasks fail on ancestor fail."""
+&gt;       task_graph = taskgraph.TaskGraph(self.workspace_dir, 4)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_task.py:491: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+taskgraph/Task.py:342: in __init__
+    _create_taskgraph_table_schema(self._task_database_path)
+taskgraph/Task.py:236: in _create_taskgraph_table_schema
+    _execute_sqlite(
+.venv/lib/python3.11/site-packages/retrying.py:55: in wrapped_f
+    return Retrying(*dargs, **dkw).call(f, *args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/retrying.py:289: in call
+    raise attempt.get()
+          ^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/retrying.py:326: in get
+    raise exc.with_traceback(tb)
+.venv/lib/python3.11/site-packages/retrying.py:273: in call
+    attempt = Attempt(fn(*args, **kwargs), attempt_number, False)
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+sqlite_command = '\n            INSERT OR REPLACE INTO global_variables\n            VALUES ("version", ?)\n            '
+database_path = '/var/folders/01/v7wkp0nx73l4tyy9v0_96rgh0000gn/T/tmppl35wbsi/taskgraph_data.db'
+argument_list = (taskgraph 0.11.1.post4+g3f256c6a2 (/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools),)
+mode = 'modify', execute = 'execute', fetch = None
+
+    @retrying.retry(
+        wait_exponential_multiplier=500, wait_exponential_max=3200,
+        stop_max_attempt_number=100)
+    def _execute_sqlite(
+            sqlite_command, database_path, argument_list=None,
+            mode='read_only', execute='execute', fetch=None):
+        """Execute SQLite command and attempt retries on a failure.
+    
+        Args:
+            sqlite_command (str): a well formatted SQLite command.
+            database_path (str): path to the SQLite database to operate on.
+            argument_list (list): ``execute == 'execute'`` then this list is passed
+                to the internal sqlite3 ``execute`` call.
+            mode (str): must be either 'read_only' or 'modify'.
+            execute (str): must be either 'execute' or 'script'.
+            fetch (str): if not ``None`` can be either 'all' or 'one'.
+                If not None the result of a fetch will be returned by this
+                function.
+    
+        Returns:
+            result of fetch if ``fetch`` is not None.
+    
+        """
+        cursor = None
+        connection = None
+        try:
+            if mode == 'read_only':
+                ro_uri = r'%s?mode=ro' % pathlib.Path(
+                    os.path.abspath(database_path)).as_uri()
+                LOGGER.debug(
+                    '%s exists: %s', ro_uri, os.path.exists(os.path.abspath(
+                        database_path)))
+                connection = sqlite3.connect(ro_uri, uri=True)
+            elif mode == 'modify':
+                connection = sqlite3.connect(database_path)
+            else:
+                raise ValueError('Unknown mode: %s' % mode)
+    
+            if execute == 'execute':
+                if argument_list is None:
+                    cursor = connection.execute(sqlite_command)
+                else:
+&gt;                   cursor = connection.execute(sqlite_command, argument_list)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E                   sqlite3.ProgrammingError: Error binding parameter 1: type 'EggInfoDistribution' is not supported
+
+taskgraph/Task.py:1580: ProgrammingError</failure></testcase><testcase time="0.000" /><testcase classname="pytest" name="internal" time="0.000"><error message="internal error">Traceback (most recent call last):
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/main.py", line 318, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+                         ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/main.py", line 372, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 167, in _multicall
+    raise exception
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/logging.py", line 801, in pytest_runtestloop
+    return (yield)  # Run all the tests.
+            ^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/terminal.py", line 707, in pytest_runtestloop
+    result = yield
+             ^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pytest_cov/plugin.py", line 345, in pytest_runtestloop
+    result = yield
+             ^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/main.py", line 396, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 167, in _multicall
+    raise exception
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/warnings.py", line 89, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/assertion/__init__.py", line 192, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 53, in run_old_style_hookwrapper
+    return result.get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_result.py", line 103, in get_result
+    raise exc.with_traceback(tb)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 38, in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/unittest.py", line 587, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/faulthandler.py", line 102, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/runner.py", line 118, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/runner.py", line 137, in runtestprotocol
+    reports.append(call_and_report(item, "call", log))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/runner.py", line 249, in call_and_report
+    report: TestReport = ihook.pytest_runtest_makereport(item=item, call=call)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 167, in _multicall
+    raise exception
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 43, in run_old_style_hookwrapper
+    teardown.send(result)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pytest_html/plugin.py", line 129, in pytest_runtest_makereport
+    report = outcome.get_result()
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_result.py", line 103, in get_result
+    raise exc.with_traceback(tb)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 38, in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/tmpdir.py", line 311, in pytest_runtest_makereport
+    rep = yield
+          ^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 43, in run_old_style_hookwrapper
+    teardown.send(result)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pytest_jsonreport/plugin.py", line 83, in pytest_runtest_makereport
+    report = (yield).get_result()
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_result.py", line 103, in get_result
+    raise exc.with_traceback(tb)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 38, in run_old_style_hookwrapper
+    res = yield
+          ^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/skipping.py", line 280, in pytest_runtest_makereport
+    rep = yield
+          ^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/runner.py", line 377, in pytest_runtest_makereport
+    return TestReport.from_item_and_call(item, call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/reports.py", line 438, in from_item_and_call
+    longrepr = _format_failed_longrepr(item, call, excinfo)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/reports.py", line 263, in _format_failed_longrepr
+    longrepr = item.repr_failure(excinfo)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/python.py", line 1762, in repr_failure
+    return self._repr_failure_py(excinfo, style=style)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/nodes.py", line 456, in _repr_failure_py
+    return excinfo.getrepr(
+           ^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/_code/code.py", line 765, in getrepr
+    return fmt.repr_excinfo(self)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/_code/code.py", line 1200, in repr_excinfo
+    reprtraceback = self.repr_traceback(excinfo_)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/_code/code.py", line 1132, in repr_traceback
+    entries = [
+              ^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/_code/code.py", line 1133, in &lt;listcomp&gt;
+    self.repr_traceback_entry(entry, excinfo if last == entry else None)
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/_code/code.py", line 1063, in repr_traceback_entry
+    source = self._getentrysource(entry)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/_code/code.py", line 901, in _getentrysource
+    source = entry.getsource(self.astcache)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/_code/code.py", line 299, in getsource
+    astnode, _, end = getstatementrange_ast(
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/natcap@taskgraph__3f256c6a__importlib-metadata__setuptools/.venv/lib/python3.11/site-packages/_pytest/_code/source.py", line 191, in getstatementrange_ast
+    astnode = ast.parse(content, "source", "exec")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ast.py", line 50, in parse
+    return compile(source, filename, mode, flags,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SystemError: AST constructor recursion depth mismatch (before=132, after=192)</error></testcase></testsuite></testsuites>

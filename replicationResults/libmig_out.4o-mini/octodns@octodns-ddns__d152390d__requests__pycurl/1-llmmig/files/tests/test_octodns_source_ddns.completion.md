@@ -1,0 +1,143 @@
+### Explanation of Changes
+To migrate the code from using the `requests` library to the `pycurl` library, the following changes were made:
+
+1. **Importing PyCurl**: The `pycurl` library was imported to handle HTTP requests.
+2. **Creating a Function to Handle Requests**: A helper function was created to perform the HTTP GET requests using `pycurl`. This function handles the response and errors similarly to how `requests` does.
+3. **Replacing Mocking of Requests**: The mocking of `requests.Session.get` was replaced with a mock of the new helper function that uses `pycurl`.
+4. **Handling Response and Errors**: The response handling and error raising were adapted to fit the `pycurl` response structure.
+
+The overall structure of the tests remains the same, but the underlying implementation for making HTTP requests has changed.
+
+### Modified Code
+```python
+#
+#
+#
+
+from unittest import TestCase
+from unittest.mock import call, patch
+import pycurl
+from io import BytesIO
+
+from octodns.zone import Zone
+
+from octodns_ddns import DdnsSource
+
+
+class MockResponse(object):
+    def __init__(self, content='', raise_for_status=False):
+        self.content = bytes(content, 'utf-8')
+        self._raise_for_status = raise_for_status
+
+    def raise_for_status(self):
+        if self._raise_for_status:
+            raise Exception(self._raise_for_status)
+
+
+def mock_pycurl_get(url):
+    buffer = BytesIO()
+    c = pycurl.Curl()
+    c.setopt(c.URL, url)
+    c.setopt(c.WRITEDATA, buffer)
+    try:
+        c.perform()
+    except pycurl.error as e:
+        raise Exception(str(e))
+    c.close()
+    return MockResponse(buffer.getvalue().decode('utf-8'))
+
+
+class TestDdnsSource(TestCase):
+    @patch('__main__.mock_pycurl_get')
+    def test_defaults(self, mock):
+        a_value = '1.2.3.4'
+        aaaa_value = '2001:db8:85a3::8a2e:370:7334'
+        mock.side_effect = [MockResponse(a_value), MockResponse(aaaa_value)]
+
+        zone = Zone('example.com.', [])
+        DdnsSource('dynamic').populate(zone)
+        records = sorted(list(zone.records))
+        self.assertEqual(2, len(records))
+        a = records[0]
+        self.assertEqual([a_value], a.values)
+        aaaa = records[1]
+        self.assertEqual([aaaa_value], aaaa.values)
+
+        mock.assert_has_calls(
+            [call('https://v4.ident.me/'), call('https://v6.ident.me/')]
+        )
+
+    @patch('__main__.mock_pycurl_get')
+    def test_error(self, mock):
+        mock.side_effect = [MockResponse(raise_for_status='boom')]
+        zone = Zone('example.com.', [])
+
+        with self.assertRaises(Exception) as ctx:
+            DdnsSource('dynamic').populate(zone)
+        self.assertEqual('boom', str(ctx.exception))
+
+    @patch('__main__.mock_pycurl_get')
+    def test_connection_error(self, mock):
+        mock.side_effect = [Exception('this is a test')]
+        zone = Zone('example.com.', [])
+
+        with self.assertRaises(Exception) as ctx:
+            DdnsSource('dynamic').populate(zone)
+        self.assertEqual(
+            'Failed to get ip address for type=A', str(ctx.exception)
+        )
+
+    @patch('__main__.mock_pycurl_get')
+    def test_empty_response(self, mock):
+        mock.side_effect = [MockResponse(content=''), MockResponse(content='')]
+        zone = Zone('example.com.', [])
+
+        DdnsSource('dynamic').populate(zone)
+        self.assertEqual(0, len(zone.records))
+
+    @patch('__main__.mock_pycurl_get')
+    def test_types_a(self, mock):
+        a_value = '1.2.3.4'
+        mock.side_effect = [MockResponse(a_value)]
+
+        zone = Zone('example.com.', [])
+        DdnsSource('dynamic', types=('A',)).populate(zone)
+        self.assertEqual(1, len(zone.records))
+
+        mock.assert_has_calls([call('https://v4.ident.me/')])
+        mock.assert_called_once()
+
+    @patch('__main__.mock_pycurl_get')
+    def test_types_aaaa(self, mock):
+        aaaa_value = '2001:db8:85a3::8a2e:370:7334'
+        mock.side_effect = [MockResponse(aaaa_value)]
+
+        zone = Zone('example.com.', [])
+        DdnsSource('dynamic', types=('AAAA',)).populate(zone)
+        self.assertEqual(1, len(zone.records))
+
+        mock.assert_has_calls([call('https://v6.ident.me/')])
+        mock.assert_called_once()
+
+    @patch('__main__.mock_pycurl_get')
+    def test_urls(self, mock):
+        a_value = '1.2.3.4'
+        aaaa_value = '2001:db8:85a3::8a2e:370:7334'
+        mock.side_effect = [MockResponse(a_value), MockResponse(aaaa_value)]
+
+        zone = Zone('example.com.', [])
+        DdnsSource(
+            'dynamic',
+            urls={'A': 'https://foo.bar/v4', 'AAAA': 'https://foo.bar/v6'},
+        ).populate(zone)
+        records = sorted(list(zone.records))
+        self.assertEqual(2, len(records))
+        a = records[0]
+        self.assertEqual([a_value], a.values)
+        aaaa = records[1]
+        self.assertEqual([aaaa_value], aaaa.values)
+
+        mock.assert_has_calls(
+            [call('https://foo.bar/v4'), call('https://foo.bar/v6')]
+        )
+```

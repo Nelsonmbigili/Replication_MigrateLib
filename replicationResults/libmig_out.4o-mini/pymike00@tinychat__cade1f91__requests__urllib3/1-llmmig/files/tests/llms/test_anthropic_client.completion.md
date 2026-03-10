@@ -1,0 +1,81 @@
+### Explanation of Changes
+To migrate the code from using the `requests` library to the `urllib3` library, the following changes were made:
+
+1. **Importing `urllib3`**: The `requests` library was replaced with `urllib3`. The `requests.post` method was replaced with `urllib3.PoolManager().request` to perform HTTP POST requests.
+2. **Response Handling**: The `Response` object from `requests` was replaced with the response returned by `urllib3`, which is accessed through the `data` attribute of the response object.
+3. **Mocking**: The mocking of the response was adjusted to reflect the structure of the `urllib3` response.
+
+Here is the modified code:
+
+```python
+import json
+import unittest
+from unittest.mock import MagicMock, Mock, patch
+import urllib3
+
+from tinychat.llms.anthropic import AnthropicAIClient
+
+
+class TestAnthropicAIClientStreaming(unittest.TestCase):
+    @patch("tinychat.llms.anthropic.urllib3.PoolManager")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_success(self, mock_api_key, mock_pool_manager):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+
+        # Mocking the response
+        mock_response = Mock()
+        mock_response.status = 200
+        mock_response.data = json.dumps(
+            {"type": "content_block_delta", "delta": {"text": "part1"}}
+        ).encode('utf-8')
+        mock_pool_manager.return_value.request.return_value = mock_response
+
+        # Creating mock events
+        mock_event1 = MagicMock()
+        mock_event1.data = json.dumps(
+            {"type": "content_block_delta", "delta": {"text": "part1"}}
+        )
+        mock_event2 = MagicMock()
+        mock_event2.data = json.dumps(
+            {"type": "content_block_delta", "delta": {"text": "part2"}}
+        )
+        mock_event_done = MagicMock()
+        mock_event_done.data = json.dumps({"type": "done"})
+
+        # Mocking SSEClient to return test events
+        with patch("tinychat.llms.anthropic.SSEClient") as mock_sse_client:
+            test_stream = iter([mock_event1, mock_event2, mock_event_done])
+            mock_sse_client.return_value.events = MagicMock(return_value=test_stream)
+
+            client = AnthropicAIClient(model_name="test_model", temperature=0.0)
+            messages = [{"role": "user", "content": "hello"}]
+            stream = client.perform_stream_request(messages)
+
+            # Extracting and verifying the stream response
+            responses = []
+            for event in stream.events():
+                event_data = json.loads(event.data)
+                if event_data.get("type") == "content_block_delta":
+                    responses.append(event_data["delta"]["text"])
+
+            self.assertEqual(responses, ["part1", "part2"])
+
+    @patch("tinychat.llms.anthropic.urllib3.PoolManager")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_failure(self, mock_api_key, mock_pool_manager):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+
+        # Mocking the response with an error status code
+        mock_response = Mock()
+        mock_response.status = 400
+        mock_pool_manager.return_value.request.return_value = mock_response
+
+        client = AnthropicAIClient(model_name="test_model", temperature=0.0)
+        messages = [{"role": "user", "content": "hello"}]
+
+        with self.assertRaises(ValueError) as context:
+            next(client.perform_stream_request(messages))
+        self.assertIn(
+            "Server responded with an error. Status Code: 400", str(context.exception)
+        )
+```

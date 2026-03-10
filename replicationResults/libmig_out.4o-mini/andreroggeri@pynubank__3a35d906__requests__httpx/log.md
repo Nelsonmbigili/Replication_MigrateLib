@@ -1,0 +1,196 @@
+## Running premig
+creating venv at /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/andreroggeri@pynubank__3a35d906__requests__httpx/.venv
+installing dependencies
+### running tests
+- test finished with status 1, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 7 files
+### migrating pynubank/exception.py
+### migrating pynubank/utils/certificate_generator.py
+### migrating pynubank/utils/http.py
+### migrating pynubank/utils/mock_http.py
+### migrating tests/test_certificate_generator.py
+### migrating tests/test_discovery.py
+### migrating tests/test_http_client.py
+### running tests
+- test finished with status 1, cov finished with status 0
+### test diff with round premig
+- `tests/test_certificate_generator.py::test_exchange_cert_fails_when_status_code_is_different_from_200: passed != failed`
+- `tests/test_certificate_generator.py::test_exchange_certs: passed != failed`
+- `tests/test_certificate_generator.py::test_request_code: passed != failed`
+- `tests/test_cli.py::test_request_code_exception_should_stop_execution: passed != failed`
+- `tests/test_cli.py::test_should_generate_certs: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[100]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[101]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[102]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[103]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[201]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[202]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[203]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[204]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[205]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[206]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[207]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[208]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[226]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[300]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[301]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[302]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[303]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[304]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[305]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[306]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[307]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[308]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[400]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[401]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[402]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[403]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[404]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[405]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[406]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[407]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[408]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[409]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[410]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[411]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[412]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[413]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[414]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[415]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[416]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[417]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[418]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[420]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[421]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[422]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[423]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[424]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[426]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[428]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[429]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[431]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[440]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[444]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[449]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[450]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[451]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[495]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[496]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[497]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[498]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[499]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[500]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[501]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[502]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[503]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[504]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[505]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[506]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[507]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[508]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[509]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[510]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[511]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[520]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[521]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[522]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[523]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[524]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[525]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[526]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[527]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[530]: passed != failed`
+- `tests/test_http_client.py::test_http_get_handler_throws_exception_on_status_different_of_200[598]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[100]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[101]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[102]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[103]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[201]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[202]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[203]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[204]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[205]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[206]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[207]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[208]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[226]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[300]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[301]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[302]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[303]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[304]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[305]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[306]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[307]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[308]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[400]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[401]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[402]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[403]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[404]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[405]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[406]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[407]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[408]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[409]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[410]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[411]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[412]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[413]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[414]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[415]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[416]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[417]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[418]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[420]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[421]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[422]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[423]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[424]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[426]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[428]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[429]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[431]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[440]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[444]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[449]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[450]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[451]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[495]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[496]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[497]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[498]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[499]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[500]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[501]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[502]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[503]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[504]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[505]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[506]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[507]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[508]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[509]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[510]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[511]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[520]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[521]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[522]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[523]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[524]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[525]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[526]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[527]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[530]: passed != failed`
+- `tests/test_http_client.py::test_http_post_handler_throws_exception_on_status_different_of_200[598]: passed != failed`
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+### Finding async transforms
+- Found 0 functions to mark async including 0 tests
+- Found 0 calls to await
+- async_transform finished

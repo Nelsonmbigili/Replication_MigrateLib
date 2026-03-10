@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="21" time="2.188" timestamp="2026-03-09T19:07:39.732861+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming" name="test_perform_stream_request_failure" time="0.002" /><testcase classname="tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming" name="test_perform_stream_request_success" time="0.002" /><testcase classname="tests.llms.test_anthropic_handler.TestAnthropicAIHandlerStreaming" name="test_stream_response_success" time="0.002" /><testcase classname="tests.llms.test_cohere_client.TestCohereClientStreaming" name="test_perform_stream_request_failure" time="0.001"><failure message="AttributeError: module 'treq' has no attribute 'Response'">self = &lt;tests.llms.test_cohere_client.TestCohereClientStreaming testMethod=test_perform_stream_request_failure&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4374474000'&gt;
+mock_post = &lt;MagicMock name='post' id='4374586192'&gt;
+
+    @patch("tinychat.llms.cohere.treq.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_failure(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+&gt;       mock_response = Mock(spec=treq.Response)
+                                  ^^^^^^^^^^^^^
+E       AttributeError: module 'treq' has no attribute 'Response'
+
+tests/llms/test_cohere_client.py:32: AttributeError</failure></testcase><testcase classname="tests.llms.test_cohere_client.TestCohereClientStreaming" name="test_perform_stream_request_success" time="0.001"><failure message="AttributeError: module 'treq' has no attribute 'Response'">self = &lt;tests.llms.test_cohere_client.TestCohereClientStreaming testMethod=test_perform_stream_request_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4374551632'&gt;
+mock_post = &lt;MagicMock name='post' id='4374578704'&gt;
+
+    @patch("tinychat.llms.cohere.treq.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_success(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+&gt;       mock_response = Mock(spec=treq.Response)
+                                  ^^^^^^^^^^^^^
+E       AttributeError: module 'treq' has no attribute 'Response'
+
+tests/llms/test_cohere_client.py:15: AttributeError</failure></testcase><testcase classname="tests.llms.test_cohere_handler.TestCohereHandlerStreaming" name="test_stream_response_success" time="0.001" /><testcase classname="tests.llms.test_google_client.TestGoogleAIClientStreaming" name="test_perform_stream_request_failure" time="0.001" /><testcase classname="tests.llms.test_google_client.TestGoogleAIClientStreaming" name="test_perform_stream_request_success" time="0.002" /><testcase classname="tests.llms.test_google_handler.TestGoogleGeminiHandlerStreaming" name="test_stream_response" time="0.001" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_api_key_setter_invalid_key" time="0.001" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_api_key_setter_valid_key" time="0.001" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_default_headers" time="0.001" /><testcase classname="tests.llms.test_mistral_client.TestMistralClientStreaming" name="test_perform_stream_request_failure" time="0.001"><failure message="TypeError: 'SSEClient' object is not an iterator">self = &lt;tests.llms.test_mistral_client.TestMistralClientStreaming testMethod=test_perform_stream_request_failure&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4375920528'&gt;
+mock_post = &lt;MagicMock name='post' id='4375978832'&gt;
+
+    @patch("tinychat.llms.mistral.treq.post")  # Updated to treq.post
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_failure(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Setup: Mocking the response with an error status code
+        mock_response = Mock()
+        mock_response.status_code = 400
+        mock_response.json = Mock(return_value={})  # Added to simulate treq response
+        mock_post.return_value = mock_response
+    
+        # Execution
+        client = MistralClient(model_name="test_model", temperature = 0.0)
+        messages = [{"role": "user", "content": "hello"}]
+    
+        # Verification: Expecting a ValueError on error response
+        with self.assertRaises(ValueError) as context:
+&gt;           next(client.perform_stream_request(messages))  # type: ignore
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: 'SSEClient' object is not an iterator
+
+tests/llms/test_mistral_client.py:68: TypeError</failure></testcase><testcase classname="tests.llms.test_mistral_client.TestMistralClientStreaming" name="test_perform_stream_request_success" time="0.002" /><testcase classname="tests.llms.test_mistral_handler.TestMistralHandlerStreaming" name="test_stream_response" time="0.001" /><testcase classname="tests.llms.test_openai_client.TestOpenAIClientStreaming" name="test_perform_stream_request_failure" time="0.001" /><testcase classname="tests.llms.test_openai_client.TestOpenAIClientStreaming" name="test_perform_stream_request_success" time="0.002" /><testcase classname="tests.llms.test_openai_handler.TestOpenAIHandlerStreaming" name="test_stream_response" time="0.001" /><testcase classname="tests.llms.test_together_client.TestTogetherClientStreaming" name="test_perform_stream_request_failure" time="0.001" /><testcase classname="tests.llms.test_together_client.TestTogetherClientStreaming" name="test_perform_stream_request_success" time="0.002" /><testcase classname="tests.llms.test_together_handler.TestTogetherHandlerStreaming" name="test_stream_response" time="0.001" /></testsuite></testsuites>

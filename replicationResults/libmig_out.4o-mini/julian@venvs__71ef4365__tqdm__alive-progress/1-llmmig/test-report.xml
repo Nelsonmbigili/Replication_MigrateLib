@@ -1,0 +1,1454 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="27" skipped="0" tests="83" time="5.652" timestamp="2026-03-07T22:33:58.263057+04:00" hostname="nelsonmbigili.local"><testcase classname="venvs.tests.test_common.TestLocator" name="test_named_virtualenvs_are_children" time="0.003" /><testcase classname="venvs.tests.test_common.TestLocator" name="test_strips_py" time="0.001" /><testcase classname="venvs.tests.test_common.TestLocator" name="test_strips_python" time="0.001" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_add_empty" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_add_with_contents" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_bundles" time="0.004" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_duplicate_link_modules" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_duplicate_link_modules_across_venvs" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_duplicate_links" time="0.001" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_duplicate_links_across_venvs" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_duplicate_mixed_links" time="0.001" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_duplicate_mixed_links_across_venvs" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_empty" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_empty_from_string" time="0.001" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_expansion" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_explicit_python" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_links" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_links_to_same_binary" time="0.002" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_no_such_bundle" time="0.001" /><testcase classname="venvs.tests.test_config.TestConfig" name="test_simple" time="0.004" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_bundles" time="0.051"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_bundles&gt;
+
+    def test_bundles(self):
+        self.assertFalse(self.locator.for_name("a").exists_on(self.filesystem))
+    
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [bundle]
+            dev = ["bar", "bla"]
+    
+            [virtualenv.a]
+            install = ["foo"]
+            install-bundle = ["dev"]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:207: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_changing_a_bundle_recreates_the_venv" time="0.004"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_changing_a_bundle_recreates_the_venv&gt;
+
+    def test_changing_a_bundle_recreates_the_venv(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [bundle]
+            one = ["foo"]
+    
+            [virtualenv.a]
+            install-bundle = ["one"]
+            """,
+        )
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:635: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_conflicting_links" time="0.004" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_conflicting_links_via_rename" time="0.004" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_custom_link_dir" time="0.013"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_custom_link_dir&gt;
+
+    def test_custom_link_dir(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            link = ["foo"]
+            """,
+        )
+    
+        link_dir = self.link_dir.descendant("some", "child", "bin")
+&gt;       self.run_cli(["converge", "--link-dir", str(link_dir)])
+
+venvs/tests/test_converge.py:396: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_invalid_config_recreates_the_venv" time="0.004"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_invalid_config_recreates_the_venv&gt;
+
+    def test_invalid_config_recreates_the_venv(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            """,
+        )
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:686: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_can_be_asked_to_blow_up_immediately_on_create" time="0.005"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_can_be_asked_to_blow_up_immediately_on_create&gt;
+
+    def test_it_can_be_asked_to_blow_up_immediately_on_create(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            [virtualenv.b]
+            [virtualenv.magicExplodingVirtualenvOnCreate]
+            [virtualenv.c]
+            """,
+        )
+    
+        with self.assertRaises(ZeroDivisionError):
+&gt;           self.run_cli(["converge", "--fail-fast"])
+
+venvs/tests/test_converge.py:358: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_can_be_asked_to_blow_up_immediately_on_install" time="0.005"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_can_be_asked_to_blow_up_immediately_on_install&gt;
+
+    def test_it_can_be_asked_to_blow_up_immediately_on_install(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            [virtualenv.b]
+            [virtualenv.magicExplodingVirtualenvOnInstall]
+            [virtualenv.c]
+            """,
+        )
+    
+        with self.assertRaises(ZeroDivisionError):
+&gt;           self.run_cli(["converge", "--fail-fast"])
+
+venvs/tests/test_converge.py:308: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_converges_existing_virtualenvs" time="0.004"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_converges_existing_virtualenvs&gt;
+
+    def test_it_converges_existing_virtualenvs(self):
+        self.assertFalse(self.locator.for_name("a").exists_on(self.filesystem))
+        self.assertFalse(self.locator.for_name("b").exists_on(self.filesystem))
+        self.assertFalse(self.locator.for_name("c").exists_on(self.filesystem))
+    
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            install = ["foo", "bar"]
+            requirements = ["requirements.txt"]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_converges_specified_virtualenvs" time="0.006"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_converges_specified_virtualenvs&gt;
+
+    def test_it_converges_specified_virtualenvs(self):
+        self.assertFalse(self.locator.for_name("a").exists_on(self.filesystem))
+        self.assertFalse(self.locator.for_name("b").exists_on(self.filesystem))
+        self.assertFalse(self.locator.for_name("c").exists_on(self.filesystem))
+    
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            [virtualenv.b]
+            install = ["foo", "bar", "bla"]
+            requirements = ["requirements.txt"]
+            [virtualenv.c]
+            install = ["foo"]
+            link = ["bar", "baz"]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge", "a", "c"])
+
+venvs/tests/test_converge.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_creates_missing_virtualenvs" time="0.006"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_creates_missing_virtualenvs&gt;
+
+    def test_it_creates_missing_virtualenvs(self):
+        self.assertFalse(self.locator.for_name("a").exists_on(self.filesystem))
+        self.assertFalse(self.locator.for_name("b").exists_on(self.filesystem))
+        self.assertFalse(self.locator.for_name("c").exists_on(self.filesystem))
+    
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            [virtualenv.b]
+            install = ["foo", "bar", "bla"]
+            requirements = ["requirements.txt"]
+            [virtualenv.c]
+            install = ["foo", "$HOME", "~/a"]
+            link = ["bar", "baz"]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_does_not_blow_up_by_default_on_create" time="0.005"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_does_not_blow_up_by_default_on_create&gt;
+
+    def test_it_does_not_blow_up_by_default_on_create(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            [virtualenv.b]
+            [virtualenv.magicExplodingVirtualenvOnCreate]
+            [virtualenv.c]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:330: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_does_not_blow_up_by_default_on_install" time="0.005"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_does_not_blow_up_by_default_on_install&gt;
+
+    def test_it_does_not_blow_up_by_default_on_install(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            [virtualenv.b]
+            [virtualenv.magicExplodingVirtualenvOnInstall]
+            [virtualenv.c]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:280: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_does_not_run_post_commands_for_already_converged_envs" time="0.005"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_does_not_run_post_commands_for_already_converged_envs&gt;
+
+    def test_it_does_not_run_post_commands_for_already_converged_envs(self):
+        self.assertFalse(self.locator.for_name("a").exists_on(self.filesystem))
+    
+        file = NamedTemporaryFile(delete=False)
+        self.addCleanup(os.remove, file.name)
+    
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            f"""
+            [virtualenv.a]
+            post-commands = [
+                ["true"],
+                ["touch", "{file.name}"],
+            ]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_runs_post_commands" time="0.005"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_runs_post_commands&gt;
+
+    def test_it_runs_post_commands(self):
+        self.assertFalse(self.locator.for_name("a").exists_on(self.filesystem))
+    
+        file = NamedTemporaryFile(delete=False)
+        self.addCleanup(os.remove, file.name)
+        mtime = os.path.getmtime(file.name)
+        later = timedelta(minutes=10)
+        new_mtime = datetime.fromtimestamp(mtime, tz=timezone.utc) + later
+    
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            f"""
+            [virtualenv.a]
+            post-commands = [
+                ["true"],
+                ["touch", "-t", "{new_mtime:%Y%m%d%H%M}", "{file.name}"],
+            ]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_it_stops_post_commands_on_error" time="0.005"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_it_stops_post_commands_on_error&gt;
+
+    def test_it_stops_post_commands_on_error(self):
+        self.assertFalse(self.locator.for_name("a").exists_on(self.filesystem))
+    
+        file = NamedTemporaryFile(delete=False)
+        self.addCleanup(os.remove, file.name)
+        mtime = os.path.getmtime(file.name)
+    
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            f"""
+            [virtualenv.a]
+            post-commands = [
+                ["false"],
+                ["touch", "{file.name}"],
+            ]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_exists" time="0.005"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_link_exists&gt;
+
+    def test_link_exists(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            link = ["foo"]
+            """,
+        )
+    
+        self.filesystem.touch(self.link_dir.descendant("foo"))
+    
+        with self.assertRaises(FileExists):
+&gt;           self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:415: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_exists_as_broken_symlink" time="0.005"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_link_exists_as_broken_symlink&gt;
+
+    def test_link_exists_as_broken_symlink(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            link = ["foo"]
+            """,
+        )
+    
+        self.filesystem.link(
+            source=self.link_dir.descendant("broken"),
+            to=self.link_dir.descendant("foo"),
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:431: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_m_module" time="0.004"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_link_m_module&gt;
+
+    def test_link_m_module(self):
+        """
+        It links modules run via -m as wrappers.
+        """
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            link-module = ["this"]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:525: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_m_module_does_not_replace_non_venvs_wrappers" time="0.004"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_link_m_module_does_not_replace_non_venvs_wrappers&gt;
+
+    def test_link_m_module_does_not_replace_non_venvs_wrappers(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            link-module = ["this"]
+            """,
+        )
+    
+        self.filesystem.touch(self.link_dir.descendant("this"))
+    
+        with self.assertRaises(FileExists):
+&gt;           self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:608: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_m_module_duplicated" time="0.005" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_m_module_replaces_generated_files" time="0.004"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_link_m_module_replaces_generated_files&gt;
+
+    def test_link_m_module_replaces_generated_files(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            link-module = ["this"]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:583: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_link_m_module_specified_name" time="0.004"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_link_m_module_specified_name&gt;
+
+    def test_link_m_module_specified_name(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            link-module = ["this:that"]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:544: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_linking_the_same_binary_twice" time="0.006"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_linking_the_same_binary_twice&gt;
+
+    def test_linking_the_same_binary_twice(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            link = ["this:that", "this"]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:619: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_missing_config_recreates_the_venv" time="0.004"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_missing_config_recreates_the_venv&gt;
+
+    def test_missing_config_recreates_the_venv(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            """,
+        )
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:666: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_missing_link_dir" time="0.007"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_missing_link_dir&gt;
+
+    def test_missing_link_dir(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            link = ["foo"]
+            """,
+        )
+    
+        self.filesystem.remove_empty_directory(self.link_dir)
+        self.assertFalse(self.filesystem.is_dir(path=self.link_dir))
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:506: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_modifying_a_bundle_recreates_envs_using_it" time="0.004"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_modifying_a_bundle_recreates_envs_using_it&gt;
+
+    def test_modifying_a_bundle_recreates_envs_using_it(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [bundle]
+            dev = ["bar"]
+    
+            [virtualenv.a]
+            install-bundle = ["dev"]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:226: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_no_such_bundle" time="0.004" /><testcase classname="venvs.tests.test_converge.TestConverge" name="test_specified_link_name" time="0.004"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_specified_link_name&gt;
+
+    def test_specified_link_name(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            link = ["foo:fooBar"]
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:487: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_specified_python" time="0.004"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_specified_python&gt;
+
+    def test_specified_python(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            python = "python3"
+            """,
+        )
+    
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:378: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_converge.TestConverge" name="test_valid_json_invalid_config_recreates_the_venv" time="0.004"><failure message="ValueError: invalid literal for int() with base 10: 'a'">self = &lt;venvs.tests.test_converge.TestConverge testMethod=test_valid_json_invalid_config_recreates_the_venv&gt;
+
+    def test_valid_json_invalid_config_recreates_the_venv(self):
+        self.filesystem.set_contents(
+            self.locator.root.descendant("virtualenvs.toml"),
+            """
+            [virtualenv.a]
+            """,
+        )
+&gt;       self.run_cli(["converge"])
+
+venvs/tests/test_converge.py:709: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venvs/tests/utils.py:100: in run_cli
+    result = runner.invoke(
+.venv/lib/python3.11/site-packages/click/testing.py:408: in invoke
+    return_value = cli.main(args=args or (), prog_name=prog_name, **extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/tests/utils.py:142: in main
+    real_main.main(*args, **kwargs)
+.venv/lib/python3.11/site-packages/click/core.py:1078: in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1688: in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:1434: in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/click/core.py:783: in invoke
+    return __callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venvs/converge.py:67: in main
+    for config, virtualenv in _loop(
+venvs/converge.py:132: in _loop
+    progress(venv_config.name)  # Changed to update progress
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:458: in __call__
+    self._handle(*args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+count = 'a'
+
+    def bar(count=1, *, skipped=False):  # for definite mode, i.e. not manual and with total.
+        hook_manager.flush_buffers()  # notify that the current index is about to change.
+&gt;       count = int(count)  # relative value can be negative.
+                ^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: 'a'
+
+.venv/lib/python3.11/site-packages/alive_progress/core/progress.py:196: ValueError</failure></testcase><testcase classname="venvs.tests.test_create.TestCreate" name="test_create_creates_an_env_with_the_given_name" time="0.003" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_handle_empty_config_file" time="0.006" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_install_and_requirements" time="0.005" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_install_default_name" time="0.003" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_install_default_name_with_version_specification" time="0.002" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_install_edit_config" time="0.005" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_install_no_persist" time="0.003" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_link_default_name" time="0.003" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_multiple_installs_one_link" time="0.002" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_multiple_installs_one_link_no_name" time="0.004" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_no_persist_handles_missing_virtualenv_directory" time="0.002" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_persist_handles_missing_config_directory" time="0.006" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_recreate" time="0.003" /><testcase classname="venvs.tests.test_create.TestCreate" name="test_venvs_default_name" time="0.002" /><testcase classname="venvs.tests.test_create.TestIntegration" name="test_it_works" time="0.075" /><testcase classname="venvs.tests.test_find.TestFind" name="test_cannot_specify_random_garbage" time="0.003" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_directory_defaults_to_cwd" time="0.003" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_directory_finds_envs_by_directory" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_directory_with_binary" time="0.003" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_existing_by_dir_fails_for_non_existing_virtualenvs" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_existing_by_dir_succeeds_for_existing_virtualenvs" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_existing_by_name_fails_for_non_existing_virtualenvs" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_existing_by_name_succeeds_for_existing_virtualenvs" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_name_finds_envs_by_name" time="0.002" /><testcase classname="venvs.tests.test_find.TestFind" name="test_find_without_args_finds_the_virtualenv_root" time="0.003" /><testcase classname="venvs.tests.test_remove.TestRemove" name="test_can_remove_non_existing_envs_with_force" time="0.002" /><testcase classname="venvs.tests.test_remove.TestRemove" name="test_cannot_remove_non_existing_envs" time="0.002" /><testcase classname="venvs.tests.test_remove.TestRemove" name="test_remove_multiple" time="0.002" /><testcase classname="venvs.tests.test_remove.TestRemove" name="test_remove_removes_an_env_with_the_given_name" time="0.002" /><testcase classname="venvs.tests.test_temporary.TestTemporary" name="test_env_with_single_install" time="0.002" /><testcase classname="venvs.tests.test_temporary.TestTemporary" name="test_it_creates_a_global_temporary_environment" time="0.002" /><testcase classname="venvs.tests.test_temporary.TestTemporary" name="test_it_recreates_the_environment_if_it_exists" time="0.004" /></testsuite></testsuites>

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="5" failures="5" skipped="1" tests="51" time="2.538" timestamp="2026-03-08T14:15:22.329728+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.integration_test" name="test_country" time="0.008"><failure message="TypeError: HTTPClient.request() got an unexpected keyword argument 'verify'">@pytest.mark.integration
+    def test_country():
+&gt;       country = speedtest.get_our_country()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration_test.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cf_speedtest/speedtest.py:129: in get_our_country
+    r = treq.get(CGI_ENDPOINT, verify=VERIFY_SSL,  proxies=PROXY_DICT)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/treq/api.py:23: in get
+    return _client(kwargs).get(url, headers=headers, _stacklevel=4, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;treq.client.HTTPClient object at 0x110bcf8d0&gt;
+url = 'https://speed.cloudflare.com/cdn-cgi/trace'
+kwargs = {'_stacklevel': 4, 'headers': None, 'proxies': None, 'verify': True}
+
+    def get(self, url: _URLType, **kwargs: Any) -&gt; "Deferred[_Response]":
+        """
+        See :func:`treq.get()`.
+        """
+        kwargs.setdefault("_stacklevel", 3)
+&gt;       return self.request("GET", url, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: HTTPClient.request() got an unexpected keyword argument 'verify'
+
+.venv/lib/python3.11/site-packages/treq/client.py:151: TypeError</failure></testcase><testcase classname="tests.integration_test" name="test_preamble" time="0.000"><failure message="TypeError: HTTPClient.request() got an unexpected keyword argument 'verify'">@pytest.mark.integration
+    def test_preamble():
+&gt;       preamble_text = speedtest.preamble()
+                        ^^^^^^^^^^^^^^^^^^^^
+
+tests/integration_test.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cf_speedtest/speedtest.py:145: in preamble
+    r = treq.get(
+.venv/lib/python3.11/site-packages/treq/api.py:23: in get
+    return _client(kwargs).get(url, headers=headers, _stacklevel=4, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;treq.client.HTTPClient object at 0x110cb90d0&gt;
+url = 'https://speed.cloudflare.com/__down?measId=0&amp;bytes=0'
+kwargs = {'_stacklevel': 4, 'headers': None, 'proxies': None, 'verify': True}
+
+    def get(self, url: _URLType, **kwargs: Any) -&gt; "Deferred[_Response]":
+        """
+        See :func:`treq.get()`.
+        """
+        kwargs.setdefault("_stacklevel", 3)
+&gt;       return self.request("GET", url, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: HTTPClient.request() got an unexpected keyword argument 'verify'
+
+.venv/lib/python3.11/site-packages/treq/client.py:151: TypeError</failure></testcase><testcase classname="tests.integration_test" name="test_main" time="0.002"><failure message="SystemExit: 2">@pytest.mark.integration
+    def test_main():
+&gt;       assert speedtest.main() == 0
+               ^^^^^^^^^^^^^^^^
+
+tests/integration_test.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cf_speedtest/speedtest.py:297: in main
+    args = parser_with_args.parse_args(argv)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/argparse.py:1872: in parse_args
+    self.error(msg % ' '.join(argv))
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/argparse.py:2630: in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ArgumentParser(prog='__main__.py', usage=None, description=None, formatter_class=&lt;class 'argparse.HelpFormatter'&gt;, conflict_handler='error', add_help=True)
+status = 2
+message = '__main__.py: error: unrecognized arguments: --durations-min=5.0 --rootdir /Users/nelsonmbigili/Desktop/Spring 2026/So...lts/libmig_out.4o-mini/12932@cf-speedtest__78d9ee1d__requests__treq/1-llmmig/test-report.json --json-report-indent 2\n'
+
+    def exit(self, status=0, message=None):
+        if message:
+            self._print_message(message, _sys.stderr)
+&gt;       _sys.exit(status)
+E       SystemExit: 2
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/argparse.py:2617: SystemExit</failure></testcase><testcase classname="tests.integration_test" name="test_proxy" time="0.000"><skipped type="pytest.skip" message="will fail without proxy">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/12932@cf-speedtest__78d9ee1d__requests__treq/tests/integration_test.py:31: will fail without proxy</skipped></testcase><testcase classname="tests.integration_test" name="test_nossl" time="0.001"><failure message="TypeError: HTTPClient.request() got an unexpected keyword argument 'verify'">@pytest.mark.integration
+    def test_nossl():
+&gt;       assert speedtest.main(['--verifyssl', 'False']) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration_test.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cf_speedtest/speedtest.py:334: in main
+    speeds = run_standard_test(measurement_sizes, percentile, True, patience)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+cf_speedtest/speedtest.py:201: in run_standard_test
+    print(preamble(), '\n')
+          ^^^^^^^^^^
+cf_speedtest/speedtest.py:145: in preamble
+    r = treq.get(
+.venv/lib/python3.11/site-packages/treq/api.py:23: in get
+    return _client(kwargs).get(url, headers=headers, _stacklevel=4, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;treq.client.HTTPClient object at 0x110cb1250&gt;
+url = 'https://speed.cloudflare.com/__down?measId=0&amp;bytes=0'
+kwargs = {'_stacklevel': 4, 'headers': None, 'proxies': None, 'verify': False}
+
+    def get(self, url: _URLType, **kwargs: Any) -&gt; "Deferred[_Response]":
+        """
+        See :func:`treq.get()`.
+        """
+        kwargs.setdefault("_stacklevel", 3)
+&gt;       return self.request("GET", url, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: HTTPClient.request() got an unexpected keyword argument 'verify'
+
+.venv/lib/python3.11/site-packages/treq/client.py:151: TypeError</failure></testcase><testcase classname="tests.integration_test" name="test_csv_output" time="0.001"><failure message="TypeError: HTTPClient.request() got an unexpected keyword argument 'verify'">@pytest.mark.integration
+    def test_csv_output():
+        temp_file = 'test_output.csv'
+    
+&gt;       assert speedtest.main(['--output', temp_file]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/integration_test.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cf_speedtest/speedtest.py:334: in main
+    speeds = run_standard_test(measurement_sizes, percentile, True, patience)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+cf_speedtest/speedtest.py:201: in run_standard_test
+    print(preamble(), '\n')
+          ^^^^^^^^^^
+cf_speedtest/speedtest.py:145: in preamble
+    r = treq.get(
+.venv/lib/python3.11/site-packages/treq/api.py:23: in get
+    return _client(kwargs).get(url, headers=headers, _stacklevel=4, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;treq.client.HTTPClient object at 0x110c15e10&gt;
+url = 'https://speed.cloudflare.com/__down?measId=0&amp;bytes=0'
+kwargs = {'_stacklevel': 4, 'headers': None, 'proxies': None, 'verify': True}
+
+    def get(self, url: _URLType, **kwargs: Any) -&gt; "Deferred[_Response]":
+        """
+        See :func:`treq.get()`.
+        """
+        kwargs.setdefault("_stacklevel", 3)
+&gt;       return self.request("GET", url, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: HTTPClient.request() got an unexpected keyword argument 'verify'
+
+.venv/lib/python3.11/site-packages/treq/client.py:151: TypeError</failure></testcase><testcase classname="tests.network_test" name="test_get_our_country" time="0.001"><error message="failed on setup with &quot;AttributeError: &lt;module 'cf_speedtest.speedtest' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/12932@cf-speedtest__78d9ee1d__requests__treq/cf_speedtest/speedtest.py'&gt; does not have the attribute 'REQ_SESSION'&quot;">@pytest.fixture
+    def mock_requests_session():
+&gt;       with patch('cf_speedtest.speedtest.REQ_SESSION') as mock_session:
+
+tests/network_test.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1443: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unittest.mock._patch object at 0x110bb7510&gt;
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+&gt;           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: &lt;module 'cf_speedtest.speedtest' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/12932@cf-speedtest__78d9ee1d__requests__treq/cf_speedtest/speedtest.py'&gt; does not have the attribute 'REQ_SESSION'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1416: AttributeError</error></testcase><testcase classname="tests.network_test" name="test_preamble_unit" time="0.000"><error message="failed on setup with &quot;AttributeError: &lt;module 'cf_speedtest.speedtest' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/12932@cf-speedtest__78d9ee1d__requests__treq/cf_speedtest/speedtest.py'&gt; does not have the attribute 'REQ_SESSION'&quot;">@pytest.fixture
+    def mock_requests_session():
+&gt;       with patch('cf_speedtest.speedtest.REQ_SESSION') as mock_session:
+
+tests/network_test.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1443: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unittest.mock._patch object at 0x110cb2e10&gt;
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+&gt;           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: &lt;module 'cf_speedtest.speedtest' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/12932@cf-speedtest__78d9ee1d__requests__treq/cf_speedtest/speedtest.py'&gt; does not have the attribute 'REQ_SESSION'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1416: AttributeError</error></testcase><testcase classname="tests.options_test" name="test_str_to_bool_valid[yes-True]" time="0.001" /><testcase classname="tests.options_test" name="test_str_to_bool_valid[no-False]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_valid[true-True]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_valid[false-False]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_valid[1-True]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_valid[0-False]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_valid[YES-True]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_valid[NO-False]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_valid[True-True]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_valid[False-False]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_valid[y-True]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_valid[n-False]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_invalid[invalid]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_invalid[maybe]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_invalid[2]" time="0.000" /><testcase classname="tests.options_test" name="test_str_to_bool_invalid[-1]" time="0.000" /><testcase classname="tests.options_test" name="test_valid_percentile_valid[0-0]" time="0.000" /><testcase classname="tests.options_test" name="test_valid_percentile_valid[50-50]" time="0.000" /><testcase classname="tests.options_test" name="test_valid_percentile_valid[100-100]" time="0.000" /><testcase classname="tests.options_test" name="test_valid_percentile_invalid[-1]" time="0.000" /><testcase classname="tests.options_test" name="test_valid_percentile_invalid[101]" time="0.000" /><testcase classname="tests.options_test" name="test_valid_percentile_invalid[invalid]" time="0.000" /><testcase classname="tests.options_test" name="test_valid_percentile_invalid[50.5]" time="0.000" /><testcase classname="tests.speedtest_test" name="test_run_tests[down-1000-3-3]" time="0.001" /><testcase classname="tests.speedtest_test" name="test_run_tests[up-1000-5-5]" time="0.001" /><testcase classname="tests.speedtest_test" name="test_run_tests[invalid-1000-2-0]" time="0.001" /><testcase classname="tests.speedtest_test" name="test_run_standard_test" time="0.002" /><testcase classname="tests.speedtest_test" name="test_main_unit[args0-0]" time="0.000"><error message="failed on setup with &quot;AttributeError: &lt;module 'cf_speedtest.speedtest' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/12932@cf-speedtest__78d9ee1d__requests__treq/cf_speedtest/speedtest.py'&gt; does not have the attribute 'REQ_SESSION'&quot;">@pytest.fixture
+    def mock_requests_session():
+&gt;       with patch('cf_speedtest.speedtest.REQ_SESSION') as mock_session:
+
+tests/conftest.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1443: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unittest.mock._patch object at 0x110d29ed0&gt;
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+&gt;           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: &lt;module 'cf_speedtest.speedtest' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/12932@cf-speedtest__78d9ee1d__requests__treq/cf_speedtest/speedtest.py'&gt; does not have the attribute 'REQ_SESSION'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1416: AttributeError</error></testcase><testcase classname="tests.speedtest_test" name="test_main_unit[args1-0]" time="0.000"><error message="failed on setup with &quot;AttributeError: &lt;module 'cf_speedtest.speedtest' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/12932@cf-speedtest__78d9ee1d__requests__treq/cf_speedtest/speedtest.py'&gt; does not have the attribute 'REQ_SESSION'&quot;">@pytest.fixture
+    def mock_requests_session():
+&gt;       with patch('cf_speedtest.speedtest.REQ_SESSION') as mock_session:
+
+tests/conftest.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1443: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unittest.mock._patch object at 0x110cff490&gt;
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+&gt;           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: &lt;module 'cf_speedtest.speedtest' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/12932@cf-speedtest__78d9ee1d__requests__treq/cf_speedtest/speedtest.py'&gt; does not have the attribute 'REQ_SESSION'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1416: AttributeError</error></testcase><testcase classname="tests.speedtest_test" name="test_main_unit[args2-0]" time="0.000"><error message="failed on setup with &quot;AttributeError: &lt;module 'cf_speedtest.speedtest' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/12932@cf-speedtest__78d9ee1d__requests__treq/cf_speedtest/speedtest.py'&gt; does not have the attribute 'REQ_SESSION'&quot;">@pytest.fixture
+    def mock_requests_session():
+&gt;       with patch('cf_speedtest.speedtest.REQ_SESSION') as mock_session:
+
+tests/conftest.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1443: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unittest.mock._patch object at 0x110cd8ad0&gt;
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+&gt;           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: &lt;module 'cf_speedtest.speedtest' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/12932@cf-speedtest__78d9ee1d__requests__treq/cf_speedtest/speedtest.py'&gt; does not have the attribute 'REQ_SESSION'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1416: AttributeError</error></testcase><testcase classname="tests.speedtest_test" name="test_proxy_unit[100.24.216.83:80-expected_dict0]" time="0.001" /><testcase classname="tests.speedtest_test" name="test_proxy_unit[socks5://127.0.0.1:9150-expected_dict1]" time="0.001" /><testcase classname="tests.speedtest_test" name="test_proxy_unit[http://user:pass@10.10.1.10:3128-expected_dict2]" time="0.001" /><testcase classname="tests.speedtest_test" name="test_output_file" time="0.002" /><testcase classname="tests.utils_test" name="test_percentile[data0-50-3]" time="0.000" /><testcase classname="tests.utils_test" name="test_percentile[data1-90-9]" time="0.000" /><testcase classname="tests.utils_test" name="test_percentile[data2-100-1]" time="0.000" /><testcase classname="tests.utils_test" name="test_percentile[data3-0-1]" time="0.000" /><testcase classname="tests.utils_test" name="test_get_server_timing[dur=1234.5-1.2345]" time="0.000" /><testcase classname="tests.utils_test" name="test_get_server_timing[key=value;dur=5678.9-5.6789]" time="0.000" /><testcase classname="tests.utils_test" name="test_get_server_timing[invalid-0.0]" time="0.000" /><testcase classname="tests.utils_test" name="test_get_server_timing[dur=1000-1.0]" time="0.000" /><testcase classname="tests.utils_test" name="test_get_server_timing[start=0;dur=500;desc=&quot;Backend&quot;-0.5]" time="0.000" /></testsuite></testsuites>

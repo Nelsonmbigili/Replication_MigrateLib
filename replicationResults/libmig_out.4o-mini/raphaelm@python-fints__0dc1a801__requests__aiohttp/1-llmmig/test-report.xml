@@ -1,0 +1,869 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="11" failures="2" skipped="2" tests="68" time="4.849" timestamp="2026-03-09T17:19:41.692250+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_client" name="test_get_sepa_accounts" time="0.006"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">fints_server = 'http://127.0.0.1:61922/'
+
+    @pytest.fixture
+    def fints_client(fints_server):
+&gt;       return FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '1234',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+
+tests/test_client.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:1180: in __init__
+    self.connection = FinTSHTTPSConnection(server)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fints/connection.py:30: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x107c3ce10&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client" name="test_get_information" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">fints_server = 'http://127.0.0.1:61922/'
+
+    @pytest.fixture
+    def fints_client(fints_server):
+&gt;       return FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '1234',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+
+tests/test_client.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:1180: in __init__
+    self.connection = FinTSHTTPSConnection(server)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fints/connection.py:30: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x107cbe050&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client" name="test_pin_wrong" time="0.000"><failure message="RuntimeError: no running event loop">fints_server = 'http://127.0.0.1:61922/'
+
+    def test_pin_wrong(fints_server):
+&gt;       client = FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '99999',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+
+tests/test_client.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:1180: in __init__
+    self.connection = FinTSHTTPSConnection(server)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fints/connection.py:30: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x107c8ce10&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</failure></testcase><testcase classname="tests.test_client" name="test_pin_locked" time="0.000"><failure message="RuntimeError: no running event loop">fints_server = 'http://127.0.0.1:61922/'
+
+    def test_pin_locked(fints_server):
+&gt;       client = FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '3938',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+
+tests/test_client.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:1180: in __init__
+    self.connection = FinTSHTTPSConnection(server)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fints/connection.py:30: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1070c6750&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</failure></testcase><testcase classname="tests.test_client" name="test_resume" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">fints_server = 'http://127.0.0.1:61922/'
+
+    @pytest.fixture
+    def fints_client(fints_server):
+&gt;       return FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '1234',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+
+tests/test_client.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:1180: in __init__
+    self.connection = FinTSHTTPSConnection(server)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fints/connection.py:30: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x107ca5e10&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client" name="test_transfer_1step" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">fints_server = 'http://127.0.0.1:61922/'
+
+    @pytest.fixture
+    def fints_client(fints_server):
+&gt;       return FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '1234',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+
+tests/test_client.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:1180: in __init__
+    self.connection = FinTSHTTPSConnection(server)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fints/connection.py:30: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x107f4c290&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client" name="test_transfer_1step_regression" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">fints_server = 'http://127.0.0.1:61922/'
+
+    @pytest.fixture
+    def fints_client(fints_server):
+&gt;       return FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '1234',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+
+tests/test_client.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:1180: in __init__
+    self.connection = FinTSHTTPSConnection(server)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fints/connection.py:30: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x107cc6690&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client" name="test_transfer_2step" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">fints_server = 'http://127.0.0.1:61922/'
+
+    @pytest.fixture
+    def fints_client(fints_server):
+&gt;       return FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '1234',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+
+tests/test_client.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:1180: in __init__
+    self.connection = FinTSHTTPSConnection(server)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fints/connection.py:30: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x107a9f810&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client" name="test_transfer_2step_continue" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">fints_server = 'http://127.0.0.1:61922/'
+
+    @pytest.fixture
+    def fints_client(fints_server):
+&gt;       return FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '1234',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+
+tests/test_client.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:1180: in __init__
+    self.connection = FinTSHTTPSConnection(server)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fints/connection.py:30: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x107cc0050&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client" name="test_tan_wrong" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">fints_server = 'http://127.0.0.1:61922/'
+
+    @pytest.fixture
+    def fints_client(fints_server):
+&gt;       return FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '1234',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+
+tests/test_client.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:1180: in __init__
+    self.connection = FinTSHTTPSConnection(server)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fints/connection.py:30: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x112077a50&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client" name="test_tan_hhduc" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">fints_server = 'http://127.0.0.1:61922/'
+
+    @pytest.fixture
+    def fints_client(fints_server):
+&gt;       return FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '1234',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+
+tests/test_client.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:1180: in __init__
+    self.connection = FinTSHTTPSConnection(server)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fints/connection.py:30: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x107f4d810&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_client" name="test_get_transactions" time="0.000"><error message="failed on setup with &quot;RuntimeError: no running event loop&quot;">fints_server = 'http://127.0.0.1:61922/'
+
+    @pytest.fixture
+    def fints_client(fints_server):
+&gt;       return FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '1234',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+
+tests/test_client.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:1180: in __init__
+    self.connection = FinTSHTTPSConnection(server)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fints/connection.py:30: in __init__
+    self.session = aiohttp.ClientSession()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x107cc3610&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</error></testcase><testcase classname="tests.test_formals" name="test_container_simple" time="0.001" /><testcase classname="tests.test_formals" name="test_container_nested" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_exact" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_variable_1" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_variable_2" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_variable_3" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_variable_iter" time="0.000" /><testcase classname="tests.test_formals" name="test_container_init" time="0.000" /><testcase classname="tests.test_formals" name="test_container_nested_init" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_init" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_variable_init" time="0.000" /><testcase classname="tests.test_formals" name="test_container_naive_parse" time="0.000" /><testcase classname="tests.test_formals" name="test_invalid_spec" time="0.000" /><testcase classname="tests.test_formals" name="test_parse_restrictions" time="0.001" /><testcase classname="tests.test_formals" name="test_unset" time="0.000" /><testcase classname="tests.test_formals" name="test_sequence_repr" time="0.000" /><testcase classname="tests.test_formals" name="test_valuelist_repr" time="0.000" /><testcase classname="tests.test_formals" name="test_empty_list" time="0.000" /><testcase classname="tests.test_formals" name="test_segmentheader_short" time="0.000" /><testcase classname="tests.test_formals" name="test_container_generic" time="0.001" /><testcase classname="tests.test_formals" name="test_find_1" time="0.176" /><testcase classname="tests.test_formals" name="test_find_by_class" time="0.168" /><testcase classname="tests.test_hhd" name="test_flicker_hhd13" time="0.000" /><testcase classname="tests.test_hhd" name="test_flicker_hhd13_old" time="0.000" /><testcase classname="tests.test_hhd" name="test_flicker_hhd13_hbci4java_1" time="0.001"><skipped type="pytest.xfail" message="" /></testcase><testcase classname="tests.test_message_parser" name="test_explode[basic_complicated]" time="0.001" /><testcase classname="tests.test_message_parser" name="test_explode[basic_simple]" time="0.001" /><testcase classname="tests.test_message_parser" name="test_parse_basic[basic_complicated]" time="0.204" /><testcase classname="tests.test_message_parser" name="test_parse_basic[basic_simple]" time="0.005" /><testcase classname="tests.test_message_parser" name="test_parse_other[NOTSET]" time="0.000"><skipped type="pytest.skip" message="got empty parameter set for (input_name)">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/raphaelm@python-fints__0dc1a801__requests__aiohttp/tests/test_message_parser.py:23: got empty parameter set for (input_name)</skipped></testcase><testcase classname="tests.test_message_parser" name="test_parse_counted" time="0.003" /><testcase classname="tests.test_message_parser" name="test_parse_HIRMG2" time="0.001" /><testcase classname="tests.test_message_parser" name="test_extra_colon" time="0.001" /><testcase classname="tests.test_message_parser" name="test_invalid" time="0.001" /><testcase classname="tests.test_message_parser" name="test_robust_mode" time="0.000"><error message="failed on setup with &quot;file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/raphaelm@python-fints__0dc1a801__requests__aiohttp/tests/test_message_parser.py, line 128&#10;  def test_robust_mode(mocker):&#10;E       fixture 'mocker' not found&#10;&gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, extra, extras, fints_server, include_metadata_in_junit_xml, json_metadata, metadata, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory&#10;&gt;       use 'pytest --fixtures [testpath]' for help on them.&#10;&#10;/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/raphaelm@python-fints__0dc1a801__requests__aiohttp/tests/test_message_parser.py:128&quot;">file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/raphaelm@python-fints__0dc1a801__requests__aiohttp/tests/test_message_parser.py, line 128
+  def test_robust_mode(mocker):
+E       fixture 'mocker' not found
+&gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, extra, extras, fints_server, include_metadata_in_junit_xml, json_metadata, metadata, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+&gt;       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/raphaelm@python-fints__0dc1a801__requests__aiohttp/tests/test_message_parser.py:128</error></testcase><testcase classname="tests.test_message_serializer" name="test_serialize_1" time="0.000" /><testcase classname="tests.test_message_serializer" name="test_implode_1" time="0.000" /><testcase classname="tests.test_message_serializer" name="test_implode_shorten" time="0.000" /><testcase classname="tests.test_message_serializer" name="test_implode_roundtrip_simple" time="0.005" /><testcase classname="tests.test_message_serializer" name="test_escape" time="0.000" /><testcase classname="tests.test_message_serializer" name="test_serialize_2" time="0.002" /><testcase classname="tests.test_message_serializer" name="test_serialize_roundtrips_complex_1" time="0.638" /><testcase classname="tests.test_models" name="test_metaclass_foo" time="0.000" /><testcase classname="tests.test_models" name="test_fints3_only_de_and_deg" time="0.001" /><testcase classname="tests.test_models" name="test_segment_subclassing" time="0.000" /><testcase classname="tests.test_models" name="test_descriptor_subclassing" time="0.000" /><testcase classname="tests.test_models" name="test_descriptor_in_use" time="0.000" /><testcase classname="tests.test_models" name="test_data_element_constructor" time="0.000" /><testcase classname="tests.test_models" name="test_fints3_constructor_auto_segmentheader" time="0.000" /><testcase classname="tests.test_models" name="test_data_element_constructor_double_arg" time="0.000" /><testcase classname="tests.test_models" name="test_data_element_setgetdel" time="0.000" /><testcase classname="tests.test_models" name="test_descriptors_independent" time="0.000" /><testcase classname="tests.test_models" name="test_parse_container" time="0.000" /><testcase classname="tests.test_models" name="test_segment_class_type_version" time="0.000" /><testcase classname="tests.test_models" name="test_find_subclass" time="0.001" /><testcase classname="tests.test_models" name="test_nested_output_evalable" time="0.234" /></testsuite></testsuites>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="18" time="2.249" timestamp="2026-03-10T06:28:28.940170+04:00" hostname="nelsonmbigili.local"><testcase classname="cronitor.tests.test_00.SyncTests" name="test_00_monitor_attributes_are_put" time="2.017" /><testcase classname="cronitor.tests.test_config.CronitorTests" name="test_apply_config" time="0.006"><failure message="AttributeError: 'coroutine' object has no attribute 'get'">self = &lt;cronitor.tests.test_config.CronitorTests testMethod=test_apply_config&gt;
+mock = &lt;AsyncMock name='put' id='4376377872'&gt;
+
+    @patch('cronitor.Monitor.put')
+    def test_apply_config(self, mock):
+        cronitor.config = YAML_PATH
+&gt;       cronitor.apply_config()
+
+cronitor/tests/test_config.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+rollback = False
+
+    def apply_config(rollback=False):
+        if not this.config:
+            raise ConfigValidationError("Must set a path to config file e.g. cronitor.config = './cronitor.yaml'")
+    
+        config = read_config(output=True)
+        try:
+            monitors = Monitor.put(monitors=config, rollback=rollback, format=YAML)
+&gt;           job_count = len(monitors.get('jobs', []))
+                            ^^^^^^^^^^^^
+E           AttributeError: 'coroutine' object has no attribute 'get'
+
+cronitor/__init__.py:102: AttributeError</failure></testcase><testcase classname="cronitor.tests.test_config.CronitorTests" name="test_read_config" time="0.003" /><testcase classname="cronitor.tests.test_config.CronitorTests" name="test_validate_config" time="0.004"><failure message="AttributeError: 'coroutine' object has no attribute 'get'">self = &lt;cronitor.tests.test_config.CronitorTests testMethod=test_validate_config&gt;
+mock = &lt;AsyncMock name='put' id='4378679056'&gt;
+
+    @patch('cronitor.Monitor.put', return_value=YAML_DATA)
+    def test_validate_config(self, mock):
+            cronitor.config = YAML_PATH
+&gt;           cronitor.validate_config()
+
+cronitor/tests/test_config.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cronitor/__init__.py:93: in validate_config
+    return apply_config(rollback=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+rollback = True
+
+    def apply_config(rollback=False):
+        if not this.config:
+            raise ConfigValidationError("Must set a path to config file e.g. cronitor.config = './cronitor.yaml'")
+    
+        config = read_config(output=True)
+        try:
+            monitors = Monitor.put(monitors=config, rollback=rollback, format=YAML)
+&gt;           job_count = len(monitors.get('jobs', []))
+                            ^^^^^^^^^^^^
+E           AttributeError: 'coroutine' object has no attribute 'get'
+
+cronitor/__init__.py:102: AttributeError</failure></testcase><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_create_monitor" time="0.000" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_create_monitor_fails" time="0.000" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_create_monitors" time="0.000" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_create_monitors_yaml_body" time="0.000" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_delete_no_id" time="0.000" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_get_monitor_invalid_code" time="0.000" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_update_monitor_data" time="0.000" /><testcase classname="cronitor.tests.test_monitor.MonitorTests" name="test_update_monitor_fails_validation" time="0.000" /><testcase classname="cronitor.tests.test_pings.MonitorPingTests" name="test_convert_metrics_hash" time="0.000" /><testcase classname="cronitor.tests.test_pings.MonitorPingTests" name="test_endpoints" time="0.000" /><testcase classname="cronitor.tests.test_pings.MonitorPingTests" name="test_with_all_params" time="0.000" /><testcase classname="cronitor.tests.test_pings.PingDecoratorTests" name="test_ping_with_non_default_env" time="0.002" /><testcase classname="cronitor.tests.test_pings.PingDecoratorTests" name="test_ping_wraps_function_raises_exception" time="0.001" /><testcase classname="cronitor.tests.test_pings.PingDecoratorTests" name="test_ping_wraps_function_success" time="0.001" /></testsuite></testsuites>

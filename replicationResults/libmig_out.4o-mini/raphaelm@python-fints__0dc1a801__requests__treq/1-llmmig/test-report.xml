@@ -1,0 +1,1972 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="12" skipped="2" tests="68" time="4.782" timestamp="2026-03-08T13:56:31.551792+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_client" name="test_get_sepa_accounts" time="0.019"><failure message="fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?">self = &lt;fints.dialog.FinTSDialog object at 0x107ce9110&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+&gt;               retval = self.send(*segments, internal_send=True)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+fints/dialog.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/dialog.py:138: in send
+    response = self.client.connection.send(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.connection.FinTSHTTPSConnection object at 0x107cde290&gt;
+msg = fints.message.FinTSCustomerMessage([fints.segments.message.HNHBK3(header=fints.formals.SegmentHeader('HNHBK', 1, 3), m...e(pin='1234'))])), fints.segments.message.HNHBS1(header=fints.formals.SegmentHeader('HNHBS', 7, 1), message_number=1)])
+
+    def send(self, msg: FinTSMessage):
+        log_out = io.StringIO()
+        with Password.protect():
+            log_msg = reduce_message_for_log(msg)
+            log_msg.print_nested(stream=log_out, prefix="\t")
+            logger.debug("Sending {}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n{}\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n".format("(abbrv.)" if log_configuration.reduced else "", log_out.getvalue()))
+            log_out.truncate(0)
+    
+        r = treq.post(
+            self.url, data=base64.b64encode(msg.render_bytes()),
+            headers={
+                'Content-Type': 'text/plain',
+            },
+        )
+    
+&gt;       if r.status_code &lt; 200 or r.status_code &gt; 299:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+fints/connection.py:46: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+fints_client = &lt;fints.client.FinTS3PinTanClient object at 0x107cdfd90&gt;
+
+    def test_get_sepa_accounts(fints_client):
+&gt;       with fints_client:
+
+tests/test_client.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:251: in __enter__
+    self._standing_dialog = self._get_dialog()
+                            ^^^^^^^^^^^^^^^^^^
+fints/client.py:274: in _get_dialog
+    self._ensure_system_id()
+fints/client.py:1230: in _ensure_system_id
+    response = dialog.init(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.dialog.FinTSDialog object at 0x107ce9110&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+                retval = self.send(*segments, internal_send=True)
+    
+                if tan_seg:
+                    for resp in retval.responses(tan_seg):
+                        if resp.code in ('0030', '3955'):
+                            self.client.init_tan_response = NeedTANResponse(
+                                None,
+                                retval.find_segment_first('HITAN'),
+                                '_continue_dialog_initialization',
+                                self.client.is_challenge_structured(),
+                                resp.code == '3955',
+                            )
+                self.need_init = False
+                return retval
+            except Exception as e:
+                self.open = False
+                if isinstance(e, (FinTSConnectionError, FinTSClientError)):
+                    raise
+                else:
+&gt;                   raise FinTSDialogInitError("Couldn't establish dialog with bank, Authentication data wrong?") from e
+E                   fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?
+
+fints/dialog.py:104: FinTSDialogInitError</failure></testcase><testcase classname="tests.test_client" name="test_get_information" time="0.004"><failure message="fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?">self = &lt;fints.dialog.FinTSDialog object at 0x107f43b90&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+&gt;               retval = self.send(*segments, internal_send=True)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+fints/dialog.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/dialog.py:138: in send
+    response = self.client.connection.send(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.connection.FinTSHTTPSConnection object at 0x107f40710&gt;
+msg = fints.message.FinTSCustomerMessage([fints.segments.message.HNHBK3(header=fints.formals.SegmentHeader('HNHBK', 1, 3), m...e(pin='1234'))])), fints.segments.message.HNHBS1(header=fints.formals.SegmentHeader('HNHBS', 7, 1), message_number=1)])
+
+    def send(self, msg: FinTSMessage):
+        log_out = io.StringIO()
+        with Password.protect():
+            log_msg = reduce_message_for_log(msg)
+            log_msg.print_nested(stream=log_out, prefix="\t")
+            logger.debug("Sending {}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n{}\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n".format("(abbrv.)" if log_configuration.reduced else "", log_out.getvalue()))
+            log_out.truncate(0)
+    
+        r = treq.post(
+            self.url, data=base64.b64encode(msg.render_bytes()),
+            headers={
+                'Content-Type': 'text/plain',
+            },
+        )
+    
+&gt;       if r.status_code &lt; 200 or r.status_code &gt; 299:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+fints/connection.py:46: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+fints_client = &lt;fints.client.FinTS3PinTanClient object at 0x107f43a50&gt;
+
+    def test_get_information(fints_client):
+&gt;       with fints_client:
+
+tests/test_client.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:251: in __enter__
+    self._standing_dialog = self._get_dialog()
+                            ^^^^^^^^^^^^^^^^^^
+fints/client.py:274: in _get_dialog
+    self._ensure_system_id()
+fints/client.py:1230: in _ensure_system_id
+    response = dialog.init(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.dialog.FinTSDialog object at 0x107f43b90&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+                retval = self.send(*segments, internal_send=True)
+    
+                if tan_seg:
+                    for resp in retval.responses(tan_seg):
+                        if resp.code in ('0030', '3955'):
+                            self.client.init_tan_response = NeedTANResponse(
+                                None,
+                                retval.find_segment_first('HITAN'),
+                                '_continue_dialog_initialization',
+                                self.client.is_challenge_structured(),
+                                resp.code == '3955',
+                            )
+                self.need_init = False
+                return retval
+            except Exception as e:
+                self.open = False
+                if isinstance(e, (FinTSConnectionError, FinTSClientError)):
+                    raise
+                else:
+&gt;                   raise FinTSDialogInitError("Couldn't establish dialog with bank, Authentication data wrong?") from e
+E                   fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?
+
+fints/dialog.py:104: FinTSDialogInitError</failure></testcase><testcase classname="tests.test_client" name="test_pin_wrong" time="0.004"><failure message="fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?">self = &lt;fints.dialog.FinTSDialog object at 0x107ed5490&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+&gt;               retval = self.send(*segments, internal_send=True)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+fints/dialog.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/dialog.py:138: in send
+    response = self.client.connection.send(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.connection.FinTSHTTPSConnection object at 0x107ed4390&gt;
+msg = fints.message.FinTSCustomerMessage([fints.segments.message.HNHBK3(header=fints.formals.SegmentHeader('HNHBK', 1, 3), m...(pin='99999'))])), fints.segments.message.HNHBS1(header=fints.formals.SegmentHeader('HNHBS', 7, 1), message_number=1)])
+
+    def send(self, msg: FinTSMessage):
+        log_out = io.StringIO()
+        with Password.protect():
+            log_msg = reduce_message_for_log(msg)
+            log_msg.print_nested(stream=log_out, prefix="\t")
+            logger.debug("Sending {}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n{}\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n".format("(abbrv.)" if log_configuration.reduced else "", log_out.getvalue()))
+            log_out.truncate(0)
+    
+        r = treq.post(
+            self.url, data=base64.b64encode(msg.render_bytes()),
+            headers={
+                'Content-Type': 'text/plain',
+            },
+        )
+    
+&gt;       if r.status_code &lt; 200 or r.status_code &gt; 299:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+fints/connection.py:46: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+fints_server = 'http://127.0.0.1:59193/'
+
+    def test_pin_wrong(fints_server):
+        client = FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '99999',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+        with pytest.raises(FinTSClientPINError):
+&gt;           with client:
+
+tests/test_client.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:251: in __enter__
+    self._standing_dialog = self._get_dialog()
+                            ^^^^^^^^^^^^^^^^^^
+fints/client.py:274: in _get_dialog
+    self._ensure_system_id()
+fints/client.py:1230: in _ensure_system_id
+    response = dialog.init(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.dialog.FinTSDialog object at 0x107ed5490&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+                retval = self.send(*segments, internal_send=True)
+    
+                if tan_seg:
+                    for resp in retval.responses(tan_seg):
+                        if resp.code in ('0030', '3955'):
+                            self.client.init_tan_response = NeedTANResponse(
+                                None,
+                                retval.find_segment_first('HITAN'),
+                                '_continue_dialog_initialization',
+                                self.client.is_challenge_structured(),
+                                resp.code == '3955',
+                            )
+                self.need_init = False
+                return retval
+            except Exception as e:
+                self.open = False
+                if isinstance(e, (FinTSConnectionError, FinTSClientError)):
+                    raise
+                else:
+&gt;                   raise FinTSDialogInitError("Couldn't establish dialog with bank, Authentication data wrong?") from e
+E                   fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?
+
+fints/dialog.py:104: FinTSDialogInitError</failure></testcase><testcase classname="tests.test_client" name="test_pin_locked" time="0.004"><failure message="fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?">self = &lt;fints.dialog.FinTSDialog object at 0x110058a50&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+&gt;               retval = self.send(*segments, internal_send=True)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+fints/dialog.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/dialog.py:138: in send
+    response = self.client.connection.send(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.connection.FinTSHTTPSConnection object at 0x11005bb50&gt;
+msg = fints.message.FinTSCustomerMessage([fints.segments.message.HNHBK3(header=fints.formals.SegmentHeader('HNHBK', 1, 3), m...e(pin='3938'))])), fints.segments.message.HNHBS1(header=fints.formals.SegmentHeader('HNHBS', 7, 1), message_number=1)])
+
+    def send(self, msg: FinTSMessage):
+        log_out = io.StringIO()
+        with Password.protect():
+            log_msg = reduce_message_for_log(msg)
+            log_msg.print_nested(stream=log_out, prefix="\t")
+            logger.debug("Sending {}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n{}\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n".format("(abbrv.)" if log_configuration.reduced else "", log_out.getvalue()))
+            log_out.truncate(0)
+    
+        r = treq.post(
+            self.url, data=base64.b64encode(msg.render_bytes()),
+            headers={
+                'Content-Type': 'text/plain',
+            },
+        )
+    
+&gt;       if r.status_code &lt; 200 or r.status_code &gt; 299:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+fints/connection.py:46: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+fints_server = 'http://127.0.0.1:59193/'
+
+    def test_pin_locked(fints_server):
+        client = FinTS3PinTanClient(
+            '12345678',
+            'test1',
+            '3938',
+            fints_server,
+            product_id="TEST-123", product_version="1.2.3",
+        )
+        with pytest.raises(FinTSClientTemporaryAuthError):
+&gt;           with client:
+
+tests/test_client.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:251: in __enter__
+    self._standing_dialog = self._get_dialog()
+                            ^^^^^^^^^^^^^^^^^^
+fints/client.py:274: in _get_dialog
+    self._ensure_system_id()
+fints/client.py:1230: in _ensure_system_id
+    response = dialog.init(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.dialog.FinTSDialog object at 0x110058a50&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+                retval = self.send(*segments, internal_send=True)
+    
+                if tan_seg:
+                    for resp in retval.responses(tan_seg):
+                        if resp.code in ('0030', '3955'):
+                            self.client.init_tan_response = NeedTANResponse(
+                                None,
+                                retval.find_segment_first('HITAN'),
+                                '_continue_dialog_initialization',
+                                self.client.is_challenge_structured(),
+                                resp.code == '3955',
+                            )
+                self.need_init = False
+                return retval
+            except Exception as e:
+                self.open = False
+                if isinstance(e, (FinTSConnectionError, FinTSClientError)):
+                    raise
+                else:
+&gt;                   raise FinTSDialogInitError("Couldn't establish dialog with bank, Authentication data wrong?") from e
+E                   fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?
+
+fints/dialog.py:104: FinTSDialogInitError</failure></testcase><testcase classname="tests.test_client" name="test_resume" time="0.004"><failure message="fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?">self = &lt;fints.dialog.FinTSDialog object at 0x110052890&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+&gt;               retval = self.send(*segments, internal_send=True)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+fints/dialog.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/dialog.py:138: in send
+    response = self.client.connection.send(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.connection.FinTSHTTPSConnection object at 0x110053e50&gt;
+msg = fints.message.FinTSCustomerMessage([fints.segments.message.HNHBK3(header=fints.formals.SegmentHeader('HNHBK', 1, 3), m...e(pin='1234'))])), fints.segments.message.HNHBS1(header=fints.formals.SegmentHeader('HNHBS', 7, 1), message_number=1)])
+
+    def send(self, msg: FinTSMessage):
+        log_out = io.StringIO()
+        with Password.protect():
+            log_msg = reduce_message_for_log(msg)
+            log_msg.print_nested(stream=log_out, prefix="\t")
+            logger.debug("Sending {}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n{}\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n".format("(abbrv.)" if log_configuration.reduced else "", log_out.getvalue()))
+            log_out.truncate(0)
+    
+        r = treq.post(
+            self.url, data=base64.b64encode(msg.render_bytes()),
+            headers={
+                'Content-Type': 'text/plain',
+            },
+        )
+    
+&gt;       if r.status_code &lt; 200 or r.status_code &gt; 299:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+fints/connection.py:46: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+fints_client = &lt;fints.client.FinTS3PinTanClient object at 0x110053b10&gt;
+fints_server = 'http://127.0.0.1:59193/'
+
+    def test_resume(fints_client, fints_server):
+&gt;       with fints_client:
+
+tests/test_client.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:251: in __enter__
+    self._standing_dialog = self._get_dialog()
+                            ^^^^^^^^^^^^^^^^^^
+fints/client.py:274: in _get_dialog
+    self._ensure_system_id()
+fints/client.py:1230: in _ensure_system_id
+    response = dialog.init(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.dialog.FinTSDialog object at 0x110052890&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+                retval = self.send(*segments, internal_send=True)
+    
+                if tan_seg:
+                    for resp in retval.responses(tan_seg):
+                        if resp.code in ('0030', '3955'):
+                            self.client.init_tan_response = NeedTANResponse(
+                                None,
+                                retval.find_segment_first('HITAN'),
+                                '_continue_dialog_initialization',
+                                self.client.is_challenge_structured(),
+                                resp.code == '3955',
+                            )
+                self.need_init = False
+                return retval
+            except Exception as e:
+                self.open = False
+                if isinstance(e, (FinTSConnectionError, FinTSClientError)):
+                    raise
+                else:
+&gt;                   raise FinTSDialogInitError("Couldn't establish dialog with bank, Authentication data wrong?") from e
+E                   fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?
+
+fints/dialog.py:104: FinTSDialogInitError</failure></testcase><testcase classname="tests.test_client" name="test_transfer_1step" time="0.004"><failure message="fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?">self = &lt;fints.dialog.FinTSDialog object at 0x1102ca210&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+&gt;               retval = self.send(*segments, internal_send=True)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+fints/dialog.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/dialog.py:138: in send
+    response = self.client.connection.send(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.connection.FinTSHTTPSConnection object at 0x1102c9f90&gt;
+msg = fints.message.FinTSCustomerMessage([fints.segments.message.HNHBK3(header=fints.formals.SegmentHeader('HNHBK', 1, 3), m...e(pin='1234'))])), fints.segments.message.HNHBS1(header=fints.formals.SegmentHeader('HNHBS', 7, 1), message_number=1)])
+
+    def send(self, msg: FinTSMessage):
+        log_out = io.StringIO()
+        with Password.protect():
+            log_msg = reduce_message_for_log(msg)
+            log_msg.print_nested(stream=log_out, prefix="\t")
+            logger.debug("Sending {}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n{}\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n".format("(abbrv.)" if log_configuration.reduced else "", log_out.getvalue()))
+            log_out.truncate(0)
+    
+        r = treq.post(
+            self.url, data=base64.b64encode(msg.render_bytes()),
+            headers={
+                'Content-Type': 'text/plain',
+            },
+        )
+    
+&gt;       if r.status_code &lt; 200 or r.status_code &gt; 299:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+fints/connection.py:46: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+fints_client = &lt;fints.client.FinTS3PinTanClient object at 0x1102cad50&gt;
+
+    def test_transfer_1step(fints_client):
+&gt;       with fints_client:
+
+tests/test_client.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:251: in __enter__
+    self._standing_dialog = self._get_dialog()
+                            ^^^^^^^^^^^^^^^^^^
+fints/client.py:274: in _get_dialog
+    self._ensure_system_id()
+fints/client.py:1230: in _ensure_system_id
+    response = dialog.init(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.dialog.FinTSDialog object at 0x1102ca210&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+                retval = self.send(*segments, internal_send=True)
+    
+                if tan_seg:
+                    for resp in retval.responses(tan_seg):
+                        if resp.code in ('0030', '3955'):
+                            self.client.init_tan_response = NeedTANResponse(
+                                None,
+                                retval.find_segment_first('HITAN'),
+                                '_continue_dialog_initialization',
+                                self.client.is_challenge_structured(),
+                                resp.code == '3955',
+                            )
+                self.need_init = False
+                return retval
+            except Exception as e:
+                self.open = False
+                if isinstance(e, (FinTSConnectionError, FinTSClientError)):
+                    raise
+                else:
+&gt;                   raise FinTSDialogInitError("Couldn't establish dialog with bank, Authentication data wrong?") from e
+E                   fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?
+
+fints/dialog.py:104: FinTSDialogInitError</failure></testcase><testcase classname="tests.test_client" name="test_transfer_1step_regression" time="0.004"><failure message="fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?">self = &lt;fints.dialog.FinTSDialog object at 0x1101b3950&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+&gt;               retval = self.send(*segments, internal_send=True)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+fints/dialog.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/dialog.py:138: in send
+    response = self.client.connection.send(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.connection.FinTSHTTPSConnection object at 0x1101b1210&gt;
+msg = fints.message.FinTSCustomerMessage([fints.segments.message.HNHBK3(header=fints.formals.SegmentHeader('HNHBK', 1, 3), m...e(pin='1234'))])), fints.segments.message.HNHBS1(header=fints.formals.SegmentHeader('HNHBS', 7, 1), message_number=1)])
+
+    def send(self, msg: FinTSMessage):
+        log_out = io.StringIO()
+        with Password.protect():
+            log_msg = reduce_message_for_log(msg)
+            log_msg.print_nested(stream=log_out, prefix="\t")
+            logger.debug("Sending {}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n{}\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n".format("(abbrv.)" if log_configuration.reduced else "", log_out.getvalue()))
+            log_out.truncate(0)
+    
+        r = treq.post(
+            self.url, data=base64.b64encode(msg.render_bytes()),
+            headers={
+                'Content-Type': 'text/plain',
+            },
+        )
+    
+&gt;       if r.status_code &lt; 200 or r.status_code &gt; 299:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+fints/connection.py:46: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+fints_client = &lt;fints.client.FinTS3PinTanClient object at 0x1101b2810&gt;
+
+    def test_transfer_1step_regression(fints_client):
+        # Passing a float is not officially supported, but should not fail with wrong values
+        # Decimal(1.23) is Decimal('1.229999999999999982236431605997495353221893310546875')
+        # which emphatically should not be cut to 122 cents.
+    
+&gt;       with fints_client:
+
+tests/test_client.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:251: in __enter__
+    self._standing_dialog = self._get_dialog()
+                            ^^^^^^^^^^^^^^^^^^
+fints/client.py:274: in _get_dialog
+    self._ensure_system_id()
+fints/client.py:1230: in _ensure_system_id
+    response = dialog.init(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.dialog.FinTSDialog object at 0x1101b3950&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+                retval = self.send(*segments, internal_send=True)
+    
+                if tan_seg:
+                    for resp in retval.responses(tan_seg):
+                        if resp.code in ('0030', '3955'):
+                            self.client.init_tan_response = NeedTANResponse(
+                                None,
+                                retval.find_segment_first('HITAN'),
+                                '_continue_dialog_initialization',
+                                self.client.is_challenge_structured(),
+                                resp.code == '3955',
+                            )
+                self.need_init = False
+                return retval
+            except Exception as e:
+                self.open = False
+                if isinstance(e, (FinTSConnectionError, FinTSClientError)):
+                    raise
+                else:
+&gt;                   raise FinTSDialogInitError("Couldn't establish dialog with bank, Authentication data wrong?") from e
+E                   fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?
+
+fints/dialog.py:104: FinTSDialogInitError</failure></testcase><testcase classname="tests.test_client" name="test_transfer_2step" time="0.004"><failure message="fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?">self = &lt;fints.dialog.FinTSDialog object at 0x11021eb90&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+&gt;               retval = self.send(*segments, internal_send=True)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+fints/dialog.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/dialog.py:138: in send
+    response = self.client.connection.send(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.connection.FinTSHTTPSConnection object at 0x11021f810&gt;
+msg = fints.message.FinTSCustomerMessage([fints.segments.message.HNHBK3(header=fints.formals.SegmentHeader('HNHBK', 1, 3), m...e(pin='1234'))])), fints.segments.message.HNHBS1(header=fints.formals.SegmentHeader('HNHBS', 7, 1), message_number=1)])
+
+    def send(self, msg: FinTSMessage):
+        log_out = io.StringIO()
+        with Password.protect():
+            log_msg = reduce_message_for_log(msg)
+            log_msg.print_nested(stream=log_out, prefix="\t")
+            logger.debug("Sending {}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n{}\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n".format("(abbrv.)" if log_configuration.reduced else "", log_out.getvalue()))
+            log_out.truncate(0)
+    
+        r = treq.post(
+            self.url, data=base64.b64encode(msg.render_bytes()),
+            headers={
+                'Content-Type': 'text/plain',
+            },
+        )
+    
+&gt;       if r.status_code &lt; 200 or r.status_code &gt; 299:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+fints/connection.py:46: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+fints_client = &lt;fints.client.FinTS3PinTanClient object at 0x11021e9d0&gt;
+
+    def test_transfer_2step(fints_client):
+&gt;       with fints_client:
+
+tests/test_client.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:251: in __enter__
+    self._standing_dialog = self._get_dialog()
+                            ^^^^^^^^^^^^^^^^^^
+fints/client.py:274: in _get_dialog
+    self._ensure_system_id()
+fints/client.py:1230: in _ensure_system_id
+    response = dialog.init(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.dialog.FinTSDialog object at 0x11021eb90&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+                retval = self.send(*segments, internal_send=True)
+    
+                if tan_seg:
+                    for resp in retval.responses(tan_seg):
+                        if resp.code in ('0030', '3955'):
+                            self.client.init_tan_response = NeedTANResponse(
+                                None,
+                                retval.find_segment_first('HITAN'),
+                                '_continue_dialog_initialization',
+                                self.client.is_challenge_structured(),
+                                resp.code == '3955',
+                            )
+                self.need_init = False
+                return retval
+            except Exception as e:
+                self.open = False
+                if isinstance(e, (FinTSConnectionError, FinTSClientError)):
+                    raise
+                else:
+&gt;                   raise FinTSDialogInitError("Couldn't establish dialog with bank, Authentication data wrong?") from e
+E                   fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?
+
+fints/dialog.py:104: FinTSDialogInitError</failure></testcase><testcase classname="tests.test_client" name="test_transfer_2step_continue" time="0.004"><failure message="fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?">self = &lt;fints.dialog.FinTSDialog object at 0x11002afd0&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+&gt;               retval = self.send(*segments, internal_send=True)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+fints/dialog.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/dialog.py:138: in send
+    response = self.client.connection.send(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.connection.FinTSHTTPSConnection object at 0x110028d10&gt;
+msg = fints.message.FinTSCustomerMessage([fints.segments.message.HNHBK3(header=fints.formals.SegmentHeader('HNHBK', 1, 3), m...e(pin='1234'))])), fints.segments.message.HNHBS1(header=fints.formals.SegmentHeader('HNHBS', 7, 1), message_number=1)])
+
+    def send(self, msg: FinTSMessage):
+        log_out = io.StringIO()
+        with Password.protect():
+            log_msg = reduce_message_for_log(msg)
+            log_msg.print_nested(stream=log_out, prefix="\t")
+            logger.debug("Sending {}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n{}\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n".format("(abbrv.)" if log_configuration.reduced else "", log_out.getvalue()))
+            log_out.truncate(0)
+    
+        r = treq.post(
+            self.url, data=base64.b64encode(msg.render_bytes()),
+            headers={
+                'Content-Type': 'text/plain',
+            },
+        )
+    
+&gt;       if r.status_code &lt; 200 or r.status_code &gt; 299:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+fints/connection.py:46: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+fints_client = &lt;fints.client.FinTS3PinTanClient object at 0x110029310&gt;
+
+    def test_transfer_2step_continue(fints_client):
+&gt;       with fints_client:
+
+tests/test_client.py:163: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:251: in __enter__
+    self._standing_dialog = self._get_dialog()
+                            ^^^^^^^^^^^^^^^^^^
+fints/client.py:274: in _get_dialog
+    self._ensure_system_id()
+fints/client.py:1230: in _ensure_system_id
+    response = dialog.init(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.dialog.FinTSDialog object at 0x11002afd0&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+                retval = self.send(*segments, internal_send=True)
+    
+                if tan_seg:
+                    for resp in retval.responses(tan_seg):
+                        if resp.code in ('0030', '3955'):
+                            self.client.init_tan_response = NeedTANResponse(
+                                None,
+                                retval.find_segment_first('HITAN'),
+                                '_continue_dialog_initialization',
+                                self.client.is_challenge_structured(),
+                                resp.code == '3955',
+                            )
+                self.need_init = False
+                return retval
+            except Exception as e:
+                self.open = False
+                if isinstance(e, (FinTSConnectionError, FinTSClientError)):
+                    raise
+                else:
+&gt;                   raise FinTSDialogInitError("Couldn't establish dialog with bank, Authentication data wrong?") from e
+E                   fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?
+
+fints/dialog.py:104: FinTSDialogInitError</failure></testcase><testcase classname="tests.test_client" name="test_tan_wrong" time="0.004"><failure message="fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?">self = &lt;fints.dialog.FinTSDialog object at 0x1101218d0&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+&gt;               retval = self.send(*segments, internal_send=True)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+fints/dialog.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/dialog.py:138: in send
+    response = self.client.connection.send(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.connection.FinTSHTTPSConnection object at 0x110120d50&gt;
+msg = fints.message.FinTSCustomerMessage([fints.segments.message.HNHBK3(header=fints.formals.SegmentHeader('HNHBK', 1, 3), m...e(pin='1234'))])), fints.segments.message.HNHBS1(header=fints.formals.SegmentHeader('HNHBS', 7, 1), message_number=1)])
+
+    def send(self, msg: FinTSMessage):
+        log_out = io.StringIO()
+        with Password.protect():
+            log_msg = reduce_message_for_log(msg)
+            log_msg.print_nested(stream=log_out, prefix="\t")
+            logger.debug("Sending {}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n{}\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n".format("(abbrv.)" if log_configuration.reduced else "", log_out.getvalue()))
+            log_out.truncate(0)
+    
+        r = treq.post(
+            self.url, data=base64.b64encode(msg.render_bytes()),
+            headers={
+                'Content-Type': 'text/plain',
+            },
+        )
+    
+&gt;       if r.status_code &lt; 200 or r.status_code &gt; 299:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+fints/connection.py:46: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+fints_client = &lt;fints.client.FinTS3PinTanClient object at 0x110122f10&gt;
+
+    def test_tan_wrong(fints_client):
+&gt;       with fints_client:
+
+tests/test_client.py:185: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:251: in __enter__
+    self._standing_dialog = self._get_dialog()
+                            ^^^^^^^^^^^^^^^^^^
+fints/client.py:274: in _get_dialog
+    self._ensure_system_id()
+fints/client.py:1230: in _ensure_system_id
+    response = dialog.init(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.dialog.FinTSDialog object at 0x1101218d0&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+                retval = self.send(*segments, internal_send=True)
+    
+                if tan_seg:
+                    for resp in retval.responses(tan_seg):
+                        if resp.code in ('0030', '3955'):
+                            self.client.init_tan_response = NeedTANResponse(
+                                None,
+                                retval.find_segment_first('HITAN'),
+                                '_continue_dialog_initialization',
+                                self.client.is_challenge_structured(),
+                                resp.code == '3955',
+                            )
+                self.need_init = False
+                return retval
+            except Exception as e:
+                self.open = False
+                if isinstance(e, (FinTSConnectionError, FinTSClientError)):
+                    raise
+                else:
+&gt;                   raise FinTSDialogInitError("Couldn't establish dialog with bank, Authentication data wrong?") from e
+E                   fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?
+
+fints/dialog.py:104: FinTSDialogInitError</failure></testcase><testcase classname="tests.test_client" name="test_tan_hhduc" time="0.004"><failure message="fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?">self = &lt;fints.dialog.FinTSDialog object at 0x1102595d0&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+&gt;               retval = self.send(*segments, internal_send=True)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+fints/dialog.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/dialog.py:138: in send
+    response = self.client.connection.send(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.connection.FinTSHTTPSConnection object at 0x110258990&gt;
+msg = fints.message.FinTSCustomerMessage([fints.segments.message.HNHBK3(header=fints.formals.SegmentHeader('HNHBK', 1, 3), m...e(pin='1234'))])), fints.segments.message.HNHBS1(header=fints.formals.SegmentHeader('HNHBS', 7, 1), message_number=1)])
+
+    def send(self, msg: FinTSMessage):
+        log_out = io.StringIO()
+        with Password.protect():
+            log_msg = reduce_message_for_log(msg)
+            log_msg.print_nested(stream=log_out, prefix="\t")
+            logger.debug("Sending {}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n{}\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n".format("(abbrv.)" if log_configuration.reduced else "", log_out.getvalue()))
+            log_out.truncate(0)
+    
+        r = treq.post(
+            self.url, data=base64.b64encode(msg.render_bytes()),
+            headers={
+                'Content-Type': 'text/plain',
+            },
+        )
+    
+&gt;       if r.status_code &lt; 200 or r.status_code &gt; 299:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+fints/connection.py:46: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+fints_client = &lt;fints.client.FinTS3PinTanClient object at 0x110259310&gt;
+
+    def test_tan_hhduc(fints_client):
+&gt;       with fints_client:
+
+tests/test_client.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:251: in __enter__
+    self._standing_dialog = self._get_dialog()
+                            ^^^^^^^^^^^^^^^^^^
+fints/client.py:274: in _get_dialog
+    self._ensure_system_id()
+fints/client.py:1230: in _ensure_system_id
+    response = dialog.init(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.dialog.FinTSDialog object at 0x1102595d0&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+                retval = self.send(*segments, internal_send=True)
+    
+                if tan_seg:
+                    for resp in retval.responses(tan_seg):
+                        if resp.code in ('0030', '3955'):
+                            self.client.init_tan_response = NeedTANResponse(
+                                None,
+                                retval.find_segment_first('HITAN'),
+                                '_continue_dialog_initialization',
+                                self.client.is_challenge_structured(),
+                                resp.code == '3955',
+                            )
+                self.need_init = False
+                return retval
+            except Exception as e:
+                self.open = False
+                if isinstance(e, (FinTSConnectionError, FinTSClientError)):
+                    raise
+                else:
+&gt;                   raise FinTSDialogInitError("Couldn't establish dialog with bank, Authentication data wrong?") from e
+E                   fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?
+
+fints/dialog.py:104: FinTSDialogInitError</failure></testcase><testcase classname="tests.test_client" name="test_get_transactions" time="0.004"><failure message="fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?">self = &lt;fints.dialog.FinTSDialog object at 0x1100851d0&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+&gt;               retval = self.send(*segments, internal_send=True)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+fints/dialog.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/dialog.py:138: in send
+    response = self.client.connection.send(message)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.connection.FinTSHTTPSConnection object at 0x110084a90&gt;
+msg = fints.message.FinTSCustomerMessage([fints.segments.message.HNHBK3(header=fints.formals.SegmentHeader('HNHBK', 1, 3), m...e(pin='1234'))])), fints.segments.message.HNHBS1(header=fints.formals.SegmentHeader('HNHBS', 7, 1), message_number=1)])
+
+    def send(self, msg: FinTSMessage):
+        log_out = io.StringIO()
+        with Password.protect():
+            log_msg = reduce_message_for_log(msg)
+            log_msg.print_nested(stream=log_out, prefix="\t")
+            logger.debug("Sending {}&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n{}\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n".format("(abbrv.)" if log_configuration.reduced else "", log_out.getvalue()))
+            log_out.truncate(0)
+    
+        r = treq.post(
+            self.url, data=base64.b64encode(msg.render_bytes()),
+            headers={
+                'Content-Type': 'text/plain',
+            },
+        )
+    
+&gt;       if r.status_code &lt; 200 or r.status_code &gt; 299:
+           ^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+fints/connection.py:46: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+fints_client = &lt;fints.client.FinTS3PinTanClient object at 0x110085dd0&gt;
+
+    def test_get_transactions(fints_client):
+&gt;       with fints_client:
+
+tests/test_client.py:223: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fints/client.py:251: in __enter__
+    self._standing_dialog = self._get_dialog()
+                            ^^^^^^^^^^^^^^^^^^
+fints/client.py:274: in _get_dialog
+    self._ensure_system_id()
+fints/client.py:1230: in _ensure_system_id
+    response = dialog.init(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fints.dialog.FinTSDialog object at 0x1100851d0&gt;
+extra_segments = (fints.segments.dialog.HKSYN3(header=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID),)
+FinTSClientMode = &lt;enum 'FinTSClientMode'&gt;
+NeedTANResponse = &lt;class 'fints.client.NeedTANResponse'&gt;
+segments = [fints.segments.auth.HKIDN2(header=fints.formals.SegmentHeader('HKIDN', 3, 2), bank_identifier=fints.formals.BankIdent...ader=fints.formals.SegmentHeader('HKSYN', 5, 3), synchronization_mode=fints.formals.SynchronizationMode.NEW_SYSTEM_ID)]
+
+    def init(self, *extra_segments):
+        if self.paused:
+            raise FinTSDialogStateError("Cannot init() a paused dialog")
+    
+        from fints.client import FinTSClientMode, NeedTANResponse
+        if self.client.mode == FinTSClientMode.OFFLINE:
+            raise FinTSDialogOfflineError("Cannot open a dialog with mode=FinTSClientMode.OFFLINE. "
+                                          "This is a control flow error, no online functionality "
+                                          "should have been attempted with this FinTSClient object.")
+    
+        if self.need_init and not self.open:
+            segments = [
+                HKIDN2(
+                    self.client.bank_identifier,
+                    self.client.customer_id,
+                    self.client.system_id,
+                    SystemIDStatus.ID_NECESSARY if self.client.customer_id != CUSTOMER_ID_ANONYMOUS else SystemIDStatus.ID_UNNECESSARY
+                ),
+                HKVVB3(
+                    self.client.bpd_version,
+                    self.client.upd_version,
+                    Language2.DE,
+                    self.client.product_name,
+                    self.client.product_version
+                ),
+            ]
+    
+            if self.client.mode == FinTSClientMode.INTERACTIVE and self.client.get_tan_mechanisms():
+                tan_seg = self.client._get_tan_segment(segments[0], '4')
+                segments.append(tan_seg)
+            else:
+                tan_seg = None
+    
+            for s in extra_segments:
+                segments.append(s)
+    
+            try:
+                self.open = True
+                retval = self.send(*segments, internal_send=True)
+    
+                if tan_seg:
+                    for resp in retval.responses(tan_seg):
+                        if resp.code in ('0030', '3955'):
+                            self.client.init_tan_response = NeedTANResponse(
+                                None,
+                                retval.find_segment_first('HITAN'),
+                                '_continue_dialog_initialization',
+                                self.client.is_challenge_structured(),
+                                resp.code == '3955',
+                            )
+                self.need_init = False
+                return retval
+            except Exception as e:
+                self.open = False
+                if isinstance(e, (FinTSConnectionError, FinTSClientError)):
+                    raise
+                else:
+&gt;                   raise FinTSDialogInitError("Couldn't establish dialog with bank, Authentication data wrong?") from e
+E                   fints.exceptions.FinTSDialogInitError: Couldn't establish dialog with bank, Authentication data wrong?
+
+fints/dialog.py:104: FinTSDialogInitError</failure></testcase><testcase classname="tests.test_formals" name="test_container_simple" time="0.000" /><testcase classname="tests.test_formals" name="test_container_nested" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_exact" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_variable_1" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_variable_2" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_variable_3" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_variable_iter" time="0.000" /><testcase classname="tests.test_formals" name="test_container_init" time="0.000" /><testcase classname="tests.test_formals" name="test_container_nested_init" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_init" time="0.000" /><testcase classname="tests.test_formals" name="test_container_count_variable_init" time="0.000" /><testcase classname="tests.test_formals" name="test_container_naive_parse" time="0.000" /><testcase classname="tests.test_formals" name="test_invalid_spec" time="0.000" /><testcase classname="tests.test_formals" name="test_parse_restrictions" time="0.001" /><testcase classname="tests.test_formals" name="test_unset" time="0.000" /><testcase classname="tests.test_formals" name="test_sequence_repr" time="0.000" /><testcase classname="tests.test_formals" name="test_valuelist_repr" time="0.000" /><testcase classname="tests.test_formals" name="test_empty_list" time="0.000" /><testcase classname="tests.test_formals" name="test_segmentheader_short" time="0.000" /><testcase classname="tests.test_formals" name="test_container_generic" time="0.001" /><testcase classname="tests.test_formals" name="test_find_1" time="0.196" /><testcase classname="tests.test_formals" name="test_find_by_class" time="0.169" /><testcase classname="tests.test_hhd" name="test_flicker_hhd13" time="0.001" /><testcase classname="tests.test_hhd" name="test_flicker_hhd13_old" time="0.000" /><testcase classname="tests.test_hhd" name="test_flicker_hhd13_hbci4java_1" time="0.001"><skipped type="pytest.xfail" message="" /></testcase><testcase classname="tests.test_message_parser" name="test_explode[basic_complicated]" time="0.001" /><testcase classname="tests.test_message_parser" name="test_explode[basic_simple]" time="0.001" /><testcase classname="tests.test_message_parser" name="test_parse_basic[basic_complicated]" time="0.205" /><testcase classname="tests.test_message_parser" name="test_parse_basic[basic_simple]" time="0.005" /><testcase classname="tests.test_message_parser" name="test_parse_other[NOTSET]" time="0.000"><skipped type="pytest.skip" message="got empty parameter set for (input_name)">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/raphaelm@python-fints__0dc1a801__requests__treq/tests/test_message_parser.py:23: got empty parameter set for (input_name)</skipped></testcase><testcase classname="tests.test_message_parser" name="test_parse_counted" time="0.003" /><testcase classname="tests.test_message_parser" name="test_parse_HIRMG2" time="0.001" /><testcase classname="tests.test_message_parser" name="test_extra_colon" time="0.001" /><testcase classname="tests.test_message_parser" name="test_invalid" time="0.001" /><testcase classname="tests.test_message_parser" name="test_robust_mode" time="0.000"><error message="failed on setup with &quot;file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/raphaelm@python-fints__0dc1a801__requests__treq/tests/test_message_parser.py, line 128&#10;  def test_robust_mode(mocker):&#10;E       fixture 'mocker' not found&#10;&gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, extra, extras, fints_server, include_metadata_in_junit_xml, json_metadata, metadata, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory&#10;&gt;       use 'pytest --fixtures [testpath]' for help on them.&#10;&#10;/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/raphaelm@python-fints__0dc1a801__requests__treq/tests/test_message_parser.py:128&quot;">file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/raphaelm@python-fints__0dc1a801__requests__treq/tests/test_message_parser.py, line 128
+  def test_robust_mode(mocker):
+E       fixture 'mocker' not found
+&gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, extra, extras, fints_server, include_metadata_in_junit_xml, json_metadata, metadata, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+&gt;       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/raphaelm@python-fints__0dc1a801__requests__treq/tests/test_message_parser.py:128</error></testcase><testcase classname="tests.test_message_serializer" name="test_serialize_1" time="0.000" /><testcase classname="tests.test_message_serializer" name="test_implode_1" time="0.000" /><testcase classname="tests.test_message_serializer" name="test_implode_shorten" time="0.000" /><testcase classname="tests.test_message_serializer" name="test_implode_roundtrip_simple" time="0.005" /><testcase classname="tests.test_message_serializer" name="test_escape" time="0.000" /><testcase classname="tests.test_message_serializer" name="test_serialize_2" time="0.002" /><testcase classname="tests.test_message_serializer" name="test_serialize_roundtrips_complex_1" time="0.639" /><testcase classname="tests.test_models" name="test_metaclass_foo" time="0.000" /><testcase classname="tests.test_models" name="test_fints3_only_de_and_deg" time="0.001" /><testcase classname="tests.test_models" name="test_segment_subclassing" time="0.000" /><testcase classname="tests.test_models" name="test_descriptor_subclassing" time="0.000" /><testcase classname="tests.test_models" name="test_descriptor_in_use" time="0.000" /><testcase classname="tests.test_models" name="test_data_element_constructor" time="0.000" /><testcase classname="tests.test_models" name="test_fints3_constructor_auto_segmentheader" time="0.000" /><testcase classname="tests.test_models" name="test_data_element_constructor_double_arg" time="0.000" /><testcase classname="tests.test_models" name="test_data_element_setgetdel" time="0.000" /><testcase classname="tests.test_models" name="test_descriptors_independent" time="0.000" /><testcase classname="tests.test_models" name="test_parse_container" time="0.000" /><testcase classname="tests.test_models" name="test_segment_class_type_version" time="0.000" /><testcase classname="tests.test_models" name="test_find_subclass" time="0.001" /><testcase classname="tests.test_models" name="test_nested_output_evalable" time="0.436" /></testsuite></testsuites>

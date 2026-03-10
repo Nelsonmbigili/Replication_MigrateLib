@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="13" time="3.380" timestamp="2026-03-10T17:26:44.186651+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_base.TestBase" name="test_content_type" time="0.001" /><testcase classname="tests.test_base.TestBase" name="test_discover_get" time="0.073"><failure message="AssertionError: &lt;coroutine object BaseLDN.discover at 0x105c3a9b0&gt; != 'http://example.org/inbox'">self = &lt;test_base.TestBase testMethod=test_discover_get&gt;
+mock_head = &lt;MagicMock name='head' id='4389513168'&gt;
+mock_get = &lt;MagicMock name='get' id='4390076496'&gt;
+
+    @patch('requests.get')
+    @patch('requests.head')
+    def test_discover_get(self, mock_head, mock_get):
+        inbox = "http://example.org/inbox"
+        links = {"type": {"url": "http://www.w3.org/ns/ldp#Container"}}
+        headers = {"content-type": "application/n-triples"}
+    
+        mock_res1 = Mock()
+        mock_res1.links = links
+        mock_res1.headers = headers
+        mock_head.return_value = mock_res1
+    
+        mock_res2 = Mock()
+        mock_res2.links = links
+        mock_res2.headers = headers
+        mock_res2.text = "&lt;http://example.org/resource&gt; " + \
+                         "&lt;http://www.w3.org/ns/ldp#inbox&gt; " + \
+                         "&lt;http://example.org/inbox&gt; .\n"
+        mock_get.return_value = mock_res2
+    
+        ldn = BaseLDN()
+&gt;       self.assertEqual(ldn.discover("http://example.org/resource"), inbox)
+E       AssertionError: &lt;coroutine object BaseLDN.discover at 0x105c3a9b0&gt; != 'http://example.org/inbox'
+
+tests/test_base.py:41: AssertionError</failure></testcase><testcase classname="tests.test_base.TestBase" name="test_discover_head" time="0.001"><failure message="AssertionError: &lt;coroutine object BaseLDN.discover at 0x105cd06a0&gt; != 'http://example.org/inbox'">self = &lt;test_base.TestBase testMethod=test_discover_head&gt;
+mock_head = &lt;MagicMock name='head' id='4392031440'&gt;
+
+    @patch('requests.head')
+    def test_discover_head(self, mock_head):
+        inbox = "http://example.org/inbox"
+        mock_res = Mock()
+        mock_res.links = {"http://www.w3.org/ns/ldp#inbox": {"url": inbox}}
+    
+        mock_head.return_value = mock_res
+    
+        ldn = BaseLDN()
+&gt;       self.assertEqual(ldn.discover("http://example.org/resource"), inbox)
+E       AssertionError: &lt;coroutine object BaseLDN.discover at 0x105cd06a0&gt; != 'http://example.org/inbox'
+
+tests/test_base.py:18: AssertionError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notification_jsonld" time="0.001"><failure message="TypeError: object of type 'coroutine' has no len()">self = &lt;test_consumer.TestConsumer testMethod=test_notification_jsonld&gt;
+mock_get = &lt;MagicMock name='get' id='4392037456'&gt;
+
+    @patch('requests.get')
+    def test_notification_jsonld(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/notification1.json", "r") as f:
+            attrs = {'json.return_value': json.loads("[" + f.read() + "]")}
+            mock_res.configure_mock(**attrs)
+    
+        mock_get.return_value = mock_res
+    
+        notification = Consumer().notification("http://example.org/inbox/1")
+&gt;       self.assertTrue(1, len(notification))
+                           ^^^^^^^^^^^^^^^^^
+E       TypeError: object of type 'coroutine' has no len()
+
+tests/test_consumer.py:112: TypeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notification_turtle" time="0.001"><failure message="TypeError: object of type 'coroutine' has no len()">self = &lt;test_consumer.TestConsumer testMethod=test_notification_turtle&gt;
+mock_get = &lt;MagicMock name='get' id='4392221456'&gt;
+
+    @patch('requests.get')
+    def test_notification_turtle(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "text/turtle; charset=utf-8"}
+        with open("tests/notification.ttl", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+        notification = Consumer().notification("http://example.org/inbox/1")
+&gt;       self.assertTrue(1, len(notification))
+                           ^^^^^^^^^^^^^^^^^
+E       TypeError: object of type 'coroutine' has no len()
+
+tests/test_consumer.py:92: TypeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_jsonld_compacted" time="0.001"><failure message="TypeError: object of type 'coroutine' has no len()">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_jsonld_compacted&gt;
+mock_get = &lt;MagicMock name='get' id='4392160976'&gt;
+
+    @patch('requests.get')
+    def test_notifications_jsonld_compacted(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/inbox.jsonld", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+        notifications = Consumer().notifications("http://example.org/inbox")
+    
+&gt;       self.assertEqual(5, len(notifications))
+                            ^^^^^^^^^^^^^^^^^^
+E       TypeError: object of type 'coroutine' has no len()
+
+tests/test_consumer.py:39: TypeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_jsonld_expanded" time="0.001"><failure message="TypeError: object of type 'coroutine' has no len()">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_jsonld_expanded&gt;
+mock_get = &lt;MagicMock name='get' id='4392469840'&gt;
+
+    @patch('requests.get')
+    def test_notifications_jsonld_expanded(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/ld+json"}
+        with open("tests/inbox_expanded.jsonld", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+        notifications = Consumer().notifications("http://example.org/inbox")
+    
+&gt;       self.assertEqual(5, len(notifications))
+                            ^^^^^^^^^^^^^^^^^^
+E       TypeError: object of type 'coroutine' has no len()
+
+tests/test_consumer.py:57: TypeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_ntriples" time="0.001"><failure message="TypeError: object of type 'coroutine' has no len()">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_ntriples&gt;
+mock_get = &lt;MagicMock name='get' id='4392117072'&gt;
+
+    @patch('requests.get')
+    def test_notifications_ntriples(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "application/n-triples"}
+        with open("tests/inbox.nt", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+        notifications = Consumer().notifications("http://example.org/inbox")
+    
+&gt;       self.assertEqual(5, len(notifications))
+                            ^^^^^^^^^^^^^^^^^^
+E       TypeError: object of type 'coroutine' has no len()
+
+tests/test_consumer.py:21: TypeError</failure></testcase><testcase classname="tests.test_consumer.TestConsumer" name="test_notifications_turtle" time="0.001"><failure message="TypeError: object of type 'coroutine' has no len()">self = &lt;test_consumer.TestConsumer testMethod=test_notifications_turtle&gt;
+mock_get = &lt;MagicMock name='get' id='4392180944'&gt;
+
+    @patch('requests.get')
+    def test_notifications_turtle(self, mock_get):
+        mock_res = Mock()
+        mock_res.headers = {"content-type": "text/turtle; charset=utf-8"}
+        with open("tests/inbox.ttl", "r") as f:
+            mock_res.text = f.read()
+    
+        mock_get.return_value = mock_res
+    
+        notifications = Consumer().notifications("http://example.org/inbox")
+    
+&gt;       self.assertEqual(5, len(notifications))
+                            ^^^^^^^^^^^^^^^^^^
+E       TypeError: object of type 'coroutine' has no len()
+
+tests/test_consumer.py:75: TypeError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_dict" time="0.001"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;test_sender.TestSender testMethod=test_send_dict&gt;
+mock_post = &lt;MagicMock name='post' id='4392032208'&gt;
+
+    @patch('requests.post')
+    def test_send_dict(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = json.loads(f.read())
+    
+        Sender().send(self.INBOX, data)
+        self.assertEqual(dict, type(data))
+&gt;       mock_post.assert_called_once_with(self.INBOX, data=json.dumps(data),
+                                          headers=self.HEADERS)
+
+tests/test_sender.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='post' id='4392032208'&gt;
+args = ('http://example.org/inbox',)
+kwargs = {'data': '{"@context": {"schema": "http://schema.org/", "creator": {"@id": "schema:creator", "@type": "@id"}}, "creator": "http://example.org/user"}', 'headers': {'content-type': 'application/ld+json'}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_graph" time="0.011"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;test_sender.TestSender testMethod=test_send_graph&gt;
+mock_post = &lt;MagicMock name='post' id='4392157968'&gt;
+
+    @patch('requests.post')
+    def test_send_graph(self, mock_post):
+        data = Graph().parse("tests/notification.nt", format="ntriples")
+    
+        Sender().send(self.INBOX, data)
+        self.assertEqual(Graph, type(data))
+&gt;       mock_post.assert_called_once_with(self.INBOX, data=data.serialize(
+            format="application/ld+json"), headers=self.HEADERS)
+
+tests/test_sender.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='post' id='4392157968'&gt;
+args = ('http://example.org/inbox',)
+kwargs = {'data': '[\n  {\n    "@id": "ex:notification",\n    "http://schema.org/creator": [\n      {\n        "@id": "http://example.org/user"\n      }\n    ]\n  }\n]', 'headers': {'content-type': 'application/ld+json'}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_list" time="0.001"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;test_sender.TestSender testMethod=test_send_list&gt;
+mock_post = &lt;MagicMock name='post' id='4391940496'&gt;
+
+    @patch('requests.post')
+    def test_send_list(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = json.loads("[" + f.read() + "]")
+    
+        Sender().send(self.INBOX, data)
+        self.assertEqual(list, type(data))
+&gt;       mock_post.assert_called_once_with(self.INBOX, data=json.dumps(data),
+                                          headers=self.HEADERS)
+
+tests/test_sender.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='post' id='4391940496'&gt;
+args = ('http://example.org/inbox',)
+kwargs = {'data': '[{"@context": {"schema": "http://schema.org/", "creator": {"@id": "schema:creator", "@type": "@id"}}, "creator": "http://example.org/user"}]', 'headers': {'content-type': 'application/ld+json'}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase><testcase classname="tests.test_sender.TestSender" name="test_send_string" time="0.001"><failure message="AssertionError: Expected 'post' to be called once. Called 0 times.">self = &lt;test_sender.TestSender testMethod=test_send_string&gt;
+mock_post = &lt;MagicMock name='post' id='4392117712'&gt;
+
+    @patch('requests.post')
+    def test_send_string(self, mock_post):
+        data = None
+        with open("tests/notification.json", "r") as f:
+            data = f.read()
+    
+        Sender().send(self.INBOX, data)
+        self.assertEqual(str, type(data))
+&gt;       mock_post.assert_called_once_with(self.INBOX, data=data,
+                                          headers=self.HEADERS)
+
+tests/test_sender.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='post' id='4392117712'&gt;
+args = ('http://example.org/inbox',)
+kwargs = {'data': '{\n    "@context" : {\n        "schema" : "http://schema.org/",\n        "creator" : { "@id" : "schema:creat...: "@id" }\n    },\n    "creator" : "http://example.org/user"\n}\n', 'headers': {'content-type': 'application/ld+json'}}
+msg = "Expected 'post' to be called once. Called 0 times."
+
+    def assert_called_once_with(self, /, *args, **kwargs):
+        """assert that the mock was called exactly once and that that call was
+        with the specified arguments."""
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to be called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+&gt;           raise AssertionError(msg)
+E           AssertionError: Expected 'post' to be called once. Called 0 times.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:950: AssertionError</failure></testcase></testsuite></testsuites>

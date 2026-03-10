@@ -1,0 +1,88 @@
+mig: dknowles2@pyschlage__5c48dcd0__requests__httpx__5c48dcd0__requests__httpx
+repo: dknowles2@pyschlage__5c48dcd0__requests__httpx
+commit: 5c48dcd01e5a253a25044155fe03b0411f1105c0
+source: requests
+target: httpx
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 0.28.1
+  finished_at: '2026-03-10 17:20:37'
+  project_coverage: 99.72972972972973
+  total_tests: 58
+  passed_tests: 54
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 64.0
+  files:
+  - path: pyschlage/auth.py
+    file_change_coverage: 41.666666666666664
+    covered_changed_lines: 11,37,57,103,131
+    uncovered_changed_lines: 33,35,53,55,62,65,120
+  - path: pyschlage/device.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 6,67
+    uncovered_changed_lines: ''
+  - path: tests/test_auth.py
+    file_change_coverage: 81.81818181818181
+    covered_changed_lines: 5,11,28,44,75,81-82,103,130
+    uncovered_changed_lines: 86-87
+  test_diffs:
+  - test_id: tests/test_auth.py::test_request_not_authorized
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: 'AssertionError: expected call not found.
+
+      Expected: request(''get'', ''https://api.allegion.yonomi.cloud/v1/foo/bar'',
+      timeout=60, auth=<MagicMock name=''RequestsSrpAuth()'' spec=''RequestsSrpAuth''
+      id=''4406484240''>, headers={''X-Api-Key'': ''hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9''},
+      baz=''bam'')
+
+      Actual: request(''get'', ''https://api.allegion.yonomi.cloud/v1/foo/bar'', baz=''bam'',
+      auth=<MagicMock name=''RequestsSrpAuth()'' spec=''RequestsSrpAuth'' id=''4406484240''>,
+      headers={''X-Api-Key'': ''hnuu9jbbJr7MssFDWm5nU2Z7nG5Q5rxsaqWsE7e9''}, timeout=60)'
+  - test_id: tests/test_auth.py::test_request_unknown_error
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: HTTPStatusError.__init__() missing 2 required keyword-only
+      arguments: ''request'' and ''response'''
+  - test_id: tests/test_lock.py::TestLock::test_add_access_code
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: Mock object has no attribute ''post'''
+  - test_id: tests/test_lock.py::TestLock::test_lock_ble
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: Mock object has no attribute ''post'''
+  - test_id: tests/test_lock.py::TestLock::test_unlock_ble
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: Mock object has no attribute ''post'''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

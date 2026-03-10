@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="44" time="7.488" timestamp="2026-03-10T06:19:04.132954+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_auth.AuthTests" name="test_bad_login" time="1.452" /><testcase classname="tests.test_auth.AuthTests" name="test_get_token" time="0.143" /><testcase classname="tests.test_auth.AuthTests" name="test_get_token_in_body_only" time="0.136" /><testcase classname="tests.test_auth.AuthTests" name="test_get_token_in_cookie_only" time="0.139" /><testcase classname="tests.test_auth.AuthTests" name="test_no_auth" time="0.074" /><testcase classname="tests.test_auth.AuthTests" name="test_no_login" time="0.073" /><testcase classname="tests.test_auth.AuthTests" name="test_oauth" time="0.081"><failure message="AttributeError: module 'api.tokens' has no attribute 'requests'">self = &lt;tests.test_auth.AuthTests testMethod=test_oauth&gt;
+
+    def test_oauth(self):
+        rv = self.client.get('/api/tokens/oauth2/bar')
+        assert rv.status_code == 404
+        rv = self.client.get('/api/tokens/oauth2/foo')
+        assert rv.status_code == 302
+        assert rv.headers['Location'].startswith('https://foo.com/login?')
+        args = rv.headers['Location'].split('?')[1].split('&amp;')
+        assert 'client_id=foo-id' in args
+        assert ('redirect_uri='
+                'http%3A%2F%2Flocalhost%2Foauth2%2Ffoo%2Fcallback') in args
+        assert 'response_type=code' in args
+        assert 'scope=user+email' in args
+        state = None
+        for arg in args:
+            if arg.startswith('state='):
+                state = arg.split('=')[1]
+        assert state is not None
+    
+        # redirect to auth provider
+        rv = self.client.post('/api/tokens/oauth2/bar',
+                              json={'code': '123', 'state': state})
+        assert rv.status_code == 404
+        rv = self.client.post('/api/tokens/oauth2/foo',
+                              json={'code': '123', 'state': 'not-the-state'})
+        assert rv.status_code == 401
+&gt;       with mock.patch('api.tokens.requests.post') as requests_post:
+
+tests/test_auth.py:242: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1427: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'api.tokens.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'api.tokens' has no attribute 'requests'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pkgutil.py:715: AttributeError</failure></testcase><testcase classname="tests.test_auth.AuthTests" name="test_refresh_revoke_all" time="0.216" /><testcase classname="tests.test_auth.AuthTests" name="test_refresh_token" time="0.141" /><testcase classname="tests.test_auth.AuthTests" name="test_refresh_token_failure" time="0.138" /><testcase classname="tests.test_auth.AuthTests" name="test_reset_password" time="0.257" /><testcase classname="tests.test_auth.AuthTests" name="test_revoke" time="0.140" /><testcase classname="tests.test_auth.AuthTests" name="test_token_expired" time="0.137" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_after_asc" time="0.127" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_after_desc" time="0.132" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_custom_limit" time="0.125" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_default" time="0.125" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_invalid" time="0.126" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_large_per_page" time="0.131" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_last" time="0.150" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_offset_and_after" time="0.134" /><testcase classname="tests.test_pagination.PaginationTests" name="test_pagination_page" time="0.126" /><testcase classname="tests.test_post_model.PostModelTests" name="test_url" time="0.074" /><testcase classname="tests.test_posts.PostTests" name="test_delete_post" time="0.079" /><testcase classname="tests.test_posts.PostTests" name="test_edit_post" time="0.085" /><testcase classname="tests.test_posts.PostTests" name="test_new_post" time="0.092" /><testcase classname="tests.test_posts.PostTests" name="test_permissions" time="0.139" /><testcase classname="tests.test_posts.PostTests" name="test_post_feed" time="0.142" /><testcase classname="tests.test_token_model.TokenModelTests" name="test_token_clean" time="0.076" /><testcase classname="tests.test_user_model.UserModelTests" name="test_avatar" time="0.072" /><testcase classname="tests.test_user_model.UserModelTests" name="test_follow" time="0.096" /><testcase classname="tests.test_user_model.UserModelTests" name="test_follow_posts" time="0.084" /><testcase classname="tests.test_user_model.UserModelTests" name="test_get_users" time="0.137" /><testcase classname="tests.test_user_model.UserModelTests" name="test_password_hashing" time="0.246" /><testcase classname="tests.test_user_model.UserModelTests" name="test_url" time="0.073" /><testcase classname="tests.test_users.UserTests" name="test_create_invalid_user" time="0.079" /><testcase classname="tests.test_users.UserTests" name="test_create_user" time="0.142" /><testcase classname="tests.test_users.UserTests" name="test_edit_me" time="0.075" /><testcase classname="tests.test_users.UserTests" name="test_edit_password" time="0.442" /><testcase classname="tests.test_users.UserTests" name="test_edit_user_no_changes" time="0.075" /><testcase classname="tests.test_users.UserTests" name="test_follow_unfollow" time="0.167" /><testcase classname="tests.test_users.UserTests" name="test_get_me" time="0.073" /><testcase classname="tests.test_users.UserTests" name="test_get_user" time="0.075" /><testcase classname="tests.test_users.UserTests" name="test_get_users" time="0.074" /></testsuite></testsuites>

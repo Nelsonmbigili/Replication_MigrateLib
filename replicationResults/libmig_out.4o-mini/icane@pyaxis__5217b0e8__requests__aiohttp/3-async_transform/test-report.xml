@@ -1,0 +1,1304 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="10" skipped="0" tests="28" time="5.110" timestamp="2026-03-09T21:33:42.121873+04:00" hostname="nelsonmbigili.local"><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_uri_type" time="0.002" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_read" time="0.321"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host www.ine.es:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]">self = &lt;aiohttp.connector.TCPConnector object at 0x10355ca90&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x107682210&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+&gt;               return await self._loop.create_connection(*args, **kwargs, sock=sock)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x10717b310&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_read():
+        """Check if a URL is loaded into a string variable."""
+&gt;       pc_axis = await async_read(
+            'https://www.ine.es/jaxiT3/files/es/1001.px',
+            'iso-8859-15')
+
+pyaxis/test/integration/test_pyaxis.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyaxis/test/integration/test_pyaxis.py:26: in async_read
+    return await fetch(session, url, encoding)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyaxis/test/integration/test_pyaxis.py:19: in fetch
+    async with session.get(url) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x10355ca90&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x107682210&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host www.ine.es:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1315: ClientConnectorCertificateError</failure></testcase><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_metadata_extract" time="0.364"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host www.ine.es:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]">self = &lt;aiohttp.connector.TCPConnector object at 0x107c5d250&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x107c5e510&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+&gt;               return await self._loop.create_connection(*args, **kwargs, sock=sock)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x107c5ef90&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_metadata_extract():
+        """Should extract pcaxis metadata into a list."""
+&gt;       pc_axis = await async_read(
+            'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/'
+            '14001.px?nocab=1',
+            'iso-8859-15')
+
+pyaxis/test/integration/test_pyaxis.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyaxis/test/integration/test_pyaxis.py:26: in async_read
+    return await fetch(session, url, encoding)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyaxis/test/integration/test_pyaxis.py:19: in fetch
+    async with session.get(url) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x107c5d250&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x107c5e510&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host www.ine.es:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1315: ClientConnectorCertificateError</failure></testcase><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_metadata_split_to_dict" time="0.315"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host www.ine.es:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]">self = &lt;aiohttp.connector.TCPConnector object at 0x1074e05d0&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x106bc39d0&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+&gt;               return await self._loop.create_connection(*args, **kwargs, sock=sock)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x10758ff10&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_metadata_split_to_dict():
+        """Should split metadata into a dictionary."""
+&gt;       pc_axis = await async_read(
+            'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/'
+            '14001.px?nocab=1',
+            'iso-8859-15')
+
+pyaxis/test/integration/test_pyaxis.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyaxis/test/integration/test_pyaxis.py:26: in async_read
+    return await fetch(session, url, encoding)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyaxis/test/integration/test_pyaxis.py:19: in fetch
+    async with session.get(url) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x1074e05d0&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x106bc39d0&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host www.ine.es:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1315: ClientConnectorCertificateError</failure></testcase><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_get_dimensions" time="0.340"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host www.ine.es:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]">self = &lt;aiohttp.connector.TCPConnector object at 0x107676a50&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x107676ad0&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+&gt;               return await self._loop.create_connection(*args, **kwargs, sock=sock)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x1076a0f90&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_get_dimensions():
+        """Should return two lists (dimension names and members)."""
+&gt;       pc_axis = await async_read(
+            'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/'
+            '14001.px?nocab=1',
+            'iso-8859-15')
+
+pyaxis/test/integration/test_pyaxis.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyaxis/test/integration/test_pyaxis.py:26: in async_read
+    return await fetch(session, url, encoding)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyaxis/test/integration/test_pyaxis.py:19: in fetch
+    async with session.get(url) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x107676a50&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x107676ad0&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host www.ine.es:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1315: ClientConnectorCertificateError</failure></testcase><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_build_dataframe" time="0.342"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host www.ine.es:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]">self = &lt;aiohttp.connector.TCPConnector object at 0x107623b50&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x107623cd0&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+&gt;               return await self._loop.create_connection(*args, **kwargs, sock=sock)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x10762d490&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_build_dataframe():
+        """Should return a dataframe with n+1 columns (dimensions + data)."""
+        null_values = r'^"\."$'
+        sd_values = r'"\.\."'
+&gt;       pc_axis = await async_read(
+            'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/'
+            '14001.px?nocab=1',
+            'iso-8859-15')
+
+pyaxis/test/integration/test_pyaxis.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyaxis/test/integration/test_pyaxis.py:26: in async_read
+    return await fetch(session, url, encoding)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyaxis/test/integration/test_pyaxis.py:19: in fetch
+    async with session.get(url) as response:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x107623b50&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x107623cd0&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host www.ine.es:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1315: ClientConnectorCertificateError</failure></testcase><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_parse" time="0.368"><failure message="TypeError: catching classes that do not inherit from BaseException is not allowed">self = &lt;aiohttp.connector.TCPConnector object at 0x106bdbb90&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x106bc3490&gt;
+timeout = ClientTimeout(total=10, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+&gt;               return await self._loop.create_connection(*args, **kwargs, sock=sock)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x10718ce50&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+uri = 'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/14001.px?nocab=1'
+encoding = 'ISO-8859-15', timeout = 10
+
+    async def read(uri, encoding, timeout=10):
+        """Read a text file from file system or URL.
+    
+        Args:
+            uri (str): file name or URL
+            encoding (str): charset encoding
+            timeout (int): request timeout; optional
+    
+        Returns:
+            raw_pcaxis (str): file contents.
+    
+        """
+        raw_pcaxis = ''
+    
+        if uri_type(uri) == 'URL':
+            try:
+                async with aiohttp.ClientSession() as session:
+&gt;                   async with session.get(uri, timeout=timeout) as response:
+
+pyaxis/pyaxis.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x106bdbb90&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x106bc3490&gt;
+timeout = ClientTimeout(total=10, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host www.ine.es:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1315: ClientConnectorCertificateError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_parse():
+        """Should parse a pc-axis into a dataframe and a metadata dictionary"""
+&gt;       parsed_pcaxis = await pyaxis.parse(
+            'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/'
+            '14001.px?nocab=1',
+            encoding='ISO-8859-15')
+
+pyaxis/test/integration/test_pyaxis.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyaxis/pyaxis.py:137: in parse
+    pc_axis = await read(uri, encoding, timeout)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+uri = 'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/14001.px?nocab=1'
+encoding = 'ISO-8859-15', timeout = 10
+
+    async def read(uri, encoding, timeout=10):
+        """Read a text file from file system or URL.
+    
+        Args:
+            uri (str): file name or URL
+            encoding (str): charset encoding
+            timeout (int): request timeout; optional
+    
+        Returns:
+            raw_pcaxis (str): file contents.
+    
+        """
+        raw_pcaxis = ''
+    
+        if uri_type(uri) == 'URL':
+            try:
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(uri, timeout=timeout) as response:
+                        response.raise_for_status()
+                        response.encoding = encoding
+                        raw_pcaxis = await response.text()
+&gt;           except aiohttp.ClientTimeout as connect_timeout:
+E           TypeError: catching classes that do not inherit from BaseException is not allowed
+
+pyaxis/pyaxis.py:92: TypeError</failure></testcase><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_http_error" time="0.336"><failure message="TypeError: catching classes that do not inherit from BaseException is not allowed">self = &lt;aiohttp.connector.TCPConnector object at 0x107696390&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x107696690&gt;
+timeout = ClientTimeout(total=10, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+&gt;               return await self._loop.create_connection(*args, **kwargs, sock=sock)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x10760c7d0&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+uri = 'https://www.ine.es/jaxi', encoding = 'windows-1252', timeout = 10
+
+    async def read(uri, encoding, timeout=10):
+        """Read a text file from file system or URL.
+    
+        Args:
+            uri (str): file name or URL
+            encoding (str): charset encoding
+            timeout (int): request timeout; optional
+    
+        Returns:
+            raw_pcaxis (str): file contents.
+    
+        """
+        raw_pcaxis = ''
+    
+        if uri_type(uri) == 'URL':
+            try:
+                async with aiohttp.ClientSession() as session:
+&gt;                   async with session.get(uri, timeout=timeout) as response:
+
+pyaxis/pyaxis.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x107696390&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x107696690&gt;
+timeout = ClientTimeout(total=10, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'www.ine.es', 'ssl': &lt;ssl.SSLContext object at 0x106ffe180&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host www.ine.es:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1315: ClientConnectorCertificateError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_http_error():
+        """Using parse() with a non-existent URL should return a 404."""
+        url = 'https://www.ine.es/jaxi'
+        with pytest.raises(aiohttp.ClientResponseError):
+&gt;           await pyaxis.parse(url, encoding='windows-1252')
+
+pyaxis/test/integration/test_pyaxis.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyaxis/pyaxis.py:137: in parse
+    pc_axis = await read(uri, encoding, timeout)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+uri = 'https://www.ine.es/jaxi', encoding = 'windows-1252', timeout = 10
+
+    async def read(uri, encoding, timeout=10):
+        """Read a text file from file system or URL.
+    
+        Args:
+            uri (str): file name or URL
+            encoding (str): charset encoding
+            timeout (int): request timeout; optional
+    
+        Returns:
+            raw_pcaxis (str): file contents.
+    
+        """
+        raw_pcaxis = ''
+    
+        if uri_type(uri) == 'URL':
+            try:
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(uri, timeout=timeout) as response:
+                        response.raise_for_status()
+                        response.encoding = encoding
+                        raw_pcaxis = await response.text()
+&gt;           except aiohttp.ClientTimeout as connect_timeout:
+E           TypeError: catching classes that do not inherit from BaseException is not allowed
+
+pyaxis/pyaxis.py:92: TypeError</failure></testcase><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_connection_error" time="0.037"><failure message="TypeError: catching classes that do not inherit from BaseException is not allowed">self = &lt;aiohttp.connector.TCPConnector object at 0x1075ff250&gt;
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x1075fc690&gt;, traces = []
+timeout = ClientTimeout(total=10, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+
+    async def _create_direct_connection(
+        self,
+        req: ClientRequest,
+        traces: List["Trace"],
+        timeout: "ClientTimeout",
+        *,
+        client_error: Type[Exception] = ClientConnectorError,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        sslcontext = self._get_ssl_context(req)
+        fingerprint = self._get_fingerprint(req)
+    
+        host = req.url.raw_host
+        assert host is not None
+        # Replace multiple trailing dots with a single one.
+        # A trailing dot is only present for fully-qualified domain names.
+        # See https://github.com/aio-libs/aiohttp/pull/7364.
+        if host.endswith(".."):
+            host = host.rstrip(".") + "."
+        port = req.port
+        assert port is not None
+        try:
+            # Cancelling this lookup should not cancel the underlying lookup
+            #  or else the cancel event will get broadcast to all the waiters
+            #  across all connections.
+&gt;           hosts = await self._resolve_host(host, port, traces=traces)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1562: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1178: in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1209: in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/resolver.py:40: in resolve
+    infos = await self._loop.getaddrinfo(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:867: in getaddrinfo
+    return await self.run_in_executor(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/thread.py:58: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+host = 'www.ine.net', port = 443, family = &lt;AddressFamily.AF_UNSPEC: 0&gt;
+type = &lt;SocketKind.SOCK_STREAM: 1&gt;, proto = 0
+flags = &lt;AddressInfo.AI_ADDRCONFIG: 1024&gt;
+
+    def getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+        """Resolve host and port into list of address info entries.
+    
+        Translate the host/port argument into a sequence of 5-tuples that contain
+        all the necessary arguments for creating a socket connected to that service.
+        host is a domain name, a string representation of an IPv4/v6 address or
+        None. port is a string service name such as 'http', a numeric port number or
+        None. By passing None as the value of host and port, you can pass NULL to
+        the underlying C API.
+    
+        The family, type and proto arguments can be optionally specified in order to
+        narrow the list of addresses returned. Passing zero as a value for each of
+        these arguments selects the full range of results.
+        """
+        # We override this function since we want to translate the numeric family
+        # and socket type values to enum constants.
+        addrlist = []
+&gt;       for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socket.py:962: gaierror
+
+The above exception was the direct cause of the following exception:
+
+uri = 'https://www.ine.net/jaxiT3/files/t/es/px/1001.px'
+encoding = 'windows-1252', timeout = 10
+
+    async def read(uri, encoding, timeout=10):
+        """Read a text file from file system or URL.
+    
+        Args:
+            uri (str): file name or URL
+            encoding (str): charset encoding
+            timeout (int): request timeout; optional
+    
+        Returns:
+            raw_pcaxis (str): file contents.
+    
+        """
+        raw_pcaxis = ''
+    
+        if uri_type(uri) == 'URL':
+            try:
+                async with aiohttp.ClientSession() as session:
+&gt;                   async with session.get(uri, timeout=timeout) as response:
+
+pyaxis/pyaxis.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x1075ff250&gt;
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x1075fc690&gt;, traces = []
+timeout = ClientTimeout(total=10, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+
+    async def _create_direct_connection(
+        self,
+        req: ClientRequest,
+        traces: List["Trace"],
+        timeout: "ClientTimeout",
+        *,
+        client_error: Type[Exception] = ClientConnectorError,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        sslcontext = self._get_ssl_context(req)
+        fingerprint = self._get_fingerprint(req)
+    
+        host = req.url.raw_host
+        assert host is not None
+        # Replace multiple trailing dots with a single one.
+        # A trailing dot is only present for fully-qualified domain names.
+        # See https://github.com/aio-libs/aiohttp/pull/7364.
+        if host.endswith(".."):
+            host = host.rstrip(".") + "."
+        port = req.port
+        assert port is not None
+        try:
+            # Cancelling this lookup should not cancel the underlying lookup
+            #  or else the cancel event will get broadcast to all the waiters
+            #  across all connections.
+            hosts = await self._resolve_host(host, port, traces=traces)
+        except OSError as exc:
+            if exc.errno is None and isinstance(exc, asyncio.TimeoutError):
+                raise
+            # in case of proxy it is not ClientProxyConnectionError
+            # it is problem of resolving proxy ip itself
+&gt;           raise ClientConnectorDNSError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host www.ine.net:443 ssl:default [nodename nor servname provided, or not known]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1568: ClientConnectorDNSError
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_connection_error():
+        """Using parse() with a wrong URL should return a connection error."""
+        url = 'https://www.ine.net/jaxiT3/files/t/es/px/1001.px'
+    
+        with pytest.raises(aiohttp.ClientConnectionError):
+&gt;           await pyaxis.parse(url, encoding='windows-1252')
+
+pyaxis/test/integration/test_pyaxis.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyaxis/pyaxis.py:137: in parse
+    pc_axis = await read(uri, encoding, timeout)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+uri = 'https://www.ine.net/jaxiT3/files/t/es/px/1001.px'
+encoding = 'windows-1252', timeout = 10
+
+    async def read(uri, encoding, timeout=10):
+        """Read a text file from file system or URL.
+    
+        Args:
+            uri (str): file name or URL
+            encoding (str): charset encoding
+            timeout (int): request timeout; optional
+    
+        Returns:
+            raw_pcaxis (str): file contents.
+    
+        """
+        raw_pcaxis = ''
+    
+        if uri_type(uri) == 'URL':
+            try:
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(uri, timeout=timeout) as response:
+                        response.raise_for_status()
+                        response.encoding = encoding
+                        raw_pcaxis = await response.text()
+&gt;           except aiohttp.ClientTimeout as connect_timeout:
+E           TypeError: catching classes that do not inherit from BaseException is not allowed
+
+pyaxis/pyaxis.py:92: TypeError</failure></testcase><testcase classname="pyaxis.test.unit.test_json_stat" name="test_to_json_stat" time="0.088" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_uri_type" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_read" time="0.001" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_metadata_extract" time="0.001" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_metadata_split_to_dict" time="0.002" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_metadata_split_dict_quotation_marks" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_split_ignore_quotation_marks" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_get_dimensions" time="0.002" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_get_codes" time="0.002" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_build_dataframe" time="0.020" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_make_unique_list" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_brackets_stripper" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_multilingual_checker" time="0.013" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_get_default_lang" time="0.011" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_metadata_dict_maker" time="0.011" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_translation_dict_maker" time="0.011" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_multilingual_parse" time="0.011" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_parse" time="0.020"><failure message="AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'">@pytest.mark.asyncio
+    async def test_parse():
+        """Should parse a pc-axis into a dataframe and a metadata dictionary"""
+        parsed_pcaxis = await pyaxis.parse(
+            data_path + '14001.px',
+            encoding='ISO-8859-15')
+&gt;       assert parsed_pcaxis['DATA'].dtypes['DATA'] == 'object'
+E       AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'
+
+pyaxis/test/unit/test_pyaxis.py:234: AssertionError</failure></testcase><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_statistical_disclosure" time="0.006"><failure message="AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'">@pytest.mark.asyncio
+    async def test_statistical_disclosure():
+        """Should parse a pc-axis with statistical disclosure into a dataframe.
+    
+        Uses convenient Na or NaN representations and a metadata dict.
+        """
+        parsed_pcaxis = await pyaxis.parse(
+            data_path + '27067.px',
+            encoding='ISO-8859-2')
+&gt;       assert parsed_pcaxis['DATA'].dtypes['DATA'] == 'object'
+E       AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'
+
+pyaxis/test/unit/test_pyaxis.py:253: AssertionError</failure></testcase></testsuite></testsuites>

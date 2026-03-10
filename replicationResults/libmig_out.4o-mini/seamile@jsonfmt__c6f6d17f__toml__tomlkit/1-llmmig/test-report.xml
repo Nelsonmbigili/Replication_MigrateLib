@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="50" time="0.474" timestamp="2026-03-07T18:13:52.674593+04:00" hostname="nelsonmbigili.local"><testcase classname="test.test_diff.TestDiff" name="test_cmp_by_code" time="0.001" /><testcase classname="test.test_diff.TestDiff" name="test_cmp_by_diff" time="0.003" /><testcase classname="test.test_diff.TestDiff" name="test_cmp_by_fc" time="0.001" /><testcase classname="test.test_diff.TestDiff" name="test_cmp_by_git" time="0.001" /><testcase classname="test.test_diff.TestDiff" name="test_cmp_by_others" time="0.001" /><testcase classname="test.test_diff.TestDiff" name="test_command_not_found" time="0.001" /><testcase classname="test.test_diff.TestDiff" name="test_compare" time="0.032" /><testcase classname="test.test_diff.TestDiff" name="test_has_command_nt" time="0.001" /><testcase classname="test.test_diff.TestDiff" name="test_has_command_posix" time="0.001" /><testcase classname="test.test_diff.TestDiff" name="test_has_command_unsupported_os" time="0.001" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_format_to_text" time="0.002"><failure message="AssertionError: 'name[50 chars]926\n\n[[actions]]\nname = &quot;eating&quot;\ncalorie =[169 chars]-15&quot;' != 'name[50 chars]926\n[[actions]]\nname = &quot;eating&quot;\ncalorie = 1[167 chars]-15&quot;'&#10;  name = &quot;Bob&quot;&#10;  age = 23&#10;  gender = &quot;纯爷们&quot;&#10;  money = 3.1415926&#10;- &#10;  [[actions]]&#10;  name = &quot;eating&quot;&#10;  calorie = 1294.9&#10;  date = &quot;2021-03-02&quot;&#10;  &#10;  [[actions]]&#10;  name = &quot;sporting&quot;&#10;  calorie = -2375&#10;  date = &quot;2023-04-27&quot;&#10;  &#10;  [[actions]]&#10;  name = &quot;sleeping&quot;&#10;  calorie = -420.5&#10;  date = &quot;2023-05-15&quot;">self = &lt;test_jsonfmt.JSONFormatToolTestCase testMethod=test_format_to_text&gt;
+
+    def test_format_to_text(self):
+        py_obj = {"name": "约翰", "age": 30}
+        # format to json (compacted)
+        j_compacted = jsonfmt.format_to_text(py_obj, 'json',
+                                             compact=True, escape=True,
+                                             indent='4', sort_keys=False)
+        self.assertEqual(j_compacted.strip(), '{"name":"\\u7ea6\\u7ff0","age":30}')
+    
+        # format to json (indentation)
+        j_indented = jsonfmt.format_to_text(py_obj, 'json',
+                                            compact=False, escape=False,
+                                            indent='t', sort_keys=True)
+        self.assertEqual(j_indented.strip(), '{\n\t"age": 30,\n\t"name": "约翰"\n}')
+    
+        # format to toml
+        toml_text = jsonfmt.format_to_text(self.py_obj, 'toml',
+                                           compact=False, escape=False,
+                                           indent='4', sort_keys=False)
+&gt;       self.assertEqual(toml_text.strip(), TOML_TEXT.strip())
+E       AssertionError: 'name[50 chars]926\n\n[[actions]]\nname = "eating"\ncalorie =[169 chars]-15"' != 'name[50 chars]926\n[[actions]]\nname = "eating"\ncalorie = 1[167 chars]-15"'
+E         name = "Bob"
+E         age = 23
+E         gender = "纯爷们"
+E         money = 3.1415926
+E       - 
+E         [[actions]]
+E         name = "eating"
+E         calorie = 1294.9
+E         date = "2021-03-02"
+E         
+E         [[actions]]
+E         name = "sporting"
+E         calorie = -2375
+E         date = "2023-04-27"
+E         
+E         [[actions]]
+E         name = "sleeping"
+E         calorie = -420.5
+E         date = "2023-05-15"
+
+test/test_jsonfmt.py:273: AssertionError</failure></testcase><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_get_overview" time="0.000" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_is_clipboard_available" time="0.001" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_clipboard_unavailable" time="0.001" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_convert" time="0.008"><failure message="AssertionError: 'name[496 chars]x1b[37m\x1b[39;49;00m\n\x1b[34m[[\x1b[39;49;00[1551 chars]0m\n' != 'name[496 chars]x1b[34m[[\x1b[39;49;00m\x1b[34mactions\x1b[39;[1527 chars]0m\n'&#10;  name#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[33mBob#x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  age#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[34m23#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  gender#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[33m纯爷们#x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  money#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[34m3.1415926#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;- #x1B[37m#x1B[39;49;00m&#10;  #x1B[34m[[#x1B[39;49;00m#x1B[34mactions#x1B[39;49;00m#x1B[34m]]#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  name#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[33meating#x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  calorie#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[34m1294.9#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  date#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[33m2021-03-02#x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  #x1B[37m#x1B[39;49;00m&#10;  #x1B[34m[[#x1B[39;49;00m#x1B[34mactions#x1B[39;49;00m#x1B[34m]]#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  name#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[33msporting#x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  calorie#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[34m-2375#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  date#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[33m2023-04-27#x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  #x1B[37m#x1B[39;49;00m&#10;  #x1B[34m[[#x1B[39;49;00m#x1B[34mactions#x1B[39;49;00m#x1B[34m]]#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  name#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[33msleeping#x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  calorie#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[34m-420.5#x1B[39;49;00m#x1B[37m#x1B[39;49;00m&#10;  date#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[33m2023-05-15#x1B[39;49;00m#x1B[33m&quot;#x1B[39;49;00m#x1B[37m#x1B[39;49;00m">self = &lt;test_jsonfmt.JSONFormatToolTestCase testMethod=test_main_convert&gt;
+
+    @patch('sys.stdout', StdOut())
+    def test_main_convert(self):
+        # test json to toml
+        with patch.multiple(sys, argv=['jf', '-f', 'toml', JSON_FILE]):
+            jsonfmt.main()
+&gt;           self.assertEqual(sys.stdout.read(), color(TOML_TEXT, 'toml'))
+E           AssertionError: 'name[496 chars]x1b[37m\x1b[39;49;00m\n\x1b[34m[[\x1b[39;49;00[1551 chars]0m\n' != 'name[496 chars]x1b[34m[[\x1b[39;49;00m\x1b[34mactions\x1b[39;[1527 chars]0m\n'
+E             name#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[33mBob#x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             age#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[34m23#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             gender#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[33m纯爷们#x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             money#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[34m3.1415926#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E           - #x1B[37m#x1B[39;49;00m
+E             #x1B[34m[[#x1B[39;49;00m#x1B[34mactions#x1B[39;49;00m#x1B[34m]]#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             name#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[33meating#x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             calorie#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[34m1294.9#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             date#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[33m2021-03-02#x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             #x1B[37m#x1B[39;49;00m
+E             #x1B[34m[[#x1B[39;49;00m#x1B[34mactions#x1B[39;49;00m#x1B[34m]]#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             name#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[33msporting#x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             calorie#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[34m-2375#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             date#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[33m2023-04-27#x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             #x1B[37m#x1B[39;49;00m
+E             #x1B[34m[[#x1B[39;49;00m#x1B[34mactions#x1B[39;49;00m#x1B[34m]]#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             name#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[33msleeping#x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             calorie#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[34m-420.5#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+E             date#x1B[37m #x1B[39;49;00m=#x1B[37m #x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[33m2023-05-15#x1B[39;49;00m#x1B[33m"#x1B[39;49;00m#x1B[37m#x1B[39;49;00m
+
+test/test_jsonfmt.py:429: AssertionError</failure></testcase><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_copy_to_clipboard" time="0.031" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_diff_mode" time="0.017" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_invalid_input" time="0.015" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_modify_and_pop" time="0.001" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_overview" time="0.001" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_overwrite_to_original_file" time="0.003" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_querying" time="0.023" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_with_file" time="0.003" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_main_with_stdin" time="0.001" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_modify_pyobj_for_adding" time="0.000" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_modify_pyobj_for_all" time="0.000" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_modify_pyobj_for_modifying" time="0.000" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_modify_pyobj_for_popping" time="0.000" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_output" time="0.002" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_parse_cmdline_args" time="0.001" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_parse_querypath" time="0.020" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_parse_to_pyobj_with_jmespath" time="0.006" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_parse_to_pyobj_with_jsonpath" time="0.039" /><testcase classname="test.test_jsonfmt.JSONFormatToolTestCase" name="test_parse_to_pyobj_with_wrong_fmt" time="0.023" /><testcase classname="test.test_utils.TestFunctions" name="test_exit_with_error" time="0.000" /><testcase classname="test.test_utils.TestFunctions" name="test_print_inf" time="0.000" /><testcase classname="test.test_utils.TestFunctions" name="test_safe_eval" time="0.000" /><testcase classname="test.test_utils.TestFunctions" name="test_sort_dict" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_clone" time="0.001" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_dumps" time="0.001" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_from_py" time="0.001" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_from_xml" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_get_attrs" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_init" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_loads" time="0.001" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_makeelement" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_spawn" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_to_py" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_to_xml_minimal" time="0.000" /><testcase classname="test.test_xml2py.TestXmlElement" name="test_to_xml_pretty" time="0.000" /></testsuite></testsuites>

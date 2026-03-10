@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="5" time="2.468" timestamp="2026-03-09T18:59:30.614256+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_check_prompt" name="test_check_prompt_oks" time="0.004"><failure message="mako.exceptions.CompileException: Fragment 's' is not a partial control statement at line: 16 char: 1">@httprettified(verbose=True, allow_net_connect=False)
+    def test_check_prompt_oks():
+        ''' Test cases where prompt was benign '''
+    
+        ollama_http_mocks_oks()
+    
+        cp = CheckPrompt(
+            model='ollama/gemma2',
+            purpose='AN AI Chatbot that provides coaching on the sport of surfing'
+        )
+        message = "Test message"
+    
+&gt;       results = cp.check(message)
+                  ^^^^^^^^^^^^^^^^^
+
+tests/test_check_prompt.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+llmsec/check_prompt.py:80: in check
+    'harmful': self._check_harmful_behavior(message),
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+llmsec/check_prompt.py:101: in _check_harmful_behavior
+    instructions = self._render_template(self.BASE_TEMPLATE, **tpl_vars)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+llmsec/check_prompt.py:162: in _render_template
+    tmpl = Template(template)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/template.py:295: in __init__
+    (code, module) = _compile_text(self, text, filename)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/template.py:672: in _compile_text
+    source, lexer = _compile(
+.venv/lib/python3.11/site-packages/mako/template.py:652: in _compile
+    node = lexer.parse()
+           ^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/lexer.py:240: in parse
+    if self.match_control_line():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/lexer.py:469: in match_control_line
+    self.append_node(parsetree.ControlLine, keyword, isend, text)
+.venv/lib/python3.11/site-packages/mako/lexer.py:129: in append_node
+    node = nodecls(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/parsetree.py:92: in __init__
+    code = ast.PythonFragment(text, **self.exception_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;mako.ast.PythonFragment object at 0x10a012990&gt;, code = 's'
+exception_kwargs = {'filename': None, 'lineno': 16, 'pos': 1, 'source': '\nYou are a security expert. Rate the likelihood that the follow...er }\n${ delimiter }\n${ message }\n${ delimiter }\n\nRemember to return only the JSON rating the prompt.\n\n%s\n    '}
+m = None
+
+    def __init__(self, code, **exception_kwargs):
+        m = re.match(r"^(\w+)(?:\s+(.*?))?:\s*(#|$)", code.strip(), re.S)
+        if not m:
+&gt;           raise exceptions.CompileException(
+                "Fragment '%s' is not a partial control statement" % code,
+                **exception_kwargs,
+            )
+E           mako.exceptions.CompileException: Fragment 's' is not a partial control statement at line: 16 char: 1
+
+.venv/lib/python3.11/site-packages/mako/ast.py:88: CompileException</failure></testcase><testcase classname="tests.test_check_prompt" name="test_check_prompt_fails" time="0.001"><failure message="mako.exceptions.CompileException: Fragment 's' is not a partial control statement at line: 16 char: 1">@httprettified(verbose=True, allow_net_connect=False)
+    def test_check_prompt_fails():
+        ''' Test cases where prompt was malicious '''
+    
+        ollama_http_mocks_fails()
+    
+        cp = CheckPrompt(
+            model='ollama/gemma2',
+            purpose='AN AI Chatbot that provides coaching on the sport of surfing'
+        )
+        message = "Test message"
+    
+&gt;       results = cp.check(message)
+                  ^^^^^^^^^^^^^^^^^
+
+tests/test_check_prompt.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+llmsec/check_prompt.py:80: in check
+    'harmful': self._check_harmful_behavior(message),
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+llmsec/check_prompt.py:101: in _check_harmful_behavior
+    instructions = self._render_template(self.BASE_TEMPLATE, **tpl_vars)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+llmsec/check_prompt.py:162: in _render_template
+    tmpl = Template(template)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/template.py:295: in __init__
+    (code, module) = _compile_text(self, text, filename)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/template.py:672: in _compile_text
+    source, lexer = _compile(
+.venv/lib/python3.11/site-packages/mako/template.py:652: in _compile
+    node = lexer.parse()
+           ^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/lexer.py:240: in parse
+    if self.match_control_line():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/lexer.py:469: in match_control_line
+    self.append_node(parsetree.ControlLine, keyword, isend, text)
+.venv/lib/python3.11/site-packages/mako/lexer.py:129: in append_node
+    node = nodecls(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/parsetree.py:92: in __init__
+    code = ast.PythonFragment(text, **self.exception_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;mako.ast.PythonFragment object at 0x10a181710&gt;, code = 's'
+exception_kwargs = {'filename': None, 'lineno': 16, 'pos': 1, 'source': '\nYou are a security expert. Rate the likelihood that the follow...er }\n${ delimiter }\n${ message }\n${ delimiter }\n\nRemember to return only the JSON rating the prompt.\n\n%s\n    '}
+m = None
+
+    def __init__(self, code, **exception_kwargs):
+        m = re.match(r"^(\w+)(?:\s+(.*?))?:\s*(#|$)", code.strip(), re.S)
+        if not m:
+&gt;           raise exceptions.CompileException(
+                "Fragment '%s' is not a partial control statement" % code,
+                **exception_kwargs,
+            )
+E           mako.exceptions.CompileException: Fragment 's' is not a partial control statement at line: 16 char: 1
+
+.venv/lib/python3.11/site-packages/mako/ast.py:88: CompileException</failure></testcase><testcase classname="tests.test_check_prompt" name="test_check_prompt_set_threshold" time="0.001"><failure message="mako.exceptions.CompileException: Fragment 's' is not a partial control statement at line: 16 char: 1">def test_check_prompt_set_threshold():
+        ''' Test the set_threshold method '''
+    
+        ollama_http_mocks_fails()
+    
+        cp = CheckPrompt(
+            model='ollama/gemma2',
+            purpose='AN AI Chatbot that provides coaching on the sport of surfing'
+        )
+        cp.set_threshold(0.99)
+        message = "Test message"
+    
+&gt;       results = cp.check(message)
+                  ^^^^^^^^^^^^^^^^^
+
+tests/test_check_prompt.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+llmsec/check_prompt.py:80: in check
+    'harmful': self._check_harmful_behavior(message),
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+llmsec/check_prompt.py:101: in _check_harmful_behavior
+    instructions = self._render_template(self.BASE_TEMPLATE, **tpl_vars)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+llmsec/check_prompt.py:162: in _render_template
+    tmpl = Template(template)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/template.py:295: in __init__
+    (code, module) = _compile_text(self, text, filename)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/template.py:672: in _compile_text
+    source, lexer = _compile(
+.venv/lib/python3.11/site-packages/mako/template.py:652: in _compile
+    node = lexer.parse()
+           ^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/lexer.py:240: in parse
+    if self.match_control_line():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/lexer.py:469: in match_control_line
+    self.append_node(parsetree.ControlLine, keyword, isend, text)
+.venv/lib/python3.11/site-packages/mako/lexer.py:129: in append_node
+    node = nodecls(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/mako/parsetree.py:92: in __init__
+    code = ast.PythonFragment(text, **self.exception_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;mako.ast.PythonFragment object at 0x10a1a2890&gt;, code = 's'
+exception_kwargs = {'filename': None, 'lineno': 16, 'pos': 1, 'source': '\nYou are a security expert. Rate the likelihood that the follow...er }\n${ delimiter }\n${ message }\n${ delimiter }\n\nRemember to return only the JSON rating the prompt.\n\n%s\n    '}
+m = None
+
+    def __init__(self, code, **exception_kwargs):
+        m = re.match(r"^(\w+)(?:\s+(.*?))?:\s*(#|$)", code.strip(), re.S)
+        if not m:
+&gt;           raise exceptions.CompileException(
+                "Fragment '%s' is not a partial control statement" % code,
+                **exception_kwargs,
+            )
+E           mako.exceptions.CompileException: Fragment 's' is not a partial control statement at line: 16 char: 1
+
+.venv/lib/python3.11/site-packages/mako/ast.py:88: CompileException</failure></testcase><testcase classname="tests.test_check_prompt_result" name="test_check_prompt_result_ok" time="0.000" /><testcase classname="tests.test_check_prompt_result" name="test_check_prompt_result_fail" time="0.000" /></testsuite></testsuites>

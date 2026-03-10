@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="10" skipped="0" tests="73" time="4.190" timestamp="2026-03-09T12:24:29.849489" hostname="nelsonmbigili.local"><testcase classname="tests.course_test.CourseTest" name="test_get_course_details" time="0.002" /><testcase classname="tests.course_test.CourseTest" name="test_get_section_details" time="0.001" /><testcase classname="tests.course_test.CourseTest" name="test_get_subject_courses" time="0.001" /><testcase classname="tests.course_test.CourseTest" name="test_get_subject_courses_invalid" time="0.001" /><testcase classname="tests.course_test.CourseTest" name="test_validate_course" time="0.001" /><testcase classname="tests.course_test.CourseTest" name="test_validate_subject" time="0.001" /><testcase classname="tests.course_test.CourseTest" name="test_validate_term" time="0.001" /><testcase classname="tests.dining_test.DiningTest" name="test_get_location_hours" time="0.014" /><testcase classname="tests.dining_test.DiningTest" name="test_get_location_menu" time="0.011" /><testcase classname="tests.dining_test.DiningTest" name="test_get_locations" time="0.003" /><testcase classname="tests.gym_test.GymTest" name="test_fetch_gym_info" time="0.007" /><testcase classname="tests.gym_test.GymTest" name="test_get_gym_info" time="0.007" /><testcase classname="tests.gym_test.GymTest" name="test_invalid_gym_name" time="0.007" /><testcase classname="tests.gym_test.GymTest" name="test_percentage_value_error" time="0.008" /><testcase classname="tests.gym_test.GymTest" name="test_valid_gym_name_not_all_info" time="0.007" /><testcase classname="tests.lab_test.LabTest" name="test_get_all_lab_data" time="0.001"><failure message="AssertionError: &lt;coroutine object get_all_labs_data at 0x1091f5fc0&gt; is not an instance of &lt;class 'list'&gt;">self = &lt;tests.lab_test.LabTest testMethod=test_get_all_lab_data&gt;
+
+    @responses.activate
+    def test_get_all_lab_data(self):
+        responses.add(
+            responses.GET,
+            create_test_url("BELLEFIELD"),
+            json=lab_mocks.mocked_bellefield_data,
+        )
+        responses.add(
+            responses.GET,
+            create_test_url("LAWRENCE"),
+            json=lab_mocks.mocked_lawrence_data,
+        )
+        responses.add(
+            responses.GET,
+            create_test_url("SUTH"),
+            json=lab_mocks.mocked_sutherland_data,
+        )
+        responses.add(
+            responses.GET,
+            create_test_url("CATH_G27"),
+            json=lab_mocks.mocked_cathy_g27_data,
+        )
+        responses.add(
+            responses.GET,
+            create_test_url("CATH_G62"),
+            json=lab_mocks.mocked_cathy_g62_data,
+        )
+        responses.add(
+            responses.GET,
+            create_test_url("BENEDUM"),
+            json=lab_mocks.mocked_benedum_data,
+        )
+    
+        results = lab.get_all_labs_data()
+    
+&gt;       self.assertIsInstance(results, list)
+E       AssertionError: &lt;coroutine object get_all_labs_data at 0x1091f5fc0&gt; is not an instance of &lt;class 'list'&gt;
+
+tests/lab_test.py:212: AssertionError</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_get_status_bellefield" time="0.001"><failure message="AssertionError: &lt;coroutine object get_one_lab_data at 0x10974ceb0&gt; is not an instance of &lt;class 'pittapi.lab.Lab'&gt;">self = &lt;tests.lab_test.LabTest testMethod=test_get_status_bellefield&gt;
+
+    @responses.activate
+    def test_get_status_bellefield(self):
+        responses.add(
+            responses.GET,
+            create_test_url("BELLEFIELD"),
+            json=lab_mocks.mocked_bellefield_data,
+        )
+    
+        result = lab.get_one_lab_data("BELLEFIELD")
+    
+&gt;       self.assertIsInstance(result, lab.Lab)
+E       AssertionError: &lt;coroutine object get_one_lab_data at 0x10974ceb0&gt; is not an instance of &lt;class 'pittapi.lab.Lab'&gt;
+
+tests/lab_test.py:43: AssertionError</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_get_status_benedum" time="0.001"><failure message="AssertionError: &lt;coroutine object get_one_lab_data at 0x10974d000&gt; is not an instance of &lt;class 'pittapi.lab.Lab'&gt;">self = &lt;tests.lab_test.LabTest testMethod=test_get_status_benedum&gt;
+
+    @responses.activate
+    def test_get_status_benedum(self):
+        responses.add(
+            responses.GET,
+            create_test_url("BENEDUM"),
+            json=lab_mocks.mocked_benedum_data,
+        )
+    
+        result = lab.get_one_lab_data("BENEDUM")
+    
+&gt;       self.assertIsInstance(result, lab.Lab)
+E       AssertionError: &lt;coroutine object get_one_lab_data at 0x10974d000&gt; is not an instance of &lt;class 'pittapi.lab.Lab'&gt;
+
+tests/lab_test.py:163: AssertionError</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_get_status_cathg27" time="0.001"><failure message="AssertionError: &lt;coroutine object get_one_lab_data at 0x10974d150&gt; is not an instance of &lt;class 'pittapi.lab.Lab'&gt;">self = &lt;tests.lab_test.LabTest testMethod=test_get_status_cathg27&gt;
+
+    @responses.activate
+    def test_get_status_cathg27(self):
+        responses.add(
+            responses.GET,
+            create_test_url("CATH_G27"),
+            json=lab_mocks.mocked_cathy_g27_data,
+        )
+    
+        result = lab.get_one_lab_data("CATH_G27")
+    
+&gt;       self.assertIsInstance(result, lab.Lab)
+E       AssertionError: &lt;coroutine object get_one_lab_data at 0x10974d150&gt; is not an instance of &lt;class 'pittapi.lab.Lab'&gt;
+
+tests/lab_test.py:115: AssertionError</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_get_status_cathg62" time="0.001"><failure message="AssertionError: &lt;coroutine object get_one_lab_data at 0x10974d2a0&gt; is not an instance of &lt;class 'pittapi.lab.Lab'&gt;">self = &lt;tests.lab_test.LabTest testMethod=test_get_status_cathg62&gt;
+
+    @responses.activate
+    def test_get_status_cathg62(self):
+        responses.add(
+            responses.GET,
+            create_test_url("CATH_G62"),
+            json=lab_mocks.mocked_cathy_g62_data,
+        )
+    
+        result = lab.get_one_lab_data("CATH_G62")
+    
+&gt;       self.assertIsInstance(result, lab.Lab)
+E       AssertionError: &lt;coroutine object get_one_lab_data at 0x10974d2a0&gt; is not an instance of &lt;class 'pittapi.lab.Lab'&gt;
+
+tests/lab_test.py:139: AssertionError</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_get_status_lawrence" time="0.001"><failure message="AssertionError: &lt;coroutine object get_one_lab_data at 0x10974d3f0&gt; is not an instance of &lt;class 'pittapi.lab.Lab'&gt;">self = &lt;tests.lab_test.LabTest testMethod=test_get_status_lawrence&gt;
+
+    @responses.activate
+    def test_get_status_lawrence(self):
+        responses.add(
+            responses.GET,
+            create_test_url("LAWRENCE"),
+            json=lab_mocks.mocked_lawrence_data,
+        )
+    
+        result = lab.get_one_lab_data("LAWRENCE")
+    
+&gt;       self.assertIsInstance(result, lab.Lab)
+E       AssertionError: &lt;coroutine object get_one_lab_data at 0x10974d3f0&gt; is not an instance of &lt;class 'pittapi.lab.Lab'&gt;
+
+tests/lab_test.py:67: AssertionError</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_get_status_sutherland" time="0.001"><failure message="AssertionError: &lt;coroutine object get_one_lab_data at 0x10974d540&gt; is not an instance of &lt;class 'pittapi.lab.Lab'&gt;">self = &lt;tests.lab_test.LabTest testMethod=test_get_status_sutherland&gt;
+
+    @responses.activate
+    def test_get_status_sutherland(self):
+        responses.add(
+            responses.GET,
+            create_test_url("SUTH"),
+            json=lab_mocks.mocked_sutherland_data,
+        )
+    
+        result = lab.get_one_lab_data("SUTH")
+    
+&gt;       self.assertIsInstance(result, lab.Lab)
+E       AssertionError: &lt;coroutine object get_one_lab_data at 0x10974d540&gt; is not an instance of &lt;class 'pittapi.lab.Lab'&gt;
+
+tests/lab_test.py:91: AssertionError</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_handle_invalid_lab_id" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'pittapi.lab.LabAPIError'&gt;">self = &lt;tests.lab_test.LabTest testMethod=test_handle_invalid_lab_id&gt;
+
+    @responses.activate
+    def test_handle_invalid_lab_id(self):
+        responses.add(
+            responses.GET,
+            create_test_url("CATH_G27"),
+            body="Resource not found",
+            status=404,
+        )
+    
+&gt;       with pytest.raises(
+            lab.LabAPIError,
+            match="The Lab ID was invalid. Please open a GitHub issue so we can resolve this.",
+        ):
+E       Failed: DID NOT RAISE &lt;class 'pittapi.lab.LabAPIError'&gt;
+
+tests/lab_test.py:234: Failed</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_handle_unexpected_fetch_err" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'pittapi.lab.LabAPIError'&gt;">self = &lt;tests.lab_test.LabTest testMethod=test_handle_unexpected_fetch_err&gt;
+
+    @responses.activate
+    def test_handle_unexpected_fetch_err(self):
+        responses.add(
+            responses.GET,
+            create_test_url("CATH_G27"),
+            body="Unauthorized",
+            status=401,
+        )
+    
+&gt;       with pytest.raises(
+            lab.LabAPIError,
+            match="An unexpected error occurred while fetching lab data: Unauthorized",
+        ):
+E       Failed: DID NOT RAISE &lt;class 'pittapi.lab.LabAPIError'&gt;
+
+tests/lab_test.py:249: Failed</failure></testcase><testcase classname="tests.lab_test.LabTest" name="test_invalid_lab_name" time="0.000"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">self = &lt;tests.lab_test.LabTest testMethod=test_invalid_lab_name&gt;
+
+    def test_invalid_lab_name(self):
+&gt;       with pytest.raises(
+            ValueError,
+            match="Invalid lab name: INVALID. Valid options: BELLEFIELD, LAWRENCE, SUTH, CATH_G27, CATH_G62, BENEDUM",
+        ):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests/lab_test.py:219: Failed</failure></testcase><testcase classname="tests.laundry_test.LaundryTest" name="test_get_building_status_holland" time="0.004" /><testcase classname="tests.laundry_test.LaundryTest" name="test_get_building_status_towers" time="0.003" /><testcase classname="tests.laundry_test.LaundryTest" name="test_get_laundry_machine_statuses_holland" time="0.004" /><testcase classname="tests.laundry_test.LaundryTest" name="test_get_laundry_machine_statuses_towers" time="0.004" /><testcase classname="tests.library_test.LibraryTest" name="test_get_documents" time="0.004" /><testcase classname="tests.library_test.StudyRoomTest" name="test_hillman_total_reserved" time="0.004" /><testcase classname="tests.library_test.StudyRoomTest" name="test_reserved_hillman_times" time="0.005" /><testcase classname="tests.people_test.PeopleTest" name="test_people_get_person" time="0.009" /><testcase classname="tests.people_test.PeopleTest" name="test_people_get_person_none" time="0.003" /><testcase classname="tests.people_test.PeopleTest" name="test_people_get_person_too_many" time="0.002" /><testcase classname="tests.shuttle_test.ShuttleTest" name="test_get_map_vehicle_points" time="0.003" /><testcase classname="tests.shuttle_test.ShuttleTest" name="test_get_route_stop_arrivals" time="0.003" /><testcase classname="tests.shuttle_test.ShuttleTest" name="test_get_routes" time="0.002" /><testcase classname="tests.shuttle_test.ShuttleTest" name="test_vehicle_route_stop_estimates" time="0.003" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_football_record" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_football_record_offseason" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_football_standings" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_mens_basketball_record" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_mens_basketball_record_offseason" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_mens_basketball_standings" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_next_football_game" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_next_football_game_offseason" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_next_mens_basketball_game" time="0.001" /><testcase classname="tests.sports_test.LibraryTest" name="test_get_next_mens_basketball_game_offseason" time="0.001" /><testcase classname="tests.status_test.StatusTest" name="test_get_status" time="0.005" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info" time="0.013" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_convert_input" time="0.012" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_failing_header_requests" time="0.007" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_failing_subject_map_requests" time="0.036" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_invalid_course_num" time="0.013" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_invalid_section_num" time="0.012" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_invalid_subject" time="0.012" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_missing_instructor_and_section_num" time="0.013" /><testcase classname="tests.textbook_test.TextbookTest" name="test_course_info_no_headers" time="0.002" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_deduce_section" time="0.019" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_failing_courses_requests" time="0.042" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_instructor" time="0.018" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_invalid_course" time="0.020" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_invalid_instructor" time="0.016" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_invalid_section_num" time="0.014" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_no_textbook" time="0.018" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_not_enough_info" time="0.014" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_section_num" time="0.016" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_course_textbook_no_info" time="0.018" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_courses" time="0.025" /><testcase classname="tests.textbook_test.TextbookTest" name="test_get_textbooks_for_courses_failing_courses_requests" time="0.038" /><testcase classname="tests.textbook_test.TextbookTest" name="test_textbook_from_json" time="0.001" /><testcase classname="tests.textbook_test.TextbookTest" name="test_textbook_from_json_all_empty" time="0.000" /></testsuite></testsuites>

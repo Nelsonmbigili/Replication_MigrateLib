@@ -1,0 +1,109 @@
+mig: juanjosalvador@nyaapy__38df01c2__requests__aiohttp__38df01c2__requests__aiohttp
+repo: juanjosalvador@nyaapy__38df01c2__requests__aiohttp
+commit: 38df01c21f4a10f0338783cbcb23660249852ebc
+source: requests
+target: aiohttp
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.5
+  target_version: 3.13.3
+  finished_at: '2026-03-10 05:39:23'
+  project_coverage: 86.66666666666667
+  total_tests: 4
+  passed_tests: 4
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 16.129032258064516
+  files:
+  - path: nyaapy/anime_site.py
+    file_change_coverage: 16.129032258064516
+    covered_changed_lines: 1,11,22,81,90
+    uncovered_changed_lines: 12-17,64-66,68-75,82-85,91-95
+  test_diffs:
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_get_from_user
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_get_single
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False == True\n +  where False = isinstance(<coroutine\
+      \ object AnimeTorrentSite.get at 0x108d898b0>, Torrent)"
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_last_uploads
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_search
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''coroutine'' object is not subscriptable'
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 59.09090909090909
+  files:
+  - path: nyaapy/anime_site.py
+    file_change_coverage: 41.935483870967744
+    covered_changed_lines: 1,11-13,22,64-65,81-83,90-92
+    uncovered_changed_lines: 14-17,66,68-75,84-85,93-95
+  - path: tests/integration/test_nyaasi.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 3,6-8,15-17,23-25,30-32
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_get_from_user
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ClientConnectorCertificateError
+    error_message: 'aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot
+      connect to host nyaa.si:443 ssl:True [SSLCertVerificationError: (1, ''[SSL:
+      CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer
+      certificate (_ssl.c:1006)'')]'
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_get_single
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ClientConnectorCertificateError
+    error_message: 'aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot
+      connect to host nyaa.si:443 ssl:True [SSLCertVerificationError: (1, ''[SSL:
+      CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer
+      certificate (_ssl.c:1006)'')]'
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_last_uploads
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ClientConnectorCertificateError
+    error_message: 'aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot
+      connect to host nyaa.si:443 ssl:True [SSLCertVerificationError: (1, ''[SSL:
+      CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer
+      certificate (_ssl.c:1006)'')]'
+  - test_id: tests/integration/test_nyaasi.py::test_nyaa_search
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ClientConnectorCertificateError
+    error_message: 'aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot
+      connect to host nyaa.si:443 ssl:True [SSLCertVerificationError: (1, ''[SSL:
+      CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer
+      certificate (_ssl.c:1006)'')]'
+manual_edit: null

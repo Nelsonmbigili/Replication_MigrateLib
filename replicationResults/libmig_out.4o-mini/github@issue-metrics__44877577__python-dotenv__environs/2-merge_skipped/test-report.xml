@@ -1,0 +1,1013 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="98" time="0.941" timestamp="2026-03-10T06:42:44.768539+04:00" hostname="nelsonmbigili.local"><testcase classname="test_auth.TestAuthToGithub" name="test_auth_to_github_invalid_credentials" time="0.001" /><testcase classname="test_auth.TestAuthToGithub" name="test_auth_to_github_with_ghe" time="0.000" /><testcase classname="test_auth.TestAuthToGithub" name="test_auth_to_github_with_ghe_and_ghe_app" time="0.001" /><testcase classname="test_auth.TestAuthToGithub" name="test_auth_to_github_with_github_app" time="0.001" /><testcase classname="test_auth.TestAuthToGithub" name="test_auth_to_github_with_token" time="0.000" /><testcase classname="test_auth.TestAuthToGithub" name="test_auth_to_github_without_authentication_information" time="0.000" /><testcase classname="test_auth.TestAuthToGithub" name="test_get_github_app_installation_token" time="0.001" /><testcase classname="test_auth.TestAuthToGithub" name="test_get_github_app_installation_token_request_failure" time="0.001" /><testcase classname="test_config.TestGetIntFromEnv" name="test_get_int_env_var" time="0.001" /><testcase classname="test_config.TestGetIntFromEnv" name="test_get_int_env_var_with_empty_env_var" time="0.001" /><testcase classname="test_config.TestGetIntFromEnv" name="test_get_int_env_var_with_non_integer" time="0.001" /><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_auth_with_github_app_installation_missing_inputs" time="0.002"><failure message="AssertionError: 'Environment variable &quot;GH_APP_INSTALLATION[30 chars]ger.' != 'GH_APP_ID set and GH_APP_INSTALLATION_ID [34 chars] set'&#10;- Environment variable &quot;GH_APP_INSTALLATION_ID&quot; invalid: Not a valid integer.&#10;+ GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set">self = &lt;test_config.TestGetEnvVars testMethod=test_get_env_vars_auth_with_github_app_installation_missing_inputs&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "my_organization",
+            "GH_APP_ID": "12345",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "",
+            "SEARCH_QUERY": SEARCH_QUERY,
+        },
+        clear=True,
+    )
+    def test_get_env_vars_auth_with_github_app_installation_missing_inputs(self):
+        """Test that an error is raised there are missing inputs for the gh app"""
+        with self.assertRaises(ValueError) as context_manager:
+            get_env_vars(True)
+        the_exception = context_manager.exception
+&gt;       self.assertEqual(
+            str(the_exception),
+            "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set",
+        )
+E       AssertionError: 'Environment variable "GH_APP_INSTALLATION[30 chars]ger.' != 'GH_APP_ID set and GH_APP_INSTALLATION_ID [34 chars] set'
+E       - Environment variable "GH_APP_INSTALLATION_ID" invalid: Not a valid integer.
+E       + GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set
+
+test_config.py:347: AssertionError</failure></testcase><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_missing_query" time="0.001" /><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_missing_token" time="0.001" /><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_optional_values" time="0.001"><failure message="environs.exceptions.EnvValidationError: Environment variable &quot;GH_APP_ID&quot; invalid: Not a valid integer.">self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _validated(self, value: typing.Any) -&gt; _NumT:
+        """Format the value or raise a :exc:`ValidationError` if an error occurs."""
+        # (value is True or value is False) is ~5x faster than isinstance(value, bool)
+        if value is True or value is False:
+            raise self.make_error("invalid", input=value)
+        try:
+&gt;           return self._format_num(value)
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:943: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _format_num(self, value) -&gt; _NumT:
+        """Return the number value for value, given this field's `num_type`."""
+&gt;       return self.num_type(value)  # type: ignore[call-arg]
+               ^^^^^^^^^^^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: ''
+
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:935: ValueError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'GH_APP_ID', default = None
+subcast = None, validate = None, kwargs = {}, load_default = None
+preprocess_kwargs = {}
+field = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+parsed_key = 'GH_APP_ID', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+&gt;           value = field.deserialize(value)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/environs/__init__.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:374: in deserialize
+    output = self._deserialize(value, attr, data, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:960: in _deserialize
+    return self._validated(value)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:990: in _validated
+    return super()._validated(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _validated(self, value: typing.Any) -&gt; _NumT:
+        """Format the value or raise a :exc:`ValidationError` if an error occurs."""
+        # (value is True or value is False) is ~5x faster than isinstance(value, bool)
+        if value is True or value is False:
+            raise self.make_error("invalid", input=value)
+        try:
+            return self._format_num(value)
+        except (TypeError, ValueError) as error:
+&gt;           raise self.make_error("invalid", input=value) from error
+E           marshmallow.exceptions.ValidationError: Not a valid integer.
+
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:945: ValidationError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;test_config.TestGetEnvVars testMethod=test_get_env_vars_optional_values&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": TOKEN,
+            "GH_ENTERPRISE_URL": "",
+            "HIDE_AUTHOR": "true",
+            "HIDE_ITEMS_CLOSED_COUNT": "true",
+            "HIDE_LABEL_METRICS": "true",
+            "HIDE_TIME_TO_ANSWER": "true",
+            "HIDE_TIME_TO_CLOSE": "true",
+            "HIDE_TIME_TO_FIRST_RESPONSE": "true",
+            "IGNORE_USERS": "",
+            "LABELS_TO_MEASURE": "waiting-for-review,waiting-for-manager",
+            "NON_MENTIONING_LINKS": "true",
+            "OUTPUT_FILE": "issue_metrics.md",
+            "REPORT_TITLE": "Issue Metrics",
+            "SEARCH_QUERY": SEARCH_QUERY,
+            "RATE_LIMIT_BYPASS": "true",
+            "DRAFT_PR_TRACKING": "True",
+        },
+    )
+    def test_get_env_vars_optional_values(self):
+        """Test that optional values are set to their default values if not provided"""
+        expected_result = EnvVars(
+            gh_app_id=None,
+            gh_app_installation_id=None,
+            gh_app_private_key_bytes=b"",
+            gh_app_enterprise_only=False,
+            gh_token=TOKEN,
+            ghe="",
+            hide_author=True,
+            hide_items_closed_count=True,
+            hide_label_metrics=True,
+            hide_time_to_answer=True,
+            hide_time_to_close=True,
+            hide_time_to_first_response=True,
+            ignore_user=[],
+            labels_to_measure=["waiting-for-review", "waiting-for-manager"],
+            enable_mentor_count=False,
+            min_mentor_comments=10,
+            max_comments_eval=20,
+            heavily_involved_cutoff=3,
+            search_query=SEARCH_QUERY,
+            non_mentioning_links=True,
+            report_title="Issue Metrics",
+            output_file="issue_metrics.md",
+            rate_limit_bypass=True,
+            draft_pr_tracking=True,
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_config.py:285: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+config.py:184: in get_env_vars
+    gh_app_id = env.int("GH_APP_ID", None)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'GH_APP_ID', default = None
+subcast = None, validate = None, kwargs = {}, load_default = None
+preprocess_kwargs = {}
+field = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+parsed_key = 'GH_APP_ID', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+            value = field.deserialize(value)
+        except ma.ValidationError as error:
+            if self.eager:
+&gt;               raise EnvValidationError(
+                    f'Environment variable "{source_key}" invalid: {error.args[0]}',
+                    error.messages,
+                ) from error
+E               environs.exceptions.EnvValidationError: Environment variable "GH_APP_ID" invalid: Not a valid integer.
+
+.venv/lib/python3.11/site-packages/environs/__init__.py:131: EnvValidationError</failure></testcase><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_optionals_are_defaulted" time="0.001"><failure message="environs.exceptions.EnvValidationError: Environment variable &quot;GH_APP_ID&quot; invalid: Not a valid integer.">self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _validated(self, value: typing.Any) -&gt; _NumT:
+        """Format the value or raise a :exc:`ValidationError` if an error occurs."""
+        # (value is True or value is False) is ~5x faster than isinstance(value, bool)
+        if value is True or value is False:
+            raise self.make_error("invalid", input=value)
+        try:
+&gt;           return self._format_num(value)
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:943: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _format_num(self, value) -&gt; _NumT:
+        """Return the number value for value, given this field's `num_type`."""
+&gt;       return self.num_type(value)  # type: ignore[call-arg]
+               ^^^^^^^^^^^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: ''
+
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:935: ValueError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'GH_APP_ID', default = None
+subcast = None, validate = None, kwargs = {}, load_default = None
+preprocess_kwargs = {}
+field = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+parsed_key = 'GH_APP_ID', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+&gt;           value = field.deserialize(value)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/environs/__init__.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:374: in deserialize
+    output = self._deserialize(value, attr, data, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:960: in _deserialize
+    return self._validated(value)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:990: in _validated
+    return super()._validated(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _validated(self, value: typing.Any) -&gt; _NumT:
+        """Format the value or raise a :exc:`ValidationError` if an error occurs."""
+        # (value is True or value is False) is ~5x faster than isinstance(value, bool)
+        if value is True or value is False:
+            raise self.make_error("invalid", input=value)
+        try:
+            return self._format_num(value)
+        except (TypeError, ValueError) as error:
+&gt;           raise self.make_error("invalid", input=value) from error
+E           marshmallow.exceptions.ValidationError: Not a valid integer.
+
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:945: ValidationError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;test_config.TestGetEnvVars testMethod=test_get_env_vars_optionals_are_defaulted&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "TOKEN",
+            "SEARCH_QUERY": SEARCH_QUERY,
+        },
+        clear=True,
+    )
+    def test_get_env_vars_optionals_are_defaulted(self):
+        """Test that optional values are set to their default values if not provided"""
+        expected_result = EnvVars(
+            gh_app_id=None,
+            gh_app_installation_id=None,
+            gh_app_private_key_bytes=b"",
+            gh_app_enterprise_only=False,
+            gh_token="TOKEN",
+            ghe="",
+            hide_author=False,
+            hide_items_closed_count=False,
+            hide_label_metrics=False,
+            hide_time_to_answer=False,
+            hide_time_to_close=False,
+            hide_time_to_first_response=False,
+            ignore_user=[],
+            labels_to_measure=[],
+            enable_mentor_count=False,
+            min_mentor_comments="10",
+            max_comments_eval="20",
+            heavily_involved_cutoff="3",
+            search_query=SEARCH_QUERY,
+            non_mentioning_links=False,
+            report_title="Issue Metrics",
+            output_file="",
+            rate_limit_bypass=False,
+            draft_pr_tracking=False,
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_config.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+config.py:184: in get_env_vars
+    gh_app_id = env.int("GH_APP_ID", None)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'GH_APP_ID', default = None
+subcast = None, validate = None, kwargs = {}, load_default = None
+preprocess_kwargs = {}
+field = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+parsed_key = 'GH_APP_ID', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+            value = field.deserialize(value)
+        except ma.ValidationError as error:
+            if self.eager:
+&gt;               raise EnvValidationError(
+                    f'Environment variable "{source_key}" invalid: {error.args[0]}',
+                    error.messages,
+                ) from error
+E               environs.exceptions.EnvValidationError: Environment variable "GH_APP_ID" invalid: Not a valid integer.
+
+.venv/lib/python3.11/site-packages/environs/__init__.py:131: EnvValidationError</failure></testcase><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_with_github_app" time="0.001"><failure message="environs.exceptions.EnvValidationError: Environment variable &quot;HIDE_AUTHOR&quot; invalid: Not a valid boolean.">self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'HIDE_AUTHOR'
+default = False, subcast = None, validate = None, kwargs = {}
+load_default = False, preprocess_kwargs = {}
+field = &lt;fields.Boolean(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...d field.', 'null': 'Field may not be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid boolean.'})&gt;
+parsed_key = 'HIDE_AUTHOR', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+&gt;           value = field.deserialize(value)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/environs/__init__.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:374: in deserialize
+    output = self._deserialize(value, attr, data, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fields.Boolean(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...d field.', 'null': 'Field may not be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid boolean.'})&gt;
+value = '', attr = None, data = None, kwargs = {}
+
+    def _deserialize(
+        self,
+        value: typing.Any,
+        attr: str | None,
+        data: typing.Mapping[str, typing.Any] | None,
+        **kwargs,
+    ) -&gt; bool:
+        if not self.truthy:
+            return bool(value)
+        try:
+            if value in self.truthy:
+                return True
+            if value in self.falsy:
+                return False
+        except TypeError as error:
+            raise self.make_error("invalid", input=value) from error
+&gt;       raise self.make_error("invalid", input=value)
+E       marshmallow.exceptions.ValidationError: Not a valid boolean.
+
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:1196: ValidationError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;test_config.TestGetEnvVars testMethod=test_get_env_vars_with_github_app&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_APP_ID": "12345",
+            "GH_APP_INSTALLATION_ID": "678910",
+            "GH_APP_PRIVATE_KEY": "hello",
+            "GH_TOKEN": "",
+            "GH_ENTERPRISE_URL": "",
+            "HIDE_AUTHOR": "",
+            "HIDE_ITEMS_CLOSED_COUNT": "false",
+            "HIDE_LABEL_METRICS": "",
+            "HIDE_TIME_TO_ANSWER": "",
+            "HIDE_TIME_TO_CLOSE": "",
+            "HIDE_TIME_TO_FIRST_RESPONSE": "",
+            "IGNORE_USERS": "",
+            "LABELS_TO_MEASURE": "",
+            "NON_MENTIONING_LINKS": "false",
+            "OUTPUT_FILE": "",
+            "REPORT_TITLE": "",
+            "SEARCH_QUERY": SEARCH_QUERY,
+            "RATE_LIMIT_BYPASS": "false",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_with_github_app(self):
+        """Test that all environment variables are set correctly using GitHub App"""
+        expected_result = EnvVars(
+            gh_app_id=12345,
+            gh_app_installation_id=678910,
+            gh_app_private_key_bytes=b"hello",
+            gh_app_enterprise_only=False,
+            gh_token="",
+            ghe="",
+            hide_author=False,
+            hide_items_closed_count=False,
+            hide_label_metrics=False,
+            hide_time_to_answer=False,
+            hide_time_to_close=False,
+            hide_time_to_first_response=False,
+            ignore_user=[],
+            labels_to_measure=[],
+            enable_mentor_count=False,
+            min_mentor_comments="10",
+            max_comments_eval="20",
+            heavily_involved_cutoff="3",
+            search_query=SEARCH_QUERY,
+            non_mentioning_links=False,
+            report_title="",
+            output_file="",
+            draft_pr_tracking=False,
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_config.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+config.py:221: in get_env_vars
+    hide_author = env.bool("HIDE_AUTHOR", False)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'HIDE_AUTHOR'
+default = False, subcast = None, validate = None, kwargs = {}
+load_default = False, preprocess_kwargs = {}
+field = &lt;fields.Boolean(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...d field.', 'null': 'Field may not be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid boolean.'})&gt;
+parsed_key = 'HIDE_AUTHOR', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+            value = field.deserialize(value)
+        except ma.ValidationError as error:
+            if self.eager:
+&gt;               raise EnvValidationError(
+                    f'Environment variable "{source_key}" invalid: {error.args[0]}',
+                    error.messages,
+                ) from error
+E               environs.exceptions.EnvValidationError: Environment variable "HIDE_AUTHOR" invalid: Not a valid boolean.
+
+.venv/lib/python3.11/site-packages/environs/__init__.py:131: EnvValidationError</failure></testcase><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_with_token" time="0.001"><failure message="environs.exceptions.EnvValidationError: Environment variable &quot;GH_APP_ID&quot; invalid: Not a valid integer.">self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _validated(self, value: typing.Any) -&gt; _NumT:
+        """Format the value or raise a :exc:`ValidationError` if an error occurs."""
+        # (value is True or value is False) is ~5x faster than isinstance(value, bool)
+        if value is True or value is False:
+            raise self.make_error("invalid", input=value)
+        try:
+&gt;           return self._format_num(value)
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:943: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _format_num(self, value) -&gt; _NumT:
+        """Return the number value for value, given this field's `num_type`."""
+&gt;       return self.num_type(value)  # type: ignore[call-arg]
+               ^^^^^^^^^^^^^^^^^^^^
+E       ValueError: invalid literal for int() with base 10: ''
+
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:935: ValueError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'GH_APP_ID', default = None
+subcast = None, validate = None, kwargs = {}, load_default = None
+preprocess_kwargs = {}
+field = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+parsed_key = 'GH_APP_ID', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+&gt;           value = field.deserialize(value)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/environs/__init__.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:374: in deserialize
+    output = self._deserialize(value, attr, data, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:960: in _deserialize
+    return self._validated(value)
+           ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:990: in _validated
+    return super()._validated(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+value = ''
+
+    def _validated(self, value: typing.Any) -&gt; _NumT:
+        """Format the value or raise a :exc:`ValidationError` if an error occurs."""
+        # (value is True or value is False) is ~5x faster than isinstance(value, bool)
+        if value is True or value is False:
+            raise self.make_error("invalid", input=value)
+        try:
+            return self._format_num(value)
+        except (TypeError, ValueError) as error:
+&gt;           raise self.make_error("invalid", input=value) from error
+E           marshmallow.exceptions.ValidationError: Not a valid integer.
+
+.venv/lib/python3.11/site-packages/marshmallow/fields.py:945: ValidationError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;test_config.TestGetEnvVars testMethod=test_get_env_vars_with_token&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_ENTERPRISE_URL": "",
+            "GH_TOKEN": TOKEN,
+            "HIDE_AUTHOR": "",
+            "HIDE_ITEMS_CLOSED_COUNT": "false",
+            "HIDE_LABEL_METRICS": "",
+            "HIDE_TIME_TO_ANSWER": "",
+            "HIDE_TIME_TO_CLOSE": "",
+            "HIDE_TIME_TO_FIRST_RESPONSE": "",
+            "IGNORE_USERS": "",
+            "LABELS_TO_MEASURE": "",
+            "NON_MENTIONING_LINKS": "false",
+            "OUTPUT_FILE": "",
+            "REPORT_TITLE": "",
+            "SEARCH_QUERY": SEARCH_QUERY,
+        },
+        clear=True,
+    )
+    def test_get_env_vars_with_token(self):
+        """Test that all environment variables are set correctly using a list of repositories"""
+        expected_result = EnvVars(
+            gh_app_id=None,
+            gh_app_installation_id=None,
+            gh_app_private_key_bytes=b"",
+            gh_app_enterprise_only=False,
+            gh_token=TOKEN,
+            ghe="",
+            hide_author=False,
+            hide_items_closed_count=False,
+            hide_label_metrics=False,
+            hide_time_to_answer=False,
+            hide_time_to_close=False,
+            hide_time_to_first_response=False,
+            ignore_user=[],
+            labels_to_measure=[],
+            enable_mentor_count=False,
+            min_mentor_comments="10",
+            max_comments_eval="20",
+            heavily_involved_cutoff="3",
+            search_query=SEARCH_QUERY,
+            non_mentioning_links=False,
+            report_title="",
+            output_file="",
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_config.py:195: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+config.py:184: in get_env_vars
+    gh_app_id = env.int("GH_APP_ID", None)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Env(eager=True, expand_vars=False)&gt;, name = 'GH_APP_ID', default = None
+subcast = None, validate = None, kwargs = {}, load_default = None
+preprocess_kwargs = {}
+field = &lt;fields.Integer(dump_default=&lt;marshmallow.missing&gt;, attribute=None, validate=None, required=False, load_only=False, du...be null.', 'validator_failed': 'Invalid value.', 'invalid': 'Not a valid integer.', 'too_large': 'Number too large.'})&gt;
+parsed_key = 'GH_APP_ID', value = ''
+
+    def method(
+        self: Env,
+        name: str,
+        default: typing.Any = ...,
+        subcast: Subcast[_T] | None = None,
+        *,
+        # Subset of relevant marshmallow.Field kwargs
+        validate: (
+            typing.Callable[[typing.Any], typing.Any]
+            | typing.Iterable[typing.Callable[[typing.Any], typing.Any]]
+            | None
+        ) = None,
+        # Additional kwargs are passed to Field constructor
+        **kwargs,
+    ) -&gt; _T | None:
+        if self._sealed:
+            raise EnvSealedError(
+                "Env has already been sealed. New values cannot be parsed.",
+            )
+        load_default = default if default is not Ellipsis else ma.missing
+        preprocess_kwargs = {
+            name: kwargs.pop(name) for name in preprocess_kwarg_names if name in kwargs
+        }
+        if isinstance(field_or_factory, type) and issubclass(
+            field_or_factory,
+            ma.fields.Field,
+        ):
+            field = field_or_factory(
+                validate=validate,
+                load_default=load_default,
+                **kwargs,
+            )
+        else:
+            parsed_subcast = _make_subcast_field(subcast) if subcast else ma.fields.Raw
+            field = typing.cast("FieldFactory", field_or_factory)(
+                subcast=parsed_subcast,
+                validate=validate,
+                load_default=load_default,
+            )
+        parsed_key, value, proxied_key = self._get_from_environ(name, default=Ellipsis)
+        self._fields[parsed_key] = field
+        source_key = proxied_key or parsed_key
+        if value is Ellipsis:
+            if default is not Ellipsis:
+                self._values[parsed_key] = default
+                return default
+            if self.eager:
+                raise EnvError(
+                    f'Environment variable "{proxied_key or parsed_key}" not set',
+                )
+            self._errors[parsed_key].append("Environment variable not set.")
+            return None
+        try:
+            if preprocess:
+                value = preprocess(value, **preprocess_kwargs)
+            value = field.deserialize(value)
+        except ma.ValidationError as error:
+            if self.eager:
+&gt;               raise EnvValidationError(
+                    f'Environment variable "{source_key}" invalid: {error.args[0]}',
+                    error.messages,
+                ) from error
+E               environs.exceptions.EnvValidationError: Environment variable "GH_APP_ID" invalid: Not a valid integer.
+
+.venv/lib/python3.11/site-packages/environs/__init__.py:131: EnvValidationError</failure></testcase><testcase classname="test_config_get_bool.TestEnv" name="test_get_bool_env_var_that_does_not_exist_and_default_value_returns_false" time="0.001" /><testcase classname="test_config_get_bool.TestEnv" name="test_get_bool_env_var_that_does_not_exist_and_default_value_returns_true" time="0.001" /><testcase classname="test_config_get_bool.TestEnv" name="test_get_bool_env_var_that_exists_and_is_false" time="0.001" /><testcase classname="test_config_get_bool.TestEnv" name="test_get_bool_env_var_that_exists_and_is_false_due_to_invalid_value" time="0.001" /><testcase classname="test_config_get_bool.TestEnv" name="test_get_bool_env_var_that_exists_and_is_true" time="0.001" /><testcase classname="test_discussions.TestGetDiscussions" name="test_get_discussions_error_status_code" time="0.001" /><testcase classname="test_discussions.TestGetDiscussions" name="test_get_discussions_graphql_error" time="0.001" /><testcase classname="test_discussions.TestGetDiscussions" name="test_get_discussions_multiple_pages" time="0.001" /><testcase classname="test_discussions.TestGetDiscussions" name="test_get_discussions_single_page" time="0.001" /><testcase classname="test_issue_metrics.TestGetEnvVars" name="test_get_env_vars" time="0.001" /><testcase classname="test_issue_metrics.TestGetEnvVars" name="test_get_env_vars_missing_query" time="0.001" /><testcase classname="test_issue_metrics.TestGetPerIssueMetrics" name="test_get_per_issue_metrics_with_hide_envs" time="0.002" /><testcase classname="test_issue_metrics.TestGetPerIssueMetrics" name="test_get_per_issue_metrics_with_ignore_users" time="0.004" /><testcase classname="test_issue_metrics.TestGetPerIssueMetrics" name="test_get_per_issue_metrics_without_hide_envs" time="0.005" /><testcase classname="test_issue_metrics.TestDiscussionMetrics" name="test_get_per_issue_metrics_with_discussion" time="0.001" /><testcase classname="test_issue_metrics.TestDiscussionMetrics" name="test_get_per_issue_metrics_with_discussion_with_hide_envs" time="0.001" /><testcase classname="test_json_writer.TestWriteToJson" name="test_write_to_json" time="0.001" /><testcase classname="test_json_writer.TestWriteToJson" name="test_write_to_json_with_no_response" time="0.001" /><testcase classname="test_labels.TestLabels" name="test_get_label_events" time="0.002" /><testcase classname="test_labels.TestLabels" name="test_get_label_metrics_closed_issue" time="0.002" /><testcase classname="test_labels.TestLabels" name="test_get_label_metrics_closed_issue_labeled_past_closed_at" time="0.002" /><testcase classname="test_labels.TestLabels" name="test_get_label_metrics_open_issue" time="0.002" /><testcase classname="test_labels.TestGetAverageTimeInLabels" name="test_get_stats_time_in_labels" time="0.006" /><testcase classname="test_markdown_helpers.TestMarkdownHelpers" name="test_markdown_too_large_for_issue_body" time="0.001" /><testcase classname="test_markdown_helpers.TestMarkdownHelpers" name="test_split_markdown_file" time="0.001" /><testcase classname="test_markdown_writer.TestWriteToMarkdown" name="test_write_to_markdown" time="0.001" /><testcase classname="test_markdown_writer.TestWriteToMarkdown" name="test_write_to_markdown_no_issues" time="0.003" /><testcase classname="test_markdown_writer.TestWriteToMarkdown" name="test_write_to_markdown_with_vertical_bar_in_title" time="0.001" /><testcase classname="test_markdown_writer.TestWriteToMarkdownWithEnv" name="test_writes_markdown_file_with_non_hidden_columns_only" time="0.001" /><testcase classname="test_most_active_mentors.TestCountCommentsPerUser" name="test_count_comments_per_user_limit" time="0.014" /><testcase classname="test_most_active_mentors.TestCountCommentsPerUser" name="test_count_comments_per_user_with_ignores" time="0.006" /><testcase classname="test_most_active_mentors.TestCountCommentsPerUser" name="test_get_mentor_count" time="0.000" /><testcase classname="test_search.TestSearchIssues" name="test_search_issues_with_just_owner_or_org" time="0.001" /><testcase classname="test_search.TestSearchIssues" name="test_search_issues_with_just_owner_or_org_with_bypass" time="0.001" /><testcase classname="test_search.TestSearchIssues" name="test_search_issues_with_owner_and_repository" time="0.001" /><testcase classname="test_search.TestGetOwnerAndRepository" name="test_get_owner_and_repositories_without_repo_in_query" time="0.000" /><testcase classname="test_search.TestGetOwnerAndRepository" name="test_get_owners_and_repositories_with_multiple_entries" time="0.000" /><testcase classname="test_search.TestGetOwnerAndRepository" name="test_get_owners_and_repositories_with_org" time="0.000" /><testcase classname="test_search.TestGetOwnerAndRepository" name="test_get_owners_and_repositories_with_user" time="0.000" /><testcase classname="test_search.TestGetOwnerAndRepository" name="test_get_owners_and_repositories_without_either_in_query" time="0.000" /><testcase classname="test_search.TestGetOwnerAndRepository" name="test_get_owners_with_owner_and_repo_in_query" time="0.000" /><testcase classname="test_time_in_draft.TestMeasureTimeInDraft" name="test_time_in_draft_multiple_intervals" time="0.001" /><testcase classname="test_time_in_draft.TestMeasureTimeInDraft" name="test_time_in_draft_no_draft_events" time="0.001" /><testcase classname="test_time_in_draft.TestMeasureTimeInDraft" name="test_time_in_draft_ongoing_draft" time="0.001" /><testcase classname="test_time_in_draft.TestMeasureTimeInDraft" name="test_time_in_draft_with_ready_for_review" time="0.001" /><testcase classname="test_time_in_draft.TestMeasureTimeInDraft" name="test_time_in_draft_without_ready_for_review" time="0.001" /><testcase classname="test_time_in_draft.TestMeasureTimeInDraft" name="test_time_in_draft_without_ready_for_review_and_closed" time="0.001" /><testcase classname="test_time_in_draft.TestGetStatsTimeInDraft" name="test_get_stats_time_in_draft_empty_list" time="0.000" /><testcase classname="test_time_in_draft.TestGetStatsTimeInDraft" name="test_get_stats_time_in_draft_no_data" time="0.001" /><testcase classname="test_time_in_draft.TestGetStatsTimeInDraft" name="test_get_stats_time_in_draft_with_data" time="0.001" /><testcase classname="test_time_to_answer.TestGetAverageTimeToAnswer" name="test_returns_none_for_empty_list" time="0.000" /><testcase classname="test_time_to_answer.TestGetAverageTimeToAnswer" name="test_returns_none_for_list_with_no_time_to_answer" time="0.000" /><testcase classname="test_time_to_answer.TestGetAverageTimeToAnswer" name="test_returns_stats_time_to_answer" time="0.000" /><testcase classname="test_time_to_answer.TestMeasureTimeToAnswer" name="test_returns_none_if_answer_chosen_at_is_missing" time="0.000" /><testcase classname="test_time_to_answer.TestMeasureTimeToAnswer" name="test_returns_none_if_created_at_is_missing" time="0.000" /><testcase classname="test_time_to_answer.TestMeasureTimeToAnswer" name="test_returns_time_to_answer" time="0.000" /><testcase classname="test_time_to_close.TestGetAverageTimeToClose" name="test_get_stats_time_to_close" time="0.001" /><testcase classname="test_time_to_close.TestGetAverageTimeToClose" name="test_get_stats_time_to_close_no_issues" time="0.000" /><testcase classname="test_time_to_close.TestMeasureTimeToClose" name="test_measure_time_to_close" time="0.001" /><testcase classname="test_time_to_close.TestMeasureTimeToClose" name="test_measure_time_to_close_discussion" time="0.000" /><testcase classname="test_time_to_close.TestMeasureTimeToClose" name="test_measure_time_to_close_returns_none" time="0.001" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response" time="0.003" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_ignore_bot" time="0.003" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_ignore_issue_owners_comment" time="0.005" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_ignore_pending_review" time="0.004" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_ignore_users" time="0.005" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_issue_comment_faster" time="0.004" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_no_comments" time="0.001" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_only_ignored_users" time="0.005" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_pull_request_comment_faster" time="0.004" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_pull_request_comment_ignore_before_ready" time="0.006" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_with_pull_request_comments" time="0.003" /><testcase classname="test_time_to_first_response.TestGetStatsTimeToFirstResponse" name="test_get_stats_time_to_first_response" time="0.001" /><testcase classname="test_time_to_first_response.TestGetStatsTimeToFirstResponse" name="test_get_stats_time_to_first_response_with_all_none" time="0.000" /><testcase classname="test_time_to_merge.TestMeasureTimeToMerge" name="test_measure_time_to_merge_created_at" time="0.001" /><testcase classname="test_time_to_merge.TestMeasureTimeToMerge" name="test_measure_time_to_merge_ready_for_review" time="0.000" /><testcase classname="test_time_to_merge.TestMeasureTimeToMerge" name="test_measure_time_to_merge_returns_none" time="0.001" /><testcase classname="test_time_to_ready_for_review.TestGetTimeToReadyForReview" name="test_get_time_to_ready_for_review_event" time="0.001" /><testcase classname="test_time_to_ready_for_review.TestGetTimeToReadyForReview" name="test_get_time_to_ready_for_review_no_event" time="0.002" /><testcase classname="test_time_to_ready_for_review.TestGetTimeToReadyForReview" name="test_time_to_ready_for_review_draft" time="0.011" /></testsuite></testsuites>

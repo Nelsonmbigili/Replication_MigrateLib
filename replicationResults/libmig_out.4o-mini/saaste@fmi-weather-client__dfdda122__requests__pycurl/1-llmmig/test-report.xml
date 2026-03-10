@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="21" time="11.211" timestamp="2026-03-09T22:13:21.671230+04:00" hostname="nelsonmbigili.local"><testcase classname="test.test_http.HTTPTest" name="test_create_params_invalid_request_type" time="0.001" /><testcase classname="test.test_http.HTTPTest" name="test_create_params_missing_location" time="0.001" /><testcase classname="test.test_http.HTTPTest" name="test_handle_errors_client_error_with_exception_text" time="0.001"><failure message="TypeError: _handle_errors() missing 1 required positional argument: 'response_body'">self = &lt;test.test_http.HTTPTest testMethod=test_handle_errors_client_error_with_exception_text&gt;
+
+    def test_handle_errors_client_error_with_exception_text(self):
+        with self.assertRaises(ClientError):
+            status_code = 400
+            text = """
+                &lt;ExceptionReport&gt;
+                    &lt;ExceptionText&gt;Mock error&lt;/ExceptionText&gt;
+                    &lt;ExceptionText&gt;Something else which is not used here &lt;/ExceptionText&gt;
+                &lt;/ExceptionReport&gt;
+            """
+            Response = namedtuple("Response", ['status_code', 'text'])
+            mock_response = Response(status_code=status_code, text=text)
+&gt;           http._handle_errors(mock_response)
+E           TypeError: _handle_errors() missing 1 required positional argument: 'response_body'
+
+test/test_http.py:29: TypeError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_async_get_forecast_by_coordinates" time="1.583"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_async_get_forecast_by_coordinates&gt;
+mock_get = &lt;MagicMock name='get' id='4376901520'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_coordinate_forecast_response)
+    def test_async_get_forecast_by_coordinates(self, mock_get):
+        loop = asyncio.get_event_loop()
+&gt;       forecast = loop.run_until_complete(fmi_weather_client.async_forecast_by_coordinates(67.583988, 29.742731))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+fmi_weather_client/__init__.py:110: in async_forecast_by_coordinates
+    return await loop.run_in_executor(None, forecast_by_coordinates, lat, lon, timestep_hours)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/thread.py:58: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/__init__.py:97: in forecast_by_coordinates
+    response = http.request_forecast_by_coordinates(lat, lon, timestep_hours)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:54: in request_forecast_by_coordinates
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:147: in _send_request
+    _handle_errors(response_code, response_body)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response_code = 400
+response_body = '&lt;?xml version="1.0" encoding="UTF-8"?&gt;\n&lt;ExceptionReport xmlns="http://www.opengis.net/ows/1.1"\n\t\t xmlns:xsi="http...3Amultipointcoverage&amp;amp;timestep=1440&amp;amp;version=2.0.0&lt;/ExceptionText&gt;\n    \n  &lt;/Exception&gt;\n\n&lt;/ExceptionReport&gt;\n'
+
+    def _handle_errors(response_code: int, response_body: str):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response_code &lt; 500:
+            data = xmltodict.parse(response_body)
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response_code, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:160: ClientError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_async_get_forecast_by_place_name" time="1.272"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_async_get_forecast_by_place_name&gt;
+mock_get = &lt;MagicMock name='get' id='4380603536'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_place_forecast_response)
+    def test_async_get_forecast_by_place_name(self, mock_get):
+        loop = asyncio.get_event_loop()
+&gt;       forecast = loop.run_until_complete(fmi_weather_client.async_forecast_by_place_name('Iisalmi'))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+fmi_weather_client/__init__.py:86: in async_forecast_by_place_name
+    return await loop.run_in_executor(None, forecast_by_place_name, name, timestep_hours)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/thread.py:58: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/__init__.py:74: in forecast_by_place_name
+    response = http.request_forecast_by_place(name, timestep_hours)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:67: in request_forecast_by_place
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:147: in _send_request
+    _handle_errors(response_code, response_body)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response_code = 400
+response_body = '&lt;?xml version="1.0" encoding="UTF-8"?&gt;\n&lt;ExceptionReport xmlns="http://www.opengis.net/ows/1.1"\n\t\t xmlns:xsi="http...3Amultipointcoverage&amp;amp;timestep=1440&amp;amp;version=2.0.0&lt;/ExceptionText&gt;\n    \n  &lt;/Exception&gt;\n\n&lt;/ExceptionReport&gt;\n'
+
+    def _handle_errors(response_code: int, response_body: str):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response_code &lt; 500:
+            data = xmltodict.parse(response_body)
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response_code, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:160: ClientError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_async_get_weather_by_coordinates" time="0.313"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_async_get_weather_by_coordinates&gt;
+mock_get = &lt;MagicMock name='get' id='4388948240'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_coordinate_forecast_response)
+    def test_async_get_weather_by_coordinates(self, mock_get):
+        loop = asyncio.get_event_loop()
+&gt;       weather = loop.run_until_complete(fmi_weather_client.async_weather_by_coordinates(63.14343, 27.31317))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+fmi_weather_client/__init__.py:37: in async_weather_by_coordinates
+    return await loop.run_in_executor(None, weather_by_coordinates, lat, lon)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/thread.py:58: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/__init__.py:18: in weather_by_coordinates
+    response = http.request_weather_by_coordinates(lat, lon)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:29: in request_weather_by_coordinates
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:147: in _send_request
+    _handle_errors(response_code, response_body)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response_code = 400
+response_body = '&lt;?xml version="1.0" encoding="UTF-8"?&gt;\n&lt;ExceptionReport xmlns="http://www.opengis.net/ows/1.1"\n\t\t xmlns:xsi="http...A%3Amultipointcoverage&amp;amp;timestep=10&amp;amp;version=2.0.0&lt;/ExceptionText&gt;\n    \n  &lt;/Exception&gt;\n\n&lt;/ExceptionReport&gt;\n'
+
+    def _handle_errors(response_code: int, response_body: str):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response_code &lt; 500:
+            data = xmltodict.parse(response_body)
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response_code, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:160: ClientError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_async_get_weather_by_place" time="0.310"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_async_get_weather_by_place&gt;
+mock_get = &lt;MagicMock name='get' id='4389869648'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_place_forecast_response)
+    def test_async_get_weather_by_place(self, mock_get):
+        loop = asyncio.get_event_loop()
+&gt;       weather = loop.run_until_complete(fmi_weather_client.async_weather_by_place_name('Iisalmi'))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+fmi_weather_client/__init__.py:64: in async_weather_by_place_name
+    return await loop.run_in_executor(None, weather_by_place_name, name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/thread.py:58: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/__init__.py:47: in weather_by_place_name
+    response = http.request_weather_by_place(name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:40: in request_weather_by_place
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:147: in _send_request
+    _handle_errors(response_code, response_body)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response_code = 400
+response_body = '&lt;?xml version="1.0" encoding="UTF-8"?&gt;\n&lt;ExceptionReport xmlns="http://www.opengis.net/ows/1.1"\n\t\t xmlns:xsi="http...A%3Amultipointcoverage&amp;amp;timestep=10&amp;amp;version=2.0.0&lt;/ExceptionText&gt;\n    \n  &lt;/Exception&gt;\n\n&lt;/ExceptionReport&gt;\n'
+
+    def _handle_errors(response_code: int, response_body: str):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response_code &lt; 500:
+            data = xmltodict.parse(response_body)
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response_code, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:160: ClientError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_get_forecast_by_coordinates" time="0.314"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_get_forecast_by_coordinates&gt;
+mock_get = &lt;MagicMock name='get' id='4380344592'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_coordinate_forecast_response)
+    def test_get_forecast_by_coordinates(self, mock_get):
+&gt;       forecast = fmi_weather_client.forecast_by_coordinates(29.742731, 67.583988)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fmi_weather_client/__init__.py:97: in forecast_by_coordinates
+    response = http.request_forecast_by_coordinates(lat, lon, timestep_hours)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:54: in request_forecast_by_coordinates
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:147: in _send_request
+    _handle_errors(response_code, response_body)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response_code = 400
+response_body = '&lt;?xml version="1.0" encoding="UTF-8"?&gt;\n&lt;ExceptionReport xmlns="http://www.opengis.net/ows/1.1"\n\t\t xmlns:xsi="http...3Amultipointcoverage&amp;amp;timestep=1440&amp;amp;version=2.0.0&lt;/ExceptionText&gt;\n    \n  &lt;/Exception&gt;\n\n&lt;/ExceptionReport&gt;\n'
+
+    def _handle_errors(response_code: int, response_body: str):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response_code &lt; 500:
+            data = xmltodict.parse(response_body)
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response_code, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:160: ClientError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_get_forecast_by_place_name" time="0.314"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_get_forecast_by_place_name&gt;
+mock_get = &lt;MagicMock name='get' id='4379157264'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_place_forecast_response)
+    def test_get_forecast_by_place_name(self, mock_get):
+&gt;       forecast = fmi_weather_client.forecast_by_place_name('Iisalmi')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fmi_weather_client/__init__.py:74: in forecast_by_place_name
+    response = http.request_forecast_by_place(name, timestep_hours)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:67: in request_forecast_by_place
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:147: in _send_request
+    _handle_errors(response_code, response_body)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response_code = 400
+response_body = '&lt;?xml version="1.0" encoding="UTF-8"?&gt;\n&lt;ExceptionReport xmlns="http://www.opengis.net/ows/1.1"\n\t\t xmlns:xsi="http...3Amultipointcoverage&amp;amp;timestep=1440&amp;amp;version=2.0.0&lt;/ExceptionText&gt;\n    \n  &lt;/Exception&gt;\n\n&lt;/ExceptionReport&gt;\n'
+
+    def _handle_errors(response_code: int, response_body: str):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response_code &lt; 500:
+            data = xmltodict.parse(response_body)
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response_code, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:160: ClientError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_get_weather_by_coordinates" time="0.324"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_get_weather_by_coordinates&gt;
+mock_get = &lt;MagicMock name='get' id='4390209680'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_coordinate_forecast_response)
+    def test_get_weather_by_coordinates(self, mock_get):
+&gt;       weather = fmi_weather_client.weather_by_coordinates(63.14343, 27.31317)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fmi_weather_client/__init__.py:18: in weather_by_coordinates
+    response = http.request_weather_by_coordinates(lat, lon)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:29: in request_weather_by_coordinates
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:147: in _send_request
+    _handle_errors(response_code, response_body)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response_code = 400
+response_body = '&lt;?xml version="1.0" encoding="UTF-8"?&gt;\n&lt;ExceptionReport xmlns="http://www.opengis.net/ows/1.1"\n\t\t xmlns:xsi="http...A%3Amultipointcoverage&amp;amp;timestep=10&amp;amp;version=2.0.0&lt;/ExceptionText&gt;\n    \n  &lt;/Exception&gt;\n\n&lt;/ExceptionReport&gt;\n'
+
+    def _handle_errors(response_code: int, response_body: str):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response_code &lt; 500:
+            data = xmltodict.parse(response_body)
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response_code, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:160: ClientError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_get_weather_by_place" time="0.315"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_get_weather_by_place&gt;
+mock_get = &lt;MagicMock name='get' id='4388844752'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_place_forecast_response)
+    def test_get_weather_by_place(self, mock_get):
+&gt;       weather = fmi_weather_client.weather_by_place_name('Iisalmi')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fmi_weather_client/__init__.py:47: in weather_by_place_name
+    response = http.request_weather_by_place(name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:40: in request_weather_by_place
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:147: in _send_request
+    _handle_errors(response_code, response_body)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response_code = 400
+response_body = '&lt;?xml version="1.0" encoding="UTF-8"?&gt;\n&lt;ExceptionReport xmlns="http://www.opengis.net/ows/1.1"\n\t\t xmlns:xsi="http...A%3Amultipointcoverage&amp;amp;timestep=10&amp;amp;version=2.0.0&lt;/ExceptionText&gt;\n    \n  &lt;/Exception&gt;\n\n&lt;/ExceptionReport&gt;\n'
+
+    def _handle_errors(response_code: int, response_body: str):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response_code &lt; 500:
+            data = xmltodict.parse(response_body)
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response_code, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:160: ClientError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_invalid_lat_lon_exception_response" time="0.312" /><testcase classname="test.test_init.FMIWeatherTest" name="test_nil_forecast_response" time="0.318"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_nil_forecast_response&gt;
+mock_get = &lt;MagicMock name='get' id='4380596560'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_nan_response)
+    def test_nil_forecast_response(self, mock_get):
+&gt;       forecast_coord = fmi_weather_client.forecast_by_coordinates(25.46816, 65.01236, 24)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fmi_weather_client/__init__.py:97: in forecast_by_coordinates
+    response = http.request_forecast_by_coordinates(lat, lon, timestep_hours)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:54: in request_forecast_by_coordinates
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:147: in _send_request
+    _handle_errors(response_code, response_body)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response_code = 400
+response_body = '&lt;?xml version="1.0" encoding="UTF-8"?&gt;\n&lt;ExceptionReport xmlns="http://www.opengis.net/ows/1.1"\n\t\t xmlns:xsi="http...3Amultipointcoverage&amp;amp;timestep=1440&amp;amp;version=2.0.0&lt;/ExceptionText&gt;\n    \n  &lt;/Exception&gt;\n\n&lt;/ExceptionReport&gt;\n'
+
+    def _handle_errors(response_code: int, response_body: str):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response_code &lt; 500:
+            data = xmltodict.parse(response_body)
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response_code, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:160: ClientError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_nil_weather_response" time="0.323"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_nil_weather_response&gt;
+mock_get = &lt;MagicMock name='get' id='4388607312'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_nan_response)
+    def test_nil_weather_response(self, mock_get):
+&gt;       weather_coord = fmi_weather_client.weather_by_coordinates(25.46816, 65.01236)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_init.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fmi_weather_client/__init__.py:18: in weather_by_coordinates
+    response = http.request_weather_by_coordinates(lat, lon)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:29: in request_weather_by_coordinates
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:147: in _send_request
+    _handle_errors(response_code, response_body)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response_code = 400
+response_body = '&lt;?xml version="1.0" encoding="UTF-8"?&gt;\n&lt;ExceptionReport xmlns="http://www.opengis.net/ows/1.1"\n\t\t xmlns:xsi="http...A%3Amultipointcoverage&amp;amp;timestep=10&amp;amp;version=2.0.0&lt;/ExceptionText&gt;\n    \n  &lt;/Exception&gt;\n\n&lt;/ExceptionReport&gt;\n'
+
+    def _handle_errors(response_code: int, response_body: str):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response_code &lt; 500:
+            data = xmltodict.parse(response_body)
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response_code, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:160: ClientError</failure></testcase><testcase classname="test.test_init.FMIWeatherTest" name="test_no_data_available_exception_response" time="0.308" /><testcase classname="test.test_init.FMIWeatherTest" name="test_no_location_exception_response" time="0.307" /><testcase classname="test.test_init.FMIWeatherTest" name="test_server_error_response" time="0.312"><failure message="fmi_weather_client.errors.ClientError">self = &lt;test.test_init.FMIWeatherTest testMethod=test_server_error_response&gt;
+mock_get = &lt;MagicMock name='get' id='4380612496'&gt;
+
+    @mock.patch('requests.get', side_effect=test_data.mock_server_error_response)
+    def test_server_error_response(self, mock_get):
+        with self.assertRaises(ServerError):
+&gt;           fmi_weather_client.weather_by_coordinates(27.31317, 63.14343)
+
+test/test_init.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+fmi_weather_client/__init__.py:18: in weather_by_coordinates
+    response = http.request_weather_by_coordinates(lat, lon)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:29: in request_weather_by_coordinates
+    return _send_request(params)
+           ^^^^^^^^^^^^^^^^^^^^^
+fmi_weather_client/http.py:147: in _send_request
+    _handle_errors(response_code, response_body)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _handle_errors(response_code: int, response_body: str):
+        """Handle error responses from FMI service"""
+        if 400 &lt;= response_code &lt; 500:
+            data = xmltodict.parse(response_body)
+            try:
+                error_message = data['ExceptionReport']['Exception']['ExceptionText'][0]
+&gt;               raise ClientError(response_code, error_message)
+E               fmi_weather_client.errors.ClientError
+
+fmi_weather_client/http.py:160: ClientError</failure></testcase><testcase classname="test.test_models.ModelsTest" name="test_fmi_place" time="0.001" /><testcase classname="test.test_models.ModelsTest" name="test_value" time="0.001" /><testcase classname="test.test_parsers_forecast.ForecastParserTest" name="test_feels_like" time="0.001" /><testcase classname="test.test_parsers_forecast.ForecastParserTest" name="test_float_or_none" time="0.001" /></testsuite></testsuites>
