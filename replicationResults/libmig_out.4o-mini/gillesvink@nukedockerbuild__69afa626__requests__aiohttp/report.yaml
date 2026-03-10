@@ -1,0 +1,83 @@
+mig: gillesvink@nukedockerbuild__69afa626__requests__aiohttp__69afa626__requests__aiohttp
+repo: gillesvink@nukedockerbuild__69afa626__requests__aiohttp
+commit: 69afa626f58e7336b92e11bb47d05ec381326b1b
+source: requests
+target: aiohttp
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.5
+  target_version: 3.13.3
+  finished_at: '2026-03-09 12:44:38'
+  project_coverage: 100.0
+  total_tests: 58
+  passed_tests: 58
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 32.142857142857146
+  files:
+  - path: src/nukedockerbuild/creator/collector.py
+    file_change_coverage: 22.22222222222222
+    covered_changed_lines: 10,23
+    uncovered_changed_lines: 25-31
+  - path: tests/dockerfile_creator/creator/test_collector.py
+    file_change_coverage: 36.8421052631579
+    covered_changed_lines: 19,23,25,61-62,77-78
+    uncovered_changed_lines: 64-66,68,70-72,80-81,83-84,89
+  test_diffs:
+  - test_id: tests/dockerfile_creator/creator/test_collector.py::test_fetch_json_data
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: unknown
+    error_message: "Failed: async def functions are not natively supported.\nYou need\
+      \ to install a suitable plugin for your async framework, for example:\n  - anyio\n\
+      \  - pytest-asyncio\n  - pytest-tornasync\n  - pytest-trio\n  - pytest-twisted"
+  - test_id: tests/dockerfile_creator/creator/test_collector.py::test_fetch_json_data_but_no_data_found[403]
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: unknown
+    error_message: "Failed: async def functions are not natively supported.\nYou need\
+      \ to install a suitable plugin for your async framework, for example:\n  - anyio\n\
+      \  - pytest-asyncio\n  - pytest-tornasync\n  - pytest-trio\n  - pytest-twisted"
+  - test_id: tests/dockerfile_creator/creator/test_collector.py::test_fetch_json_data_but_no_data_found[404]
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: unknown
+    error_message: "Failed: async def functions are not natively supported.\nYou need\
+      \ to install a suitable plugin for your async framework, for example:\n  - anyio\n\
+      \  - pytest-asyncio\n  - pytest-tornasync\n  - pytest-trio\n  - pytest-twisted"
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 75.86206896551724
+  files:
+  - path: src/nukedockerbuild/creator/collector.py
+    file_change_coverage: 77.77777777777777
+    covered_changed_lines: 10,23,25-29
+    uncovered_changed_lines: 30-31
+  - path: tests/dockerfile_creator/creator/test_collector.py
+    file_change_coverage: 75.0
+    covered_changed_lines: 19,23,25,61-63,65-67,72,78-79,81-82,90
+    uncovered_changed_lines: 69,71,73,84-85
+  test_diffs:
+  - test_id: tests/dockerfile_creator/creator/test_collector.py::test_fetch_json_data
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: ValueError
+    error_message: 'ValueError: Request returned 404. Please check the URL and try
+      again.'
+manual_edit: null

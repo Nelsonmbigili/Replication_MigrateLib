@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="16" time="3.472" timestamp="2026-03-07T18:15:33.922518+04:00" hostname="nelsonmbigili.local"><testcase classname="encrypt_decrypt_fields.tests.test_crypto.TestCrypt" name="test_key_is_str" time="0.002"><failure message="assert b&quot;+\xb8\rS{\x...e9{\xf5'\xa2[&quot; == b'K7gNU3sdo-O...2ol_pe_Unols='&#10;  &#10;  At index 0 diff: b'+' != b'K'&#10;  Use -v to get more diff">self = &lt;encrypt_decrypt_fields.tests.test_crypto.TestCrypt object at 0x1077bc410&gt;
+
+    def test_key_is_str(self):
+        crypto = Crypto("secret")
+        key = crypto.get_key()
+    
+        assert isinstance(key, bytes)
+&gt;       assert key == b"K7gNU3sdo-OL0wNhqoVWhr3g6s1xYv72ol_pe_Unols="
+E       assert b"+\xb8\rS{\x...e9{\xf5'\xa2[" == b'K7gNU3sdo-O...2ol_pe_Unols='
+E         
+E         At index 0 diff: b'+' != b'K'
+E         Use -v to get more diff
+
+encrypt_decrypt_fields/tests/test_crypto.py:12: AssertionError</failure></testcase><testcase classname="encrypt_decrypt_fields.tests.test_crypto.TestCrypt" name="test_key_not_str" time="0.000" /><testcase classname="encrypt_decrypt_fields.tests.test_crypto.TestCrypt" name="test_encrypt_successfully" time="0.781" /><testcase classname="encrypt_decrypt_fields.tests.test_crypto.TestCrypt" name="test_encrypt_not_successfully[int]" time="0.001" /><testcase classname="encrypt_decrypt_fields.tests.test_crypto.TestCrypt" name="test_encrypt_not_successfully[tuple]" time="0.001" /><testcase classname="encrypt_decrypt_fields.tests.test_crypto.TestCrypt" name="test_encrypt_not_successfully[list]" time="0.001" /><testcase classname="encrypt_decrypt_fields.tests.test_crypto.TestCrypt" name="test_encrypt_not_successfully[dict]" time="0.001" /><testcase classname="encrypt_decrypt_fields.tests.test_crypto.TestCrypt" name="test_decrypt_empty_value" time="0.001" /><testcase classname="encrypt_decrypt_fields.tests.test_crypto.TestCrypt" name="test_decrypt_successfully" time="0.001" /><testcase classname="encrypt_decrypt_fields.tests.test_django_field.TestDjangoEncryptField" name="test_passed_empty_value" time="0.002" /><testcase classname="encrypt_decrypt_fields.tests.test_django_field.TestDjangoEncryptField" name="test_passed_byte_value" time="0.001" /><testcase classname="encrypt_decrypt_fields.tests.test_django_field.TestDjangoEncryptField" name="test_passed_memoryview_value" time="0.001" /><testcase classname="encrypt_decrypt_fields.tests.test_django_field.TestDjangoEncryptField" name="test_passed_string_value" time="0.002"><failure message="binascii.Error: Invalid base64-encoded string: number of data characters (97) cannot be 1 more than a multiple of 4">self = &lt;encrypt_decrypt_fields.tests.test_django_field.TestDjangoEncryptField object at 0x10780cdd0&gt;
+connection = &lt;Mock id='4420916880'&gt;
+
+    def test_passed_string_value(self, connection):
+        connection.Database.Binary.return_value = (
+            b"gAAAAABg1vz2rLbNvztnC8p2hQbBGzrnyuGN772bEY5" b"w9c1s6fVmqZm4bkjJPfr2PAWZZ3twsLcajxK5y6g-KpjjeMO5luh0fg=="
+        )
+        value = self.FIELD.get_db_prep_value("password", connection)
+    
+        connection.Database.Binary.assert_called_once()
+        assert not isinstance(value, str)
+&gt;       assert Crypto("secret").decrypt_token(value) == "password"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+encrypt_decrypt_fields/tests/test_django_field.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+encrypt_decrypt_fields/services/crypto.py:27: in decrypt_token
+    raw = base64.b64decode(token)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+s = b'gAAAAABg1vz2rLbNvztnC8p2hQbBGzrnyuGN772bEY5w9c1s6fVmqZm4bkjJPfr2PAWZZ3twsLcajxK5y6g-KpjjeMO5luh0fg=='
+altchars = None, validate = False
+
+    def b64decode(s, altchars=None, validate=False):
+        """Decode the Base64 encoded bytes-like object or ASCII string s.
+    
+        Optional altchars must be a bytes-like object or ASCII string of length 2
+        which specifies the alternative alphabet used instead of the '+' and '/'
+        characters.
+    
+        The result is returned as a bytes object.  A binascii.Error is raised if
+        s is incorrectly padded.
+    
+        If validate is False (the default), characters that are neither in the
+        normal base-64 alphabet nor the alternative alphabet are discarded prior
+        to the padding check.  If validate is True, these non-alphabet characters
+        in the input result in a binascii.Error.
+        For more information about the strict base64 check, see:
+    
+        https://docs.python.org/3.11/library/binascii.html#binascii.a2b_base64
+        """
+        s = _bytes_from_decode_data(s)
+        if altchars is not None:
+            altchars = _bytes_from_decode_data(altchars)
+            assert len(altchars) == 2, repr(altchars)
+            s = s.translate(bytes.maketrans(altchars, b'+/'))
+&gt;       return binascii.a2b_base64(s, strict_mode=validate)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       binascii.Error: Invalid base64-encoded string: number of data characters (97) cannot be 1 more than a multiple of 4
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/base64.py:88: Error</failure></testcase><testcase classname="encrypt_decrypt_fields.tests.test_django_field.TestDjangoEncryptField" name="test_passed_any_value[1-int]" time="0.001" /><testcase classname="encrypt_decrypt_fields.tests.test_django_field.TestDjangoEncryptField" name="test_passed_any_value[passed1-dict]" time="0.001" /><testcase classname="encrypt_decrypt_fields.tests.test_django_field.TestDjangoEncryptField" name="test_passed_any_value[passed2-list]" time="0.001" /></testsuite></testsuites>

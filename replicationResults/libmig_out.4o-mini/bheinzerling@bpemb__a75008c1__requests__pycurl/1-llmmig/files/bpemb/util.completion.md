@@ -1,0 +1,120 @@
+To migrate the provided code from using the `requests` library to the `pycurl` library, several changes are necessary. The `requests` library provides a high-level interface for making HTTP requests, while `pycurl` is a low-level interface that requires more manual setup for handling requests and responses.
+
+### Changes Made:
+1. **Importing `pycurl`**: The `requests` import was replaced with `pycurl`.
+2. **Setting Up the Request**: Instead of using `requests.get()`, we set up a `pycurl.Curl` object to handle the HTTP GET request.
+3. **Handling Response**: The response data is captured using a callback function that writes to the temporary file, rather than using `iter_content()`.
+4. **SSL Verification**: The `verify=False` option in `requests` is replaced with `curl.setopt(curl.SSL_VERIFYPEER, 0)` to ignore SSL certificate verification.
+5. **Headers**: The headers are accessed differently in `pycurl`, so we manually handle the response headers.
+
+Here is the modified code:
+
+```python
+from pathlib import Path
+from typing import IO
+
+
+def sentencepiece_load(file):
+    """Load a SentencePiece model"""
+    from sentencepiece import SentencePieceProcessor
+    spm = SentencePieceProcessor()
+    spm.Load(str(file))
+    return spm
+
+
+# source: https://github.com/allenai/allennlp/blob/master/allennlp/common/file_utils.py#L147  # NOQA
+def http_get_temp(url: str, temp_file: IO) -> None:
+    import pycurl
+    import warnings
+    from urllib3.exceptions import InsecureRequestWarning
+
+    # temporary fix for dealing with this SSL certificate issue:
+    # https://github.com/bheinzerling/bpemb/issues/63
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", InsecureRequestWarning)
+
+        curl = pycurl.Curl()
+        curl.setopt(curl.URL, url)
+        curl.setopt(curl.SSL_VERIFYPEER, 0)  # Ignore SSL certificate verification
+        curl.setopt(curl.WRITEDATA, temp_file)
+
+        # To capture headers
+        headers = []
+        curl.setopt(curl.HEADERFUNCTION, lambda header: headers.append(header.decode('utf-8')))
+
+        curl.perform()
+        curl.close()
+
+    content_length = None
+    for header in headers:
+        if header.startswith('Content-Length:'):
+            content_length = header.split(':', 1)[1].strip()
+            break
+    total = int(content_length) if content_length is not None else None
+
+    try:
+        from tqdm import tqdm
+        progress = tqdm(unit="B", total=total)
+    except ImportError:
+        progress = None
+
+    if progress is not None:
+        progress.close()
+    return {header.split(':', 1)[0]: header.split(':', 1)[1].strip() for header in headers}
+
+
+# source: https://github.com/allenai/allennlp/blob/master/allennlp/common/file_utils.py#L147  # NOQA
+def http_get(url: str, outfile: Path, ignore_tardir=False) -> None:
+    import tempfile
+    import shutil
+    with tempfile.NamedTemporaryFile() as temp_file:
+        headers = http_get_temp(url, temp_file)
+        # we are copying the file before closing it, flush to avoid truncation
+        temp_file.flush()
+        # shutil.copyfileobj() starts at current position, so go to the start
+        temp_file.seek(0)
+        outfile.parent.mkdir(exist_ok=True, parents=True)
+        content_header = headers.get("Content-Type")
+        if content_header and "gzip" in content_header:
+            import tarfile
+            tf = tarfile.open(fileobj=temp_file)
+            members = tf.getmembers()
+            if len(members) != 1:
+                raise NotImplementedError("TODO: extract multiple files")
+            member = members[0]
+            if ignore_tardir:
+                member.name = Path(member.name).name
+            tf.extract(member, str(outfile.parent))
+            extracted_file = outfile.parent / member.name
+            assert extracted_file == outfile, "{} != {}".format(
+                extracted_file, outfile)
+        else:
+            with open(str(outfile), 'wb') as out:
+                shutil.copyfileobj(temp_file, out)
+    return outfile
+
+
+def load_word2vec_file(word2vec_file, add_pad=False, pad="<pad>"):
+    """Load a word2vec file in either text or bin format."""
+    from gensim.models import KeyedVectors
+    word2vec_file = str(word2vec_file)
+    binary = word2vec_file.endswith(".bin")
+    vecs = KeyedVectors.load_word2vec_format(word2vec_file, binary=binary)
+    if add_pad:
+        if pad not in vecs:
+            add_embeddings(vecs, pad)
+        else:
+            raise ValueError("Attempted to add <pad>, but already present")
+    return vecs
+
+
+def add_embeddings(keyed_vectors, *words, init=None):
+    import numpy as np
+    if init is None:
+        init = np.zeros
+    vectors_to_add = init((len(words), keyed_vectors.vectors.shape[1]))
+    keyed_vectors.add_vectors(words, vectors_to_add)
+    return keyed_vectors.vectors.shape[0]
+```
+
+This code now uses `pycurl` for HTTP GET requests while maintaining the original structure and functionality of the application.

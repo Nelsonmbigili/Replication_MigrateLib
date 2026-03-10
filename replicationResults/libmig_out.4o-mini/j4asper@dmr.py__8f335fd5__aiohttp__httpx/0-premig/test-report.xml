@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="13" time="27.383" timestamp="2026-03-07T22:14:42.120012+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_converter" name="test_km_to_miles" time="0.001" /><testcase classname="tests.test_converter" name="test_miles_to_km" time="0.001" /><testcase classname="tests.test_converter" name="test_kg_to_lb" time="0.000" /><testcase classname="tests.test_converter" name="test_lb_to_kg" time="0.000" /><testcase classname="tests.test_dmr_methods" name="test_validate_license_plate" time="0.001" /><testcase classname="tests.test_dmr_methods" name="test_invalid_license_plate" time="1.823" /><testcase classname="tests.test_dmr_methods" name="test_invalid_license_plate_async" time="0.473"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host motorregister.skat.dk:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]">self = &lt;aiohttp.connector.TCPConnector object at 0x104a84d50&gt;
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x104a867d0&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;), '5.44.137.81', 443)
+kwargs = {'family': &lt;AddressFamily.AF_INET: 2&gt;, 'flags': &lt;AddressInfo.AI_NUMERICHOST|AI_NUMERICSERV: 4100&gt;, 'local_addr': None, 'proto': 6, ...}
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+&gt;               return await self._loop.create_connection(*args, **kwargs)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1025: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x104a79510&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+    def test_invalid_license_plate_async():
+        loop = asyncio.new_event_loop()
+&gt;       dmr_obj = loop.run_until_complete(DMR.get_by_plate_async("GGGGGGG"))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dmr_methods.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+dmr/dmr.py:74: in get_by_plate_async
+    data = await scrape_async(license_plate=license_plate)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dmr/utils/async_scraper.py:21: in scrape_async
+    token, new_url = await get_token(session)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+dmr/utils/async_scraper.py:10: in get_token
+    async with session.get("https://motorregister.skat.dk/dmr-kerne/koeretoejdetaljer/visKoeretoej", headers=get_headers(), allow_redirects=True) as resp:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1197: in __aenter__
+    self._resp = await self._coro
+                 ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:581: in _request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:544: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:944: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1257: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1226: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x104a84d50&gt;
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x104a867d0&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;), '5.44.137.81', 443)
+kwargs = {'family': &lt;AddressFamily.AF_INET: 2&gt;, 'flags': &lt;AddressInfo.AI_NUMERICHOST|AI_NUMERICSERV: 4100&gt;, 'local_addr': None, 'proto': 6, ...}
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                return await self._loop.create_connection(*args, **kwargs)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host motorregister.skat.dk:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1027: ClientConnectorCertificateError</failure></testcase><testcase classname="tests.test_dmr_object" name="test_dmr_object_normal_car" time="5.916"><failure message="AssertionError">def test_dmr_object_normal_car():
+        dmr, expected = get_object_for_comparison("cw87553", False)
+&gt;       validate_object(dmr, expected)
+
+tests/test_dmr_object.py:6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+dmr = Vehicle(make='Suzuki', model='Swift', variant='1,5', type=&lt;VehicleType.car: 'Personbil'&gt;, color=None, total_weight=147...Insurance(company='Forsia Forsikring A/S', is_active=True, number=None, created=datetime.datetime(2025, 10, 31, 0, 0)))
+expected = {'battery_capacity': None, 'body_type': None, 'color': None, 'cylinders': None, ...}
+
+    def validate_object(dmr, expected):
+        assert dmr.make == expected["make"]
+        assert dmr.model == expected["model"]
+        assert dmr.variant == expected["variant"]
+        assert dmr.vin == expected["vin"]
+        assert dmr.type == expected["type"]
+        assert dmr.last_update == expected["last_update"]
+        assert dmr.registration_number == expected["registration_number"]
+        assert dmr.first_registration == expected["first_registration"]
+        assert dmr.use == expected["use"]
+        assert dmr.vehicle_id == expected["vehicle_id"]
+        assert dmr.color == expected["color"]
+        assert dmr.model_year == expected["model_year"]
+        assert dmr.total_weight == expected["total_weight"]
+        assert dmr.vehicle_weight == expected["vehicle_weight"]
+        assert dmr.propulsion == expected["propulsion"]
+        assert dmr.tow_bar == expected["tow_bar"]
+        assert dmr.fuel_consumption == expected["fuel_consumption"]
+        assert dmr.cylinders == expected["cylinders"]
+        assert dmr.plugin_hybrid == expected["plugin_hybrid"]
+        assert dmr.electricity_consumption == expected["electricity_consumption"]
+        assert dmr.electric_range == expected["electric_range"]
+        assert dmr.battery_capacity == expected["battery_capacity"]
+        assert dmr.body_type == expected["body_type"]
+        assert dmr.particle_filter == expected["particle_filter"]
+        assert dmr.doors == expected["doors"]
+&gt;       assert dmr.insurance.company == expected["insurance"]["company"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError
+
+tests/helper_methods.py:45: AssertionError</failure></testcase><testcase classname="tests.test_dmr_object" name="test_dmr_object_electric_car" time="6.430"><failure message="AssertionError">def test_dmr_object_electric_car():
+        dmr, expected = get_object_for_comparison("ap43115", False)
+&gt;       validate_object(dmr, expected)
+
+tests/test_dmr_object.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+dmr = Vehicle(make='Tesla', model='Model s', variant='85p', type=&lt;VehicleType.car: 'Personbil'&gt;, color='Sort', total_weight=...rance=Insurance(company='GF-FORSIKRING A/S', is_active=True, number=None, created=datetime.datetime(2020, 9, 5, 0, 0)))
+expected = {'battery_capacity': None, 'body_type': &lt;BodyType.hatchback: 'Hatchback'&gt;, 'color': 'Sort', 'cylinders': 0, ...}
+
+    def validate_object(dmr, expected):
+        assert dmr.make == expected["make"]
+        assert dmr.model == expected["model"]
+        assert dmr.variant == expected["variant"]
+        assert dmr.vin == expected["vin"]
+        assert dmr.type == expected["type"]
+        assert dmr.last_update == expected["last_update"]
+        assert dmr.registration_number == expected["registration_number"]
+        assert dmr.first_registration == expected["first_registration"]
+        assert dmr.use == expected["use"]
+        assert dmr.vehicle_id == expected["vehicle_id"]
+        assert dmr.color == expected["color"]
+        assert dmr.model_year == expected["model_year"]
+        assert dmr.total_weight == expected["total_weight"]
+        assert dmr.vehicle_weight == expected["vehicle_weight"]
+        assert dmr.propulsion == expected["propulsion"]
+        assert dmr.tow_bar == expected["tow_bar"]
+        assert dmr.fuel_consumption == expected["fuel_consumption"]
+        assert dmr.cylinders == expected["cylinders"]
+        assert dmr.plugin_hybrid == expected["plugin_hybrid"]
+        assert dmr.electricity_consumption == expected["electricity_consumption"]
+        assert dmr.electric_range == expected["electric_range"]
+&gt;       assert dmr.battery_capacity == expected["battery_capacity"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError
+
+tests/helper_methods.py:41: AssertionError</failure></testcase><testcase classname="tests.test_dmr_object" name="test_dmr_object_plugin_hybrid_car" time="4.510"><failure message="AttributeError: 'NoneType' object has no attribute 'make'">def test_dmr_object_plugin_hybrid_car():
+        dmr, expected = get_object_for_comparison("dd24506", False)
+&gt;       validate_object(dmr, expected)
+
+tests/test_dmr_object.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+dmr = None
+expected = {'battery_capacity': 12.5, 'body_type': &lt;BodyType.hatchback: 'Hatchback'&gt;, 'color': 'Sort', 'cylinders': 4, ...}
+
+    def validate_object(dmr, expected):
+&gt;       assert dmr.make == expected["make"]
+               ^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'make'
+
+tests/helper_methods.py:20: AttributeError</failure></testcase><testcase classname="tests.test_dmr_object" name="test_dmr_object_hydrogen_car" time="0.440"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host motorregister.skat.dk:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]">self = &lt;aiohttp.connector.TCPConnector object at 0x104fc9b50&gt;
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x104fcb310&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;), '5.44.137.81', 443)
+kwargs = {'family': &lt;AddressFamily.AF_INET: 2&gt;, 'flags': &lt;AddressInfo.AI_NUMERICHOST|AI_NUMERICSERV: 4100&gt;, 'local_addr': None, 'proto': 6, ...}
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+&gt;               return await self._loop.create_connection(*args, **kwargs)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1025: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x104fcb190&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+    def test_dmr_object_hydrogen_car():
+&gt;       dmr, expected = get_object_for_comparison("cy41511", True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dmr_object.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/helper_methods.py:10: in get_object_for_comparison
+    vehicle = loop.run_until_complete(DMR.get_by_plate_async(license_plate))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+dmr/dmr.py:74: in get_by_plate_async
+    data = await scrape_async(license_plate=license_plate)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dmr/utils/async_scraper.py:21: in scrape_async
+    token, new_url = await get_token(session)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+dmr/utils/async_scraper.py:10: in get_token
+    async with session.get("https://motorregister.skat.dk/dmr-kerne/koeretoejdetaljer/visKoeretoej", headers=get_headers(), allow_redirects=True) as resp:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1197: in __aenter__
+    self._resp = await self._coro
+                 ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:581: in _request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:544: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:944: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1257: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1226: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x104fc9b50&gt;
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x104fcb310&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;), '5.44.137.81', 443)
+kwargs = {'family': &lt;AddressFamily.AF_INET: 2&gt;, 'flags': &lt;AddressInfo.AI_NUMERICHOST|AI_NUMERICSERV: 4100&gt;, 'local_addr': None, 'proto': 6, ...}
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                return await self._loop.create_connection(*args, **kwargs)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host motorregister.skat.dk:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1027: ClientConnectorCertificateError</failure></testcase><testcase classname="tests.test_dmr_object" name="test_dmr_object_van" time="0.484"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host motorregister.skat.dk:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]">self = &lt;aiohttp.connector.TCPConnector object at 0x1051341d0&gt;
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x105134d90&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;), '5.44.137.81', 443)
+kwargs = {'family': &lt;AddressFamily.AF_INET: 2&gt;, 'flags': &lt;AddressInfo.AI_NUMERICHOST|AI_NUMERICSERV: 4100&gt;, 'local_addr': None, 'proto': 6, ...}
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+&gt;               return await self._loop.create_connection(*args, **kwargs)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1025: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x1051348d0&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+    def test_dmr_object_van():
+&gt;       dmr, expected = get_object_for_comparison("ap22698", True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dmr_object.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/helper_methods.py:10: in get_object_for_comparison
+    vehicle = loop.run_until_complete(DMR.get_by_plate_async(license_plate))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+dmr/dmr.py:74: in get_by_plate_async
+    data = await scrape_async(license_plate=license_plate)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dmr/utils/async_scraper.py:21: in scrape_async
+    token, new_url = await get_token(session)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+dmr/utils/async_scraper.py:10: in get_token
+    async with session.get("https://motorregister.skat.dk/dmr-kerne/koeretoejdetaljer/visKoeretoej", headers=get_headers(), allow_redirects=True) as resp:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1197: in __aenter__
+    self._resp = await self._coro
+                 ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:581: in _request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:544: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:944: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1257: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1226: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x1051341d0&gt;
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x105134d90&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;), '5.44.137.81', 443)
+kwargs = {'family': &lt;AddressFamily.AF_INET: 2&gt;, 'flags': &lt;AddressInfo.AI_NUMERICHOST|AI_NUMERICSERV: 4100&gt;, 'local_addr': None, 'proto': 6, ...}
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                return await self._loop.create_connection(*args, **kwargs)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host motorregister.skat.dk:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1027: ClientConnectorCertificateError</failure></testcase><testcase classname="tests.test_dmr_object" name="test_dmr_object_motorcycle" time="0.437"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host motorregister.skat.dk:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]">self = &lt;aiohttp.connector.TCPConnector object at 0x104e7ac50&gt;
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x104e7aa10&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;), '5.44.137.81', 443)
+kwargs = {'family': &lt;AddressFamily.AF_INET: 2&gt;, 'flags': &lt;AddressInfo.AI_NUMERICHOST|AI_NUMERICSERV: 4100&gt;, 'local_addr': None, 'proto': 6, ...}
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+&gt;               return await self._loop.create_connection(*args, **kwargs)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1025: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x104e7b9d0&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+    def test_dmr_object_motorcycle():
+&gt;       dmr, expected = get_object_for_comparison("aw85002", True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dmr_object.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/helper_methods.py:10: in get_object_for_comparison
+    vehicle = loop.run_until_complete(DMR.get_by_plate_async(license_plate))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+dmr/dmr.py:74: in get_by_plate_async
+    data = await scrape_async(license_plate=license_plate)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dmr/utils/async_scraper.py:21: in scrape_async
+    token, new_url = await get_token(session)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+dmr/utils/async_scraper.py:10: in get_token
+    async with session.get("https://motorregister.skat.dk/dmr-kerne/koeretoejdetaljer/visKoeretoej", headers=get_headers(), allow_redirects=True) as resp:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1197: in __aenter__
+    self._resp = await self._coro
+                 ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:581: in _request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:544: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:944: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1257: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1226: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x104e7ac50&gt;
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x104e7aa10&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=None, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;), '5.44.137.81', 443)
+kwargs = {'family': &lt;AddressFamily.AF_INET: 2&gt;, 'flags': &lt;AddressInfo.AI_NUMERICHOST|AI_NUMERICSERV: 4100&gt;, 'local_addr': None, 'proto': 6, ...}
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                return await self._loop.create_connection(*args, **kwargs)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host motorregister.skat.dk:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1027: ClientConnectorCertificateError</failure></testcase></testsuite></testsuites>

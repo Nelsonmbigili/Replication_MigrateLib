@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="13" time="20.916" timestamp="2026-03-07T22:16:04.040249+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_converter" name="test_km_to_miles" time="0.002" /><testcase classname="tests.test_converter" name="test_miles_to_km" time="0.000" /><testcase classname="tests.test_converter" name="test_kg_to_lb" time="0.002" /><testcase classname="tests.test_converter" name="test_lb_to_kg" time="0.000" /><testcase classname="tests.test_dmr_methods" name="test_validate_license_plate" time="0.000" /><testcase classname="tests.test_dmr_methods" name="test_invalid_license_plate" time="1.380" /><testcase classname="tests.test_dmr_methods" name="test_invalid_license_plate_async" time="0.075"><failure message="TypeError: AsyncClient.get() got an unexpected keyword argument 'allow_redirects'">def test_invalid_license_plate_async():
+        loop = asyncio.new_event_loop()
+&gt;       dmr_obj = loop.run_until_complete(DMR.get_by_plate_async("GGGGGGG"))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dmr_methods.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+dmr/dmr.py:74: in get_by_plate_async
+    data = await scrape_async(license_plate=license_plate)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dmr/utils/async_scraper.py:21: in scrape_async
+    token, new_url = await get_token(session)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;httpx.AsyncClient object at 0x118633a90&gt;
+
+    async def get_token(session) -&gt; Tuple[str, str]:
+        """Get dmrFormToken"""
+&gt;       async with session.get("https://motorregister.skat.dk/dmr-kerne/koeretoejdetaljer/visKoeretoej", headers=get_headers(), allow_redirects=True) as resp:
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: AsyncClient.get() got an unexpected keyword argument 'allow_redirects'
+
+dmr/utils/async_scraper.py:10: TypeError</failure></testcase><testcase classname="tests.test_dmr_object" name="test_dmr_object_normal_car" time="6.609"><failure message="AssertionError">def test_dmr_object_normal_car():
+        dmr, expected = get_object_for_comparison("cw87553", False)
+&gt;       validate_object(dmr, expected)
+
+tests/test_dmr_object.py:6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+dmr = Vehicle(make='Suzuki', model='Swift', variant='1,5', type=&lt;VehicleType.car: 'Personbil'&gt;, color=None, total_weight=147...Insurance(company='Forsia Forsikring A/S', is_active=True, number=None, created=datetime.datetime(2025, 10, 31, 0, 0)))
+expected = {'battery_capacity': None, 'body_type': None, 'color': None, 'cylinders': None, ...}
+
+    def validate_object(dmr, expected):
+        assert dmr.make == expected["make"]
+        assert dmr.model == expected["model"]
+        assert dmr.variant == expected["variant"]
+        assert dmr.vin == expected["vin"]
+        assert dmr.type == expected["type"]
+        assert dmr.last_update == expected["last_update"]
+        assert dmr.registration_number == expected["registration_number"]
+        assert dmr.first_registration == expected["first_registration"]
+        assert dmr.use == expected["use"]
+        assert dmr.vehicle_id == expected["vehicle_id"]
+        assert dmr.color == expected["color"]
+        assert dmr.model_year == expected["model_year"]
+        assert dmr.total_weight == expected["total_weight"]
+        assert dmr.vehicle_weight == expected["vehicle_weight"]
+        assert dmr.propulsion == expected["propulsion"]
+        assert dmr.tow_bar == expected["tow_bar"]
+        assert dmr.fuel_consumption == expected["fuel_consumption"]
+        assert dmr.cylinders == expected["cylinders"]
+        assert dmr.plugin_hybrid == expected["plugin_hybrid"]
+        assert dmr.electricity_consumption == expected["electricity_consumption"]
+        assert dmr.electric_range == expected["electric_range"]
+        assert dmr.battery_capacity == expected["battery_capacity"]
+        assert dmr.body_type == expected["body_type"]
+        assert dmr.particle_filter == expected["particle_filter"]
+        assert dmr.doors == expected["doors"]
+&gt;       assert dmr.insurance.company == expected["insurance"]["company"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError
+
+tests/helper_methods.py:45: AssertionError</failure></testcase><testcase classname="tests.test_dmr_object" name="test_dmr_object_electric_car" time="6.185"><failure message="AssertionError">def test_dmr_object_electric_car():
+        dmr, expected = get_object_for_comparison("ap43115", False)
+&gt;       validate_object(dmr, expected)
+
+tests/test_dmr_object.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+dmr = Vehicle(make='Tesla', model='Model s', variant='85p', type=&lt;VehicleType.car: 'Personbil'&gt;, color='Sort', total_weight=...rance=Insurance(company='GF-FORSIKRING A/S', is_active=True, number=None, created=datetime.datetime(2020, 9, 5, 0, 0)))
+expected = {'battery_capacity': None, 'body_type': &lt;BodyType.hatchback: 'Hatchback'&gt;, 'color': 'Sort', 'cylinders': 0, ...}
+
+    def validate_object(dmr, expected):
+        assert dmr.make == expected["make"]
+        assert dmr.model == expected["model"]
+        assert dmr.variant == expected["variant"]
+        assert dmr.vin == expected["vin"]
+        assert dmr.type == expected["type"]
+        assert dmr.last_update == expected["last_update"]
+        assert dmr.registration_number == expected["registration_number"]
+        assert dmr.first_registration == expected["first_registration"]
+        assert dmr.use == expected["use"]
+        assert dmr.vehicle_id == expected["vehicle_id"]
+        assert dmr.color == expected["color"]
+        assert dmr.model_year == expected["model_year"]
+        assert dmr.total_weight == expected["total_weight"]
+        assert dmr.vehicle_weight == expected["vehicle_weight"]
+        assert dmr.propulsion == expected["propulsion"]
+        assert dmr.tow_bar == expected["tow_bar"]
+        assert dmr.fuel_consumption == expected["fuel_consumption"]
+        assert dmr.cylinders == expected["cylinders"]
+        assert dmr.plugin_hybrid == expected["plugin_hybrid"]
+        assert dmr.electricity_consumption == expected["electricity_consumption"]
+        assert dmr.electric_range == expected["electric_range"]
+&gt;       assert dmr.battery_capacity == expected["battery_capacity"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError
+
+tests/helper_methods.py:41: AssertionError</failure></testcase><testcase classname="tests.test_dmr_object" name="test_dmr_object_plugin_hybrid_car" time="6.075"><failure message="AttributeError: 'NoneType' object has no attribute 'make'">def test_dmr_object_plugin_hybrid_car():
+        dmr, expected = get_object_for_comparison("dd24506", False)
+&gt;       validate_object(dmr, expected)
+
+tests/test_dmr_object.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+dmr = None
+expected = {'battery_capacity': 12.5, 'body_type': &lt;BodyType.hatchback: 'Hatchback'&gt;, 'color': 'Sort', 'cylinders': 4, ...}
+
+    def validate_object(dmr, expected):
+&gt;       assert dmr.make == expected["make"]
+               ^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'make'
+
+tests/helper_methods.py:20: AttributeError</failure></testcase><testcase classname="tests.test_dmr_object" name="test_dmr_object_hydrogen_car" time="0.031"><failure message="TypeError: AsyncClient.get() got an unexpected keyword argument 'allow_redirects'">def test_dmr_object_hydrogen_car():
+&gt;       dmr, expected = get_object_for_comparison("cy41511", True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dmr_object.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/helper_methods.py:10: in get_object_for_comparison
+    vehicle = loop.run_until_complete(DMR.get_by_plate_async(license_plate))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+dmr/dmr.py:74: in get_by_plate_async
+    data = await scrape_async(license_plate=license_plate)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dmr/utils/async_scraper.py:21: in scrape_async
+    token, new_url = await get_token(session)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;httpx.AsyncClient object at 0x1187d26d0&gt;
+
+    async def get_token(session) -&gt; Tuple[str, str]:
+        """Get dmrFormToken"""
+&gt;       async with session.get("https://motorregister.skat.dk/dmr-kerne/koeretoejdetaljer/visKoeretoej", headers=get_headers(), allow_redirects=True) as resp:
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: AsyncClient.get() got an unexpected keyword argument 'allow_redirects'
+
+dmr/utils/async_scraper.py:10: TypeError</failure></testcase><testcase classname="tests.test_dmr_object" name="test_dmr_object_van" time="0.016"><failure message="TypeError: AsyncClient.get() got an unexpected keyword argument 'allow_redirects'">def test_dmr_object_van():
+&gt;       dmr, expected = get_object_for_comparison("ap22698", True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dmr_object.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/helper_methods.py:10: in get_object_for_comparison
+    vehicle = loop.run_until_complete(DMR.get_by_plate_async(license_plate))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+dmr/dmr.py:74: in get_by_plate_async
+    data = await scrape_async(license_plate=license_plate)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dmr/utils/async_scraper.py:21: in scrape_async
+    token, new_url = await get_token(session)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;httpx.AsyncClient object at 0x11916f9d0&gt;
+
+    async def get_token(session) -&gt; Tuple[str, str]:
+        """Get dmrFormToken"""
+&gt;       async with session.get("https://motorregister.skat.dk/dmr-kerne/koeretoejdetaljer/visKoeretoej", headers=get_headers(), allow_redirects=True) as resp:
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: AsyncClient.get() got an unexpected keyword argument 'allow_redirects'
+
+dmr/utils/async_scraper.py:10: TypeError</failure></testcase><testcase classname="tests.test_dmr_object" name="test_dmr_object_motorcycle" time="0.017"><failure message="TypeError: AsyncClient.get() got an unexpected keyword argument 'allow_redirects'">def test_dmr_object_motorcycle():
+&gt;       dmr, expected = get_object_for_comparison("aw85002", True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_dmr_object.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/helper_methods.py:10: in get_object_for_comparison
+    vehicle = loop.run_until_complete(DMR.get_by_plate_async(license_plate))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:653: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+dmr/dmr.py:74: in get_by_plate_async
+    data = await scrape_async(license_plate=license_plate)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+dmr/utils/async_scraper.py:21: in scrape_async
+    token, new_url = await get_token(session)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+session = &lt;httpx.AsyncClient object at 0x119132d90&gt;
+
+    async def get_token(session) -&gt; Tuple[str, str]:
+        """Get dmrFormToken"""
+&gt;       async with session.get("https://motorregister.skat.dk/dmr-kerne/koeretoejdetaljer/visKoeretoej", headers=get_headers(), allow_redirects=True) as resp:
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: AsyncClient.get() got an unexpected keyword argument 'allow_redirects'
+
+dmr/utils/async_scraper.py:10: TypeError</failure></testcase></testsuite></testsuites>

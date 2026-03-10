@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="46" time="1.046" timestamp="2026-03-07T22:51:32.191877+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.schemata.test_import_schema" name="test_import_examples[example0]" time="0.083" /><testcase classname="tests.schemata.test_import_schema" name="test_import_examples[example1]" time="0.003" /><testcase classname="tests.schemata.test_import_schema" name="test_import_examples[example2]" time="0.002" /><testcase classname="tests.test_book.TestBook" name="test_canonical_title" time="0.000" /><testcase classname="tests.test_book.TestBook" name="test_create_book" time="0.000" /><testcase classname="tests.test_book.TestBook" name="test_xisbn_to_books" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test__init__" time="0.072" /><testcase classname="tests.test_bots.TestBots" name="test__str2bool_errors_for_non_boolean_input" time="0.015" /><testcase classname="tests.test_bots.TestBots" name="test__str2bool_returns_false_for_falsey_input" time="0.017" /><testcase classname="tests.test_bots.TestBots" name="test__str2bool_returns_true_for_truthy_input" time="0.014" /><testcase classname="tests.test_bots.TestBots" name="test_process_row_with_bytecode" time="0.017" /><testcase classname="tests.test_bots.TestBots" name="test_process_row_with_string" time="0.015" /><testcase classname="tests.test_bots.TestBots" name="test_save_exits_when_limit_reached" time="0.017" /><testcase classname="tests.test_bots.TestBots" name="test_save_when_write_changes_is_false" time="0.019" /><testcase classname="tests.test_bots.TestBots" name="test_save_when_write_changes_is_true" time="0.018" /><testcase classname="tests.test_bots.TestBots" name="test_setup_logger" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test_write_changes_declaration_when_write_changes_is_false" time="0.015" /><testcase classname="tests.test_bots.TestBots" name="test_write_changes_declaration_when_write_changes_is_true" time="0.015" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_create_book" time="0.014" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_delete" time="0.014" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_edition_json" time="0.013" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_edition_validation" time="0.019" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_edition_by_isbn" time="0.015" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_notfound" time="0.014"><failure message="TypeError: HTTPStatusError.__init__() missing 1 required keyword-only argument: 'request'">self = &lt;tests.test_openlibrary.TestOpenLibrary testMethod=test_get_notfound&gt;
+mock_get = &lt;MagicMock name='get' id='4424027984'&gt;
+
+    @patch('httpx.Client.get')
+    def test_get_notfound(self, mock_get):
+        # This tests that if httpx.raise_for_status() raises an exception,
+        # (e.g. 404 or 500 HTTP response) it is not swallowed by the client.
+        mock_get.return_value.raise_for_status = raise_http_error
+        suffixes = {'edition': 'M', 'work': 'W', 'author': 'A'}
+        for _type, suffix in suffixes.items():
+            target = f"OLnotfound{suffix}"
+            with pytest.raises(httpx.HTTPStatusError):
+&gt;               _ = self.ol.get(target)
+                    ^^^^^^^^^^^^^^^^^^^
+
+tests/test_openlibrary.py:258: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+olclient/openlibrary.py:748: in get
+    return self.Edition.get(olid)
+           ^^^^^^^^^^^^^^^^^^^^^^
+olclient/openlibrary.py:378: in get
+    response = cls.OL.get_ol_response(path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/backoff/_sync.py:105: in retry
+    ret = target(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+olclient/openlibrary.py:150: in get_ol_response
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def raise_http_error():
+        r = httpx.Response
+        # Non 4xx status will trigger backoff retries
+        r.status_code = 404
+        kwargs = {'response': r}
+&gt;       raise httpx.HTTPStatusError("test HTTPError", **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: HTTPStatusError.__init__() missing 1 required keyword-only argument: 'request'
+
+tests/test_openlibrary.py:54: TypeError</failure></testcase><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_olid_by_isbn" time="0.015" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_olid_notfound_by_bibkey" time="0.015" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_work" time="0.013" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_work_by_metadata" time="0.014"><failure message="AttributeError: 'OpenLibrary' object has no attribute 'session'">self = &lt;tests.test_openlibrary.TestOpenLibrary testMethod=test_get_work_by_metadata&gt;
+mock_get = &lt;MagicMock name='get' id='4423976464'&gt;
+
+    @patch('httpx.Client.get')
+    def test_get_work_by_metadata(self, mock_get):
+        doc = {
+            "key": "/works/OL2514747W",
+            "title": "The Autobiography of Benjamin Franklin",
+        }
+        search_results = {'start': 0, 'num_found': 1, 'docs': [doc]}
+        title = "The Autobiography of Benjamin Franklin"
+        mock_get.return_value.json.return_value = search_results
+&gt;       book = self.ol.Work.search(title=title)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_openlibrary.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+olclient/entity_helpers/work.py:195: in search
+    response = _get_book_by_metadata(url)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/backoff/_sync.py:105: in retry
+    ret = target(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ol_url = 'https://openlibrary.org/search.json?title=The Autobiography of Benjamin Franklin'
+
+    @backoff.on_exception(
+        on_giveup=lambda error: logger.exception(
+            "Error retrieving metadata for book: %s", error
+        ),
+        **cls.OL.BACKOFF_KWARGS,
+    )
+    def _get_book_by_metadata(ol_url):
+&gt;       return cls.OL.session.get(ol_url)
+               ^^^^^^^^^^^^^^
+E       AttributeError: 'OpenLibrary' object has no attribute 'session'
+
+olclient/entity_helpers/work.py:193: AttributeError</failure></testcase><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_matching_authors_olid" time="0.015" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_redirect" time="0.014" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_save_many" time="0.016" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_work_json" time="0.015" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_work_validation" time="0.018" /><testcase classname="tests.test_openlibrary.TestAuthors" name="test_author_validation" time="0.016" /><testcase classname="tests.test_openlibrary.TestFullEditionGet" name="test_load_by_isbn" time="0.015" /><testcase classname="tests.test_openlibrary.TestFullEditionGet" name="test_load_by_olid" time="0.016" /><testcase classname="tests.test_openlibrary.TestTextType" name="test_edition_text_type" time="0.015" /><testcase classname="tests.test_openlibrary.TestTextType" name="test_edition_text_type_from_string" time="0.016" /><testcase classname="tests.test_openlibrary.TestTextType" name="test_work_text_type" time="0.015" /><testcase classname="tests.test_openlibrary.TestTextType" name="test_work_text_type_from_string" time="0.016" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_0-merged0]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_1-merged1]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_2-merged2]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_3-merged3]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_4-merged4]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_5-merged5]" time="0.000" /></testsuite></testsuites>

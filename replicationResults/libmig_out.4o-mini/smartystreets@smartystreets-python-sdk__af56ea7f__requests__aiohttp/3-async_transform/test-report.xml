@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="9" skipped="0" tests="83" time="0.736" timestamp="2026-03-07T22:29:55.324000+04:00" hostname="nelsonmbigili.local"><testcase classname="test.custom_header_test.TestCustomHeaderSender" name="test_custom_headers_set" time="0.001"><failure message="AttributeError: 'dict' object has no attribute 'headers'">self = &lt;test.custom_header_test.TestCustomHeaderSender testMethod=test_custom_headers_set&gt;
+
+    def test_custom_headers_set(self):
+        sender = smarty.RequestsSender
+        header = {'Test-User-Agent': 'Test-Agent', 'Test-Content-Type': 'Test-Type'}
+        sender = smarty.CustomHeaderSender(header, sender)
+        smartyrequest = smarty.Request()
+        smartyrequest.url_prefix = "http://localhost"
+        smartyrequest.payload = "This is the test content."
+    
+        request = sender.build_request(smartyrequest)
+    
+&gt;       self.assertEqual('Test-Agent', request.headers['Test-User-Agent'])
+                                       ^^^^^^^^^^^^^^^
+E       AttributeError: 'dict' object has no attribute 'headers'
+
+test/custom_header_test.py:25: AttributeError</failure></testcase><testcase classname="test.custom_header_test.TestCustomHeaderSender" name="test_custom_headers_used" time="0.001"><failure message="RuntimeError: no running event loop">self = &lt;test.custom_header_test.TestCustomHeaderSender testMethod=test_custom_headers_used&gt;
+
+    def test_custom_headers_used(self):
+&gt;       sender = smarty.RequestsSender()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+
+test/custom_header_test.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+smartystreets_python_sdk/requests_sender.py:10: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x10360ced0&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</failure></testcase><testcase classname="test.custom_header_test.TestCustomHeaderSender" name="test_populates_headers" time="0.001"><failure message="RuntimeError: no running event loop">self = &lt;test.custom_header_test.TestCustomHeaderSender testMethod=test_populates_headers&gt;
+
+    def test_populates_headers(self):
+&gt;       sender = smarty.RequestsSender()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+
+test/custom_header_test.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+smartystreets_python_sdk/requests_sender.py:10: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1036e0310&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</failure></testcase><testcase classname="test.international_autocomplete.candidate_test.TestSuggestion" name="test_all_fields_get_filled_in_correctly" time="0.001" /><testcase classname="test.international_autocomplete.client_test.TestClient" name="test_deserialize_called_with_response_body" time="0.000" /><testcase classname="test.international_autocomplete.client_test.TestClient" name="test_raises_exception_when_response_has_error" time="0.000" /><testcase classname="test.international_autocomplete.client_test.TestClient" name="test_rejects_blank_lookup" time="0.000" /><testcase classname="test.international_autocomplete.client_test.TestClient" name="test_result_correctly_assigned_to_corresponding_lookup" time="0.000" /><testcase classname="test.international_autocomplete.client_test.TestClient" name="test_sending_fully_populated_lookup" time="0.000" /><testcase classname="test.international_autocomplete.client_test.TestClient" name="test_sending_prefix_only_lookup" time="0.000" /><testcase classname="test.international_street.candidate_test.TestCandidate" name="test_all_fields_filled_correctly" time="0.001" /><testcase classname="test.international_street.client_test.TestClient" name="test_accepts_lookups_with_enough_info" time="0.000" /><testcase classname="test.international_street.client_test.TestClient" name="test_candidates_correctly_assigned_to_lookup" time="0.000" /><testcase classname="test.international_street.client_test.TestClient" name="test_deserialize_called_with_response_body" time="0.000" /><testcase classname="test.international_street.client_test.TestClient" name="test_empty_lookup_rejected" time="0.000" /><testcase classname="test.international_street.client_test.TestClient" name="test_rejects_lookups_with_only_country" time="0.000" /><testcase classname="test.international_street.client_test.TestClient" name="test_rejects_lookups_with_only_country_and_address1" time="0.000" /><testcase classname="test.international_street.client_test.TestClient" name="test_rejects_lookups_with_only_country_and_address1_and_administrative_area" time="0.000" /><testcase classname="test.international_street.client_test.TestClient" name="test_rejects_lookups_with_only_country_and_address1_and_locality" time="0.000" /><testcase classname="test.international_street.client_test.TestClient" name="test_sending_freeform_lookup" time="0.000" /><testcase classname="test.international_street.client_test.TestClient" name="test_sending_single_fully_populated_lookup" time="0.000" /><testcase classname="test.license_test.TestLicenseSender" name="test_license_not_set" time="0.000" /><testcase classname="test.license_test.TestLicenseSender" name="test_license_set" time="0.000" /><testcase classname="test.requests_sender_test.TestRequestsSender" name="test_http_request_contains_post_when_appropriate" time="0.001"><failure message="AssertionError: http://localhost">self = &lt;test.requests_sender_test.TestRequestsSender testMethod=test_http_request_contains_post_when_appropriate&gt;
+
+    def test_http_request_contains_post_when_appropriate(self):
+        smartyrequest = smarty.Request()
+        smartyrequest.url_prefix = "http://localhost"
+    
+        smartyrequest.payload = "Test Payload"
+&gt;       request = smarty.requests_sender.build_request(smartyrequest)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/requests_sender_test.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+smartystreets_python_sdk/requests_sender.py:48: in build_request
+    request = ClientRequest(method='GET', url=smarty_request.url_prefix, params=smarty_request.parameters)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client_reqrep.ClientRequest object at 0x1037355d0&gt;
+method = 'GET', url = 'http://localhost'
+
+    def __init__(
+        self,
+        method: str,
+        url: URL,
+        *,
+        params: Query = None,
+        headers: Optional[LooseHeaders] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        data: Any = None,
+        cookies: Optional[LooseCookies] = None,
+        auth: Optional[BasicAuth] = None,
+        version: http.HttpVersion = http.HttpVersion11,
+        compress: Union[str, bool, None] = None,
+        chunked: Optional[bool] = None,
+        expect100: bool = False,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        response_class: Optional[Type["ClientResponse"]] = None,
+        proxy: Optional[URL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        timer: Optional[BaseTimerContext] = None,
+        session: Optional["ClientSession"] = None,
+        ssl: Union[SSLContext, bool, Fingerprint] = True,
+        proxy_headers: Optional[LooseHeaders] = None,
+        traces: Optional[List["Trace"]] = None,
+        trust_env: bool = False,
+        server_hostname: Optional[str] = None,
+    ):
+        if loop is None:
+            loop = asyncio.get_event_loop()
+        if match := _CONTAINS_CONTROL_CHAR_RE.search(method):
+            raise ValueError(
+                f"Method cannot contain non-token characters {method!r} "
+                f"(found at least {match.group()!r})"
+            )
+        # URL forbids subclasses, so a simple type check is enough.
+&gt;       assert type(url) is URL, url
+               ^^^^^^^^^^^^^^^^
+E       AssertionError: http://localhost
+
+.venv/lib/python3.11/site-packages/aiohttp/client_reqrep.py:864: AssertionError</failure></testcase><testcase classname="test.requests_sender_test.TestRequestsSender" name="test_request_contains_correct_content" time="0.001"><failure message="AssertionError: http://localhost">self = &lt;test.requests_sender_test.TestRequestsSender testMethod=test_request_contains_correct_content&gt;
+
+    def test_request_contains_correct_content(self):
+        smartyrequest = smarty.Request()
+        smartyrequest.url_prefix = "http://localhost"
+        smartyrequest.payload = "This is the test content."
+    
+&gt;       request = smarty.requests_sender.build_request(smartyrequest)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/requests_sender_test.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+smartystreets_python_sdk/requests_sender.py:48: in build_request
+    request = ClientRequest(method='GET', url=smarty_request.url_prefix, params=smarty_request.parameters)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client_reqrep.ClientRequest object at 0x103728110&gt;
+method = 'GET', url = 'http://localhost'
+
+    def __init__(
+        self,
+        method: str,
+        url: URL,
+        *,
+        params: Query = None,
+        headers: Optional[LooseHeaders] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        data: Any = None,
+        cookies: Optional[LooseCookies] = None,
+        auth: Optional[BasicAuth] = None,
+        version: http.HttpVersion = http.HttpVersion11,
+        compress: Union[str, bool, None] = None,
+        chunked: Optional[bool] = None,
+        expect100: bool = False,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        response_class: Optional[Type["ClientResponse"]] = None,
+        proxy: Optional[URL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        timer: Optional[BaseTimerContext] = None,
+        session: Optional["ClientSession"] = None,
+        ssl: Union[SSLContext, bool, Fingerprint] = True,
+        proxy_headers: Optional[LooseHeaders] = None,
+        traces: Optional[List["Trace"]] = None,
+        trust_env: bool = False,
+        server_hostname: Optional[str] = None,
+    ):
+        if loop is None:
+            loop = asyncio.get_event_loop()
+        if match := _CONTAINS_CONTROL_CHAR_RE.search(method):
+            raise ValueError(
+                f"Method cannot contain non-token characters {method!r} "
+                f"(found at least {match.group()!r})"
+            )
+        # URL forbids subclasses, so a simple type check is enough.
+&gt;       assert type(url) is URL, url
+               ^^^^^^^^^^^^^^^^
+E       AssertionError: http://localhost
+
+.venv/lib/python3.11/site-packages/aiohttp/client_reqrep.py:864: AssertionError</failure></testcase><testcase classname="test.requests_sender_test.TestRequestsSender" name="test_request_has_correct_content_type" time="0.001"><failure message="AssertionError: http://localhost">self = &lt;test.requests_sender_test.TestRequestsSender testMethod=test_request_has_correct_content_type&gt;
+
+    def test_request_has_correct_content_type(self):
+        smartyrequest = smarty.Request()
+        smartyrequest.url_prefix = "http://localhost"
+        smartyrequest.payload = "This is the test content."
+        smartyrequest.content_type = 'text/plain'
+    
+&gt;       request = smarty.requests_sender.build_request(smartyrequest)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/requests_sender_test.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+smartystreets_python_sdk/requests_sender.py:48: in build_request
+    request = ClientRequest(method='GET', url=smarty_request.url_prefix, params=smarty_request.parameters)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client_reqrep.ClientRequest object at 0x103731b10&gt;
+method = 'GET', url = 'http://localhost'
+
+    def __init__(
+        self,
+        method: str,
+        url: URL,
+        *,
+        params: Query = None,
+        headers: Optional[LooseHeaders] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        data: Any = None,
+        cookies: Optional[LooseCookies] = None,
+        auth: Optional[BasicAuth] = None,
+        version: http.HttpVersion = http.HttpVersion11,
+        compress: Union[str, bool, None] = None,
+        chunked: Optional[bool] = None,
+        expect100: bool = False,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        response_class: Optional[Type["ClientResponse"]] = None,
+        proxy: Optional[URL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        timer: Optional[BaseTimerContext] = None,
+        session: Optional["ClientSession"] = None,
+        ssl: Union[SSLContext, bool, Fingerprint] = True,
+        proxy_headers: Optional[LooseHeaders] = None,
+        traces: Optional[List["Trace"]] = None,
+        trust_env: bool = False,
+        server_hostname: Optional[str] = None,
+    ):
+        if loop is None:
+            loop = asyncio.get_event_loop()
+        if match := _CONTAINS_CONTROL_CHAR_RE.search(method):
+            raise ValueError(
+                f"Method cannot contain non-token characters {method!r} "
+                f"(found at least {match.group()!r})"
+            )
+        # URL forbids subclasses, so a simple type check is enough.
+&gt;       assert type(url) is URL, url
+               ^^^^^^^^^^^^^^^^
+E       AssertionError: http://localhost
+
+.venv/lib/python3.11/site-packages/aiohttp/client_reqrep.py:864: AssertionError</failure></testcase><testcase classname="test.requests_sender_test.TestRequestsSender" name="test_smartyresponse_contains_correct_payload" time="0.000" /><testcase classname="test.requests_sender_test.TestRequestsSender" name="test_smartyresponse_contains_status_code_200_on_success" time="0.000" /><testcase classname="test.requests_sender_test.TestRequestsSender" name="test_smartyresponse_contains_status_code_400_when_server_gives_a_400" time="0.000" /><testcase classname="test.retry_sender_test.TestRetrySender" name="test_backoff_does_not_exceed_max" time="0.001" /><testcase classname="test.retry_sender_test.TestRetrySender" name="test_payment_required_does_not_retry" time="0.001" /><testcase classname="test.retry_sender_test.TestRetrySender" name="test_retry_until_success" time="0.000" /><testcase classname="test.retry_sender_test.TestRetrySender" name="test_return_response_if_retry_limit_exceeded" time="0.000" /><testcase classname="test.retry_sender_test.TestRetrySender" name="test_sleep_on_rate_limit" time="0.000" /><testcase classname="test.retry_sender_test.TestRetrySender" name="test_sleep_on_rate_limit_error" time="0.000" /><testcase classname="test.retry_sender_test.TestRetrySender" name="test_success_does_not_retry" time="0.000" /><testcase classname="test.standard_serializer_test.TestStandardSerializer" name="test_deserialize" time="0.000" /><testcase classname="test.standard_serializer_test.TestStandardSerializer" name="test_serialize" time="0.001" /><testcase classname="test.url_prefix_sender_test.TestURLPrefixSender" name="test_multiple_sends" time="0.000" /><testcase classname="test.url_prefix_sender_test.TestURLPrefixSender" name="test_request_url_not_present" time="0.000" /><testcase classname="test.url_prefix_sender_test.TestURLPrefixSender" name="test_request_url_present" time="0.000" /><testcase classname="test.us_enrichment.client_test.TestClient" name="test_sending_Financial_Lookup" time="0.001" /><testcase classname="test.us_enrichment.client_test.TestClient" name="test_sending_Financial_address_Lookup" time="0.000" /><testcase classname="test.us_enrichment.client_test.TestClient" name="test_sending_geo_reference_address_lookup" time="0.000" /><testcase classname="test.us_enrichment.client_test.TestClient" name="test_sending_geo_reference_lookup" time="0.000" /><testcase classname="test.us_enrichment.client_test.TestClient" name="test_sending_principal_address_lookup" time="0.000" /><testcase classname="test.us_enrichment.client_test.TestClient" name="test_sending_principal_lookup" time="0.000" /><testcase classname="test.us_enrichment.client_test.TestClient" name="test_sending_secondary_address_lookup" time="0.000" /><testcase classname="test.us_enrichment.client_test.TestClient" name="test_sending_secondary_count_address_lookup" time="0.000" /><testcase classname="test.us_enrichment.client_test.TestClient" name="test_sending_secondary_count_lookup" time="0.000" /><testcase classname="test.us_enrichment.client_test.TestClient" name="test_sending_secondary_lookup" time="0.000" /><testcase classname="test.us_enrichment.result_test.ResultTest" name="test_result_generic_deserialization" time="0.001" /><testcase classname="test.us_extract.client_test.TestClient" name="test_content_type_set_correctly" time="0.001" /><testcase classname="test.us_extract.client_test.TestClient" name="test_deserialize_called_with_response_body" time="0.000" /><testcase classname="test.us_extract.client_test.TestClient" name="test_raises_exception_when_response_has_error" time="0.000" /><testcase classname="test.us_extract.client_test.TestClient" name="test_reject_blank_lookup" time="0.000" /><testcase classname="test.us_extract.client_test.TestClient" name="test_result_correctly_assigned_to_corresponding_lookup" time="0.000" /><testcase classname="test.us_extract.client_test.TestClient" name="test_sending_body_only_lookup" time="0.000" /><testcase classname="test.us_extract.client_test.TestClient" name="test_sending_fully_populated_lookup" time="0.000" /><testcase classname="test.us_extract.result_test.TestResult" name="test_all_fields_filled_correctly" time="0.000" /><testcase classname="test.us_reverse_geo.client_test.TestClient" name="test_sending_freeform_lookup" time="0.001" /><testcase classname="test.us_street.batch_test.TestBatch" name="test_adding_a_lookup_when_batch_is_full_raises_exception" time="0.001" /><testcase classname="test.us_street.batch_test.TestBatch" name="test_clear_method_clears_both_lookup_collections" time="0.000" /><testcase classname="test.us_street.batch_test.TestBatch" name="test_gets_lookup_by_index" time="0.000" /><testcase classname="test.us_street.batch_test.TestBatch" name="test_gets_lookup_by_input_id" time="0.000" /><testcase classname="test.us_street.batch_test.TestBatch" name="test_returns_correct_size" time="0.000" /><testcase classname="test.us_street.client_test.TestClient" name="test_candidates_correctly_assigned_to_corresponding_lookup" time="0.000" /><testcase classname="test.us_street.client_test.TestClient" name="test_deserialize_called_with_response_body" time="0.001" /><testcase classname="test.us_street.client_test.TestClient" name="test_empty_batch_not_sent" time="0.000" /><testcase classname="test.us_street.client_test.TestClient" name="test_freeform_assigned_to_street_field" time="0.000" /><testcase classname="test.us_street.client_test.TestClient" name="test_full_json_response_deserialization" time="0.000" /><testcase classname="test.us_street.client_test.TestClient" name="test_raises_exception_when_response_has_error" time="0.000" /><testcase classname="test.us_street.client_test.TestClient" name="test_single_lookup_values_correctly_assigned_to_parameters" time="0.000" /><testcase classname="test.us_street.client_test.TestClient" name="test_successfully_sends_batch" time="0.000" /><testcase classname="test.us_zipcode.client_test.TestClient" name="test_Successfully_Sends_Batch" time="0.001" /><testcase classname="test.us_zipcode.client_test.TestClient" name="test_deserialize_called_with_response_body" time="0.000" /><testcase classname="test.us_zipcode.client_test.TestClient" name="test_empty_batch_not_sent" time="0.000" /><testcase classname="test.us_zipcode.client_test.TestClient" name="test_raises_exception_when_response_has_error" time="0.000" /><testcase classname="test.us_zipcode.client_test.TestClient" name="test_results_correctly_assigned_to_corresponding_lookup" time="0.000" /><testcase classname="test.us_zipcode.client_test.TestClient" name="test_single_lookup_values_correctly_assigned_to_parameters" time="0.000" /><testcase classname="test.x_forwarded_for_test.TestCustomHeaderSender" name="test_custom_headers_used" time="0.059"><failure message="RuntimeError: no running event loop">self = &lt;test.x_forwarded_for_test.TestCustomHeaderSender testMethod=test_custom_headers_used&gt;
+mock_send = &lt;MagicMock name='send' id='4352723664'&gt;
+
+    @patch('requests.Session.send', side_effect=mocked_session_send)
+    def test_custom_headers_used(self, mock_send):
+&gt;       sender = smarty.RequestsSender(ip = '0.0.0.0')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/x_forwarded_for_test.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+smartystreets_python_sdk/requests_sender.py:10: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x103825f10&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</failure></testcase><testcase classname="test.x_forwarded_for_test.TestCustomHeaderSender" name="test_populates_header" time="0.001"><failure message="RuntimeError: no running event loop">self = &lt;test.x_forwarded_for_test.TestCustomHeaderSender testMethod=test_populates_header&gt;
+
+    def test_populates_header(self):
+&gt;       sender = smarty.RequestsSender(ip = '0.0.0.0')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/x_forwarded_for_test.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+smartystreets_python_sdk/requests_sender.py:10: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1038d0210&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</failure></testcase><testcase classname="test.x_forwarded_for_test.TestCustomHeaderSender" name="test_x_forwarded_for_header_set" time="0.001"><failure message="RuntimeError: no running event loop">self = &lt;test.x_forwarded_for_test.TestCustomHeaderSender testMethod=test_x_forwarded_for_header_set&gt;
+mock_send = &lt;MagicMock name='send' id='4355442768'&gt;
+
+    @patch('requests.Session.send', side_effect=mocked_session_send)
+    def test_x_forwarded_for_header_set(self, mock_send):
+&gt;       sender = smarty.RequestsSender(ip = '0.0.0.0')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/x_forwarded_for_test.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+smartystreets_python_sdk/requests_sender.py:10: in __init__
+    self.session = ClientSession()
+                   ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.client.ClientSession object at 0x1039aed50&gt;, base_url = None
+
+    def __init__(
+        self,
+        base_url: Optional[StrOrURL] = None,
+        *,
+        connector: Optional[BaseConnector] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        cookies: Optional[LooseCookies] = None,
+        headers: Optional[LooseHeaders] = None,
+        proxy: Optional[StrOrURL] = None,
+        proxy_auth: Optional[BasicAuth] = None,
+        skip_auto_headers: Optional[Iterable[str]] = None,
+        auth: Optional[BasicAuth] = None,
+        json_serialize: JSONEncoder = json.dumps,
+        request_class: Type[ClientRequest] = ClientRequest,
+        response_class: Type[ClientResponse] = ClientResponse,
+        ws_response_class: Type[ClientWebSocketResponse] = ClientWebSocketResponse,
+        version: HttpVersion = http.HttpVersion11,
+        cookie_jar: Optional[AbstractCookieJar] = None,
+        connector_owner: bool = True,
+        raise_for_status: Union[
+            bool, Callable[[ClientResponse], Awaitable[None]]
+        ] = False,
+        read_timeout: Union[float, _SENTINEL] = sentinel,
+        conn_timeout: Optional[float] = None,
+        timeout: Union[object, ClientTimeout] = sentinel,
+        auto_decompress: bool = True,
+        trust_env: bool = False,
+        requote_redirect_url: bool = True,
+        trace_configs: Optional[List[TraceConfig]] = None,
+        read_bufsize: int = 2**16,
+        max_line_size: int = 8190,
+        max_field_size: int = 8190,
+        fallback_charset_resolver: _CharsetResolver = lambda r, b: "utf-8",
+        middlewares: Sequence[ClientMiddlewareType] = (),
+        ssl_shutdown_timeout: Union[_SENTINEL, None, float] = sentinel,
+    ) -&gt; None:
+        # We initialise _connector to None immediately, as it's referenced in __del__()
+        # and could cause issues if an exception occurs during initialisation.
+        self._connector: Optional[BaseConnector] = None
+    
+        if loop is None:
+            if connector is not None:
+                loop = connector._loop
+    
+&gt;       loop = loop or asyncio.get_running_loop()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: no running event loop
+
+.venv/lib/python3.11/site-packages/aiohttp/client.py:318: RuntimeError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="15" time="0.905" timestamp="2026-03-10T06:15:43.431319+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest" name="test_capture" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'get'">self = &lt;tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest testMethod=test_capture&gt;
+mock_get = &lt;MagicMock name='get' id='4367435600'&gt;
+mock_post = &lt;MagicMock name='post' id='4426179216'&gt;
+
+    @mock.patch('requests.post', side_effect=mocked_requests_post)
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_capture(self, mock_get, mock_post):
+        payment = Payment(
+            1000,
+            'EUR',
+            '1234',
+            '4H120426JX758114N',
+            payment_method=PaymentMethod.PAYPAL
+        )
+&gt;       self._service.capture(payment)
+
+tests/Unit/Application/test_paypal_adaptor.py:486: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+modules/Domain/Services/PayPalService.py:23: in capture
+    self.status(payment)
+modules/Domain/Services/PayPalService.py:19: in status
+    self.paypal_plugin.get_access_token()
+modules/Application/PluginAdaptors/PayPal/PayPalPluginAdaptor.py:22: in get_access_token
+    self.access_token = response.get_access_token()
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;modules.Application.PluginAdaptors.PayPal.GetAccessToken.GetAccessTokenResponse.GetAccessTokenResponse object at 0x107d236d0&gt;
+
+    def get_access_token(self):
+&gt;       return self._data.get('access_token')
+               ^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'get'
+
+modules/Application/PluginAdaptors/PayPal/GetAccessToken/GetAccessTokenResponse.py:7: AttributeError</failure></testcase><testcase classname="tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest" name="test_create" time="0.001"><failure message="AttributeError: 'coroutine' object has no attribute 'get'">self = &lt;tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest testMethod=test_create&gt;
+mock_post = &lt;MagicMock name='post' id='4427127760'&gt;
+
+    @mock.patch('requests.post', side_effect=mocked_requests_post)
+    def test_create(self, mock_post):
+        payment = Payment(
+            1000,
+            'EUR',
+            '1234',
+            None,
+            'FAKE_RETURN_URL',
+            payment_method=PaymentMethod.PAYPAL
+        )
+        payer = Payer(
+            'John',
+            'Doe',
+            'demo-customer@example.com',
+            '1 Rue des Roses',
+            '2nd Floor',
+            'Nantes',
+            'FR',
+            '44230',
+            'fr'
+        )
+&gt;       self._service.pay(payment, payer)
+
+tests/Unit/Application/test_paypal_adaptor.py:463: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+modules/Domain/Services/PayPalService.py:15: in pay
+    self.paypal_plugin.get_access_token()
+modules/Application/PluginAdaptors/PayPal/PayPalPluginAdaptor.py:22: in get_access_token
+    self.access_token = response.get_access_token()
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;modules.Application.PluginAdaptors.PayPal.GetAccessToken.GetAccessTokenResponse.GetAccessTokenResponse object at 0x107e0b010&gt;
+
+    def get_access_token(self):
+&gt;       return self._data.get('access_token')
+               ^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'get'
+
+modules/Application/PluginAdaptors/PayPal/GetAccessToken/GetAccessTokenResponse.py:7: AttributeError</failure></testcase><testcase classname="tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest" name="test_status" time="0.001"><failure message="AttributeError: 'coroutine' object has no attribute 'get'">self = &lt;tests.Unit.Application.test_paypal_adaptor.PayPalAdaptorTest testMethod=test_status&gt;
+mock_get = &lt;MagicMock name='get' id='4427238096'&gt;
+mock_post = &lt;MagicMock name='post' id='4427240080'&gt;
+
+    @mock.patch('requests.post', side_effect=mocked_requests_post)
+    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    def test_status(self, mock_get, mock_post):
+        payment = Payment(
+            1000,
+            'EUR',
+            '1234',
+            '4H120426JX758114N',
+            payment_method=PaymentMethod.PAYPAL
+        )
+&gt;       self._service.status(payment)
+
+tests/Unit/Application/test_paypal_adaptor.py:509: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+modules/Domain/Services/PayPalService.py:19: in status
+    self.paypal_plugin.get_access_token()
+modules/Application/PluginAdaptors/PayPal/PayPalPluginAdaptor.py:22: in get_access_token
+    self.access_token = response.get_access_token()
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;modules.Application.PluginAdaptors.PayPal.GetAccessToken.GetAccessTokenResponse.GetAccessTokenResponse object at 0x107e27710&gt;
+
+    def get_access_token(self):
+&gt;       return self._data.get('access_token')
+               ^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'get'
+
+modules/Application/PluginAdaptors/PayPal/GetAccessToken/GetAccessTokenResponse.py:7: AttributeError</failure></testcase><testcase classname="tests.Unit.Application.test_stripe_adaptor.StripeAdaptorTest" name="test_card" time="0.003" /><testcase classname="tests.Unit.Domain.test_paypal_service.PayPalServiceTest" name="test_capture" time="0.001" /><testcase classname="tests.Unit.Domain.test_paypal_service.PayPalServiceTest" name="test_pay" time="0.000" /><testcase classname="tests.Unit.Domain.test_paypal_service.PayPalServiceTest" name="test_status" time="0.000" /><testcase classname="tests.Unit.Domain.test_stripe_service.StripeServiceTest" name="test_capture" time="0.000" /><testcase classname="tests.Unit.Domain.test_stripe_service.StripeServiceTest" name="test_pay" time="0.000" /><testcase classname="tests.Unit.Domain.test_stripe_service.StripeServiceTest" name="test_status" time="0.000" /><testcase classname="tests.Unit.Entities.test_card.CardTest" name="test_invalid_card_number" time="0.000" /><testcase classname="tests.Unit.Entities.test_card.CardTest" name="test_invalid_card_year" time="0.000" /><testcase classname="tests.Unit.Entities.test_card.CardTest" name="test_valid_card" time="0.000" /><testcase classname="tests.Unit.Entities.test_payment.PaymentTest" name="test_amount_too_high" time="0.000" /><testcase classname="tests.Unit.Entities.test_payment.PaymentTest" name="test_card_invalid_numbers" time="0.000" /></testsuite></testsuites>

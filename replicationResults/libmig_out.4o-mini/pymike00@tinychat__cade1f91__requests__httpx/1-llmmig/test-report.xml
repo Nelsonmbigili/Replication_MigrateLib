@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="21" time="0.233" timestamp="2026-03-07T22:39:07.729256+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming" name="test_perform_stream_request_failure" time="0.002" /><testcase classname="tests.llms.test_anthropic_client.TestAnthropicAIClientStreaming" name="test_perform_stream_request_success" time="0.009" /><testcase classname="tests.llms.test_anthropic_handler.TestAnthropicAIHandlerStreaming" name="test_stream_response_success" time="0.002" /><testcase classname="tests.llms.test_cohere_client.TestCohereClientStreaming" name="test_perform_stream_request_failure" time="0.001" /><testcase classname="tests.llms.test_cohere_client.TestCohereClientStreaming" name="test_perform_stream_request_success" time="0.002" /><testcase classname="tests.llms.test_cohere_handler.TestCohereHandlerStreaming" name="test_stream_response_success" time="0.001"><failure message="AttributeError: 'list' object has no attribute 'iter_text'">self = &lt;tests.llms.test_cohere_handler.TestCohereHandlerStreaming testMethod=test_stream_response_success&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4378628816'&gt;
+mock_perform_stream_request = &lt;MagicMock name='perform_stream_request' id='4378761936'&gt;
+
+    @patch.object(CohereClient, "perform_stream_request")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_stream_response_success(self, mock_api_key, mock_perform_stream_request):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking the stream of responses
+        mock_stream = [b'{"event_type": "text-generation", "text": "Hi!"}',
+                       b'{"event_type": "text-generation", "text": "How can I help?"}']
+        mock_perform_stream_request.return_value = mock_stream
+    
+        handler = CohereHandler()
+        user_input = "hello"
+        generator = handler.stream_response(user_input)
+    
+        # Collecting responses from the generator
+&gt;       responses = [resp for resp in generator]
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/llms/test_cohere_handler.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/llms/test_cohere_handler.py:23: in &lt;listcomp&gt;
+    responses = [resp for resp in generator]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;tinychat.llms.cohere.CohereHandler object at 0x104fcb510&gt;
+user_input = 'hello'
+
+    def stream_response(self, user_input: str) -&gt; Generator[str, None, None]:
+        """
+        Yield stream responses from the client as they are received.
+    
+        This method sends the user input to the client and then yields each piece
+        of the language model's response as it is received in real-time. After the
+        streaming is complete, it updates the message list with the user input and
+        the full language model response.
+    
+        :param user_input: The input string from the user to be sent to the model.
+        :return: A generator yielding the model's response in streamed parts.
+        """
+        self._chat_history.append({"role": "User", "message": user_input})
+        stream = self._client.perform_stream_request(user_input, self._chat_history)
+        lm_response = ""
+&gt;       for response_piece in stream.iter_text():  # type: ignore
+                              ^^^^^^^^^^^^^^^^
+E       AttributeError: 'list' object has no attribute 'iter_text'
+
+tinychat/llms/cohere.py:84: AttributeError</failure></testcase><testcase classname="tests.llms.test_google_client.TestGoogleAIClientStreaming" name="test_perform_stream_request_failure" time="0.002"><failure message="TypeError: 'SSEClient' object is not an iterator">self = &lt;tests.llms.test_google_client.TestGoogleAIClientStreaming testMethod=test_perform_stream_request_failure&gt;
+mock_api_key = &lt;MagicMock name='api_key' id='4379054800'&gt;
+mock_post = &lt;MagicMock name='post' id='4378720528'&gt;
+
+    @patch("tinychat.llms.google.httpx.post")
+    @patch("tinychat.llms.base.BaseLLMClient.api_key", new_callable=MagicMock)
+    def test_perform_stream_request_failure(self, mock_api_key, mock_post):
+        # Setting a dummy value for mock_api_key is not strictly needed here
+    
+        # Mocking the response with an error status code
+        mock_response = Mock(spec=Response)
+        mock_response.status_code = 400
+        mock_post.return_value = mock_response
+    
+        client = GoogleAIClient(temperature = 0.0)
+        messages = [{"parts": [{"text": "content"}], "role": "user"}]
+    
+        with self.assertRaises(ValueError) as context:
+&gt;           next(client.perform_stream_request(messages))  # type: ignore
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: 'SSEClient' object is not an iterator
+
+tests/llms/test_google_client.py:68: TypeError</failure></testcase><testcase classname="tests.llms.test_google_client.TestGoogleAIClientStreaming" name="test_perform_stream_request_success" time="0.003" /><testcase classname="tests.llms.test_google_handler.TestGoogleGeminiHandlerStreaming" name="test_stream_response" time="0.001" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_api_key_setter_invalid_key" time="0.001" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_api_key_setter_valid_key" time="0.001" /><testcase classname="tests.llms.test_llms_base.TestBaseLLMClient" name="test_default_headers" time="0.001" /><testcase classname="tests.llms.test_mistral_client.TestMistralClientStreaming" name="test_perform_stream_request_failure" time="0.001" /><testcase classname="tests.llms.test_mistral_client.TestMistralClientStreaming" name="test_perform_stream_request_success" time="0.002" /><testcase classname="tests.llms.test_mistral_handler.TestMistralHandlerStreaming" name="test_stream_response" time="0.002" /><testcase classname="tests.llms.test_openai_client.TestOpenAIClientStreaming" name="test_perform_stream_request_failure" time="0.001" /><testcase classname="tests.llms.test_openai_client.TestOpenAIClientStreaming" name="test_perform_stream_request_success" time="0.002" /><testcase classname="tests.llms.test_openai_handler.TestOpenAIHandlerStreaming" name="test_stream_response" time="0.001" /><testcase classname="tests.llms.test_together_client.TestTogetherClientStreaming" name="test_perform_stream_request_failure" time="0.001" /><testcase classname="tests.llms.test_together_client.TestTogetherClientStreaming" name="test_perform_stream_request_success" time="0.002" /><testcase classname="tests.llms.test_together_handler.TestTogetherHandlerStreaming" name="test_stream_response" time="0.001" /></testsuite></testsuites>

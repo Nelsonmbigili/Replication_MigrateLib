@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="1" failures="0" skipped="0" tests="1" time="18.745" timestamp="2026-03-10T18:01:39.121305" hostname="nelsonmbigili.local"><testcase classname="" name="bcraapi.tests.test_estadisticas" time="0.000"><error message="collection failure">.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:464: in _make_request
+    self._validate_conn(conn)
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:1093: in _validate_conn
+    conn.connect()
+.venv/lib/python3.11/site-packages/urllib3/connection.py:796: in connect
+    sock_and_verified = _ssl_wrap_socket_and_match_hostname(
+.venv/lib/python3.11/site-packages/urllib3/connection.py:975: in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+.venv/lib/python3.11/site-packages/urllib3/util/ssl_.py:483: in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+.venv/lib/python3.11/site-packages/urllib3/util/ssl_.py:527: in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:517: in wrap_socket
+    return self.sslsocket_class._create(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1108: in _create
+    self.do_handshake()
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1379: in do_handshake
+    self._sslobj.do_handshake()
+E   ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)
+
+During handling of the above exception, another exception occurred:
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:787: in urlopen
+    response = self._make_request(
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:488: in _make_request
+    raise new_e
+E   urllib3.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)
+
+The above exception was the direct cause of the following exception:
+.venv/lib/python3.11/site-packages/requests/adapters.py:486: in send
+    resp = conn.urlopen(
+.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:841: in urlopen
+    retries = retries.increment(
+.venv/lib/python3.11/site-packages/urllib3/util/retry.py:535: in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+E   urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='api.bcra.gob.ar', port=443): Max retries exceeded with url: /estadisticas/v3.0/Monetarias (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')))
+
+During handling of the above exception, another exception occurred:
+bcraapi/tests/test_estadisticas.py:6: in &lt;module&gt;
+    variable_ids = monetarias()["idVariable"].tolist()
+bcraapi/estadisticas.py:21: in monetarias
+    return get_from_bcra("/estadisticas/v3.0/Monetarias")
+bcraapi/__init__.py:60: in get_from_bcra
+    df = __connect_to_api(url=f"{__base_url}{endpoint}")
+bcraapi/__init__.py:23: in __connect_to_api
+    res = requests.get(url, verify=__cert_path)
+.venv/lib/python3.11/site-packages/requests/api.py:73: in get
+    return request("get", url, params=params, **kwargs)
+.venv/lib/python3.11/site-packages/requests/api.py:59: in request
+    return session.request(method=method, url=url, **kwargs)
+.venv/lib/python3.11/site-packages/requests/sessions.py:589: in request
+    resp = self.send(prep, **send_kwargs)
+.venv/lib/python3.11/site-packages/requests/sessions.py:703: in send
+    r = adapter.send(request, **kwargs)
+.venv/lib/python3.11/site-packages/requests/adapters.py:517: in send
+    raise SSLError(e, request=request)
+E   requests.exceptions.SSLError: HTTPSConnectionPool(host='api.bcra.gob.ar', port=443): Max retries exceeded with url: /estadisticas/v3.0/Monetarias (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')))</error></testcase></testsuite></testsuites>

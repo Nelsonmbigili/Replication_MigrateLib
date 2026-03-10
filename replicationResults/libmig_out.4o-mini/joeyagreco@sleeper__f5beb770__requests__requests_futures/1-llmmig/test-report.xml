@@ -1,0 +1,832 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="23" skipped="0" tests="49" time="35.704" timestamp="2026-03-10T15:29:16.447950+04:00" hostname="nelsonmbigili.local"><testcase classname="test.integration.test_api.test_avatar.TestAvatar" name="test_get_avatar_as_thumbnail" time="0.078" /><testcase classname="test.integration.test_api.test_avatar.TestAvatar" name="test_get_avatar_defaults" time="0.101" /><testcase classname="test.integration.test_api.test_draft.TestDraft" name="test_get_draft" time="0.084" /><testcase classname="test.integration.test_api.test_draft.TestDraft" name="test_get_drafts_in_league" time="0.186" /><testcase classname="test.integration.test_api.test_draft.TestDraft" name="test_get_player_draft_picks" time="0.097" /><testcase classname="test.integration.test_api.test_draft.TestDraft" name="test_get_traded_draft_picks" time="0.092" /><testcase classname="test.integration.test_api.test_draft.TestDraft" name="test_get_user_drafts_for_year_happy_path" time="0.078" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_league" time="0.100"><failure message="AssertionError: {'nam[1130 chars] 0, 'reserve_allow_cov': 0, 'daily_waivers_las[1656 chars]': 6} != {'nam[1130 chars] 0, 'was_auto_archived': 1, 'reserve_allow_cov[1680 chars]': 6}&#10;Diff is 4957 characters long. Set self.maxDiff to None to see it.">self = &lt;test.integration.test_api.test_league.TestLeague testMethod=test_get_league&gt;
+
+    def test_get_league(self):
+        response = get_league(league_id=LEAGUE_A_LEAGUE_ID)
+&gt;       self.assertEqual(LEAGUE_A_LEAGUE, response)
+E       AssertionError: {'nam[1130 chars] 0, 'reserve_allow_cov': 0, 'daily_waivers_las[1656 chars]': 6} != {'nam[1130 chars] 0, 'was_auto_archived': 1, 'reserve_allow_cov[1680 chars]': 6}
+E       Diff is 4957 characters long. Set self.maxDiff to None to see it.
+
+test/integration/test_api/test_league.py:34: AssertionError</failure></testcase><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_losers_bracket" time="0.161" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_matchups_for_week" time="0.082" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_rosters" time="0.081" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_sport_state" time="0.080" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_traded_picks" time="0.082" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_transactions" time="0.184" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_user_leagues_for_year" time="0.118"><failure message="AssertionError: Lists differ: [{'league_id': '852776957778173952', 'last_au[12341 chars]one}] != [{'last_author_display_name': 'RickyJ49', 'di[12366 chars]one}]&#10;&#10;First differing element 0:&#10;{'league_id': '852776957778173952', 'last_au[2431 chars]None}&#10;{'last_author_display_name': 'RickyJ49', 'di[2887 chars]None}&#10;&#10;Diff is 27567 characters long. Set self.maxDiff to None to see it.">self = &lt;test.integration.test_api.test_league.TestLeague testMethod=test_get_user_leagues_for_year&gt;
+
+    def test_get_user_leagues_for_year(self):
+        response = get_user_leagues_for_year(
+            user_id=USER_A_USER_ID, sport="nfl", year=2022
+        )
+&gt;       self.assertEqual(USER_A_LEAGUES_2022, response)
+E       AssertionError: Lists differ: [{'league_id': '852776957778173952', 'last_au[12341 chars]one}] != [{'last_author_display_name': 'RickyJ49', 'di[12366 chars]one}]
+E       
+E       First differing element 0:
+E       {'league_id': '852776957778173952', 'last_au[2431 chars]None}
+E       {'last_author_display_name': 'RickyJ49', 'di[2887 chars]None}
+E       
+E       Diff is 27567 characters long. Set self.maxDiff to None to see it.
+
+test/integration/test_api/test_league.py:40: AssertionError</failure></testcase><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_users_in_league" time="0.070" /><testcase classname="test.integration.test_api.test_league.TestLeague" name="test_get_winners_bracket" time="0.074" /><testcase classname="test.integration.test_api.test_player.TestPlayer" name="test_get_all_players" time="0.940" /><testcase classname="test.integration.test_api.test_player.TestPlayer" name="test_get_trending_players" time="0.075" /><testcase classname="test.integration.test_api.test_user.TestUser" name="test_get_user_with_user_id_as_identifier" time="0.060" /><testcase classname="test.integration.test_api.test_user.TestUser" name="test_get_user_with_username_as_identifier" time="0.077" /><testcase classname="test.unit.test_api.test_avatar.TestAvatar" name="test_get_avatar_as_thumbnail" time="0.774"><failure message="requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://sleepercdn.com/avatars/thumbs/abc">self = &lt;test.unit.test_api.test_avatar.TestAvatar testMethod=test_get_avatar_as_thumbnail&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4378123984'&gt;
+
+    @patch("requests.get")
+    def test_get_avatar_as_thumbnail(self, mock_requests_get):
+        mock_bytes = b"foo"
+        mock_response = MockResponse({}, 200, mock_bytes)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_avatar(avatar_id="abc", as_thumbnail=True)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_avatar.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/avatar.py:16: in get_avatar
+    return get_content(url)
+           ^^^^^^^^^^^^^^^^
+sleeper/api/_utils.py:39: in get_content
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [403]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://sleepercdn.com/avatars/thumbs/abc
+
+.venv/lib/python3.11/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="test.unit.test_api.test_avatar.TestAvatar" name="test_get_avatar_defaults" time="0.670"><failure message="requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://sleepercdn.com/avatars/abc">self = &lt;test.unit.test_api.test_avatar.TestAvatar testMethod=test_get_avatar_defaults&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4400921872'&gt;
+
+    @patch("requests.get")
+    def test_get_avatar_defaults(self, mock_requests_get):
+        mock_bytes = b"foo"
+        mock_response = MockResponse({}, 200, mock_bytes)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_avatar(avatar_id="abc")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_avatar.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/avatar.py:16: in get_avatar
+    return get_content(url)
+           ^^^^^^^^^^^^^^^^
+sleeper/api/_utils.py:39: in get_content
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [403]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://sleepercdn.com/avatars/abc
+
+.venv/lib/python3.11/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="test.unit.test_api.test_draft.TestDraft" name="test_get_draft" time="0.471"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/draft/12345">self = &lt;test.unit.test_api.test_draft.TestDraft testMethod=test_get_draft&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4400886800'&gt;
+
+    @patch("requests.get")
+    def test_get_draft(self, mock_requests_get):
+        mock_dict = {"foo": "bar"}
+        mock_response = MockResponse(mock_dict, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_draft(draft_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_draft.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/draft.py:42: in get_draft
+    return get(build_route(SLEEPER_APP_BASE_URL, VERSION, DRAFT_ROUTE, draft_id))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sleeper/api/_utils.py:31: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/draft/12345
+
+.venv/lib/python3.11/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="test.unit.test_api.test_draft.TestDraft" name="test_get_drafts_in_league" time="0.497"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != []&#10;&#10;First list contains 1 additional elements.&#10;First extra element 0:&#10;{'foo': 'bar'}&#10;&#10;- [{'foo': 'bar'}]&#10;+ []">self = &lt;test.unit.test_api.test_draft.TestDraft testMethod=test_get_drafts_in_league&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4401745360'&gt;
+
+    @patch("requests.get")
+    def test_get_drafts_in_league(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_drafts_in_league(league_id="12345")
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       {'foo': 'bar'}
+E       
+E       - [{'foo': 'bar'}]
+E       + []
+
+test/unit/test_api/test_draft.py:36: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_draft.TestDraft" name="test_get_player_draft_picks" time="0.464"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/draft/12345/picks">self = &lt;test.unit.test_api.test_draft.TestDraft testMethod=test_get_player_draft_picks&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4401149264'&gt;
+
+    @patch("requests.get")
+    def test_get_player_draft_picks(self, mock_requests_get):
+        mock_dict = {"foo": "bar"}
+        mock_response = MockResponse(mock_dict, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_player_draft_picks(draft_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_draft.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/draft.py:46: in get_player_draft_picks
+    return get(
+sleeper/api/_utils.py:31: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/draft/12345/picks
+
+.venv/lib/python3.11/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="test.unit.test_api.test_draft.TestDraft" name="test_get_traded_draft_picks" time="0.368"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/draft/12345/traded_picks">self = &lt;test.unit.test_api.test_draft.TestDraft testMethod=test_get_traded_draft_picks&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4401750864'&gt;
+
+    @patch("requests.get")
+    def test_get_traded_draft_picks(self, mock_requests_get):
+        mock_dict = {"foo": "bar"}
+        mock_response = MockResponse(mock_dict, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_traded_draft_picks(draft_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_draft.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/draft.py:58: in get_traded_draft_picks
+    return get(
+sleeper/api/_utils.py:31: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/draft/12345/traded_picks
+
+.venv/lib/python3.11/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="test.unit.test_api.test_draft.TestDraft" name="test_get_user_drafts_for_year_happy_path" time="0.366"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/user/user_id/drafts/nfl/2020">self = &lt;test.unit.test_api.test_draft.TestDraft testMethod=test_get_user_drafts_for_year_happy_path&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4401476496'&gt;
+
+    @patch("requests.get")
+    def test_get_user_drafts_for_year_happy_path(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_user_drafts_for_year(user_id="user_id", sport="nfl", year=2020)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_draft.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/draft.py:16: in get_user_drafts_for_year
+    return get(
+sleeper/api/_utils.py:31: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/user/user_id/drafts/nfl/2020
+
+.venv/lib/python3.11/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_league" time="0.391"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/league/12345">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_league&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4401746960'&gt;
+
+    @patch("requests.get")
+    def test_get_league(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_league(league_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_league.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/league.py:21: in get_league
+    return get(build_route(SLEEPER_APP_BASE_URL, VERSION, LEAGUE_ROUTE, league_id))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sleeper/api/_utils.py:31: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/league/12345
+
+.venv/lib/python3.11/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_losers_bracket" time="0.378"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/league/12345/losers_bracket">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_losers_bracket&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4401495888'&gt;
+
+    @patch("requests.get")
+    def test_get_losers_bracket(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_losers_bracket(league_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_league.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/league.py:88: in get_losers_bracket
+    return get(
+sleeper/api/_utils.py:31: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/league/12345/losers_bracket
+
+.venv/lib/python3.11/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_matchups_for_week" time="0.455"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/league/12345/matchups/1">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_matchups_for_week&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4401559504'&gt;
+
+    @patch("requests.get")
+    def test_get_matchups_for_week(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_matchups_for_week(league_id="12345", week=1)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_league.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/league.py:63: in get_matchups_for_week
+    return get(
+sleeper/api/_utils.py:31: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/league/12345/matchups/1
+
+.venv/lib/python3.11/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_rosters" time="0.460"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/league/12345/rosters">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_rosters&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4400978448'&gt;
+
+    @patch("requests.get")
+    def test_get_rosters(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_rosters(league_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_league.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/league.py:39: in get_rosters
+    return get(
+sleeper/api/_utils.py:31: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/league/12345/rosters
+
+.venv/lib/python3.11/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_sport_state" time="0.154"><failure message="AssertionError: {'foo': 'bar'} != {'week': 0, 'leg': 0, 'season_type': 'off',[171 chars]alse}&#10;- {'foo': 'bar'}&#10;+ {'display_week': 1,&#10;+  'league_create_season': '2026',&#10;+  'league_season': '2026',&#10;+  'leg': 0,&#10;+  'previous_season': '2025',&#10;+  'season': '2026',&#10;+  'season_has_scores': False,&#10;+  'season_start_date': None,&#10;+  'season_type': 'off',&#10;+  'week': 0}">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_sport_state&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4400910352'&gt;
+
+    @patch("requests.get")
+    def test_get_sport_state(self, mock_requests_get):
+        mock_dict = {"foo": "bar"}
+        mock_response = MockResponse(mock_dict, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_sport_state(sport="nfl")
+    
+&gt;       self.assertEqual(mock_dict, response)
+E       AssertionError: {'foo': 'bar'} != {'week': 0, 'leg': 0, 'season_type': 'off',[171 chars]alse}
+E       - {'foo': 'bar'}
+E       + {'display_week': 1,
+E       +  'league_create_season': '2026',
+E       +  'league_season': '2026',
+E       +  'leg': 0,
+E       +  'previous_season': '2025',
+E       +  'season': '2026',
+E       +  'season_has_scores': False,
+E       +  'season_start_date': None,
+E       +  'season_type': 'off',
+E       +  'week': 0}
+
+test/unit/test_api/test_league.py:145: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_traded_picks" time="0.376"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != []&#10;&#10;First list contains 1 additional elements.&#10;First extra element 0:&#10;{'foo': 'bar'}&#10;&#10;- [{'foo': 'bar'}]&#10;+ []">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_traded_picks&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4401133776'&gt;
+
+    @patch("requests.get")
+    def test_get_traded_picks(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_traded_picks(league_id="12345")
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       {'foo': 'bar'}
+E       
+E       - [{'foo': 'bar'}]
+E       + []
+
+test/unit/test_api/test_league.py:132: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_transactions" time="0.481"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != []&#10;&#10;First list contains 1 additional elements.&#10;First extra element 0:&#10;{'foo': 'bar'}&#10;&#10;- [{'foo': 'bar'}]&#10;+ []">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_transactions&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4400913936'&gt;
+
+    @patch("requests.get")
+    def test_get_transactions(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_transactions(league_id="12345", week=1)
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       {'foo': 'bar'}
+E       
+E       - [{'foo': 'bar'}]
+E       + []
+
+test/unit/test_api/test_league.py:119: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_user_leagues_for_year" time="0.543"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != []&#10;&#10;First list contains 1 additional elements.&#10;First extra element 0:&#10;{'foo': 'bar'}&#10;&#10;- [{'foo': 'bar'}]&#10;+ []">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_user_leagues_for_year&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4400958096'&gt;
+
+    @patch("requests.get")
+    def test_get_user_leagues_for_year(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_user_leagues_for_year(user_id="12345", sport="nfl", year=2024)
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       {'foo': 'bar'}
+E       
+E       - [{'foo': 'bar'}]
+E       + []
+
+test/unit/test_api/test_league.py:41: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_users_in_league" time="0.477"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != []&#10;&#10;First list contains 1 additional elements.&#10;First extra element 0:&#10;{'foo': 'bar'}&#10;&#10;- [{'foo': 'bar'}]&#10;+ []">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_users_in_league&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4401234640'&gt;
+
+    @patch("requests.get")
+    def test_get_users_in_league(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_users_in_league(league_id="12345")
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       {'foo': 'bar'}
+E       
+E       - [{'foo': 'bar'}]
+E       + []
+
+test/unit/test_api/test_league.py:67: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_league.TestLeague" name="test_get_winners_bracket" time="0.460"><failure message="requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/league/12345/winners_bracket">self = &lt;test.unit.test_api.test_league.TestLeague testMethod=test_get_winners_bracket&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4401450448'&gt;
+
+    @patch("requests.get")
+    def test_get_winners_bracket(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+&gt;       response = get_winners_bracket(league_id="12345")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/unit/test_api/test_league.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sleeper/api/league.py:76: in get_winners_bracket
+    return get(
+sleeper/api/_utils.py:31: in get
+    response.raise_for_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Response [404]&gt;
+
+    def raise_for_status(self):
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 &lt;= self.status_code &lt; 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 &lt;= self.status_code &lt; 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+&gt;           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://api.sleeper.app/v1/league/12345/winners_bracket
+
+.venv/lib/python3.11/site-packages/requests/models.py:1026: HTTPError</failure></testcase><testcase classname="test.unit.test_api.test_player.TestPlayer" name="test_get_all_players" time="23.002"><failure message="AssertionError: {'foo': {'bar': 'baz'}} != {'6462': {'search_last_name': 'richardson',[15037086 chars] []}}&#10;Diff is 22545587 characters long. Set self.maxDiff to None to see it.">self = &lt;test.unit.test_api.test_player.TestPlayer testMethod=test_get_all_players&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4384648016'&gt;
+
+    @patch("requests.get")
+    def test_get_all_players(self, mock_requests_get):
+        mock_dict = {"foo": {"bar": "baz"}}
+        mock_response = MockResponse(mock_dict, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_all_players(sport="nfl")
+    
+&gt;       self.assertEqual(mock_dict, response)
+E       AssertionError: {'foo': {'bar': 'baz'}} != {'6462': {'search_last_name': 'richardson',[15037086 chars] []}}
+E       Diff is 22545587 characters long. Set self.maxDiff to None to see it.
+
+test/unit/test_api/test_player.py:17: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_player.TestPlayer" name="test_get_trending_players_with_defaults" time="0.080"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != [{'count': 56736, 'player_id': '8180'}, {'co[913 chars]06'}]&#10;&#10;First differing element 0:&#10;{'foo': 'bar'}&#10;{'count': 56736, 'player_id': '8180'}&#10;&#10;Second list contains 24 additional elements.&#10;First extra element 1:&#10;{'count': 18515, 'player_id': '8161'}&#10;&#10;Diff is 1056 characters long. Set self.maxDiff to None to see it.">self = &lt;test.unit.test_api.test_player.TestPlayer testMethod=test_get_trending_players_with_defaults&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4384968912'&gt;
+
+    @patch("requests.get")
+    def test_get_trending_players_with_defaults(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_trending_players(sport="nfl", trend_type="add")
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != [{'count': 56736, 'player_id': '8180'}, {'co[913 chars]06'}]
+E       
+E       First differing element 0:
+E       {'foo': 'bar'}
+E       {'count': 56736, 'player_id': '8180'}
+E       
+E       Second list contains 24 additional elements.
+E       First extra element 1:
+E       {'count': 18515, 'player_id': '8161'}
+E       
+E       Diff is 1056 characters long. Set self.maxDiff to None to see it.
+
+test/unit/test_api/test_player.py:30: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_player.TestPlayer" name="test_get_trending_players_with_optional_params_given" time="0.462"><failure message="AssertionError: Lists differ: [{'foo': 'bar'}] != [{'count': 1125, 'player_id': '8180'}, {'count': 378, 'player_id': '11729'}]&#10;&#10;First differing element 0:&#10;{'foo': 'bar'}&#10;{'count': 1125, 'player_id': '8180'}&#10;&#10;Second list contains 1 additional elements.&#10;First extra element 1:&#10;{'count': 378, 'player_id': '11729'}&#10;&#10;- [{'foo': 'bar'}]&#10;+ [{'count': 1125, 'player_id': '8180'}, {'count': 378, 'player_id': '11729'}]">self = &lt;test.unit.test_api.test_player.TestPlayer testMethod=test_get_trending_players_with_optional_params_given&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4401549200'&gt;
+
+    @patch("requests.get")
+    def test_get_trending_players_with_optional_params_given(self, mock_requests_get):
+        mock_list = [{"foo": "bar"}]
+        mock_response = MockResponse(mock_list, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_trending_players(
+            sport="nfl", trend_type="add", lookback_hours=1, limit=2
+        )
+    
+&gt;       self.assertEqual(mock_list, response)
+E       AssertionError: Lists differ: [{'foo': 'bar'}] != [{'count': 1125, 'player_id': '8180'}, {'count': 378, 'player_id': '11729'}]
+E       
+E       First differing element 0:
+E       {'foo': 'bar'}
+E       {'count': 1125, 'player_id': '8180'}
+E       
+E       Second list contains 1 additional elements.
+E       First extra element 1:
+E       {'count': 378, 'player_id': '11729'}
+E       
+E       - [{'foo': 'bar'}]
+E       + [{'count': 1125, 'player_id': '8180'}, {'count': 378, 'player_id': '11729'}]
+
+test/unit/test_api/test_player.py:45: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_user.TestUser" name="test_get_user" time="0.505"><failure message="AssertionError: {'foo': 'bar'} != {'avatar': 'nfl_was', 'cookies': None, 'cre[370 chars]None}&#10;- {'foo': 'bar'}&#10;+ {'avatar': 'nfl_was',&#10;+  'cookies': None,&#10;+  'created': None,&#10;+  'currencies': None,&#10;+  'data_updated': None,&#10;+  'deleted': None,&#10;+  'display_name': 'Foo',&#10;+  'email': None,&#10;+  'is_bot': None,&#10;+  'metadata': None,&#10;+  'notifications': None,&#10;+  'pending': None,&#10;+  'phone': None,&#10;+  'real_name': None,&#10;+  'solicitable': None,&#10;+  'summoner_name': None,&#10;+  'summoner_region': None,&#10;+  'token': None,&#10;+  'user_id': '109850266073186304',&#10;+  'username': 'foo',&#10;+  'verification': None}">self = &lt;test.unit.test_api.test_user.TestUser testMethod=test_get_user&gt;
+mock_requests_get = &lt;MagicMock name='get' id='4647709904'&gt;
+
+    @patch("requests.get")
+    def test_get_user(self, mock_requests_get):
+        mock_dict = {"foo": "bar"}
+        mock_response = MockResponse(mock_dict, 200)
+        mock_requests_get.return_value = mock_response
+    
+        response = get_user(identifier="foo")
+    
+&gt;       self.assertEqual(mock_dict, response)
+E       AssertionError: {'foo': 'bar'} != {'avatar': 'nfl_was', 'cookies': None, 'cre[370 chars]None}
+E       - {'foo': 'bar'}
+E       + {'avatar': 'nfl_was',
+E       +  'cookies': None,
+E       +  'created': None,
+E       +  'currencies': None,
+E       +  'data_updated': None,
+E       +  'deleted': None,
+E       +  'display_name': 'Foo',
+E       +  'email': None,
+E       +  'is_bot': None,
+E       +  'metadata': None,
+E       +  'notifications': None,
+E       +  'pending': None,
+E       +  'phone': None,
+E       +  'real_name': None,
+E       +  'solicitable': None,
+E       +  'summoner_name': None,
+E       +  'summoner_region': None,
+E       +  'token': None,
+E       +  'user_id': '109850266073186304',
+E       +  'username': 'foo',
+E       +  'verification': None}
+
+test/unit/test_api/test_user.py:17: AssertionError</failure></testcase><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_add_filters_filters_given" time="0.001" /><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_add_filters_no_filters_given" time="0.001" /><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_add_filters_url_already_has_filters" time="0.001" /><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_build_route_base_url_ends_with_slash" time="0.001" /><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_build_route_ending_path_ends_with_slash" time="0.001" /><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_build_route_with_int_and_str_paths" time="0.001" /><testcase classname="test.unit.test_api.test_utils.TestUtils" name="test_build_route_with_str_paths" time="0.001" /></testsuite></testsuites>

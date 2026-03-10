@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="46" time="63.208" timestamp="2026-03-09T21:04:44.453133+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.schemata.test_import_schema" name="test_import_examples[example0]" time="0.040" /><testcase classname="tests.schemata.test_import_schema" name="test_import_examples[example1]" time="0.003" /><testcase classname="tests.schemata.test_import_schema" name="test_import_examples[example2]" time="0.002" /><testcase classname="tests.test_book.TestBook" name="test_canonical_title" time="0.000" /><testcase classname="tests.test_book.TestBook" name="test_create_book" time="0.000" /><testcase classname="tests.test_book.TestBook" name="test_xisbn_to_books" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test__init__" time="0.002" /><testcase classname="tests.test_bots.TestBots" name="test__str2bool_errors_for_non_boolean_input" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test__str2bool_returns_false_for_falsey_input" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test__str2bool_returns_true_for_truthy_input" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test_process_row_with_bytecode" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test_process_row_with_string" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test_save_exits_when_limit_reached" time="0.002" /><testcase classname="tests.test_bots.TestBots" name="test_save_when_write_changes_is_false" time="0.002" /><testcase classname="tests.test_bots.TestBots" name="test_save_when_write_changes_is_true" time="0.002" /><testcase classname="tests.test_bots.TestBots" name="test_setup_logger" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test_write_changes_declaration_when_write_changes_is_false" time="0.001" /><testcase classname="tests.test_bots.TestBots" name="test_write_changes_declaration_when_write_changes_is_true" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_create_book" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_delete" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_edition_json" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_edition_validation" time="0.003" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_edition_by_isbn" time="5.951"><failure message="urllib3.exceptions.HTTPError: Get response failed with status &lt;MagicMock name='request().status' id='4383941840'&gt;">self = &lt;tests.test_openlibrary.TestOpenLibrary testMethod=test_get_edition_by_isbn&gt;
+mock_get = &lt;MagicMock name='request' id='4389651984'&gt;
+
+    @patch('urllib3.PoolManager.request')
+    def test_get_edition_by_isbn(self, mock_get):
+        isbn_lookup_response = {
+            'ISBN:0374202915': {
+                'info_url': 'https://openlibrary.org/books/OL23575801M/Marie_LaVeau'
+            }
+        }
+        edition_response = {'key': "/books/OL23575801M", 'title': 'test'}
+        mock_get.return_value.data.side_effect = [
+            json.dumps(isbn_lookup_response).encode('utf-8'),
+            json.dumps(edition_response).encode('utf-8'),
+        ]
+&gt;       book = self.ol.Edition.get(isbn='0374202915')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_openlibrary.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+olclient/openlibrary.py:387: in get
+    olid = cls.get_olid(bibkey, value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+olclient/openlibrary.py:433: in get_olid
+    metadata = cls.get_metadata(key, value)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+olclient/openlibrary.py:477: in get_metadata
+    response = cls.OL.get_ol_response(path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/backoff/_sync.py:105: in retry
+    ret = target(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;olclient.openlibrary.OpenLibrary object at 0x105a3ef50&gt;
+path = '/api/books.json?bibkeys=ISBN:0374202915'
+
+    @backoff.on_exception(on_giveup=err, **BACKOFF_KWARGS)  # type: ignore
+    def get_ol_response(self, path):
+        """Makes best effort to perform request w/ exponential backoff"""
+        response = self.http.request('GET', self.base_url + path)
+        if response.status != 200:
+&gt;           raise HTTPError(f"Get response failed with status {response.status}")
+E           urllib3.exceptions.HTTPError: Get response failed with status &lt;MagicMock name='request().status' id='4383941840'&gt;
+
+olclient/openlibrary.py:156: HTTPError</failure></testcase><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_notfound" time="27.195" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_olid_by_isbn" time="10.153"><failure message="urllib3.exceptions.HTTPError: Get response failed with status &lt;MagicMock name='request().status' id='4357826448'&gt;">self = &lt;tests.test_openlibrary.TestOpenLibrary testMethod=test_get_olid_by_isbn&gt;
+mock_get = &lt;MagicMock name='request' id='4389424016'&gt;
+
+    @patch('urllib3.PoolManager.request')
+    def test_get_olid_by_isbn(self, mock_get):
+        isbn_key = 'ISBN:0374202915'
+        isbn_bibkeys = {
+            isbn_key: {
+                'info_url': 'https://openlibrary.org/books/OL23575801M/Marie_LaVeau'
+            }
+        }
+        mock_get.return_value.data = json.dumps(isbn_bibkeys).encode('utf-8')
+&gt;       olid = self.ol.Edition.get_olid_by_isbn('0374202915')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_openlibrary.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+olclient/openlibrary.py:411: in get_olid_by_isbn
+    return cls.get_olid('ISBN', isbn)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+olclient/openlibrary.py:433: in get_olid
+    metadata = cls.get_metadata(key, value)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+olclient/openlibrary.py:477: in get_metadata
+    response = cls.OL.get_ol_response(path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/backoff/_sync.py:105: in retry
+    ret = target(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;olclient.openlibrary.OpenLibrary object at 0x105a4cd50&gt;
+path = '/api/books.json?bibkeys=ISBN:0374202915'
+
+    @backoff.on_exception(on_giveup=err, **BACKOFF_KWARGS)  # type: ignore
+    def get_ol_response(self, path):
+        """Makes best effort to perform request w/ exponential backoff"""
+        response = self.http.request('GET', self.base_url + path)
+        if response.status != 200:
+&gt;           raise HTTPError(f"Get response failed with status {response.status}")
+E           urllib3.exceptions.HTTPError: Get response failed with status &lt;MagicMock name='request().status' id='4357826448'&gt;
+
+olclient/openlibrary.py:156: HTTPError</failure></testcase><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_olid_notfound_by_bibkey" time="7.492"><failure message="urllib3.exceptions.HTTPError: Get response failed with status &lt;MagicMock name='request().status' id='4389291472'&gt;">self = &lt;tests.test_openlibrary.TestOpenLibrary testMethod=test_get_olid_notfound_by_bibkey&gt;
+mock_get = &lt;MagicMock name='request' id='4389092880'&gt;
+
+    @patch('urllib3.PoolManager.request')
+    def test_get_olid_notfound_by_bibkey(self, mock_get):
+        mock_get.data = {}
+&gt;       edition = self.ol.Edition.get(isbn='foobar')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_openlibrary.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+olclient/openlibrary.py:387: in get
+    olid = cls.get_olid(bibkey, value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+olclient/openlibrary.py:433: in get_olid
+    metadata = cls.get_metadata(key, value)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+olclient/openlibrary.py:477: in get_metadata
+    response = cls.OL.get_ol_response(path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/backoff/_sync.py:105: in retry
+    ret = target(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;olclient.openlibrary.OpenLibrary object at 0x105c5c9d0&gt;
+path = '/api/books.json?bibkeys=ISBN:foobar'
+
+    @backoff.on_exception(on_giveup=err, **BACKOFF_KWARGS)  # type: ignore
+    def get_ol_response(self, path):
+        """Makes best effort to perform request w/ exponential backoff"""
+        response = self.http.request('GET', self.base_url + path)
+        if response.status != 200:
+&gt;           raise HTTPError(f"Get response failed with status {response.status}")
+E           urllib3.exceptions.HTTPError: Get response failed with status &lt;MagicMock name='request().status' id='4389291472'&gt;
+
+olclient/openlibrary.py:156: HTTPError</failure></testcase><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_work" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_get_work_by_metadata" time="0.002" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_matching_authors_olid" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_redirect" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_save_many" time="0.002"><failure message="urllib3.exceptions.HTTPError: Save many failed with status &lt;MagicMock name='request().status' id='4384243024'&gt;">self = &lt;tests.test_openlibrary.TestOpenLibrary testMethod=test_save_many&gt;
+mock_post = &lt;MagicMock name='request' id='4390195472'&gt;
+
+    @patch('urllib3.PoolManager.request')
+    def test_save_many(self, mock_post):
+        edition = self.ol.Edition(
+            edition_olid='OL123M', work_olid='OL12W', title='minimal edition'
+        )
+        work = self.ol.Work(olid='OL12W', title='minimal work')
+&gt;       self.ol.save_many([edition, work], "test comment")
+
+tests/test_openlibrary.py:268: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;olclient.openlibrary.OpenLibrary object at 0x105a22150&gt;
+docs = [&lt;class 'olclient.openlibrary.OpenLibrary.Edition.&lt;locals&gt;.Edition' {'_work': None, 'work_olid': 'OL12W', 'olid': 'OL1...k' {'identifiers': {}, 'olid': 'OL12W', '_editions': [], 'description': None, 'notes': None, 'title': 'minimal work'}&gt;]
+comment = 'test comment'
+
+    def save_many(self, docs, comment) -&gt; Any:
+        """
+        Uses the Open Library save_many API endpoint to
+        write any number or combination of documents (Edition, Work, or Author)
+        back to Open Library.
+        Uses HTTP Extension Framework custom headers (RFC 2774).
+        """
+        headers = {
+            'Opt': '"http://openlibrary.org/dev/docs/api"; ns=42',
+            '42-comment': comment,
+        }
+        doc_json = [doc.json() for doc in docs]
+        response = self.http.request(
+            'POST', f'{self.base_url}/api/save_many', body=json.dumps(doc_json), headers=headers
+        )
+        if response.status != 200:
+&gt;           raise HTTPError(f"Save many failed with status {response.status}")
+E           urllib3.exceptions.HTTPError: Save many failed with status &lt;MagicMock name='request().status' id='4384243024'&gt;
+
+olclient/openlibrary.py:140: HTTPError</failure></testcase><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_work_json" time="0.001" /><testcase classname="tests.test_openlibrary.TestOpenLibrary" name="test_work_validation" time="0.003" /><testcase classname="tests.test_openlibrary.TestAuthors" name="test_author_validation" time="0.002" /><testcase classname="tests.test_openlibrary.TestFullEditionGet" name="test_load_by_isbn" time="5.949"><failure message="urllib3.exceptions.HTTPError: Get response failed with status &lt;MagicMock name='request().status' id='4390321296'&gt;">self = &lt;tests.test_openlibrary.TestFullEditionGet testMethod=test_load_by_isbn&gt;
+mock_get = &lt;MagicMock name='request' id='4389895440'&gt;
+
+    def test_load_by_isbn(self, mock_get):
+        isbn_key = 'ISBN:0137903952'
+        isbn_bibkeys = {
+            isbn_key: {
+                'info_url': "https://openlibrary.org/books/%s/Artificial_intelligence"
+                % self.target_olid
+            }
+        }
+        mock_get.return_value.data.side_effect = [
+            json.dumps(isbn_bibkeys).encode('utf-8'),
+            self.raw_edition.copy(),
+            self.raw_author.copy(),
+        ]
+    
+&gt;       actual = json.loads(jsonpickle.encode(self.ol.Edition.get(isbn='0137903952')))
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_openlibrary.py:340: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+olclient/openlibrary.py:387: in get
+    olid = cls.get_olid(bibkey, value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+olclient/openlibrary.py:433: in get_olid
+    metadata = cls.get_metadata(key, value)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+olclient/openlibrary.py:477: in get_metadata
+    response = cls.OL.get_ol_response(path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/backoff/_sync.py:105: in retry
+    ret = target(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;olclient.openlibrary.OpenLibrary object at 0x105c6bf90&gt;
+path = '/api/books.json?bibkeys=ISBN:0137903952'
+
+    @backoff.on_exception(on_giveup=err, **BACKOFF_KWARGS)  # type: ignore
+    def get_ol_response(self, path):
+        """Makes best effort to perform request w/ exponential backoff"""
+        response = self.http.request('GET', self.base_url + path)
+        if response.status != 200:
+&gt;           raise HTTPError(f"Get response failed with status {response.status}")
+E           urllib3.exceptions.HTTPError: Get response failed with status &lt;MagicMock name='request().status' id='4390321296'&gt;
+
+olclient/openlibrary.py:156: HTTPError</failure></testcase><testcase classname="tests.test_openlibrary.TestFullEditionGet" name="test_load_by_olid" time="5.725"><failure message="urllib3.exceptions.HTTPError: Get response failed with status &lt;MagicMock name='request().status' id='4390235152'&gt;">self = &lt;tests.test_openlibrary.TestFullEditionGet testMethod=test_load_by_olid&gt;
+mock_get = &lt;MagicMock name='request' id='4391954768'&gt;
+
+    def test_load_by_olid(self, mock_get):
+        mock_get.return_value.data.side_effect = [
+            self.raw_edition.copy(),
+            self.raw_author.copy(),
+        ]
+    
+        actual = json.loads(
+&gt;           jsonpickle.encode(self.ol.Edition.get(olid=self.target_olid))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+
+tests/test_openlibrary.py:369: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+olclient/openlibrary.py:393: in get
+    response = cls.OL.get_ol_response(path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/backoff/_sync.py:105: in retry
+    ret = target(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;olclient.openlibrary.OpenLibrary object at 0x105c7c390&gt;
+path = '/books/OL3702561M.json'
+
+    @backoff.on_exception(on_giveup=err, **BACKOFF_KWARGS)  # type: ignore
+    def get_ol_response(self, path):
+        """Makes best effort to perform request w/ exponential backoff"""
+        response = self.http.request('GET', self.base_url + path)
+        if response.status != 200:
+&gt;           raise HTTPError(f"Get response failed with status {response.status}")
+E           urllib3.exceptions.HTTPError: Get response failed with status &lt;MagicMock name='request().status' id='4390235152'&gt;
+
+olclient/openlibrary.py:156: HTTPError</failure></testcase><testcase classname="tests.test_openlibrary.TestTextType" name="test_edition_text_type" time="0.003" /><testcase classname="tests.test_openlibrary.TestTextType" name="test_edition_text_type_from_string" time="0.003" /><testcase classname="tests.test_openlibrary.TestTextType" name="test_work_text_type" time="0.002" /><testcase classname="tests.test_openlibrary.TestTextType" name="test_work_text_type_from_string" time="0.002" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_0-merged0]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_1-merged1]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_2-merged2]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_3-merged3]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_4-merged4]" time="0.000" /><testcase classname="tests.test_utils" name="test_merge_unique_lists[input_5-merged5]" time="0.000" /></testsuite></testsuites>

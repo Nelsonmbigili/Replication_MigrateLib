@@ -1,0 +1,46 @@
+mig: miguelgrinberg@microblog-api__e250d711__requests__urllib3__e250d711__requests__urllib3
+repo: miguelgrinberg@microblog-api__e250d711__requests__urllib3
+commit: e250d7115b47010ff0e7051d5868485fff4e32fb
+source: requests
+target: urllib3
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.3
+  target_version: 2.2.2
+  finished_at: '2026-03-07 21:11:26'
+  project_coverage: 100.0
+  total_tests: 44
+  passed_tests: 44
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 20.0
+  files:
+  - path: api/tokens.py
+    file_change_coverage: 20.0
+    covered_changed_lines: 2,4,21
+    uncovered_changed_lines: 164-165,173-174,176-177,180-181,185-186,188-189
+  test_diffs:
+  - test_id: tests/test_auth.py::AuthTests::test_oauth
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: module ''api.tokens'' has no attribute ''requests'''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="15" skipped="1" tests="31" time="32.077" timestamp="2026-03-07T22:08:32.403824+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_api_version.TestAPIVersion" name="test_invalid_api_version" time="0.001" /><testcase classname="tests.test_api_version.TestAPIVersion" name="test_valid_api_version_1" time="0.001" /><testcase classname="tests.test_api_version.TestAPIVersion" name="test_valid_api_version_2" time="0.000" /><testcase classname="tests.test_ask_stories.TestAskStories" name="test_ask_stories" time="0.474"><failure message="TypeError: hackernews.Item() argument after ** must be a mapping, not int">self = &lt;tests.test_ask_stories.TestAskStories testMethod=test_ask_stories&gt;
+
+    def test_ask_stories(self):
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, 'https://hacker-news.firebaseio.com/v0/askstories.json?print=pretty')
+        c.setopt(c.WRITEDATA, buffer)
+        c.perform()
+        c.close()
+    
+        response = json.loads(buffer.getvalue().decode('utf-8'))
+&gt;       ask_stories = [Item(**item) for item in response[:10]]  # Assuming Item can be initialized this way
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_ask_stories.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = &lt;list_iterator object at 0x105830940&gt;
+
+&gt;   ask_stories = [Item(**item) for item in response[:10]]  # Assuming Item can be initialized this way
+                   ^^^^^^^^^^^^
+E   TypeError: hackernews.Item() argument after ** must be a mapping, not int
+
+tests/test_ask_stories.py:33: TypeError</failure></testcase><testcase classname="tests.test_ask_stories.TestAskStories" name="test_ask_stories_raw" time="0.479"><failure message="AssertionError: 47282777 is not an instance of &lt;class 'str'&gt;">self = &lt;tests.test_ask_stories.TestAskStories testMethod=test_ask_stories_raw&gt;
+
+    def test_ask_stories_raw(self):
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, 'https://hacker-news.firebaseio.com/v0/askstories.json?print=pretty')
+        c.setopt(c.WRITEDATA, buffer)
+        c.perform()
+        c.close()
+    
+        response = buffer.getvalue().decode('utf-8')
+        ask_stories = json.loads(response)
+        self.assertIsInstance(ask_stories, list)
+&gt;       self.assertIsInstance(ask_stories[0], str)
+E       AssertionError: 47282777 is not an instance of &lt;class 'str'&gt;
+
+tests/test_ask_stories.py:49: AssertionError</failure></testcase><testcase classname="tests.test_get_all.TestAll" name="test_get_all" time="0.002"><skipped type="pytest.skip" message="Skip for timeout issue due to long runtime">/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/avinassh@haxor__8c0cb6be__requests__pycurl/tests/test_get_all.py:21: Skip for timeout issue due to long runtime</skipped></testcase><testcase classname="tests.test_get_async.TestGetAsync" name="test_get_async" time="0.489" /><testcase classname="tests.test_get_async.TestGetAsync" name="test_get_async_error" time="0.522" /><testcase classname="tests.test_get_item.TestGetItem" name="test_get_item" time="0.519"><failure message="TypeError: Item.__init__() got an unexpected keyword argument 'by'">self = &lt;tests.test_get_item.TestGetItem testMethod=test_get_item&gt;
+
+    def test_get_item(self):
+&gt;       item = self.get_item_with_pycurl(8863)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_get_item.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;tests.test_get_item.TestGetItem testMethod=test_get_item&gt;
+item_id = 8863, expand = False
+
+    def get_item_with_pycurl(self, item_id, expand=False):
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, f'https://hacker-news.firebaseio.com/v0/item/{item_id}.json')
+        c.setopt(c.WRITEDATA, buffer)
+        c.perform()
+        c.close()
+        response_data = buffer.getvalue()
+        item_data = json.loads(response_data)
+    
+        if 'error' in item_data:
+            raise InvalidItemID("Invalid item ID")
+    
+&gt;       item = Item(**item_data)
+               ^^^^^^^^^^^^^^^^^
+E       TypeError: Item.__init__() got an unexpected keyword argument 'by'
+
+tests/test_get_item.py:38: TypeError</failure></testcase><testcase classname="tests.test_get_item.TestGetItem" name="test_get_item_expand" time="0.513"><failure message="TypeError: Item.__init__() got an unexpected keyword argument 'by'">self = &lt;tests.test_get_item.TestGetItem testMethod=test_get_item_expand&gt;
+
+    def test_get_item_expand(self):
+&gt;       item = self.get_item_with_pycurl(8863, expand=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_get_item.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;tests.test_get_item.TestGetItem testMethod=test_get_item_expand&gt;
+item_id = 8863, expand = True
+
+    def get_item_with_pycurl(self, item_id, expand=False):
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, f'https://hacker-news.firebaseio.com/v0/item/{item_id}.json')
+        c.setopt(c.WRITEDATA, buffer)
+        c.perform()
+        c.close()
+        response_data = buffer.getvalue()
+        item_data = json.loads(response_data)
+    
+        if 'error' in item_data:
+            raise InvalidItemID("Invalid item ID")
+    
+&gt;       item = Item(**item_data)
+               ^^^^^^^^^^^^^^^^^
+E       TypeError: Item.__init__() got an unexpected keyword argument 'by'
+
+tests/test_get_item.py:38: TypeError</failure></testcase><testcase classname="tests.test_get_item.TestGetItem" name="test_invalid_item" time="0.507"><failure message="TypeError: argument of type 'NoneType' is not iterable">self = &lt;tests.test_get_item.TestGetItem testMethod=test_invalid_item&gt;
+
+    def test_invalid_item(self):
+        with self.assertRaises(InvalidItemID):
+&gt;           self.get_item_with_pycurl(0)
+
+tests/test_get_item.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_item_with_pycurl(self, item_id, expand=False):
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, f'https://hacker-news.firebaseio.com/v0/item/{item_id}.json')
+        c.setopt(c.WRITEDATA, buffer)
+        c.perform()
+        c.close()
+        response_data = buffer.getvalue()
+        item_data = json.loads(response_data)
+    
+&gt;       if 'error' in item_data:
+           ^^^^^^^^^^^^^^^^^^^^
+E       TypeError: argument of type 'NoneType' is not iterable
+
+tests/test_get_item.py:35: TypeError</failure></testcase><testcase classname="tests.test_get_items_by_ids.TestGetItemsByIDs" name="test_get_items_by_ids" time="0.497"><failure message="AttributeError: 'HackerNews' object has no attribute 'session'">self = &lt;tests.test_get_items_by_ids.TestGetItemsByIDs testMethod=test_get_items_by_ids&gt;
+
+    def tearDown(self):
+        # Assuming the HackerNews class manages the curl session
+&gt;       self.hn.session.close()
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'HackerNews' object has no attribute 'session'
+
+tests/test_get_items_by_ids.py:39: AttributeError</failure></testcase><testcase classname="tests.test_get_items_by_ids.TestGetItemsByIDs" name="test_get_items_by_ids_filtered" time="0.580"><failure message="AttributeError: 'HackerNews' object has no attribute 'session'">self = &lt;tests.test_get_items_by_ids.TestGetItemsByIDs testMethod=test_get_items_by_ids_filtered&gt;
+
+    def tearDown(self):
+        # Assuming the HackerNews class manages the curl session
+&gt;       self.hn.session.close()
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'HackerNews' object has no attribute 'session'
+
+tests/test_get_items_by_ids.py:39: AttributeError</failure></testcase><testcase classname="tests.test_get_last.TestGetLast" name="test_get_item" time="0.978" /><testcase classname="tests.test_get_max_item.TestGetMaxItem" name="test_get_max_item" time="0.516" /><testcase classname="tests.test_get_max_item.TestGetMaxItem" name="test_get_max_item_expand" time="0.523"><failure message="AttributeError: type object 'Item' has no attribute 'from_json'">self = &lt;tests.test_get_max_item.TestGetMaxItem testMethod=test_get_max_item_expand&gt;
+
+    def test_get_max_item_expand(self):
+        buffer = BytesIO()
+        self.curl.setopt(self.curl.URL, 'https://hacker-news.firebaseio.com/v0/maxitem.json?expand=true')
+        self.curl.setopt(self.curl.WRITEDATA, buffer)
+        self.curl.perform()
+        max_item_data = buffer.getvalue().decode('utf-8')
+&gt;       max_item = Item.from_json(max_item_data)  # Assuming Item has a method to create from JSON
+                   ^^^^^^^^^^^^^^
+E       AttributeError: type object 'Item' has no attribute 'from_json'
+
+tests/test_get_max_item.py:37: AttributeError</failure></testcase><testcase classname="tests.test_get_sync.TestGetSync" name="test_get_sync" time="0.511"><failure message="AttributeError: 'HackerNews' object has no attribute 'session'">self = &lt;tests.test_get_sync.TestGetSync testMethod=test_get_sync&gt;
+
+    def tearDown(self):
+&gt;       self.hn.session.close()
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'HackerNews' object has no attribute 'session'
+
+tests/test_get_sync.py:54: AttributeError</failure></testcase><testcase classname="tests.test_get_sync.TestGetSync" name="test_get_sync_error" time="0.510"><failure message="AttributeError: 'HackerNews' object has no attribute 'session'">self = &lt;tests.test_get_sync.TestGetSync testMethod=test_get_sync_error&gt;
+
+    def tearDown(self):
+&gt;       self.hn.session.close()
+        ^^^^^^^^^^^^^^^
+E       AttributeError: 'HackerNews' object has no attribute 'session'
+
+tests/test_get_sync.py:54: AttributeError</failure></testcase><testcase classname="tests.test_get_user.TestGetUser" name="test_get_invalid_user" time="0.515" /><testcase classname="tests.test_get_user.TestGetUser" name="test_get_user" time="0.721" /><testcase classname="tests.test_get_user.TestGetUser" name="test_get_user_expand" time="7.437" /><testcase classname="tests.test_get_users_by_ids.TestGetUsersByIDs" name="test_get_users_by_ids" time="0.774"><failure message="AssertionError: 1 != 3">self = &lt;tests.test_get_users_by_ids.TestGetUsersByIDs testMethod=test_get_users_by_ids&gt;
+
+    def test_get_users_by_ids(self):
+        # Prepare a buffer to capture the response
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, 'https://hacker-news.firebaseio.com/v0/user/pg.json')
+        c.setopt(c.WRITEDATA, buffer)
+        c.perform()
+        c.close()
+    
+        # Decode the response
+        response = buffer.getvalue().decode('utf-8')
+        users = [response]  # This is a placeholder; actual implementation will vary
+    
+        self.assertIsInstance(users, list)
+&gt;       self.assertEqual(len(users), 3)
+E       AssertionError: 1 != 3
+
+tests/test_get_users_by_ids.py:36: AssertionError</failure></testcase><testcase classname="tests.test_job_stories.TestJobStories" name="test_job_stories" time="0.485"><failure message="AttributeError: 'HackerNews' object has no attribute 'parse_response'">self = &lt;tests.test_job_stories.TestJobStories testMethod=test_job_stories&gt;
+
+    def test_job_stories(self):
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, 'https://hacker-news.firebaseio.com/v0/jobstories.json?limit=10')
+        c.setopt(c.WRITEDATA, buffer)
+        c.perform()
+        c.close()
+    
+&gt;       job_stories = self.hn.parse_response(buffer.getvalue())
+                      ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'HackerNews' object has no attribute 'parse_response'
+
+tests/test_job_stories.py:30: AttributeError</failure></testcase><testcase classname="tests.test_job_stories.TestJobStories" name="test_job_stories_raw" time="0.512"><failure message="AttributeError: 'HackerNews' object has no attribute 'parse_response_raw'">self = &lt;tests.test_job_stories.TestJobStories testMethod=test_job_stories_raw&gt;
+
+    def test_job_stories_raw(self):
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, 'https://hacker-news.firebaseio.com/v0/jobstories.json?raw=true')
+        c.setopt(c.WRITEDATA, buffer)
+        c.perform()
+        c.close()
+    
+&gt;       job_stories = self.hn.parse_response_raw(buffer.getvalue())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'HackerNews' object has no attribute 'parse_response_raw'
+
+tests/test_job_stories.py:43: AttributeError</failure></testcase><testcase classname="tests.test_new_stories.TestNewStories" name="test_new_stories" time="1.048" /><testcase classname="tests.test_new_stories.TestNewStories" name="test_new_stories_raw" time="0.512"><failure message="AssertionError: 47289976 is not an instance of &lt;class 'str'&gt;">self = &lt;tests.test_new_stories.TestNewStories testMethod=test_new_stories_raw&gt;
+
+    def test_new_stories_raw(self):
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, 'https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty')
+        c.setopt(c.WRITEDATA, buffer)
+        c.perform()
+        c.close()
+    
+        body = buffer.getvalue().decode('utf-8')
+        new_stories = eval(body)  # Assuming the response is a JSON array of story IDs
+        self.assertIsInstance(new_stories, list)
+&gt;       self.assertIsInstance(new_stories[0], str)
+E       AssertionError: 47289976 is not an instance of &lt;class 'str'&gt;
+
+tests/test_new_stories.py:39: AssertionError</failure></testcase><testcase classname="tests.test_show_stories.TestShowStories" name="test_show_stories" time="1.578" /><testcase classname="tests.test_show_stories.TestShowStories" name="test_show_stories_raw" time="2.099" /><testcase classname="tests.test_top_stories.TestTopStories" name="test_top_stories" time="1.559" /><testcase classname="tests.test_top_stories.TestTopStories" name="test_top_stories_raw" time="2.890" /><testcase classname="tests.test_updates.TestUpdates" name="test_top_stories" time="0.001"><failure message="AttributeError: 'HackerNews' object has no attribute 'api_url'">self = &lt;tests.test_updates.TestUpdates testMethod=test_top_stories&gt;
+
+    def test_top_stories(self):
+        buffer = BytesIO()
+        c = pycurl.Curl()
+&gt;       c.setopt(c.URL, self.hn.api_url + '/updates')  # Assuming api_url is defined in HackerNews
+                        ^^^^^^^^^^^^^^^
+E       AttributeError: 'HackerNews' object has no attribute 'api_url'
+
+tests/test_updates.py:24: AttributeError</failure></testcase></testsuite></testsuites>

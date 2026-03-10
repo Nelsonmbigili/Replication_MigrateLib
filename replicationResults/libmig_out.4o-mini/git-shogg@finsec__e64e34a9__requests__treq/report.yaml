@@ -1,0 +1,138 @@
+mig: git-shogg@finsec__e64e34a9__requests__treq__e64e34a9__requests__treq
+repo: git-shogg@finsec__e64e34a9__requests__treq
+commit: e64e34a9179f3d7930982c0d6790aeb9456739d9
+source: requests
+target: treq
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.5
+  target_version: 25.5.0
+  finished_at: '2026-03-09 19:13:25'
+  project_coverage: 83.98576512455516
+  total_tests: 7
+  passed_tests: 7
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 29.26829268292683
+  files:
+  - path: finsec/base.py
+    file_change_coverage: 27.5
+    covered_changed_lines: 1,35,59,99,197,224,237,268,278,288,298
+    uncovered_changed_lines: 40-41,61-63,69,71,100-101,103,107-114,198,208,239,244,248,274,284,294,300,324,328
+  - path: finsec/filing.py
+    file_change_coverage: 100.0
+    covered_changed_lines: '1'
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: tests/test_13f.py::Test::test_get_a_13f_filing
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: cannot unpack non-iterable coroutine object'
+  - test_id: tests/test_13f.py::Test::test_latest_13f_count_holdings
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False\n +  where False = isinstance(<coroutine object FilingBase.get_latest_13f_num_holdings\
+      \ at 0x109b40f20>, int)"
+  - test_id: tests/test_13f.py::Test::test_latest_13f_filing
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert False\n +  where False = isinstance(<coroutine\
+      \ object FilingBase.get_latest_13f_filing at 0x109935fe0>, <class 'pandas.DataFrame'>)\n\
+      \ +    where <class 'pandas.DataFrame'> = pd.DataFrame"
+  - test_id: tests/test_13f.py::Test::test_latest_13f_filing_cover_page
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False\n +  where False = isinstance(<coroutine object FilingBase.get_latest_13f_filing_cover_page\
+      \ at 0x109b51560>, dict)"
+  - test_id: tests/test_13f.py::Test::test_latest_13f_filing_detailed
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert False\n +  where False = isinstance(<coroutine\
+      \ object FilingBase.get_latest_13f_filing at 0x109936820>, <class 'pandas.DataFrame'>)\n\
+      \ +    where <class 'pandas.DataFrame'> = pd.DataFrame"
+  - test_id: tests/test_13f.py::Test::test_latest_13f_portfolio_value
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False\n +  where False = isinstance(<coroutine object FilingBase.get_latest_13f_value\
+      \ at 0x109ada190>, int)"
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished
+  project_change_coverage: 57.971014492753625
+  files:
+  - path: finsec/filing.py
+    file_change_coverage: 76.92307692307692
+    covered_changed_lines: 1,8-9,14-15,18,22,25-26,29
+    uncovered_changed_lines: 19,23,30
+  - path: tests/test_13f.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 7,18-20,24-26,29-30,34-35,39-40,44-46
+    uncovered_changed_lines: ''
+  - path: finsec/base.py
+    file_change_coverage: 35.0
+    covered_changed_lines: 1,35,40,59,99,197,224,237,239,268,278,288,298,300
+    uncovered_changed_lines: 41,61-63,69,71,100-101,103,107-114,198,208,244,248,274,284,294,324,328
+  test_diffs:
+  - test_id: tests/test_13f.py::Test::test_get_a_13f_filing
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: Task got bad yield: <Deferred at 0x113f94ed0>'
+  - test_id: tests/test_13f.py::Test::test_latest_13f_count_holdings
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False\n +  where False = isinstance(<coroutine object Filing.latest_13f_count_holdings\
+      \ at 0x113e42980>, int)"
+  - test_id: tests/test_13f.py::Test::test_latest_13f_filing
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: Task got bad yield: <Deferred at 0x113e3ce10>'
+  - test_id: tests/test_13f.py::Test::test_latest_13f_filing_cover_page
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False\n +  where False = isinstance(<coroutine object Filing.latest_13f_filing_cover_page\
+      \ at 0x113e41900>, dict)"
+  - test_id: tests/test_13f.py::Test::test_latest_13f_filing_detailed
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: RuntimeError
+    error_message: 'RuntimeError: Task got bad yield: <Deferred at 0x113f60c10>'
+  - test_id: tests/test_13f.py::Test::test_latest_13f_portfolio_value
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "assert False\n +  where False = isinstance(<coroutine object Filing.latest_13f_portfolio_value\
+      \ at 0x113e41a80>, int)"
+manual_edit: null

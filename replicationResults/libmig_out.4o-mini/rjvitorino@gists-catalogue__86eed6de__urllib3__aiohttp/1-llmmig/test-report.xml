@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="7" time="3.570" timestamp="2026-03-07T18:05:04.718385+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_utils" name="test_fetch_gists" time="0.089"><failure message="TypeError: object of type 'coroutine' has no len()">mock_get = &lt;MagicMock name='get' id='4390376016'&gt;
+
+    @patch("requests.get")
+    def test_fetch_gists(mock_get):
+        mock_response = MagicMock()
+        mock_response.json.return_value = [example_gist_data]
+        mock_get.return_value = mock_response
+        gists = fetch_gists()
+&gt;       assert len(gists) == 1
+E       TypeError: object of type 'coroutine' has no len()
+
+tests/test_utils.py:40: TypeError</failure></testcase><testcase classname="tests.test_utils" name="test_fetch_gist_content" time="0.001"><failure message="assert &lt;coroutine object fetch_gist_content at 0x105ce3890&gt; == &quot;print('Hello, world!')&quot;">mock_get = &lt;MagicMock name='get' id='4393549904'&gt;
+
+    @patch("requests.get")
+    def test_fetch_gist_content(mock_get):
+        mock_response = MagicMock()
+        mock_response.text = "print('Hello, world!')"
+        mock_get.return_value = mock_response
+        content = fetch_gist_content(
+            "https://gist.githubusercontent.com/rjvitorino/dfef5433066c061954d29d1b15202290/raw/54a0207aaf64e70e57a2063795b0a1c88a6b046c/file1.py"
+        )
+&gt;       assert content == "print('Hello, world!')"
+E       assert &lt;coroutine object fetch_gist_content at 0x105ce3890&gt; == "print('Hello, world!')"
+
+tests/test_utils.py:52: AssertionError</failure></testcase><testcase classname="tests.test_utils" name="test_format_date" time="0.001" /><testcase classname="tests.test_utils" name="test_generate_folder_name" time="0.000" /><testcase classname="tests.test_utils" name="test_save_gist_files" time="0.002"><failure message="AssertionError: expected call not found.&#10;Expected: open(PosixPath('gists/20240617-file1-gist/files/file1.py'), 'w')&#10;Actual: not called.">mock_fetch_content = &lt;AsyncMock name='fetch_gist_content' id='4393607056'&gt;
+mock_file = &lt;MagicMock name='open' id='4393612560'&gt;
+
+    @patch("builtins.open", new_callable=mock_open)
+    @patch("scripts.utils.fetch_gist_content")
+    def test_save_gist_files(mock_fetch_content, mock_file):
+        mock_fetch_content.return_value = "print('Hello, world!')"
+        save_gist_files(example_gist)
+&gt;       mock_file.assert_called_with(Path("gists/20240617-file1-gist/files/file1.py"), "w")
+
+tests/test_utils.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='open' id='4393612560'&gt;
+args = (PosixPath('gists/20240617-file1-gist/files/file1.py'), 'w'), kwargs = {}
+expected = "open(PosixPath('gists/20240617-file1-gist/files/file1.py'), 'w')"
+actual = 'not called.'
+error_message = "expected call not found.\nExpected: open(PosixPath('gists/20240617-file1-gist/files/file1.py'), 'w')\nActual: not called."
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\nActual: %s'
+                    % (expected, actual))
+&gt;           raise AssertionError(error_message)
+E           AssertionError: expected call not found.
+E           Expected: open(PosixPath('gists/20240617-file1-gist/files/file1.py'), 'w')
+E           Actual: not called.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:930: AssertionError</failure></testcase><testcase classname="tests.test_utils" name="test_create_gist_index" time="0.002"><failure message="AssertionError: expected call not found.&#10;Expected: open(PosixPath('gists/20240617-file1-gist/index.md'), 'w')&#10;Actual: not called.">mock_file = &lt;MagicMock name='open' id='4393555280'&gt;
+
+    @patch("builtins.open", new_callable=mock_open)
+    def test_create_gist_index(mock_file):
+        create_gist_index(example_gist)
+&gt;       mock_file.assert_called_with(Path("gists/20240617-file1-gist/index.md"), "w")
+
+tests/test_utils.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='open' id='4393555280'&gt;
+args = (PosixPath('gists/20240617-file1-gist/index.md'), 'w'), kwargs = {}
+expected = "open(PosixPath('gists/20240617-file1-gist/index.md'), 'w')"
+actual = 'not called.'
+error_message = "expected call not found.\nExpected: open(PosixPath('gists/20240617-file1-gist/index.md'), 'w')\nActual: not called."
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\nActual: %s'
+                    % (expected, actual))
+&gt;           raise AssertionError(error_message)
+E           AssertionError: expected call not found.
+E           Expected: open(PosixPath('gists/20240617-file1-gist/index.md'), 'w')
+E           Actual: not called.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:930: AssertionError</failure></testcase><testcase classname="tests.test_utils" name="test_update_readme" time="0.002"><failure message="AssertionError: expected call not found.&#10;Expected: open(PosixPath('README.md'), 'w')&#10;Actual: not called.">mock_file = &lt;MagicMock name='open' id='4392243152'&gt;
+
+    @patch("builtins.open", new_callable=mock_open)
+    def test_update_readme(mock_file):
+        update_readme([example_gist])
+&gt;       mock_file.assert_called_with(Path("README.md"), "w")
+
+tests/test_utils.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;MagicMock name='open' id='4392243152'&gt;
+args = (PosixPath('README.md'), 'w'), kwargs = {}
+expected = "open(PosixPath('README.md'), 'w')", actual = 'not called.'
+error_message = "expected call not found.\nExpected: open(PosixPath('README.md'), 'w')\nActual: not called."
+
+    def assert_called_with(self, /, *args, **kwargs):
+        """assert that the last call was made with the specified arguments.
+    
+        Raises an AssertionError if the args and keyword args passed in are
+        different to the last call to the mock."""
+        if self.call_args is None:
+            expected = self._format_mock_call_signature(args, kwargs)
+            actual = 'not called.'
+            error_message = ('expected call not found.\nExpected: %s\nActual: %s'
+                    % (expected, actual))
+&gt;           raise AssertionError(error_message)
+E           AssertionError: expected call not found.
+E           Expected: open(PosixPath('README.md'), 'w')
+E           Actual: not called.
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:930: AssertionError</failure></testcase></testsuite></testsuites>

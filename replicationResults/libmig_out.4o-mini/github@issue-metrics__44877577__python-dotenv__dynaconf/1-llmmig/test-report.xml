@@ -1,0 +1,1033 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="17" skipped="0" tests="98" time="0.952" timestamp="2026-03-09T12:18:49.033924+04:00" hostname="nelsonmbigili.local"><testcase classname="test_auth.TestAuthToGithub" name="test_auth_to_github_invalid_credentials" time="0.001" /><testcase classname="test_auth.TestAuthToGithub" name="test_auth_to_github_with_ghe" time="0.000" /><testcase classname="test_auth.TestAuthToGithub" name="test_auth_to_github_with_ghe_and_ghe_app" time="0.001" /><testcase classname="test_auth.TestAuthToGithub" name="test_auth_to_github_with_github_app" time="0.001" /><testcase classname="test_auth.TestAuthToGithub" name="test_auth_to_github_with_token" time="0.000" /><testcase classname="test_auth.TestAuthToGithub" name="test_auth_to_github_without_authentication_information" time="0.000" /><testcase classname="test_auth.TestAuthToGithub" name="test_get_github_app_installation_token" time="0.001" /><testcase classname="test_auth.TestAuthToGithub" name="test_get_github_app_installation_token_request_failure" time="0.001" /><testcase classname="test_config.TestGetIntFromEnv" name="test_get_int_env_var" time="0.154"><failure message="AssertionError: None != 12345">self = &lt;test_config.TestGetIntFromEnv testMethod=test_get_int_env_var&gt;
+
+    @patch.dict(os.environ, {"INT_ENV_VAR": "12345"})
+    def test_get_int_env_var(self):
+        """
+        Test that get_int_env_var returns the expected integer value.
+        """
+        result = get_int_env_var("INT_ENV_VAR")
+&gt;       self.assertEqual(result, 12345)
+E       AssertionError: None != 12345
+
+test_config.py:39: AssertionError</failure></testcase><testcase classname="test_config.TestGetIntFromEnv" name="test_get_int_env_var_with_empty_env_var" time="0.001" /><testcase classname="test_config.TestGetIntFromEnv" name="test_get_int_env_var_with_non_integer" time="0.001" /><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_auth_with_github_app_installation_missing_inputs" time="0.001"><failure message="AssertionError: 'SEARCH_QUERY environment variable not set' != 'GH_APP_ID set and GH_APP_INSTALLATION_ID [34 chars] set'&#10;- SEARCH_QUERY environment variable not set&#10;+ GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set">self = &lt;test_config.TestGetEnvVars testMethod=test_get_env_vars_auth_with_github_app_installation_missing_inputs&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "ORGANIZATION": "my_organization",
+            "GH_APP_ID": "12345",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "",
+            "SEARCH_QUERY": SEARCH_QUERY,
+        },
+        clear=True,
+    )
+    def test_get_env_vars_auth_with_github_app_installation_missing_inputs(self):
+        """Test that an error is raised there are missing inputs for the gh app"""
+        with self.assertRaises(ValueError) as context_manager:
+            get_env_vars(True)
+        the_exception = context_manager.exception
+&gt;       self.assertEqual(
+            str(the_exception),
+            "GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set",
+        )
+E       AssertionError: 'SEARCH_QUERY environment variable not set' != 'GH_APP_ID set and GH_APP_INSTALLATION_ID [34 chars] set'
+E       - SEARCH_QUERY environment variable not set
+E       + GH_APP_ID set and GH_APP_INSTALLATION_ID or GH_APP_PRIVATE_KEY variable not set
+
+test_config.py:347: AssertionError</failure></testcase><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_missing_query" time="0.001" /><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_missing_token" time="0.001" /><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_optional_values" time="0.001"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_config.TestGetEnvVars testMethod=test_get_env_vars_optional_values&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": TOKEN,
+            "GH_ENTERPRISE_URL": "",
+            "HIDE_AUTHOR": "true",
+            "HIDE_ITEMS_CLOSED_COUNT": "true",
+            "HIDE_LABEL_METRICS": "true",
+            "HIDE_TIME_TO_ANSWER": "true",
+            "HIDE_TIME_TO_CLOSE": "true",
+            "HIDE_TIME_TO_FIRST_RESPONSE": "true",
+            "IGNORE_USERS": "",
+            "LABELS_TO_MEASURE": "waiting-for-review,waiting-for-manager",
+            "NON_MENTIONING_LINKS": "true",
+            "OUTPUT_FILE": "issue_metrics.md",
+            "REPORT_TITLE": "Issue Metrics",
+            "SEARCH_QUERY": SEARCH_QUERY,
+            "RATE_LIMIT_BYPASS": "true",
+            "DRAFT_PR_TRACKING": "True",
+        },
+    )
+    def test_get_env_vars_optional_values(self):
+        """Test that optional values are set to their default values if not provided"""
+        expected_result = EnvVars(
+            gh_app_id=None,
+            gh_app_installation_id=None,
+            gh_app_private_key_bytes=b"",
+            gh_app_enterprise_only=False,
+            gh_token=TOKEN,
+            ghe="",
+            hide_author=True,
+            hide_items_closed_count=True,
+            hide_label_metrics=True,
+            hide_time_to_answer=True,
+            hide_time_to_close=True,
+            hide_time_to_first_response=True,
+            ignore_user=[],
+            labels_to_measure=["waiting-for-review", "waiting-for-manager"],
+            enable_mentor_count=False,
+            min_mentor_comments=10,
+            max_comments_eval=20,
+            heavily_involved_cutoff=3,
+            search_query=SEARCH_QUERY,
+            non_mentioning_links=True,
+            report_title="Issue Metrics",
+            output_file="issue_metrics.md",
+            rate_limit_bypass=True,
+            draft_pr_tracking=True,
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_config.py:285: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = True
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_optionals_are_defaulted" time="0.001"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_config.TestGetEnvVars testMethod=test_get_env_vars_optionals_are_defaulted&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_TOKEN": "TOKEN",
+            "SEARCH_QUERY": SEARCH_QUERY,
+        },
+        clear=True,
+    )
+    def test_get_env_vars_optionals_are_defaulted(self):
+        """Test that optional values are set to their default values if not provided"""
+        expected_result = EnvVars(
+            gh_app_id=None,
+            gh_app_installation_id=None,
+            gh_app_private_key_bytes=b"",
+            gh_app_enterprise_only=False,
+            gh_token="TOKEN",
+            ghe="",
+            hide_author=False,
+            hide_items_closed_count=False,
+            hide_label_metrics=False,
+            hide_time_to_answer=False,
+            hide_time_to_close=False,
+            hide_time_to_first_response=False,
+            ignore_user=[],
+            labels_to_measure=[],
+            enable_mentor_count=False,
+            min_mentor_comments="10",
+            max_comments_eval="20",
+            heavily_involved_cutoff="3",
+            search_query=SEARCH_QUERY,
+            non_mentioning_links=False,
+            report_title="Issue Metrics",
+            output_file="",
+            rate_limit_bypass=False,
+            draft_pr_tracking=False,
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_config.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = True
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_with_github_app" time="0.001"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_config.TestGetEnvVars testMethod=test_get_env_vars_with_github_app&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_APP_ID": "12345",
+            "GH_APP_INSTALLATION_ID": "678910",
+            "GH_APP_PRIVATE_KEY": "hello",
+            "GH_TOKEN": "",
+            "GH_ENTERPRISE_URL": "",
+            "HIDE_AUTHOR": "",
+            "HIDE_ITEMS_CLOSED_COUNT": "false",
+            "HIDE_LABEL_METRICS": "",
+            "HIDE_TIME_TO_ANSWER": "",
+            "HIDE_TIME_TO_CLOSE": "",
+            "HIDE_TIME_TO_FIRST_RESPONSE": "",
+            "IGNORE_USERS": "",
+            "LABELS_TO_MEASURE": "",
+            "NON_MENTIONING_LINKS": "false",
+            "OUTPUT_FILE": "",
+            "REPORT_TITLE": "",
+            "SEARCH_QUERY": SEARCH_QUERY,
+            "RATE_LIMIT_BYPASS": "false",
+        },
+        clear=True,
+    )
+    def test_get_env_vars_with_github_app(self):
+        """Test that all environment variables are set correctly using GitHub App"""
+        expected_result = EnvVars(
+            gh_app_id=12345,
+            gh_app_installation_id=678910,
+            gh_app_private_key_bytes=b"hello",
+            gh_app_enterprise_only=False,
+            gh_token="",
+            ghe="",
+            hide_author=False,
+            hide_items_closed_count=False,
+            hide_label_metrics=False,
+            hide_time_to_answer=False,
+            hide_time_to_close=False,
+            hide_time_to_first_response=False,
+            ignore_user=[],
+            labels_to_measure=[],
+            enable_mentor_count=False,
+            min_mentor_comments="10",
+            max_comments_eval="20",
+            heavily_involved_cutoff="3",
+            search_query=SEARCH_QUERY,
+            non_mentioning_links=False,
+            report_title="",
+            output_file="",
+            draft_pr_tracking=False,
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_config.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = True
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_config.TestGetEnvVars" name="test_get_env_vars_with_token" time="0.001"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_config.TestGetEnvVars testMethod=test_get_env_vars_with_token&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_APP_ID": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_ENTERPRISE_URL": "",
+            "GH_TOKEN": TOKEN,
+            "HIDE_AUTHOR": "",
+            "HIDE_ITEMS_CLOSED_COUNT": "false",
+            "HIDE_LABEL_METRICS": "",
+            "HIDE_TIME_TO_ANSWER": "",
+            "HIDE_TIME_TO_CLOSE": "",
+            "HIDE_TIME_TO_FIRST_RESPONSE": "",
+            "IGNORE_USERS": "",
+            "LABELS_TO_MEASURE": "",
+            "NON_MENTIONING_LINKS": "false",
+            "OUTPUT_FILE": "",
+            "REPORT_TITLE": "",
+            "SEARCH_QUERY": SEARCH_QUERY,
+        },
+        clear=True,
+    )
+    def test_get_env_vars_with_token(self):
+        """Test that all environment variables are set correctly using a list of repositories"""
+        expected_result = EnvVars(
+            gh_app_id=None,
+            gh_app_installation_id=None,
+            gh_app_private_key_bytes=b"",
+            gh_app_enterprise_only=False,
+            gh_token=TOKEN,
+            ghe="",
+            hide_author=False,
+            hide_items_closed_count=False,
+            hide_label_metrics=False,
+            hide_time_to_answer=False,
+            hide_time_to_close=False,
+            hide_time_to_first_response=False,
+            ignore_user=[],
+            labels_to_measure=[],
+            enable_mentor_count=False,
+            min_mentor_comments="10",
+            max_comments_eval="20",
+            heavily_involved_cutoff="3",
+            search_query=SEARCH_QUERY,
+            non_mentioning_links=False,
+            report_title="",
+            output_file="",
+        )
+&gt;       result = get_env_vars(True)
+                 ^^^^^^^^^^^^^^^^^^
+
+test_config.py:195: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = True
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_config_get_bool.TestEnv" name="test_get_bool_env_var_that_does_not_exist_and_default_value_returns_false" time="0.001" /><testcase classname="test_config_get_bool.TestEnv" name="test_get_bool_env_var_that_does_not_exist_and_default_value_returns_true" time="0.001" /><testcase classname="test_config_get_bool.TestEnv" name="test_get_bool_env_var_that_exists_and_is_false" time="0.001" /><testcase classname="test_config_get_bool.TestEnv" name="test_get_bool_env_var_that_exists_and_is_false_due_to_invalid_value" time="0.001" /><testcase classname="test_config_get_bool.TestEnv" name="test_get_bool_env_var_that_exists_and_is_true" time="0.001"><failure message="AssertionError: False is not true">self = &lt;test_config_get_bool.TestEnv testMethod=test_get_bool_env_var_that_exists_and_is_true&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "TEST_BOOL": "true",
+        },
+        clear=True,
+    )
+    def test_get_bool_env_var_that_exists_and_is_true(self):
+        """Test that gets a boolean environment variable that exists and is true"""
+        result = get_bool_env_var("TEST_BOOL", False)
+&gt;       self.assertTrue(result)
+E       AssertionError: False is not true
+
+test_config_get_bool.py:23: AssertionError</failure></testcase><testcase classname="test_discussions.TestGetDiscussions" name="test_get_discussions_error_status_code" time="0.001" /><testcase classname="test_discussions.TestGetDiscussions" name="test_get_discussions_graphql_error" time="0.001" /><testcase classname="test_discussions.TestGetDiscussions" name="test_get_discussions_multiple_pages" time="0.001" /><testcase classname="test_discussions.TestGetDiscussions" name="test_get_discussions_single_page" time="0.002" /><testcase classname="test_issue_metrics.TestGetEnvVars" name="test_get_env_vars" time="0.001"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_issue_metrics.TestGetEnvVars testMethod=test_get_env_vars&gt;
+
+    @patch.dict(
+        os.environ,
+        {"GH_TOKEN": "test_token", "SEARCH_QUERY": "is:issue is:open repo:user/repo"},
+    )
+    def test_get_env_vars(self):
+        """Test that the function correctly retrieves the environment variables."""
+    
+        # Call the function and check the result
+&gt;       search_query = get_env_vars(test=True).search_query
+                       ^^^^^^^^^^^^^^^^^^^^^^^
+
+test_issue_metrics.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = True
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_issue_metrics.TestGetEnvVars" name="test_get_env_vars_missing_query" time="0.000" /><testcase classname="test_issue_metrics.TestGetPerIssueMetrics" name="test_get_per_issue_metrics_with_hide_envs" time="0.002"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_issue_metrics.TestGetPerIssueMetrics testMethod=test_get_per_issue_metrics_with_hide_envs&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_TOKEN": "test_token",
+            "SEARCH_QUERY": "is:issue is:open repo:user/repo",
+            "HIDE_AUTHOR": "true",
+            "HIDE_LABEL_METRICS": "true",
+            "HIDE_TIME_TO_ANSWER": "true",
+            "HIDE_TIME_TO_CLOSE": "true",
+            "HIDE_TIME_TO_FIRST_RESPONSE": "true",
+        },
+    )
+    def test_get_per_issue_metrics_with_hide_envs(self):
+        """
+        Test that the function correctly calculates the metrics for
+        a list of GitHub issues where HIDE_* envs are set true
+        """
+    
+        # Create mock data
+        mock_issue1 = MagicMock(
+            title="Issue 1",
+            html_url="https://github.com/user/repo/issues/1",
+            user={"login": "alice"},
+            state="open",
+            comments=1,
+            created_at="2023-01-01T00:00:00Z",
+        )
+    
+        mock_comment1 = MagicMock()
+        mock_comment1.created_at = datetime.fromisoformat("2023-01-02T00:00:00Z")
+        mock_issue1.issue.comments.return_value = [mock_comment1]
+        mock_issue1.issue.pull_request_urls = None
+    
+        mock_issue2 = MagicMock(
+            title="Issue 2",
+            html_url="https://github.com/user/repo/issues/2",
+            user={"login": "bob"},
+            state="closed",
+            comments=1,
+            created_at="2023-01-01T00:00:00Z",
+            closed_at="2023-01-04T00:00:00Z",
+        )
+    
+        mock_comment2 = MagicMock()
+        mock_comment2.created_at = datetime.fromisoformat("2023-01-03T00:00:00Z")
+        mock_issue2.issue.comments.return_value = [mock_comment2]
+        mock_issue2.issue.pull_request_urls = None
+    
+        issues = [
+            mock_issue1,
+            mock_issue2,
+        ]
+    
+        # Call the function and check the result
+        with unittest.mock.patch(  # type:ignore
+            "issue_metrics.measure_time_to_first_response",
+            measure_time_to_first_response,
+        ), unittest.mock.patch(  # type:ignore
+            "issue_metrics.measure_time_to_close", measure_time_to_close
+        ):
+            (
+                result_issues_with_metrics,
+                result_num_issues_open,
+                result_num_issues_closed,
+            ) = get_per_issue_metrics(
+                issues,
+&gt;               env_vars=get_env_vars(test=True),
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+            )
+
+test_issue_metrics.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = True
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_issue_metrics.TestGetPerIssueMetrics" name="test_get_per_issue_metrics_with_ignore_users" time="0.002"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_issue_metrics.TestGetPerIssueMetrics testMethod=test_get_per_issue_metrics_with_ignore_users&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_TOKEN": "test_token",
+            "SEARCH_QUERY": "is:issue is:open repo:user/repo",
+            "IGNORE_USERS": "alice",
+        },
+    )
+    def test_get_per_issue_metrics_with_ignore_users(self):
+        """
+        Test that the function correctly filters out issues
+        with authors in the IGNORE_USERS variable
+        """
+    
+        # Create mock data
+        mock_issue1 = MagicMock(
+            title="Issue 1",
+            html_url="https://github.com/user/repo/issues/1",
+            user={"login": "alice"},
+            state="open",
+            comments=1,
+            created_at="2023-01-01T00:00:00Z",
+        )
+    
+        mock_comment1 = MagicMock()
+        mock_comment1.created_at = datetime.fromisoformat("2023-01-02T00:00:00Z")
+        mock_issue1.issue.comments.return_value = [mock_comment1]
+        mock_issue1.issue.pull_request_urls = None
+    
+        mock_issue2 = MagicMock(
+            title="Issue 2",
+            html_url="https://github.com/user/repo/issues/2",
+            user={"login": "bob"},
+            state="closed",
+            comments=1,
+            created_at="2023-01-01T00:00:00Z",
+            closed_at="2023-01-04T00:00:00Z",
+        )
+    
+        mock_comment2 = MagicMock()
+        mock_comment2.created_at = datetime.fromisoformat("2023-01-03T00:00:00Z")
+        mock_issue2.issue.comments.return_value = [mock_comment2]
+        mock_issue2.issue.pull_request_urls = None
+    
+        issues = [
+            mock_issue1,
+            mock_issue2,
+        ]
+    
+        # Call the function and check the result
+        with unittest.mock.patch(  # type:ignore
+            "issue_metrics.measure_time_to_first_response",
+            measure_time_to_first_response,
+        ), unittest.mock.patch(  # type:ignore
+            "issue_metrics.measure_time_to_close", measure_time_to_close
+        ):
+            (
+                result_issues_with_metrics,
+                result_num_issues_open,
+                result_num_issues_closed,
+            ) = get_per_issue_metrics(
+                issues,
+&gt;               env_vars=get_env_vars(test=True),
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+                ignore_users=["alice"],
+            )
+
+test_issue_metrics.py:340: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = True
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_issue_metrics.TestGetPerIssueMetrics" name="test_get_per_issue_metrics_without_hide_envs" time="0.002"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_issue_metrics.TestGetPerIssueMetrics testMethod=test_get_per_issue_metrics_without_hide_envs&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_TOKEN": "test_token",
+            "SEARCH_QUERY": "is:issue is:open repo:user/repo",
+            "HIDE_AUTHOR": "false",
+            "HIDE_LABEL_METRICS": "false",
+            "HIDE_TIME_TO_ANSWER": "false",
+            "HIDE_TIME_TO_CLOSE": "false",
+            "HIDE_TIME_TO_FIRST_RESPONSE": "false",
+        },
+    )
+    def test_get_per_issue_metrics_without_hide_envs(self):
+        """
+        Test that the function correctly calculates the metrics for
+        a list of GitHub issues where HIDE_* envs are set false
+        """
+    
+        # Create mock data
+        mock_issue1 = MagicMock(
+            title="Issue 1",
+            html_url="https://github.com/user/repo/issues/1",
+            user={"login": "alice"},
+            state="open",
+            comments=1,
+            created_at="2023-01-01T00:00:00Z",
+        )
+    
+        mock_comment1 = MagicMock()
+        mock_comment1.created_at = datetime.fromisoformat("2023-01-02T00:00:00Z")
+        mock_issue1.issue.comments.return_value = [mock_comment1]
+        mock_issue1.issue.pull_request_urls = None
+    
+        mock_issue2 = MagicMock(
+            title="Issue 2",
+            html_url="https://github.com/user/repo/issues/2",
+            user={"login": "bob"},
+            state="closed",
+            comments=1,
+            created_at="2023-01-01T00:00:00Z",
+            closed_at="2023-01-04T00:00:00Z",
+        )
+    
+        mock_comment2 = MagicMock()
+        mock_comment2.created_at = datetime.fromisoformat("2023-01-03T00:00:00Z")
+        mock_issue2.issue.comments.return_value = [mock_comment2]
+        mock_issue2.issue.pull_request_urls = None
+    
+        issues = [
+            mock_issue1,
+            mock_issue2,
+        ]
+    
+        # Call the function and check the result
+        with unittest.mock.patch(  # type:ignore
+            "issue_metrics.measure_time_to_first_response",
+            measure_time_to_first_response,
+        ), unittest.mock.patch(  # type:ignore
+            "issue_metrics.measure_time_to_close", measure_time_to_close
+        ):
+            (
+                result_issues_with_metrics,
+                result_num_issues_open,
+                result_num_issues_closed,
+            ) = get_per_issue_metrics(
+                issues,
+&gt;               env_vars=get_env_vars(test=True),
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+            )
+
+test_issue_metrics.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = True
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_issue_metrics.TestDiscussionMetrics" name="test_get_per_issue_metrics_with_discussion" time="0.001"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_issue_metrics.TestDiscussionMetrics testMethod=test_get_per_issue_metrics_with_discussion&gt;
+
+    @patch.dict(
+        os.environ,
+        {"GH_TOKEN": "test_token", "SEARCH_QUERY": "is:issue is:open repo:user/repo"},
+    )
+    def test_get_per_issue_metrics_with_discussion(self):
+        """
+        Test that the function correctly calculates
+        the metrics for a list of GitHub issues with discussions.
+        """
+    
+        issues = [self.issue1, self.issue2]
+        metrics = get_per_issue_metrics(
+&gt;           issues, discussions=True, env_vars=get_env_vars(test=True)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^
+        )
+
+test_issue_metrics.py:415: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = True
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_issue_metrics.TestDiscussionMetrics" name="test_get_per_issue_metrics_with_discussion_with_hide_envs" time="0.001"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_issue_metrics.TestDiscussionMetrics testMethod=test_get_per_issue_metrics_with_discussion_with_hide_envs&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_TOKEN": "test_token",
+            "SEARCH_QUERY": "is:issue is:open repo:user/repo",
+            "HIDE_AUTHOR": "true",
+            "HIDE_LABEL_METRICS": "true",
+            "HIDE_TIME_TO_ANSWER": "true",
+            "HIDE_TIME_TO_CLOSE": "true",
+            "HIDE_TIME_TO_FIRST_RESPONSE": "true",
+        },
+    )
+    def test_get_per_issue_metrics_with_discussion_with_hide_envs(self):
+        """
+        Test that the function correctly calculates
+        the metrics for a list of GitHub issues with discussions
+        and HIDE_* env vars set to True
+        """
+    
+        issues = [self.issue1, self.issue2]
+        metrics = get_per_issue_metrics(
+&gt;           issues, discussions=True, env_vars=get_env_vars(test=True)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^
+        )
+
+test_issue_metrics.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = True
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_json_writer.TestWriteToJson" name="test_write_to_json" time="0.001" /><testcase classname="test_json_writer.TestWriteToJson" name="test_write_to_json_with_no_response" time="0.001" /><testcase classname="test_labels.TestLabels" name="test_get_label_events" time="0.002" /><testcase classname="test_labels.TestLabels" name="test_get_label_metrics_closed_issue" time="0.002" /><testcase classname="test_labels.TestLabels" name="test_get_label_metrics_closed_issue_labeled_past_closed_at" time="0.002" /><testcase classname="test_labels.TestLabels" name="test_get_label_metrics_open_issue" time="0.002" /><testcase classname="test_labels.TestGetAverageTimeInLabels" name="test_get_stats_time_in_labels" time="0.008" /><testcase classname="test_markdown_helpers.TestMarkdownHelpers" name="test_markdown_too_large_for_issue_body" time="0.001" /><testcase classname="test_markdown_helpers.TestMarkdownHelpers" name="test_split_markdown_file" time="0.001" /><testcase classname="test_markdown_writer.TestWriteToMarkdown" name="test_write_to_markdown" time="0.001"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_markdown_writer.TestWriteToMarkdown testMethod=test_write_to_markdown&gt;
+
+    def test_write_to_markdown(self):
+        """Test that write_to_markdown writes the correct markdown file.
+    
+        This test creates a list of mock GitHub issues with time to first response
+        attributes, calls write_to_markdown with the list and the average time to
+        first response, time to close and checks that the function writes the correct
+        markdown file.
+    
+        """
+        # Create mock data
+        issues_with_metrics = [
+            IssueWithMetrics(
+                title="Issue 1",
+                html_url="https://github.com/user/repo/issues/1",
+                author="alice",
+                time_to_first_response=timedelta(days=1),
+                time_to_close=timedelta(days=2),
+                time_to_answer=timedelta(days=3),
+                time_in_draft=timedelta(days=1),
+                labels_metrics={"bug": timedelta(days=4)},
+            ),
+            IssueWithMetrics(
+                title="Issue 2\r",
+                html_url="https://github.com/user/repo/issues/2",
+                author="bob",
+                time_to_first_response=timedelta(days=3),
+                time_to_close=timedelta(days=4),
+                time_to_answer=timedelta(days=5),
+                time_in_draft=timedelta(days=1),
+                labels_metrics={"bug": timedelta(days=2)},
+            ),
+        ]
+        time_to_first_response = {
+            "avg": timedelta(days=2),
+            "med": timedelta(days=2),
+            "90p": timedelta(days=2),
+        }
+        time_to_close = {
+            "avg": timedelta(days=3),
+            "med": timedelta(days=3),
+            "90p": timedelta(days=3),
+        }
+        time_to_answer = {
+            "avg": timedelta(days=4),
+            "med": timedelta(days=4),
+            "90p": timedelta(days=4),
+        }
+        time_in_draft = {
+            "avg": timedelta(days=1),
+            "med": timedelta(days=1),
+            "90p": timedelta(days=1),
+        }
+        time_in_labels = {
+            "avg": {"bug": "1 day, 12:00:00"},
+            "med": {"bug": "1 day, 12:00:00"},
+            "90p": {"bug": "1 day, 12:00:00"},
+        }
+    
+        num_issues_opened = 2
+        num_issues_closed = 1
+        num_mentor_count = 5
+    
+        # Call the function
+&gt;       write_to_markdown(
+            issues_with_metrics=issues_with_metrics,
+            average_time_to_first_response=time_to_first_response,
+            average_time_to_close=time_to_close,
+            average_time_to_answer=time_to_answer,
+            average_time_in_draft=time_in_draft,
+            average_time_in_labels=time_in_labels,
+            num_issues_opened=num_issues_opened,
+            num_issues_closed=num_issues_closed,
+            num_mentor_count=num_mentor_count,
+            labels=["bug"],
+            search_query="is:issue is:open label:bug",
+            report_title="Issue Metrics",
+            output_file="issue_metrics.md",
+            ghe="",
+        )
+
+test_markdown_writer.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+markdown_writer.py:136: in write_to_markdown
+    columns = get_non_hidden_columns(labels)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+markdown_writer.py:55: in get_non_hidden_columns
+    env_vars = get_env_vars()
+               ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = False
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_markdown_writer.TestWriteToMarkdown" name="test_write_to_markdown_no_issues" time="0.003"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_markdown_writer.TestWriteToMarkdown testMethod=test_write_to_markdown_no_issues&gt;
+
+    def test_write_to_markdown_no_issues(self):
+        """Test that write_to_markdown writes the correct markdown file when no issues are found."""
+        # Call the function with no issues
+        with patch("builtins.open", mock_open()) as mock_open_file:
+&gt;           write_to_markdown(
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                report_title="Issue Metrics",
+            )
+
+test_markdown_writer.py:256: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+markdown_writer.py:136: in write_to_markdown
+    columns = get_non_hidden_columns(labels)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+markdown_writer.py:55: in get_non_hidden_columns
+    env_vars = get_env_vars()
+               ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = False
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_markdown_writer.TestWriteToMarkdown" name="test_write_to_markdown_with_vertical_bar_in_title" time="0.001"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_markdown_writer.TestWriteToMarkdown testMethod=test_write_to_markdown_with_vertical_bar_in_title&gt;
+
+    def test_write_to_markdown_with_vertical_bar_in_title(self):
+        """Test that write_to_markdown writes the correct markdown file when the title contains a vertical bar.
+    
+        This test creates a list of mock GitHub issues (one of which contains a vertical
+        bar in the title) with time to first response attributes, calls write_to_markdown
+        with the list and the average time to first response, time to close and checks
+        that the function writes the correct markdown file.
+    
+        """
+        # Create mock data
+        issues_with_metrics = [
+            IssueWithMetrics(
+                title="Issue 1",
+                html_url="https://github.com/user/repo/issues/1",
+                author="alice",
+                time_to_first_response=timedelta(days=1),
+                time_to_close=timedelta(days=2),
+                time_to_answer=timedelta(days=3),
+                time_in_draft=timedelta(days=1),
+                labels_metrics={"bug": timedelta(days=1)},
+            ),
+            IssueWithMetrics(
+                title="feat| Issue 2",  # title contains a vertical bar
+                html_url="https://github.com/user/repo/issues/2",
+                author="bob",
+                time_to_first_response=timedelta(days=3),
+                time_to_close=timedelta(days=4),
+                time_to_answer=timedelta(days=5),
+                labels_metrics={"bug": timedelta(days=2)},
+            ),
+        ]
+        average_time_to_first_response = {
+            "avg": timedelta(days=2),
+            "med": timedelta(days=2),
+            "90p": timedelta(days=2),
+        }
+        average_time_to_close = {
+            "avg": timedelta(days=3),
+            "med": timedelta(days=3),
+            "90p": timedelta(days=3),
+        }
+        average_time_to_answer = {
+            "avg": timedelta(days=4),
+            "med": timedelta(days=4),
+            "90p": timedelta(days=4),
+        }
+        average_time_in_draft = {
+            "avg": timedelta(days=1),
+            "med": timedelta(days=1),
+            "90p": timedelta(days=1),
+        }
+        average_time_in_labels = {
+            "avg": {"bug": "1 day, 12:00:00"},
+            "med": {"bug": "1 day, 12:00:00"},
+            "90p": {"bug": "1 day, 12:00:00"},
+        }
+    
+        num_issues_opened = 2
+        num_issues_closed = 1
+        num_mentor_count = 5
+    
+        # Call the function
+&gt;       write_to_markdown(
+            issues_with_metrics=issues_with_metrics,
+            average_time_to_first_response=average_time_to_first_response,
+            average_time_to_close=average_time_to_close,
+            average_time_to_answer=average_time_to_answer,
+            average_time_in_draft=average_time_in_draft,
+            average_time_in_labels=average_time_in_labels,
+            num_issues_opened=num_issues_opened,
+            num_issues_closed=num_issues_closed,
+            num_mentor_count=num_mentor_count,
+            labels=["bug"],
+            report_title="Issue Metrics",
+            output_file="issue_metrics.md",
+        )
+
+test_markdown_writer.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+markdown_writer.py:136: in write_to_markdown
+    columns = get_non_hidden_columns(labels)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+markdown_writer.py:55: in get_non_hidden_columns
+    env_vars = get_env_vars()
+               ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = False
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_markdown_writer.TestWriteToMarkdownWithEnv" name="test_writes_markdown_file_with_non_hidden_columns_only" time="0.001"><failure message="ValueError: SEARCH_QUERY environment variable not set">self = &lt;test_markdown_writer.TestWriteToMarkdownWithEnv testMethod=test_writes_markdown_file_with_non_hidden_columns_only&gt;
+
+    def test_writes_markdown_file_with_non_hidden_columns_only(self):
+        """
+        Test that write_to_markdown writes the correct
+        markdown file with non-hidden columns only.
+        """
+    
+        # Create mock data
+        issues_with_metrics = [
+            IssueWithMetrics(
+                title="Issue 1",
+                html_url="https://github.com/user/repo/issues/1",
+                author="alice",
+                time_to_first_response=timedelta(minutes=10),
+                time_to_close=timedelta(days=1),
+                time_to_answer=timedelta(hours=2),
+                time_in_draft=timedelta(days=1),
+                labels_metrics={
+                    "label1": timedelta(days=1),
+                },
+            ),
+            IssueWithMetrics(
+                title="Issue 2",
+                html_url="https://github.com/user/repo/issues/2",
+                author="bob",
+                time_to_first_response=timedelta(minutes=20),
+                time_to_close=timedelta(days=2),
+                time_to_answer=timedelta(hours=4),
+                labels_metrics={
+                    "label1": timedelta(days=1),
+                },
+            ),
+        ]
+        average_time_to_first_response = timedelta(minutes=15)
+        average_time_to_close = timedelta(days=1.5)
+        average_time_to_answer = timedelta(hours=3)
+        average_time_in_draft = timedelta(days=1)
+        average_time_in_labels = {
+            "label1": timedelta(days=1),
+        }
+        num_issues_opened = 2
+        num_issues_closed = 2
+        num_mentor_count = 5
+    
+        # Call the function
+&gt;       write_to_markdown(
+            issues_with_metrics=issues_with_metrics,
+            average_time_to_first_response=average_time_to_first_response,
+            average_time_to_close=average_time_to_close,
+            average_time_to_answer=average_time_to_answer,
+            average_time_in_labels=average_time_in_labels,
+            average_time_in_draft=average_time_in_draft,
+            num_issues_opened=num_issues_opened,
+            num_issues_closed=num_issues_closed,
+            num_mentor_count=num_mentor_count,
+            labels=["label1"],
+            search_query="repo:user/repo is:issue",
+            hide_label_metrics=True,
+            hide_items_closed_count=True,
+            non_mentioning_links=True,
+            report_title="Issue Metrics",
+            output_file="issue_metrics.md",
+        )
+
+test_markdown_writer.py:344: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+markdown_writer.py:136: in write_to_markdown
+    columns = get_non_hidden_columns(labels)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+markdown_writer.py:55: in get_non_hidden_columns
+    env_vars = get_env_vars()
+               ^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+test = False
+
+    def get_env_vars(test: bool = False) -&gt; EnvVars:
+        """
+        Get the environment variables for use in the script.
+    
+        Returns EnvVars object with all environment variables
+        """
+        search_query = settings.get("SEARCH_QUERY")
+        if not search_query:
+&gt;           raise ValueError("SEARCH_QUERY environment variable not set")
+E           ValueError: SEARCH_QUERY environment variable not set
+
+config.py:178: ValueError</failure></testcase><testcase classname="test_most_active_mentors.TestCountCommentsPerUser" name="test_count_comments_per_user_limit" time="0.014" /><testcase classname="test_most_active_mentors.TestCountCommentsPerUser" name="test_count_comments_per_user_with_ignores" time="0.005" /><testcase classname="test_most_active_mentors.TestCountCommentsPerUser" name="test_get_mentor_count" time="0.000" /><testcase classname="test_search.TestSearchIssues" name="test_search_issues_with_just_owner_or_org" time="0.002" /><testcase classname="test_search.TestSearchIssues" name="test_search_issues_with_just_owner_or_org_with_bypass" time="0.001" /><testcase classname="test_search.TestSearchIssues" name="test_search_issues_with_owner_and_repository" time="0.001" /><testcase classname="test_search.TestGetOwnerAndRepository" name="test_get_owner_and_repositories_without_repo_in_query" time="0.000" /><testcase classname="test_search.TestGetOwnerAndRepository" name="test_get_owners_and_repositories_with_multiple_entries" time="0.000" /><testcase classname="test_search.TestGetOwnerAndRepository" name="test_get_owners_and_repositories_with_org" time="0.000" /><testcase classname="test_search.TestGetOwnerAndRepository" name="test_get_owners_and_repositories_with_user" time="0.000" /><testcase classname="test_search.TestGetOwnerAndRepository" name="test_get_owners_and_repositories_without_either_in_query" time="0.000" /><testcase classname="test_search.TestGetOwnerAndRepository" name="test_get_owners_with_owner_and_repo_in_query" time="0.000" /><testcase classname="test_time_in_draft.TestMeasureTimeInDraft" name="test_time_in_draft_multiple_intervals" time="0.002" /><testcase classname="test_time_in_draft.TestMeasureTimeInDraft" name="test_time_in_draft_no_draft_events" time="0.001" /><testcase classname="test_time_in_draft.TestMeasureTimeInDraft" name="test_time_in_draft_ongoing_draft" time="0.001" /><testcase classname="test_time_in_draft.TestMeasureTimeInDraft" name="test_time_in_draft_with_ready_for_review" time="0.001" /><testcase classname="test_time_in_draft.TestMeasureTimeInDraft" name="test_time_in_draft_without_ready_for_review" time="0.001" /><testcase classname="test_time_in_draft.TestMeasureTimeInDraft" name="test_time_in_draft_without_ready_for_review_and_closed" time="0.001" /><testcase classname="test_time_in_draft.TestGetStatsTimeInDraft" name="test_get_stats_time_in_draft_empty_list" time="0.000" /><testcase classname="test_time_in_draft.TestGetStatsTimeInDraft" name="test_get_stats_time_in_draft_no_data" time="0.001" /><testcase classname="test_time_in_draft.TestGetStatsTimeInDraft" name="test_get_stats_time_in_draft_with_data" time="0.001" /><testcase classname="test_time_to_answer.TestGetAverageTimeToAnswer" name="test_returns_none_for_empty_list" time="0.000" /><testcase classname="test_time_to_answer.TestGetAverageTimeToAnswer" name="test_returns_none_for_list_with_no_time_to_answer" time="0.000" /><testcase classname="test_time_to_answer.TestGetAverageTimeToAnswer" name="test_returns_stats_time_to_answer" time="0.001" /><testcase classname="test_time_to_answer.TestMeasureTimeToAnswer" name="test_returns_none_if_answer_chosen_at_is_missing" time="0.000" /><testcase classname="test_time_to_answer.TestMeasureTimeToAnswer" name="test_returns_none_if_created_at_is_missing" time="0.000" /><testcase classname="test_time_to_answer.TestMeasureTimeToAnswer" name="test_returns_time_to_answer" time="0.000" /><testcase classname="test_time_to_close.TestGetAverageTimeToClose" name="test_get_stats_time_to_close" time="0.001" /><testcase classname="test_time_to_close.TestGetAverageTimeToClose" name="test_get_stats_time_to_close_no_issues" time="0.000" /><testcase classname="test_time_to_close.TestMeasureTimeToClose" name="test_measure_time_to_close" time="0.001" /><testcase classname="test_time_to_close.TestMeasureTimeToClose" name="test_measure_time_to_close_discussion" time="0.000" /><testcase classname="test_time_to_close.TestMeasureTimeToClose" name="test_measure_time_to_close_returns_none" time="0.001" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response" time="0.002" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_ignore_bot" time="0.003" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_ignore_issue_owners_comment" time="0.005" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_ignore_pending_review" time="0.004" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_ignore_users" time="0.005" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_issue_comment_faster" time="0.005" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_no_comments" time="0.001" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_only_ignored_users" time="0.005" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_pull_request_comment_faster" time="0.004" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_pull_request_comment_ignore_before_ready" time="0.006" /><testcase classname="test_time_to_first_response.TestMeasureTimeToFirstResponse" name="test_measure_time_to_first_response_with_pull_request_comments" time="0.003" /><testcase classname="test_time_to_first_response.TestGetStatsTimeToFirstResponse" name="test_get_stats_time_to_first_response" time="0.001" /><testcase classname="test_time_to_first_response.TestGetStatsTimeToFirstResponse" name="test_get_stats_time_to_first_response_with_all_none" time="0.000" /><testcase classname="test_time_to_merge.TestMeasureTimeToMerge" name="test_measure_time_to_merge_created_at" time="0.001" /><testcase classname="test_time_to_merge.TestMeasureTimeToMerge" name="test_measure_time_to_merge_ready_for_review" time="0.000" /><testcase classname="test_time_to_merge.TestMeasureTimeToMerge" name="test_measure_time_to_merge_returns_none" time="0.000" /><testcase classname="test_time_to_ready_for_review.TestGetTimeToReadyForReview" name="test_get_time_to_ready_for_review_event" time="0.001" /><testcase classname="test_time_to_ready_for_review.TestGetTimeToReadyForReview" name="test_get_time_to_ready_for_review_no_event" time="0.002" /><testcase classname="test_time_to_ready_for_review.TestGetTimeToReadyForReview" name="test_time_to_ready_for_review_draft" time="0.001" /></testsuite></testsuites>

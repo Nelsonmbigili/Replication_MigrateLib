@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="27" time="4.273" timestamp="2026-03-09T18:57:51.365017+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_add" name="test_add_movement" time="0.201"><failure message="TypeError: 'coroutine' object is not subscriptable">@pytest.mark.unit
+    def test_add_movement():
+        with get_session() as session:
+            data = {
+                "role": "Salesman",
+                "dept": "Sales",
+                "name": "Joe Doe",
+                "email": "joe@doe.com",
+            }
+            joe, created = add_person(session, Person(**data))
+            assert created is True
+    
+            data = {
+                "role": "Manager",
+                "dept": "Management",
+                "name": "Jim Doe",
+                "email": "jim@doe.com",
+            }
+            jim, created = add_person(session, Person(**data))
+            assert created is True
+    
+            session.commit()
+    
+&gt;           add(-30, email="joe@doe.com")
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/tests/test_add.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/dundie/utils/auth.py:43: in decorator
+    return f(*args, from_person=person, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/dundie/core.py:93: in add
+    people = read(**query)
+             ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+query = {'email': 'joe@doe.com'}, return_data = []
+query_statements = [&lt;sqlalchemy.sql.elements.BinaryExpression object at 0x1060a4bd0&gt;]
+sql = &lt;sqlmodel.sql.expression.SelectOfScalar object at 0x107295210&gt;
+session = &lt;sqlmodel.orm.session.Session object at 0x1072e1d10&gt;
+currencies = &lt;sqlalchemy.engine.result.ScalarResult object at 0x1072cdb50&gt;
+rates = &lt;coroutine object get_rates at 0x1075ff220&gt;
+results = &lt;sqlalchemy.engine.result.ScalarResult object at 0x1077e92d0&gt;
+
+    def read(**query: Query) -&gt; ResultDict:
+        """Read data from db and filters using query
+    
+        read(email="joe@doe.com")
+        """
+        query = {k: v for k, v in query.items() if v is not None}
+        return_data = []
+    
+        query_statements = []
+        if "dept" in query:
+            query_statements.append(Person.dept == query["dept"])
+        if "email" in query:
+            query_statements.append(Person.email == query["email"])
+        sql = select(Person)  # SELECT FROM PERSON
+        if query_statements:
+            sql = sql.where(*query_statements)  # WHERE ...
+    
+        with get_session() as session:
+            currencies = session.exec(
+                select(Person.currency).distinct(Person.currency)
+            )
+            rates = get_rates(currencies)
+            results = session.exec(sql)
+            for person in results:
+&gt;               total = rates[person.currency].value * person.balance[0].value
+                        ^^^^^^^^^^^^^^^^^^^^^^
+E               TypeError: 'coroutine' object is not subscriptable
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/dundie/core.py:74: TypeError</failure></testcase><testcase classname="tests.test_add" name="test_add_balance_for_dept" time="0.172"><failure message="TypeError: 'coroutine' object is not subscriptable">@pytest.mark.unit
+    def test_add_balance_for_dept():
+        load(PEOPLE_FILE)
+&gt;       original = read(dept="Sales")
+                   ^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/tests/test_add.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+query = {'dept': 'Sales'}, return_data = []
+query_statements = [&lt;sqlalchemy.sql.elements.BinaryExpression object at 0x1060f2f50&gt;]
+sql = &lt;sqlmodel.sql.expression.SelectOfScalar object at 0x1072bcb10&gt;
+session = &lt;sqlmodel.orm.session.Session object at 0x1072bced0&gt;
+currencies = &lt;sqlalchemy.engine.result.ScalarResult object at 0x1077bc750&gt;
+rates = &lt;coroutine object get_rates at 0x107864040&gt;
+results = &lt;sqlalchemy.engine.result.ScalarResult object at 0x107826010&gt;
+
+    def read(**query: Query) -&gt; ResultDict:
+        """Read data from db and filters using query
+    
+        read(email="joe@doe.com")
+        """
+        query = {k: v for k, v in query.items() if v is not None}
+        return_data = []
+    
+        query_statements = []
+        if "dept" in query:
+            query_statements.append(Person.dept == query["dept"])
+        if "email" in query:
+            query_statements.append(Person.email == query["email"])
+        sql = select(Person)  # SELECT FROM PERSON
+        if query_statements:
+            sql = sql.where(*query_statements)  # WHERE ...
+    
+        with get_session() as session:
+            currencies = session.exec(
+                select(Person.currency).distinct(Person.currency)
+            )
+            rates = get_rates(currencies)
+            results = session.exec(sql)
+            for person in results:
+&gt;               total = rates[person.currency].value * person.balance[0].value
+                        ^^^^^^^^^^^^^^^^^^^^^^
+E               TypeError: 'coroutine' object is not subscriptable
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/dundie/core.py:74: TypeError</failure></testcase><testcase classname="tests.test_add" name="test_add_balance_for_person" time="0.170"><failure message="TypeError: 'coroutine' object is not subscriptable">@pytest.mark.unit
+    def test_add_balance_for_person():
+        load(PEOPLE_FILE)
+&gt;       original = read(email="jim@dundlermifflin.com")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/tests/test_add.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+query = {'email': 'jim@dundlermifflin.com'}, return_data = []
+query_statements = [&lt;sqlalchemy.sql.elements.BinaryExpression object at 0x1072958d0&gt;]
+sql = &lt;sqlmodel.sql.expression.SelectOfScalar object at 0x107744fd0&gt;
+session = &lt;sqlmodel.orm.session.Session object at 0x107745250&gt;
+currencies = &lt;sqlalchemy.engine.result.ScalarResult object at 0x10781dfd0&gt;
+rates = &lt;coroutine object get_rates at 0x1075ff220&gt;
+results = &lt;sqlalchemy.engine.result.ScalarResult object at 0x10785fa50&gt;
+
+    def read(**query: Query) -&gt; ResultDict:
+        """Read data from db and filters using query
+    
+        read(email="joe@doe.com")
+        """
+        query = {k: v for k, v in query.items() if v is not None}
+        return_data = []
+    
+        query_statements = []
+        if "dept" in query:
+            query_statements.append(Person.dept == query["dept"])
+        if "email" in query:
+            query_statements.append(Person.email == query["email"])
+        sql = select(Person)  # SELECT FROM PERSON
+        if query_statements:
+            sql = sql.where(*query_statements)  # WHERE ...
+    
+        with get_session() as session:
+            currencies = session.exec(
+                select(Person.currency).distinct(Person.currency)
+            )
+            rates = get_rates(currencies)
+            results = session.exec(sql)
+            for person in results:
+&gt;               total = rates[person.currency].value * person.balance[0].value
+                        ^^^^^^^^^^^^^^^^^^^^^^
+E               TypeError: 'coroutine' object is not subscriptable
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/dundie/core.py:74: TypeError</failure></testcase><testcase classname="tests.test_database" name="test_ensure_database_is_test" time="0.006" /><testcase classname="tests.test_database" name="test_commit_to_database" time="0.008" /><testcase classname="tests.test_database" name="test_add_person_for_the_first_time" time="0.054" /><testcase classname="tests.test_database" name="test_negative_add_person_invalid_email" time="0.006" /><testcase classname="tests.test_database" name="test_add_or_remove_points_for_person" time="0.052" /><testcase classname="tests.test_load" name="test_load_positive_has_2_people" time="0.129" /><testcase classname="tests.test_load" name="test_load_positive_first_name_starts_with_j" time="0.128" /><testcase classname="tests.test_load" name="test_negative_filenotfound" time="0.006" /><testcase classname="tests.test_read" name="test_read_with_query" time="0.090"><failure message="TypeError: 'coroutine' object is not subscriptable">@pytest.mark.unit
+    def test_read_with_query():
+        session = get_session()
+    
+        data = {
+            "role": "Salesman",
+            "dept": "Sales",
+            "name": "Joe Doe",
+            "email": "joe@doe.com",
+        }
+        _, created = add_person(session, Person(**data))
+        assert created is True
+    
+        data = {
+            "role": "Manager",
+            "dept": "Management",
+            "name": "Jim Doe",
+            "email": "jim@doe.com",
+        }
+        _, created = add_person(session, Person(**data))
+        assert created is True
+    
+        session.commit()
+    
+&gt;       response = read()
+                   ^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/tests/test_read.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+query = {}, return_data = [], query_statements = []
+sql = &lt;sqlmodel.sql.expression.SelectOfScalar object at 0x107a4b3d0&gt;
+session = &lt;sqlmodel.orm.session.Session object at 0x1078bc390&gt;
+currencies = &lt;sqlalchemy.engine.result.ScalarResult object at 0x107a4cf90&gt;
+rates = &lt;coroutine object get_rates at 0x107864760&gt;
+results = &lt;sqlalchemy.engine.result.ScalarResult object at 0x107a63350&gt;
+
+    def read(**query: Query) -&gt; ResultDict:
+        """Read data from db and filters using query
+    
+        read(email="joe@doe.com")
+        """
+        query = {k: v for k, v in query.items() if v is not None}
+        return_data = []
+    
+        query_statements = []
+        if "dept" in query:
+            query_statements.append(Person.dept == query["dept"])
+        if "email" in query:
+            query_statements.append(Person.email == query["email"])
+        sql = select(Person)  # SELECT FROM PERSON
+        if query_statements:
+            sql = sql.where(*query_statements)  # WHERE ...
+    
+        with get_session() as session:
+            currencies = session.exec(
+                select(Person.currency).distinct(Person.currency)
+            )
+            rates = get_rates(currencies)
+            results = session.exec(sql)
+            for person in results:
+&gt;               total = rates[person.currency].value * person.balance[0].value
+                        ^^^^^^^^^^^^^^^^^^^^^^
+E               TypeError: 'coroutine' object is not subscriptable
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/dundie/core.py:74: TypeError</failure></testcase><testcase classname="tests.test_read" name="test_read_all_data" time="0.130"><failure message="TypeError: 'coroutine' object is not subscriptable">@pytest.mark.unit
+    def test_read_all_data():
+        load(PEOPLE_FILE)
+&gt;       result = read()
+                 ^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/tests/test_read.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+query = {}, return_data = [], query_statements = []
+sql = &lt;sqlmodel.sql.expression.SelectOfScalar object at 0x107a72c10&gt;
+session = &lt;sqlmodel.orm.session.Session object at 0x107a618d0&gt;
+currencies = &lt;sqlalchemy.engine.result.ScalarResult object at 0x107a71c10&gt;
+rates = &lt;coroutine object get_rates at 0x107864630&gt;
+results = &lt;sqlalchemy.engine.result.ScalarResult object at 0x107a59fd0&gt;
+
+    def read(**query: Query) -&gt; ResultDict:
+        """Read data from db and filters using query
+    
+        read(email="joe@doe.com")
+        """
+        query = {k: v for k, v in query.items() if v is not None}
+        return_data = []
+    
+        query_statements = []
+        if "dept" in query:
+            query_statements.append(Person.dept == query["dept"])
+        if "email" in query:
+            query_statements.append(Person.email == query["email"])
+        sql = select(Person)  # SELECT FROM PERSON
+        if query_statements:
+            sql = sql.where(*query_statements)  # WHERE ...
+    
+        with get_session() as session:
+            currencies = session.exec(
+                select(Person.currency).distinct(Person.currency)
+            )
+            rates = get_rates(currencies)
+            results = session.exec(sql)
+            for person in results:
+&gt;               total = rates[person.currency].value * person.balance[0].value
+                        ^^^^^^^^^^^^^^^^^^^^^^
+E               TypeError: 'coroutine' object is not subscriptable
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/dundie/core.py:74: TypeError</failure></testcase><testcase classname="tests.test_read" name="test_read_only_one_dept" time="0.132"><failure message="TypeError: 'coroutine' object is not subscriptable">@pytest.mark.unit
+    def test_read_only_one_dept():
+        load(PEOPLE_FILE)
+&gt;       result = read(dept="Sales")
+                 ^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/tests/test_read.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+query = {'dept': 'Sales'}, return_data = []
+query_statements = [&lt;sqlalchemy.sql.elements.BinaryExpression object at 0x1078e7750&gt;]
+sql = &lt;sqlmodel.sql.expression.SelectOfScalar object at 0x107a3d650&gt;
+session = &lt;sqlmodel.orm.session.Session object at 0x1066f4c50&gt;
+currencies = &lt;sqlalchemy.engine.result.ScalarResult object at 0x107a3ec10&gt;
+rates = &lt;coroutine object get_rates at 0x107864c20&gt;
+results = &lt;sqlalchemy.engine.result.ScalarResult object at 0x107a70690&gt;
+
+    def read(**query: Query) -&gt; ResultDict:
+        """Read data from db and filters using query
+    
+        read(email="joe@doe.com")
+        """
+        query = {k: v for k, v in query.items() if v is not None}
+        return_data = []
+    
+        query_statements = []
+        if "dept" in query:
+            query_statements.append(Person.dept == query["dept"])
+        if "email" in query:
+            query_statements.append(Person.email == query["email"])
+        sql = select(Person)  # SELECT FROM PERSON
+        if query_statements:
+            sql = sql.where(*query_statements)  # WHERE ...
+    
+        with get_session() as session:
+            currencies = session.exec(
+                select(Person.currency).distinct(Person.currency)
+            )
+            rates = get_rates(currencies)
+            results = session.exec(sql)
+            for person in results:
+&gt;               total = rates[person.currency].value * person.balance[0].value
+                        ^^^^^^^^^^^^^^^^^^^^^^
+E               TypeError: 'coroutine' object is not subscriptable
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/dundie/core.py:74: TypeError</failure></testcase><testcase classname="tests.test_read" name="test_read_only_one_person" time="0.130"><failure message="TypeError: 'coroutine' object is not subscriptable">@pytest.mark.unit
+    def test_read_only_one_person():
+        load(PEOPLE_FILE)
+&gt;       result = read(email="jim@dundlermifflin.com")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/tests/test_read.py:64: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+query = {'email': 'jim@dundlermifflin.com'}, return_data = []
+query_statements = [&lt;sqlalchemy.sql.elements.BinaryExpression object at 0x1078ad3d0&gt;]
+sql = &lt;sqlmodel.sql.expression.SelectOfScalar object at 0x107a3c510&gt;
+session = &lt;sqlmodel.orm.session.Session object at 0x107a73910&gt;
+currencies = &lt;sqlalchemy.engine.result.ScalarResult object at 0x107a3f910&gt;
+rates = &lt;coroutine object get_rates at 0x107864fb0&gt;
+results = &lt;sqlalchemy.engine.result.ScalarResult object at 0x107acd890&gt;
+
+    def read(**query: Query) -&gt; ResultDict:
+        """Read data from db and filters using query
+    
+        read(email="joe@doe.com")
+        """
+        query = {k: v for k, v in query.items() if v is not None}
+        return_data = []
+    
+        query_statements = []
+        if "dept" in query:
+            query_statements.append(Person.dept == query["dept"])
+        if "email" in query:
+            query_statements.append(Person.email == query["email"])
+        sql = select(Person)  # SELECT FROM PERSON
+        if query_statements:
+            sql = sql.where(*query_statements)  # WHERE ...
+    
+        with get_session() as session:
+            currencies = session.exec(
+                select(Person.currency).distinct(Person.currency)
+            )
+            rates = get_rates(currencies)
+            results = session.exec(sql)
+            for person in results:
+&gt;               total = rates[person.currency].value * person.balance[0].value
+                        ^^^^^^^^^^^^^^^^^^^^^^
+E               TypeError: 'coroutine' object is not subscriptable
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/dundie/core.py:74: TypeError</failure></testcase><testcase classname="tests.test_utils" name="test_positive_check_valid_email[bruno@rocha.com]" time="0.007" /><testcase classname="tests.test_utils" name="test_positive_check_valid_email[joe@doe.com]" time="0.005" /><testcase classname="tests.test_utils" name="test_positive_check_valid_email[a@b.pt]" time="0.005" /><testcase classname="tests.test_utils" name="test_negative_check_valid_email[bruno@.com]" time="0.005" /><testcase classname="tests.test_utils" name="test_negative_check_valid_email[@doe.com]" time="0.005" /><testcase classname="tests.test_utils" name="test_negative_check_valid_email[a@b]" time="0.006" /><testcase classname="tests.test_utils" name="test_generate_simple_password" time="0.006" /><testcase classname="tests.test_utils" name="test_password_hash" time="0.086" /><testcase classname="integration.test_load" name="test_load_positive_call_load_command" time="0.013"><failure message="assert 'Dunder Mifflin Associates' in &quot;                                                                                \n Usage: load [OPTIONS] FILEPATH                                                 \n                                                                                \n Try 'load --help' for help                                                     \n╭─ Error ──────────────────────────────────────────────────────────────────────╮\n│ Got unexpected extra arguments (2026/Software                                │\n│ Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__htt │\n│ px__aiohttp/integration/../tests/assets/people.csv)                          │\n╰──────────────────────────────────────────────────────────────────────────────╯\n                                                                                \n&quot;&#10; +  where &quot;                                                                                \n Usage: load [OPTIONS] FILEPATH                                                 \n                                                                                \n Try 'load --help' for help                                                     \n╭─ Error ──────────────────────────────────────────────────────────────────────╮\n│ Got unexpected extra arguments (2026/Software                                │\n│ Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__htt │\n│ px__aiohttp/integration/../tests/assets/people.csv)                          │\n╰──────────────────────────────────────────────────────────────────────────────╯\n                                                                                \n&quot; = &lt;Result SystemExit(2)&gt;.output">@pytest.mark.integration
+    @pytest.mark.medium
+    def test_load_positive_call_load_command():
+        """test command load"""
+        out = cmd.invoke(load, PEOPLE_FILE)
+&gt;       assert "Dunder Mifflin Associates" in out.output
+E       assert 'Dunder Mifflin Associates' in "                                                                                \n Usage: load [OPTIONS] FILEPATH                                                 \n                                                                                \n Try 'load --help' for help                                                     \n╭─ Error ──────────────────────────────────────────────────────────────────────╮\n│ Got unexpected extra arguments (2026/Software                                │\n│ Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__htt │\n│ px__aiohttp/integration/../tests/assets/people.csv)                          │\n╰──────────────────────────────────────────────────────────────────────────────╯\n                                                                                \n"
+E        +  where "                                                                                \n Usage: load [OPTIONS] FILEPATH                                                 \n                                                                                \n Try 'load --help' for help                                                     \n╭─ Error ──────────────────────────────────────────────────────────────────────╮\n│ Got unexpected extra arguments (2026/Software                                │\n│ Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__htt │\n│ px__aiohttp/integration/../tests/assets/people.csv)                          │\n╰──────────────────────────────────────────────────────────────────────────────╯\n                                                                                \n" = &lt;Result SystemExit(2)&gt;.output
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/rochacbruno@dundie-rewards__e35d6be5__httpx__aiohttp/integration/test_load.py:16: AssertionError</failure></testcase><testcase classname="integration.test_load" name="test_load_negative_call_load_command_with_wrong_params[loady]" time="0.009" /><testcase classname="integration.test_load" name="test_load_negative_call_load_command_with_wrong_params[carrega]" time="0.007" /><testcase classname="integration.test_load" name="test_load_negative_call_load_command_with_wrong_params[start]" time="0.010" /></testsuite></testsuites>

@@ -1,0 +1,1438 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="68" skipped="0" tests="103" time="1.677" timestamp="2026-03-09T22:14:45.435776+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.client_test" name="test_rate_limit_handler" time="0.001"><failure message="AttributeError: module 'chessdotcom.client' has no attribute 'time'">args = (), keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1427: in __enter__
+    self.target = self.getter()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'chessdotcom.client.time'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+E           AttributeError: module 'chessdotcom.client' has no attribute 'time'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pkgutil.py:715: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_do_get_request_sync" time="0.000"><failure message="AttributeError: &lt;module 'chessdotcom.client' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/client.py'&gt; does not have the attribute 'requests'">args = (), keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1443: in __enter__
+    original, local = self.get_original()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unittest.mock._patch object at 0x1077ffb50&gt;
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+&gt;           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: &lt;module 'chessdotcom.client' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/client.py'&gt; does not have the attribute 'requests'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1416: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_do_get_request_sync_error" time="0.000"><failure message="AttributeError: &lt;module 'chessdotcom.client' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/client.py'&gt; does not have the attribute 'requests'">args = (), keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1443: in __enter__
+    original, local = self.get_original()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unittest.mock._patch object at 0x1077ffed0&gt;
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+&gt;           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: &lt;module 'chessdotcom.client' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/client.py'&gt; does not have the attribute 'requests'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1416: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_do_get_request_async" time="0.003" /><testcase classname="tests.client_test" name="test_do_get_request_async_error" time="0.001" /><testcase classname="tests.client_test" name="test_do_get_request_sync_decoding_error" time="0.000"><failure message="AttributeError: &lt;module 'chessdotcom.client' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/client.py'&gt; does not have the attribute 'requests'">args = (), keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1443: in __enter__
+    original, local = self.get_original()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unittest.mock._patch object at 0x10780dc90&gt;
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+&gt;           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: &lt;module 'chessdotcom.client' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/client.py'&gt; does not have the attribute 'requests'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1416: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_do_get_request_sync_combined_headers" time="0.000"><failure message="AttributeError: &lt;module 'chessdotcom.client' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/client.py'&gt; does not have the attribute 'requests'">args = (), keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1443: in __enter__
+    original, local = self.get_original()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unittest.mock._patch object at 0x10780ded0&gt;
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+&gt;           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: &lt;module 'chessdotcom.client' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/client.py'&gt; does not have the attribute 'requests'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1416: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_do_get_request_sync_top_level_attribute" time="0.000"><failure message="AttributeError: &lt;module 'chessdotcom.client' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/client.py'&gt; does not have the attribute 'requests'">args = (), keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1443: in __enter__
+    original, local = self.get_original()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unittest.mock._patch object at 0x10780e150&gt;
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+&gt;           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: &lt;module 'chessdotcom.client' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/client.py'&gt; does not have the attribute 'requests'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1416: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_do_get_request_includes_user_agent_header" time="0.000"><failure message="AttributeError: &lt;module 'chessdotcom.client' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/client.py'&gt; does not have the attribute 'requests'">args = (), keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1443: in __enter__
+    original, local = self.get_original()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unittest.mock._patch object at 0x10780e3d0&gt;
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+&gt;           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: &lt;module 'chessdotcom.client' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/client.py'&gt; does not have the attribute 'requests'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1416: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_client_includes_default_config" time="0.000" /><testcase classname="tests.client_test" name="test_client_combines_with_defaults" time="0.000" /><testcase classname="tests.client_test" name="test_verify_ssl_option" time="0.001" /><testcase classname="tests.endpoints.get_club_details_test" name="test_with_endpoints" time="0.004"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_club_details.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_club_details(url_id="chess-com-developer-community")
+&gt;       validate_response(response)
+
+tests/endpoints/get_club_details_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107cafde0&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_club_details_test.py:28: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_club_details_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x107fce710&gt;
+
+    @vcr.use_cassette("get_club_details.yaml")
+    def test_with_client(client):
+        response = client.get_club_details(url_id="chess-com-developer-community")
+&gt;       validate_response(response)
+
+tests/endpoints/get_club_details_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c150&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_club_details_test.py:28: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_club_details_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.get_club_matches_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_club_matches.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_club_matches(url_id="chess-com-developer-community")
+&gt;       validate_response(response)
+
+tests/endpoints/get_club_matches_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d7a0&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_club_matches_test.py:28: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_club_matches_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x10810e5d0&gt;
+
+    @vcr.use_cassette("get_club_matches.yaml")
+    def test_with_client(client):
+        response = client.get_club_matches(url_id="chess-com-developer-community")
+&gt;       validate_response(response)
+
+tests/endpoints/get_club_matches_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d470&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_club_matches_test.py:28: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_club_matches_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.get_club_members_test" name="test_with_endpoints" time="0.006"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_club_members.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_club_members(url_id="chess-com-developer-community")
+&gt;       validate_response(response)
+
+tests/endpoints/get_club_members_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5e020&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_club_members_test.py:28: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_club_members_test" name="test_with_client" time="0.007"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x108239050&gt;
+
+    @vcr.use_cassette("get_club_members.yaml")
+    def test_with_client(client):
+        response = client.get_club_members(url_id="chess-com-developer-community")
+&gt;       validate_response(response)
+
+tests/endpoints/get_club_members_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d9c0&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_club_members_test.py:28: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_club_members_test" name="test_with_async_client" time="0.086" /><testcase classname="tests.endpoints.get_country_clubs_test" name="test_with_endpoints" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_country_clubs.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_country_clubs(iso="XE")
+&gt;       validate_response(response)
+
+tests/endpoints/get_country_clubs_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d360&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_country_clubs_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_country_clubs_test" name="test_with_client" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x10824cdd0&gt;
+
+    @vcr.use_cassette("get_country_clubs.yaml")
+    def test_with_client(client):
+        response = client.get_country_clubs(iso="XE")
+&gt;       validate_response(response)
+
+tests/endpoints/get_country_clubs_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5e020&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_country_clubs_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_country_clubs_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.get_country_details_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_country_details.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_country_details(iso="XE")
+&gt;       validate_response(response)
+
+tests/endpoints/get_country_details_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d250&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_country_details_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_country_details_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x107da8d90&gt;
+
+    @vcr.use_cassette("get_country_details.yaml")
+    def test_with_client(client):
+        response = client.get_country_details(iso="XE")
+&gt;       validate_response(response)
+
+tests/endpoints/get_country_details_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d7a0&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_country_details_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_country_details_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.get_country_players_test" name="test_with_endpoints" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_country_players.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_country_players(iso="US")
+&gt;       validate_response(response)
+
+tests/endpoints/get_country_players_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d360&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_country_players_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_country_players_test" name="test_with_client" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x10810c250&gt;
+
+    @vcr.use_cassette("get_country_players.yaml")
+    def test_with_client(client):
+        response = client.get_country_players(iso="US")
+&gt;       validate_response(response)
+
+tests/endpoints/get_country_players_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5e020&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_country_players_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_country_players_test" name="test_with_async_client" time="0.007" /><testcase classname="tests.endpoints.get_current_daily_puzzle_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_current_daily_puzzle.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_current_daily_puzzle()
+&gt;       validate_response(response)
+
+tests/endpoints/get_current_daily_puzzle_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d250&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_current_daily_puzzle_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_current_daily_puzzle_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x107f0fe90&gt;
+
+    @vcr.use_cassette("get_current_daily_puzzle.yaml")
+    def test_with_client(client):
+        response = client.get_current_daily_puzzle()
+&gt;       validate_response(response)
+
+tests/endpoints/get_current_daily_puzzle_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d7a0&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_current_daily_puzzle_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_current_daily_puzzle_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.get_leaderboards_test" name="test_with_endpoints" time="0.004"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_leaderboards.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_leaderboards()
+&gt;       validate_response(response)
+
+tests/endpoints/get_leaderboards_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d360&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_leaderboards_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_leaderboards_test" name="test_with_client" time="0.004"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x10810c550&gt;
+
+    @vcr.use_cassette("get_leaderboards.yaml")
+    def test_with_client(client):
+        response = client.get_leaderboards()
+&gt;       validate_response(response)
+
+tests/endpoints/get_leaderboards_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c9d0&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_leaderboards_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_leaderboards_test" name="test_with_async_client" time="0.033" /><testcase classname="tests.endpoints.get_player_team_matches_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_player_team_matches.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_player_team_matches(username="akshayraj_kore")
+&gt;       validate_response(response)
+
+tests/endpoints/get_player_team_matches_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d7a0&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_player_team_matches_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_player_team_matches_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x1080a68d0&gt;
+
+    @vcr.use_cassette("get_player_team_matches.yaml")
+    def test_with_client(client):
+        response = client.get_player_team_matches(username="akshayraj_kore")
+&gt;       validate_response(response)
+
+tests/endpoints/get_player_team_matches_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5ce10&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_player_team_matches_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_player_team_matches_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.get_random_daily_puzzle_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_random_daily_puzzle.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_random_daily_puzzle()
+&gt;       validate_response(response)
+
+tests/endpoints/get_random_daily_puzzle_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d140&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_random_daily_puzzle_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_random_daily_puzzle_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x1080c97d0&gt;
+
+    @vcr.use_cassette("get_random_daily_puzzle.yaml")
+    def test_with_client(client):
+        response = client.get_random_daily_puzzle()
+&gt;       validate_response(response)
+
+tests/endpoints/get_random_daily_puzzle_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c150&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_random_daily_puzzle_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_random_daily_puzzle_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.get_streamers_test" name="test_with_endpoints" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_streamers.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_streamers()
+&gt;       validate_response(response)
+
+tests/endpoints/get_streamers_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5e020&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_streamers_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_streamers_test" name="test_with_client" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x10811cc10&gt;
+
+    @vcr.use_cassette("get_streamers.yaml")
+    def test_with_client(client):
+        response = client.get_streamers()
+&gt;       validate_response(response)
+
+tests/endpoints/get_streamers_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c480&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_streamers_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_streamers_test" name="test_with_async_client" time="0.015" /><testcase classname="tests.endpoints.get_team_match_board_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_team_match_board.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_team_match_board(match_id=12803, board_num=1)
+&gt;       validate_response(response)
+
+tests/endpoints/get_team_match_board_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c150&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_team_match_board_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_team_match_board_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x107fda0d0&gt;
+
+    @vcr.use_cassette("get_team_match_board.yaml")
+    def test_with_client(client):
+        response = client.get_team_match_board(match_id=12803, board_num=1)
+&gt;       validate_response(response)
+
+tests/endpoints/get_team_match_board_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5ce10&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_team_match_board_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_team_match_board_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.get_team_match_live_board_test" name="test_with_endpoints" time="0.010"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_team_match_live_board.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_team_match_live_board(match_id=5833, board_num=1)
+&gt;       validate_response(response)
+
+tests/endpoints/get_team_match_live_board_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5ce10&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_team_match_live_board_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_team_match_live_board_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x107fcbc50&gt;
+
+    @vcr.use_cassette("get_team_match_live_board.yaml")
+    def test_with_client(client):
+        response = client.get_team_match_live_board(match_id=5833, board_num=1)
+&gt;       validate_response(response)
+
+tests/endpoints/get_team_match_live_board_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5e020&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_team_match_live_board_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_team_match_live_board_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.get_team_match_live_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_team_match_live.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_team_match_live(match_id=5833)
+&gt;       validate_response(response)
+
+tests/endpoints/get_team_match_live_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d470&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_team_match_live_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_team_match_live_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x10811c910&gt;
+
+    @vcr.use_cassette("get_team_match_live.yaml")
+    def test_with_client(client):
+        response = client.get_team_match_live(match_id=5833)
+&gt;       validate_response(response)
+
+tests/endpoints/get_team_match_live_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5de00&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_team_match_live_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_team_match_live_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.get_team_match_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_team_match.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_team_match(match_id=12803)
+&gt;       validate_response(response)
+
+tests/endpoints/get_team_match_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d7a0&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_team_match_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_team_match_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x107f69290&gt;
+
+    @vcr.use_cassette("get_team_match.yaml")
+    def test_with_client(client):
+        response = client.get_team_match(match_id=12803)
+&gt;       validate_response(response)
+
+tests/endpoints/get_team_match_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c150&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_team_match_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_team_match_test" name="test_with_async_client" time="0.005" /><testcase classname="tests.endpoints.get_titled_players_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_titled_players.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_titled_players(title_abbrev="GM")
+&gt;       validate_response(response)
+
+tests/endpoints/get_titled_players_test.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5dbe0&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_titled_players_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_titled_players_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x107d62f10&gt;
+
+    @vcr.use_cassette("get_titled_players.yaml")
+    def test_with_client(client):
+        response = client.get_titled_players(title_abbrev="GM")
+&gt;       validate_response(response)
+
+tests/endpoints/get_titled_players_test.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5dad0&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_titled_players_test.py:26: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_titled_players_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.get_tournament_details_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_tournament_details.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_tournament_details(
+            url_id="-33rd-chesscom-quick-knockouts-1401-1600"
+        )
+&gt;       validate_response(response)
+
+tests/endpoints/get_tournament_details_test.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5e680&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_tournament_details_test.py:32: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_tournament_details_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x1081815d0&gt;
+
+    @vcr.use_cassette("get_tournament_details.yaml")
+    def test_with_client(client):
+        response = client.get_tournament_details(
+            url_id="-33rd-chesscom-quick-knockouts-1401-1600"
+        )
+&gt;       validate_response(response)
+
+tests/endpoints/get_tournament_details_test.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5dbe0&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_tournament_details_test.py:32: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_tournament_details_test" name="test_with_async_client" time="0.005" /><testcase classname="tests.endpoints.get_tournament_round_group_details_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_tournament_round_group_details.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_tournament_round_group_details(
+            url_id="-33rd-chesscom-quick-knockouts-1401-1600", round_num=1, group_num=1
+        )
+&gt;       validate_response(response)
+
+tests/endpoints/get_tournament_round_group_details_test.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d580&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_tournament_round_group_details_test.py:32: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_tournament_round_group_details_test" name="test_with_client" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x107d61d10&gt;
+
+    @vcr.use_cassette("get_tournament_round_group_details.yaml")
+    def test_with_client(client):
+        response = client.get_tournament_round_group_details(
+            url_id="-33rd-chesscom-quick-knockouts-1401-1600", round_num=1, group_num=1
+        )
+&gt;       validate_response(response)
+
+tests/endpoints/get_tournament_round_group_details_test.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5e130&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_tournament_round_group_details_test.py:32: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_tournament_round_group_details_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.get_tournament_round_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_tournament_round.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_tournament_round(
+            url_id="-33rd-chesscom-quick-knockouts-1401-1600", round_num=1
+        )
+&gt;       validate_response(response)
+
+tests/endpoints/get_tournament_round_test.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c480&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_tournament_round_test.py:32: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_tournament_round_test" name="test_with_client" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x10779bcd0&gt;
+
+    @vcr.use_cassette("get_tournament_round.yaml")
+    def test_with_client(client):
+        response = client.get_tournament_round(
+            url_id="-33rd-chesscom-quick-knockouts-1401-1600", round_num=1
+        )
+&gt;       validate_response(response)
+
+tests/endpoints/get_tournament_round_test.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5dad0&gt;
+
+    def validate_response(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/get_tournament_round_test.py:32: AttributeError</failure></testcase><testcase classname="tests.endpoints.get_tournament_round_test" name="test_with_async_client" time="0.005" /><testcase classname="tests.endpoints.player_clubs_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_player_clubs.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_player_clubs(username="fabianocaruana")
+&gt;       validate_response(response)
+
+tests/endpoints/player_clubs_test.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_clubs_test.py:43: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5dcf0&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_clubs_test.py:37: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_clubs_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x107f0d710&gt;
+
+    @vcr.use_cassette("get_player_clubs.yaml")
+    def test_with_client(client):
+        response = client.get_player_clubs(username="fabianocaruana")
+&gt;       validate_response(response)
+
+tests/endpoints/player_clubs_test.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_clubs_test.py:43: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d360&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_clubs_test.py:37: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_clubs_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.player_clubs_test" name="test_empty_data" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">deserialize = &lt;MagicMock name='deserialize' id='4427728016'&gt;
+client = &lt;chessdotcom.client.ChessDotComClient object at 0x107f9f410&gt;
+
+    @vcr.use_cassette("get_player_clubs.yaml")
+    @patch("chessdotcom.response_builder.Serializer.deserialize")
+    def test_empty_data(deserialize, client):
+        deserialize.return_value = {}
+        response = client.get_player_clubs(username="fabianocaruana")
+    
+&gt;       validate_response_structure(response)
+
+tests/endpoints/player_clubs_test.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c150&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_clubs_test.py:37: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_current_games_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_player_current_games.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_player_current_games(username="afgano29")
+&gt;       validate_response(response)
+
+tests/endpoints/player_current_games_test.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c480&gt;
+
+    def validate_response(response):
+        validate_response_structure
+    
+&gt;       assert response.json.get("games") is not None
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_current_games_test.py:46: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_current_games_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x107fac7d0&gt;
+
+    @vcr.use_cassette("get_player_current_games.yaml")
+    def test_with_client(client):
+        response = client.get_player_current_games(username="afgano29")
+&gt;       validate_response(response)
+
+tests/endpoints/player_current_games_test.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d7a0&gt;
+
+    def validate_response(response):
+        validate_response_structure
+    
+&gt;       assert response.json.get("games") is not None
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_current_games_test.py:46: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_current_games_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.player_current_games_test" name="test_empty_data" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">deserialize = &lt;MagicMock name='deserialize' id='4427729872'&gt;
+client = &lt;chessdotcom.client.ChessDotComClient object at 0x107f43c90&gt;
+
+    @vcr.use_cassette("get_player_current_games.yaml")
+    @patch("chessdotcom.response_builder.Serializer.deserialize")
+    def test_empty_data(deserialize, client):
+        deserialize.return_value = {}
+        response = client.get_player_current_games(username="afgano29")
+    
+&gt;       validate_response_structure(response)
+
+tests/endpoints/player_current_games_test.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c370&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_current_games_test.py:38: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_game_archives_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_player_game_archives.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_player_game_archives(username="afgano29")
+&gt;       validate_response(response)
+
+tests/endpoints/player_game_archives_test.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_game_archives_test.py:37: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5de00&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_game_archives_test.py:46: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_game_archives_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x1082466d0&gt;
+
+    @vcr.use_cassette("get_player_game_archives.yaml")
+    def test_with_client(client):
+        response = client.get_player_game_archives(username="afgano29")
+&gt;       validate_response(response)
+
+tests/endpoints/player_game_archives_test.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_game_archives_test.py:37: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d470&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_game_archives_test.py:46: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_game_archives_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.player_game_archives_test" name="test_empty_data" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">deserialize = &lt;MagicMock name='deserialize' id='4431513616'&gt;
+client = &lt;chessdotcom.client.ChessDotComClient object at 0x107fc9790&gt;
+
+    @vcr.use_cassette("get_player_game_archives.yaml")
+    @patch("chessdotcom.response_builder.Serializer.deserialize")
+    def test_empty_data(deserialize, client):
+        deserialize.return_value = {}
+        response = client.get_player_game_archives(username="afgano29")
+    
+&gt;       validate_response_structure(response)
+
+tests/endpoints/player_game_archives_test.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5dad0&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_game_archives_test.py:46: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_games_by_month_pgn_test" name="test_with_endpoints" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_player_games_by_month_pgn.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_player_games_by_month_pgn(
+            username="fabianocaruana", year="2020", month="05"
+        )
+&gt;       validate_response(response)
+
+tests/endpoints/player_games_by_month_pgn_test.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_games_by_month_pgn_test.py:38: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c9d0&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_games_by_month_pgn_test.py:32: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_games_by_month_pgn_test" name="test_with_client" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x107fd9410&gt;
+
+    @vcr.use_cassette("get_player_games_by_month_pgn.yaml")
+    def test_with_client(client):
+        response = client.get_player_games_by_month_pgn(
+            username="fabianocaruana", year="2020", month="05"
+        )
+&gt;       validate_response(response)
+
+tests/endpoints/player_games_by_month_pgn_test.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_games_by_month_pgn_test.py:38: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5df10&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_games_by_month_pgn_test.py:32: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_games_by_month_pgn_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.player_games_by_month_test" name="test_with_endpoints" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_player_games_by_month.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_player_games_by_month(
+            username="fabianocaruana", year="2020", month="05"
+        )
+&gt;       validate_response(response)
+
+tests/endpoints/player_games_by_month_test.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_games_by_month_test.py:52: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d470&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_games_by_month_test.py:46: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_games_by_month_test" name="test_with_client" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x108177910&gt;
+
+    @vcr.use_cassette("get_player_games_by_month.yaml")
+    def test_with_client(client):
+        response = client.get_player_games_by_month(
+            username="fabianocaruana", year="2020", month="05"
+        )
+&gt;       validate_response(response)
+
+tests/endpoints/player_games_by_month_test.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_games_by_month_test.py:52: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c9d0&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_games_by_month_test.py:46: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_games_by_month_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.player_games_by_month_test" name="test_empty_data" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">deserialize = &lt;MagicMock name='deserialize' id='4431576720'&gt;
+client = &lt;chessdotcom.client.ChessDotComClient object at 0x108174e50&gt;
+
+    @vcr.use_cassette("get_player_games_by_month.yaml")
+    @patch("chessdotcom.response_builder.Serializer.deserialize")
+    def test_empty_data(deserialize, client):
+        deserialize.return_value = {}
+        response = client.get_player_games_by_month(
+            username="fabianocaruana", year="2020", month="05"
+        )
+    
+&gt;       validate_response_structure(response)
+
+tests/endpoints/player_games_by_month_test.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5df10&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_games_by_month_test.py:46: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_profile_test" name="test_get_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_player_profile.yaml")
+    def test_get_with_endpoints(endpoints):
+        response = endpoints.get_player_profile(username="farzyplayschess")
+&gt;       validate_response(response)
+
+tests/endpoints/player_profile_test.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_profile_test.py:45: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5dcf0&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_profile_test.py:39: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_profile_test" name="test_get_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x10815e250&gt;
+
+    @vcr.use_cassette("get_player_profile.yaml")
+    def test_get_with_client(client):
+        response = client.get_player_profile(username="farzyplayschess")
+&gt;       validate_response(response)
+
+tests/endpoints/player_profile_test.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_profile_test.py:45: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c480&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_profile_test.py:39: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_profile_test" name="test_get_with_async_client" time="0.003" /><testcase classname="tests.endpoints.player_profile_test" name="test_empty_data" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">deserialize = &lt;MagicMock name='deserialize' id='4430613008'&gt;
+client = &lt;chessdotcom.client.ChessDotComClient object at 0x10815ca90&gt;
+
+    @vcr.use_cassette("get_player_profile.yaml")
+    @patch("chessdotcom.response_builder.Serializer.deserialize")
+    def test_empty_data(deserialize, client):
+        deserialize.return_value = {}
+        response = client.get_player_profile(username="farzyplayschess")
+    
+&gt;       validate_response_structure(response)
+
+tests/endpoints/player_profile_test.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5e130&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_profile_test.py:39: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_stats_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_player_stats.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_player_stats(username="erik")
+&gt;       validate_response(response)
+
+tests/endpoints/player_stats_test.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_stats_test.py:45: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5c590&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_stats_test.py:39: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_stats_test" name="test_with_client" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x107e9ac90&gt;
+
+    @vcr.use_cassette("get_player_stats.yaml")
+    def test_with_client(client):
+        response = client.get_player_stats(username="erik")
+&gt;       validate_response(response)
+
+tests/endpoints/player_stats_test.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_stats_test.py:45: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d7a0&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_stats_test.py:39: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_stats_test" name="test_with_async_client" time="0.003" /><testcase classname="tests.endpoints.player_stats_test" name="test_empty_data" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">deserialize = &lt;MagicMock name='deserialize' id='4427879632'&gt;
+client = &lt;chessdotcom.client.ChessDotComClient object at 0x107f34590&gt;
+
+    @vcr.use_cassette("get_player_stats.yaml")
+    @patch("chessdotcom.response_builder.Serializer.deserialize")
+    def test_empty_data(deserialize, client):
+        deserialize.return_value = {}
+        response = client.get_player_stats(username="erik")
+    
+&gt;       validate_response_structure(response)
+
+tests/endpoints/player_stats_test.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5d250&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_stats_test.py:39: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_tournaments_test" name="test_with_endpoints" time="0.002"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">endpoints = &lt;module 'chessdotcom.endpoints' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/sarartur@chess.com__fdd85340__requests__aiohttp/chessdotcom/endpoints/__init__.py'&gt;
+
+    @vcr.use_cassette("get_player_tournaments.yaml")
+    def test_with_endpoints(endpoints):
+        response = endpoints.get_player_tournaments(username="fabianocaruana")
+&gt;       validate_response(response)
+
+tests/endpoints/player_tournaments_test.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_tournaments_test.py:44: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5f230&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_tournaments_test.py:29: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_tournaments_test" name="test_with_client" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">client = &lt;chessdotcom.client.ChessDotComClient object at 0x107f00f10&gt;
+
+    @vcr.use_cassette("get_player_tournaments.yaml")
+    def test_with_client(client):
+        response = client.get_player_tournaments(username="fabianocaruana")
+&gt;       validate_response(response)
+
+tests/endpoints/player_tournaments_test.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/endpoints/player_tournaments_test.py:44: in validate_response
+    validate_response_structure(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5f010&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_tournaments_test.py:29: AttributeError</failure></testcase><testcase classname="tests.endpoints.player_tournaments_test" name="test_with_async_client" time="0.004" /><testcase classname="tests.endpoints.player_tournaments_test" name="test_empty_data" time="0.003"><failure message="AttributeError: 'coroutine' object has no attribute 'json'">deserialize = &lt;MagicMock name='deserialize' id='4429869520'&gt;
+client = &lt;chessdotcom.client.ChessDotComClient object at 0x107f06090&gt;
+
+    @vcr.use_cassette("get_player_tournaments.yaml")
+    @patch("chessdotcom.response_builder.Serializer.deserialize")
+    def test_empty_data(deserialize, client):
+        deserialize.return_value = {}
+        response = client.get_player_tournaments(username="fabianocaruana")
+    
+&gt;       validate_response_structure(response)
+
+tests/endpoints/player_tournaments_test.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = &lt;coroutine object Client._do_async_get_request at 0x107d5ebd0&gt;
+
+    def validate_response_structure(response):
+&gt;       assert isinstance(response.json, dict)
+E       AttributeError: 'coroutine' object has no attribute 'json'
+
+tests/endpoints/player_tournaments_test.py:29: AttributeError</failure></testcase><testcase classname="tests.package_import_test" name="test_available_imports" time="0.000" /><testcase classname="tests.utils_test" name="test_resolve_date" time="0.000" /><testcase classname="tests.utils_test" name="test_dig" time="0.000" /></testsuite></testsuites>

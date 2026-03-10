@@ -1,0 +1,180 @@
+## Running premig
+creating venv at /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/gugarosa@learnergy__870d8a6b__matplotlib__altair/.venv
+installing dependencies
+### running tests
+- test finished with status 1, cov finished with status 1
+## Running llmmig
+## starting llmmig round
+- migrating 3 files
+### migrating learnergy/visual/convergence.py
+### migrating learnergy/visual/image.py
+### migrating learnergy/visual/tensor.py
+### running tests
+- test finished with status 2, cov finished with status 1
+### test diff with round premig
+- `tests/learnergy/core/test_dataset.py::test_dataset: passed != not found`
+- `tests/learnergy/core/test_model.py::test_model: passed != not found`
+- `tests/learnergy/math/test_metrics.py::test_calculate_ssim: passed != not found`
+- `tests/learnergy/math/test_scale.py::test_unitary_scale: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_W: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_W_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_a: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_a_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_b: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_b_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_decay: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_decay_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_energy: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_filter_shape: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_filter_shape_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_forward: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_hidden_sampling: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_hidden_shape: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_hidden_shape_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_lr: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_lr_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_momentum: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_momentum_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_n_channels: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_n_channels_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_n_filters: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_n_filters_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_optimizer: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_optimizer_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_steps: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_steps_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_visible_sampling: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_visible_shape: passed != not found`
+- `tests/learnergy/models/bernoulli/test_conv_rbm.py::test_conv_rbm_visible_shape_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_discriminative_rbm.py::test_discriminative_rbm_U: passed != not found`
+- `tests/learnergy/models/bernoulli/test_discriminative_rbm.py::test_discriminative_rbm_U_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_discriminative_rbm.py::test_discriminative_rbm_c: passed != not found`
+- `tests/learnergy/models/bernoulli/test_discriminative_rbm.py::test_discriminative_rbm_c_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_discriminative_rbm.py::test_discriminative_rbm_labels_sampling: passed != not found`
+- `tests/learnergy/models/bernoulli/test_discriminative_rbm.py::test_discriminative_rbm_loss: passed != not found`
+- `tests/learnergy/models/bernoulli/test_discriminative_rbm.py::test_discriminative_rbm_loss_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_discriminative_rbm.py::test_discriminative_rbm_n_classes: passed != not found`
+- `tests/learnergy/models/bernoulli/test_discriminative_rbm.py::test_discriminative_rbm_n_classes_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_discriminative_rbm.py::test_hybrid_discriminative_rbm_alpha: passed != not found`
+- `tests/learnergy/models/bernoulli/test_discriminative_rbm.py::test_hybrid_discriminative_rbm_alpha_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_discriminative_rbm.py::test_hybrid_discriminative_rbm_class_sampling: passed != not found`
+- `tests/learnergy/models/bernoulli/test_discriminative_rbm.py::test_hybrid_discriminative_rbm_hidden_sampling: passed != not found`
+- `tests/learnergy/models/bernoulli/test_dropout_rbm.py::test_dropconnect_rbm_hidden_sampling: passed != not found`
+- `tests/learnergy/models/bernoulli/test_dropout_rbm.py::test_dropout_rbm_hidden_sampling: passed != not found`
+- `tests/learnergy/models/bernoulli/test_dropout_rbm.py::test_dropout_rbm_p: passed != not found`
+- `tests/learnergy/models/bernoulli/test_dropout_rbm.py::test_dropout_rbm_p_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_e_dropout_rbm.py::test_e_dropout_rbm_M: passed != not found`
+- `tests/learnergy/models/bernoulli/test_e_dropout_rbm.py::test_e_dropout_rbm_M_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_e_dropout_rbm.py::test_e_dropout_rbm_energy_dropout: passed != not found`
+- `tests/learnergy/models/bernoulli/test_e_dropout_rbm.py::test_e_dropout_rbm_hidden_sampling: passed != not found`
+- `tests/learnergy/models/bernoulli/test_e_dropout_rbm.py::test_e_dropout_rbm_total_energy: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_T: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_T_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_W: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_W_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_a: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_a_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_b: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_b_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_decay: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_decay_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_energy: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_forward: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_hidden_sampling: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_lr: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_lr_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_momentum: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_momentum_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_n_hidden: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_n_hidden_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_n_visible: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_n_visible_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_optimizer: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_optimizer_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_pseudo_likelihood: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_steps: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_steps_setter: passed != not found`
+- `tests/learnergy/models/bernoulli/test_rbm.py::test_rbm_visible_sampling: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_decay: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_decay_setter: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_filter_shape: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_filter_shape_setter: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_lr: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_lr_setter: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_models: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_models_setter: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_momentum: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_momentum_setter: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_n_channels: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_n_channels_setter: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_n_filters: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_n_filters_setter: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_n_layers: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_n_layers_setter: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_steps: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_steps_setter: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_visible_shape: passed != not found`
+- `tests/learnergy/models/deep/test_conv_dbn.py::test_dbn_visible_shape_setter: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_T: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_T_setter: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_decay: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_decay_setter: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_lr: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_lr_setter: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_models: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_models_setter: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_momentum: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_momentum_setter: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_n_hidden: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_n_hidden_setter: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_n_layers: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_n_layers_setter: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_n_visible: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_n_visible_setter: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_steps: passed != not found`
+- `tests/learnergy/models/deep/test_dbn.py::test_dbn_steps_setter: passed != not found`
+- `tests/learnergy/models/deep/test_residual_dbn.py::test_residual_dbn_calculate_residual: passed != not found`
+- `tests/learnergy/models/deep/test_residual_dbn.py::test_residual_dbn_forward: passed != not found`
+- `tests/learnergy/models/deep/test_residual_dbn.py::test_residual_dbn_zetta1: passed != not found`
+- `tests/learnergy/models/deep/test_residual_dbn.py::test_residual_dbn_zetta1_setter: passed != not found`
+- `tests/learnergy/models/deep/test_residual_dbn.py::test_residual_dbn_zetta2: passed != not found`
+- `tests/learnergy/models/deep/test_residual_dbn.py::test_residual_dbn_zetta2_setter: passed != not found`
+- `tests/learnergy/models/extra/test_sigmoid_rbm.py::test_sigmoid_rbm_hidden_sampling: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_conv_rbm.py::test_gaussian_conv_rbm_hidden_sampling: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_conv_rbm.py::test_gaussian_conv_rbm_visible_sampling: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_rbm.py::test_gaussian_rbm_input_normalize: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_rbm.py::test_gaussian_rbm_input_normalize_setter: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_rbm.py::test_gaussian_rbm_normalize: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_rbm.py::test_gaussian_rbm_normalize_setter: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_rbm.py::test_gaussian_rbm_visible_sampling: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_rbm.py::test_gaussian_relu_rbm_hidden_sampling: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_rbm.py::test_gaussian_selu_rbm_hidden_sampling: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_rbm.py::test_variance_gaussian_rbm_energy: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_rbm.py::test_variance_gaussian_rbm_hidden_sampling: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_rbm.py::test_variance_gaussian_rbm_sigma: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_rbm.py::test_variance_gaussian_rbm_sigma_setter: passed != not found`
+- `tests/learnergy/models/gaussian/test_gaussian_rbm.py::test_variance_gaussian_rbm_visible_sampling: passed != not found`
+- `tests/learnergy/utils/test_constants.py::test_constants: passed != not found`
+- `tests/learnergy/utils/test_exception.py::test_argument_error: passed != not found`
+- `tests/learnergy/utils/test_exception.py::test_build_error: passed != not found`
+- `tests/learnergy/utils/test_exception.py::test_error: passed != not found`
+- `tests/learnergy/utils/test_exception.py::test_size_error: passed != not found`
+- `tests/learnergy/utils/test_exception.py::test_type_error: passed != not found`
+- `tests/learnergy/utils/test_exception.py::test_value_error: passed != not found`
+- `tests/learnergy/utils/test_logging.py::test_get_console_handler: passed != not found`
+- `tests/learnergy/utils/test_logging.py::test_get_logger: passed != not found`
+- `tests/learnergy/utils/test_logging.py::test_get_timed_file_handler: passed != not found`
+- `tests/learnergy/visual/test_convergence.py::test_convergence_plot: passed != not found`
+- `tests/learnergy/visual/test_image.py::test_create_mosaic: passed != not found`
+- `tests/learnergy/visual/test_image.py::test_create_rgb_mosaic: passed != not found`
+- `tests/learnergy/visual/test_image.py::test_rasterize: passed != not found`
+- `tests/learnergy/visual/test_tensor.py::test_show_tensor: passed != not found`
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+### Finding async transforms
+- Found 0 functions to mark async including 0 tests
+- Found 0 calls to await
+- async_transform finished

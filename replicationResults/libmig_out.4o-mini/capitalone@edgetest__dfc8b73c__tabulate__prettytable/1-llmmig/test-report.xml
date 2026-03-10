@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="25" skipped="0" tests="56" time="1.767" timestamp="2026-03-07T22:45:49.604718+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_core" name="test_init" time="0.004" /><testcase classname="tests.test_core" name="test_basic_setup" time="0.024" /><testcase classname="tests.test_core" name="test_basic_setup_create_environment_error" time="0.019" /><testcase classname="tests.test_core" name="test_basic_setup_upgrade_error" time="0.019" /><testcase classname="tests.test_core" name="test_basic_setup_lower_error" time="0.017" /><testcase classname="tests.test_core" name="test_setup_extras" time="0.017" /><testcase classname="tests.test_core" name="test_setup_pip_deps" time="0.018" /><testcase classname="tests.test_core" name="test_setup_pip_deps_error" time="0.023" /><testcase classname="tests.test_core" name="test_run_tests" time="0.017" /><testcase classname="tests.test_integration_cfg" name="test_toy_package" time="0.031"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code">@pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.integration
+    def test_toy_package():
+        """Test using edgetest with a toy package."""
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG)
+            with open("setup.py", "w") as outfile:
+                outfile.write(SETUP_PY)
+            # Make a directory for the module
+            Path(loc, "toy_package").mkdir()
+            with open(Path(loc, "toy_package", "__init__.py"), "w") as outfile:
+                outfile.write(MODULE_CODE)
+            # Make a directory for the tests
+            Path(loc, "tests").mkdir()
+            with open(Path(loc, "tests", "test_main.py"), "w") as outfile:
+                outfile.write(TEST_CODE)
+    
+            # Run the CLI
+            result = runner.invoke(cli, ["--config=setup.cfg"])
+    
+&gt;           assert result.exit_code == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_integration_cfg.py:145: AssertionError</failure></testcase><testcase classname="tests.test_integration_cfg" name="test_toy_package_lower" time="0.020"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code">@pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.integration
+    def test_toy_package_lower():
+        """Test lower bounds with a toy package."""
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG_LOWER)
+            with open("setup.py", "w") as outfile:
+                outfile.write(SETUP_PY)
+            # Make a directory for the module
+            Path(loc, "toy_package").mkdir()
+            with open(Path(loc, "toy_package", "__init__.py"), "w") as outfile:
+                outfile.write(MODULE_CODE)
+            # Make a directory for the tests
+            Path(loc, "tests").mkdir()
+            with open(Path(loc, "tests", "test_main.py"), "w") as outfile:
+                outfile.write(TEST_CODE)
+    
+            # Run the CLI
+            result = runner.invoke(cli, ["--config=setup.cfg"])
+    
+&gt;           assert result.exit_code == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_integration_cfg.py:179: AssertionError</failure></testcase><testcase classname="tests.test_integration_cfg" name="test_toy_package_extras" time="0.014"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code">@pytest.mark.integration
+    def test_toy_package_extras():
+        """Test using edgetest with a toy package."""
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG_EXTRAS)
+            with open("setup.py", "w") as outfile:
+                outfile.write(SETUP_PY)
+            # Make a directory for the module
+            Path(loc, "toy_package").mkdir()
+            with open(Path(loc, "toy_package", "__init__.py"), "w") as outfile:
+                outfile.write(MODULE_CODE)
+            # Make a directory for the tests
+            Path(loc, "tests").mkdir()
+            with open(Path(loc, "tests", "test_main.py"), "w") as outfile:
+                outfile.write(TEST_CODE)
+    
+            # Run the CLI
+            result = runner.invoke(cli, ["--config=setup.cfg", "--export"])
+    
+&gt;           assert result.exit_code == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_integration_cfg.py:212: AssertionError</failure></testcase><testcase classname="tests.test_integration_toml" name="test_toy_package" time="0.015"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code">@pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.integration
+    def test_toy_package():
+        """Test using edgetest with a toy package."""
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML)
+            with open("setup.py", "w") as outfile:
+                outfile.write(SETUP_PY)
+            # Make a directory for the module
+            Path(loc, "toy_package").mkdir()
+            with open(Path(loc, "toy_package", "__init__.py"), "w") as outfile:
+                outfile.write(MODULE_CODE)
+            # Make a directory for the tests
+            Path(loc, "tests").mkdir()
+            with open(Path(loc, "tests", "test_main.py"), "w") as outfile:
+                outfile.write(TEST_CODE)
+    
+            # Run the CLI
+            result = runner.invoke(cli, ["--config=pyproject.toml"])
+    
+&gt;           assert result.exit_code == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_integration_toml.py:110: AssertionError</failure></testcase><testcase classname="tests.test_integration_toml" name="test_toy_package_lower" time="0.015"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code">@pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.integration
+    def test_toy_package_lower():
+        """Test using edgetest with a toy package."""
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML_LOWER)
+            with open("setup.py", "w") as outfile:
+                outfile.write(SETUP_PY)
+            # Make a directory for the module
+            Path(loc, "toy_package").mkdir()
+            with open(Path(loc, "toy_package", "__init__.py"), "w") as outfile:
+                outfile.write(MODULE_CODE)
+            # Make a directory for the tests
+            Path(loc, "tests").mkdir()
+            with open(Path(loc, "tests", "test_main.py"), "w") as outfile:
+                outfile.write(TEST_CODE)
+    
+            # Run the CLI
+            result = runner.invoke(cli, ["--config=pyproject.toml"])
+    
+&gt;           assert result.exit_code == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_integration_toml.py:144: AssertionError</failure></testcase><testcase classname="tests.test_integration_toml" name="test_toy_package_extras" time="0.021"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code">@pytest.mark.integration
+    def test_toy_package_extras():
+        """Test using edgetest with a toy package."""
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML_EXTRAS)
+            with open("setup.py", "w") as outfile:
+                outfile.write(SETUP_PY)
+            # Make a directory for the module
+            Path(loc, "toy_package").mkdir()
+            with open(Path(loc, "toy_package", "__init__.py"), "w") as outfile:
+                outfile.write(MODULE_CODE)
+            # Make a directory for the tests
+            Path(loc, "tests").mkdir()
+            with open(Path(loc, "tests", "test_main.py"), "w") as outfile:
+                outfile.write(TEST_CODE)
+    
+            # Run the CLI
+            result = runner.invoke(cli, ["--config=pyproject.toml", "--export"])
+    
+&gt;           assert result.exit_code == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = &lt;Result FileNotFoundError(2, 'No such file or directory')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_integration_toml.py:177: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_basic" time="0.049"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4414925584'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4415146256'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4412110800'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_basic(mock_popen, mock_cpopen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg"])
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_cfg.py:140: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_basic_lower" time="0.047"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4415669456'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4416060880'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4415436624'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_basic_lower(mock_popen, mock_cpopen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG_LOWER)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg"])
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_cfg.py:204: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_reqs" time="0.047"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4415863696'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4416133584'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4416459088'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_reqs(mock_popen, mock_cpopen, mock_builder):
+        """Test running tests based on the requirements file."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("requirements.txt", "w") as outfile:
+                outfile.write(REQS)
+    
+            result = runner.invoke(cli)
+    
+        if platform.system() == "Windows":
+            py_myupgrade_loc = (
+                Path(loc) / ".edgetest" / "myupgrade" / "Scripts" / "python.exe"
+            )
+            py_allreq_loc = (
+                Path(loc) / ".edgetest" / "all-requirements" / "Scripts" / "python.exe"
+            )
+        else:
+            py_myupgrade_loc = Path(loc) / ".edgetest" / "myupgrade" / "bin" / "python"
+            py_allreq_loc = Path(loc) / ".edgetest" / "all-requirements" / "bin" / "python"
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_cfg.py:273: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_setup_reqs_update" time="0.048"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4416998800'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4417294352'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4417059920'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_setup_reqs_update(mock_popen, mock_cpopen, mock_builder):
+        """Test running tests and updating requirements in a ``setup.cfg`` file."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG_REQS)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg", "--export"])
+    
+            with open("setup.cfg") as infile:
+                out = infile.read()
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_cfg.py:381: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_setup_extras_update" time="0.047"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4417216144'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4417576912'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4417664656'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_setup_extras_update(mock_popen, mock_cpopen, mock_builder):
+        """Test running tests and updating extra installation requirements in a ``setup.cfg`` file."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG_EXTRAS)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg", "--export"])
+    
+            with open("setup.cfg") as infile:
+                out = infile.read()
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_cfg.py:407: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_nosetup" time="0.035"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4417825040'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4418552528'&gt;
+
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_nosetup(mock_popen, mock_cpopen):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg", "--nosetup"])
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_cfg.py:429: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_nosetup_lower" time="0.036"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4418414032'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4417892368'&gt;
+
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_nosetup_lower(mock_popen, mock_cpopen):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG_LOWER)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg", "--nosetup"])
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_cfg.py:474: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_notest" time="0.030"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4417196624'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4417216528'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_notest(mock_popen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg", "--notest"])
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_cfg.py:510: AssertionError</failure></testcase><testcase classname="tests.test_interface_cfg" name="test_cli_notest_lower" time="0.033"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4416821968'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4416492112'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_notest_lower(mock_popen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("setup.cfg", "w") as outfile:
+                outfile.write(SETUP_CFG_LOWER)
+    
+            result = runner.invoke(cli, ["--config=setup.cfg", "--notest"])
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_cfg.py:565: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_basic" time="0.051"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4415849936'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4415430288'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4414339664'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_basic(mock_popen, mock_cpopen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml"])
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_toml.py:132: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_basic_lower" time="0.053"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4415007568'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4415147536'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4414776656'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_basic_lower(mock_popen, mock_cpopen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML_LOWER)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml"])
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_toml.py:203: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_reqs" time="0.046"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4412305168'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4414046992'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4416188752'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_reqs(mock_popen, mock_cpopen, mock_builder):
+        """Test running tests based on the requirements file."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("requirements.txt", "w") as outfile:
+                outfile.write(REQS)
+    
+            result = runner.invoke(cli)
+    
+        if platform.system() == "Windows":
+            py_myupgrade_loc = (
+                Path(loc) / ".edgetest" / "myupgrade" / "Scripts" / "python.exe"
+            )
+            py_allreq_loc = (
+                Path(loc) / ".edgetest" / "all-requirements" / "Scripts" / "python.exe"
+            )
+        else:
+            py_myupgrade_loc = Path(loc) / ".edgetest" / "myupgrade" / "bin" / "python"
+            py_allreq_loc = Path(loc) / ".edgetest" / "all-requirements" / "bin" / "python"
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_toml.py:278: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_setup_reqs_update" time="0.049"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4415790992'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4416640144'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4414047824'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_setup_reqs_update(mock_popen, mock_cpopen, mock_builder):
+        """Test running tests and updating requirements in a ``pyproject.toml`` file."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML_REQS)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml", "--export"])
+    
+            with open("pyproject.toml") as infile:
+                out = infile.read()
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_toml.py:392: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_setup_extras_update" time="0.053"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4419787472'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4420578960'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4417610128'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_setup_extras_update(mock_popen, mock_cpopen, mock_builder):
+        """Test running tests and updating extra installation requirements in a ``pyproject.toml`` file."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML_EXTRAS)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml", "--export"])
+    
+            with open("pyproject.toml") as infile:
+                out = infile.read()
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_toml.py:418: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_nosetup" time="0.036"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4420267280'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4420029136'&gt;
+
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_nosetup(mock_popen, mock_cpopen):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml", "--nosetup"])
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_toml.py:440: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_nosetup_lower" time="0.041"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4420202896'&gt;
+mock_cpopen = &lt;MagicMock name='Popen' spec='Popen' id='4420586512'&gt;
+
+    @patch("edgetest.core.Popen", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_nosetup_lower(mock_popen, mock_cpopen):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+        mock_cpopen.return_value.communicate.return_value = ("output", "error")
+        type(mock_cpopen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML_LOWER)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml", "--nosetup"])
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_toml.py:485: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_notest" time="0.060"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4421028240'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4421036688'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_notest(mock_popen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml", "--notest"])
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_toml.py:521: AssertionError</failure></testcase><testcase classname="tests.test_interface_toml" name="test_cli_notest_lower" time="0.034"><failure message="AssertionError: assert 1 == 0&#10; +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code">mock_popen = &lt;MagicMock name='Popen' spec='Popen' id='4420570000'&gt;
+mock_builder = &lt;MagicMock name='EnvBuilder' spec='EnvBuilder' id='4419986768'&gt;
+
+    @patch("edgetest.lib.EnvBuilder", autospec=True)
+    @patch("edgetest.utils.Popen", autospec=True)
+    def test_cli_notest_lower(mock_popen, mock_builder):
+        """Test creating a basic environment."""
+        mock_popen.return_value.communicate.return_value = (PIP_LIST, "error")
+        type(mock_popen.return_value).returncode = PropertyMock(return_value=0)
+    
+        runner = CliRunner()
+    
+        with runner.isolated_filesystem() as loc:
+            with open("pyproject.toml", "w") as outfile:
+                outfile.write(SETUP_TOML_LOWER)
+    
+            result = runner.invoke(cli, ["--config=pyproject.toml", "--notest"])
+    
+&gt;       assert result.exit_code == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = &lt;Result ValueError('Invalid value for format. Must be True or False.')&gt;.exit_code
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/tests/test_interface_toml.py:576: AssertionError</failure></testcase><testcase classname="tests.test_lib" name="test_path_to_python" time="0.010" /><testcase classname="tests.test_lib" name="test_create_environment" time="0.013" /><testcase classname="tests.test_lib" name="test_run_update" time="0.001" /><testcase classname="tests.test_lib" name="test_run_install_lower" time="0.001" /><testcase classname="tests.test_report" name="test_report" time="0.002"><failure message="AttributeError: &lt;module 'edgetest.report' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/edgetest/report.py'&gt; does not have the attribute 'tabulate'">args = ()
+keywargs = {'plugin_manager': &lt;pluggy._manager.PluginManager object at 0x1077994d0&gt;}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1443: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;unittest.mock._patch object at 0x106fef850&gt;
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+&gt;           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: &lt;module 'edgetest.report' from '/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/capitalone@edgetest__dfc8b73c__tabulate__prettytable/edgetest/report.py'&gt; does not have the attribute 'tabulate'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1416: AttributeError</failure></testcase><testcase classname="tests.test_schema" name="test_add_envoption" time="0.011" /><testcase classname="tests.test_schema" name="test_add_global_option" time="0.005" /><testcase classname="tests.test_utils" name="test_get_lower_bounds" time="0.001" /><testcase classname="tests.test_utils" name="test_parse_reqs" time="0.004" /><testcase classname="tests.test_utils" name="test_parse_cfg" time="0.002" /><testcase classname="tests.test_utils" name="test_parse_cfg_default" time="0.003" /><testcase classname="tests.test_utils" name="test_parse_cfg_reqs" time="0.002" /><testcase classname="tests.test_utils" name="test_parse_cfg_reqs_default" time="0.002" /><testcase classname="tests.test_utils" name="test_parse_custom_cfg" time="0.006" /><testcase classname="tests.test_utils" name="test_parse_toml" time="0.008" /><testcase classname="tests.test_utils" name="test_parse_toml_default" time="0.007" /><testcase classname="tests.test_utils" name="test_parse_toml_reqs" time="0.004" /><testcase classname="tests.test_utils" name="test_parse_toml_reqs_default" time="0.004" /><testcase classname="tests.test_utils" name="test_parse_custom_toml" time="0.006" /><testcase classname="tests.test_utils" name="test_convert_toml_array_to_string" time="0.000" /><testcase classname="tests.test_utils" name="test_upgrade_setup_cfg" time="0.001" /><testcase classname="tests.test_utils" name="test_upgrade_pyproject_toml" time="0.003" /><testcase classname="tests.test_utils" name="test_isin_case_dashhyphen_ins" time="0.001" /></testsuite></testsuites>

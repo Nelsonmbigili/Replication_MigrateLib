@@ -1,0 +1,1005 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="15" skipped="0" tests="32" time="1.165" timestamp="2026-03-09T20:32:45.907222+04:00" hostname="nelsonmbigili.local"><testcase classname="test_stale_repos.AuthToGithubTestCase" name="test_auth_to_github_app_with_github_app_installation_env_vars" time="0.159"><failure message="AttributeError: 'Settings' object has no attribute 'GH_APP_PRIVATE_KEY'">self = &lt;test_stale_repos.AuthToGithubTestCase testMethod=test_auth_to_github_app_with_github_app_installation_env_vars&gt;
+mock_login = &lt;MagicMock name='login_as_app_installation' id='4371622160'&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_APP_ID": "12345",
+            "GH_APP_PRIVATE_KEY": "FakePrivateKey",
+            "GH_APP_INSTALLATION_ID": "67890",
+            "GH_ENTERPRISE_URL": "",
+            "GH_TOKEN": "",
+        },
+    )
+    @patch("github3.github.GitHub.login_as_app_installation")
+    def test_auth_to_github_app_with_github_app_installation_env_vars(self, mock_login):
+        """
+        Test authentication with both app id, app private key, and installation id.
+    
+        This test verifies that when GH_APP_ID, GH_APP_PRIVATE_KEY, and GH_INSTALLATION_ID
+        environment variables are set, the auth_to_github() function returns a connection
+        object of type github3.github.GitHub.
+    
+        """
+        mock_login.return_value = MagicMock()
+&gt;       connection = auth_to_github()
+                     ^^^^^^^^^^^^^^^^
+
+test_stale_repos.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:348: in auth_to_github
+    gh_app_private_key_bytes = settings.GH_APP_PRIVATE_KEY.encode("utf8")
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;dynaconf.base.Settings object at 0x103e8ccd0&gt;
+name = 'GH_APP_PRIVATE_KEY'
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'GH_APP_PRIVATE_KEY'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase><testcase classname="test_stale_repos.AuthToGithubTestCase" name="test_auth_to_github_authentication_failure" time="0.002"><failure message="AttributeError: 'Settings' object has no attribute 'GH_APP_PRIVATE_KEY'">self = &lt;test_stale_repos.AuthToGithubTestCase testMethod=test_auth_to_github_authentication_failure&gt;
+mock_login = &lt;MagicMock name='login' id='4373864656'&gt;
+
+    @patch("github3.login")
+    def test_auth_to_github_authentication_failure(self, mock_login):
+        """
+        Test authentication failure.
+    
+        This test verifies that when the GH_ENTERPRISE_URL environment variable is empty,
+        the GH_TOKEN environment variable is set, and the authentication process fails,
+        the auth_to_github() function raises a ValueError.
+    
+        """
+        mock_login.return_value = None
+        with patch.dict(
+            os.environ,
+            {
+                "GH_APP_ID": "",
+                "GH_APP_PRIVATE_KEY": "",
+                "GH_APP_INSTALLATION_ID": "",
+                "GH_ENTERPRISE_URL": "",
+                "GH_TOKEN": "abc123",
+            },
+        ):
+            with self.assertRaises(ValueError) as cm:
+&gt;               auth_to_github()
+
+test_stale_repos.py:189: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:348: in auth_to_github
+    gh_app_private_key_bytes = settings.GH_APP_PRIVATE_KEY.encode("utf8")
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'GH_APP_PRIVATE_KEY'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase><testcase classname="test_stale_repos.AuthToGithubTestCase" name="test_auth_to_github_with_enterprise_url_and_token" time="0.001"><failure message="AttributeError: 'Settings' object has no attribute 'GH_APP_PRIVATE_KEY'">self = &lt;test_stale_repos.AuthToGithubTestCase testMethod=test_auth_to_github_with_enterprise_url_and_token&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_APP_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_ENTERPRISE_URL": "https://example.com",
+            "GH_TOKEN": "abc123",
+        },
+    )
+    def test_auth_to_github_with_enterprise_url_and_token(self):
+        """
+        Test authentication with both enterprise URL and token.
+    
+        This test verifies that when both the GH_ENTERPRISE_URL and GH_TOKEN environment
+        variables are set, the auth_to_github() function returns a connection object of
+        type github3.github.GitHubEnterprise.
+    
+        """
+&gt;       connection = auth_to_github()
+                     ^^^^^^^^^^^^^^^^
+
+test_stale_repos.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:348: in auth_to_github
+    gh_app_private_key_bytes = settings.GH_APP_PRIVATE_KEY.encode("utf8")
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;dynaconf.base.Settings object at 0x103e8ccd0&gt;
+name = 'GH_APP_PRIVATE_KEY'
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'GH_APP_PRIVATE_KEY'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase><testcase classname="test_stale_repos.AuthToGithubTestCase" name="test_auth_to_github_with_token" time="0.001"><failure message="AttributeError: 'Settings' object has no attribute 'GH_APP_PRIVATE_KEY'">self = &lt;test_stale_repos.AuthToGithubTestCase testMethod=test_auth_to_github_with_token&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_APP_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_ENTERPRISE_URL": "",
+            "GH_TOKEN": "abc123",
+        },
+    )
+    def test_auth_to_github_with_token(self):
+        """
+        Test authentication with only a token.
+    
+        This test verifies that when only the GH_TOKEN environment variable is set,
+        the auth_to_github() function returns a connection object of type github3.github.GitHub.
+    
+        """
+&gt;       connection = auth_to_github()
+                     ^^^^^^^^^^^^^^^^
+
+test_stale_repos.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:348: in auth_to_github
+    gh_app_private_key_bytes = settings.GH_APP_PRIVATE_KEY.encode("utf8")
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;dynaconf.base.Settings object at 0x103e8ccd0&gt;
+name = 'GH_APP_PRIVATE_KEY'
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'GH_APP_PRIVATE_KEY'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase><testcase classname="test_stale_repos.AuthToGithubTestCase" name="test_auth_to_github_without_enterprise_url" time="0.001"><failure message="AttributeError: 'Settings' object has no attribute 'GH_APP_PRIVATE_KEY'">self = &lt;test_stale_repos.AuthToGithubTestCase testMethod=test_auth_to_github_without_enterprise_url&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_APP_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_ENTERPRISE_URL": "",
+            "GH_TOKEN": "abc123",
+        },
+    )
+    def test_auth_to_github_without_enterprise_url(self):
+        """
+        Test authentication without an enterprise URL.
+    
+        This test verifies that when the GH_ENTERPRISE_URL environment variable is empty,
+        and the GH_TOKEN environment variable is set, the auth_to_github() function returns
+        a connection object of type github3.github.GitHub.
+    
+        """
+&gt;       connection = auth_to_github()
+                     ^^^^^^^^^^^^^^^^
+
+test_stale_repos.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:348: in auth_to_github
+    gh_app_private_key_bytes = settings.GH_APP_PRIVATE_KEY.encode("utf8")
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;dynaconf.base.Settings object at 0x103e8ccd0&gt;
+name = 'GH_APP_PRIVATE_KEY'
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'GH_APP_PRIVATE_KEY'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase><testcase classname="test_stale_repos.AuthToGithubTestCase" name="test_auth_to_github_without_environment_variables" time="0.001"><failure message="AttributeError: 'Settings' object has no attribute 'GH_APP_PRIVATE_KEY'">self = &lt;test_stale_repos.AuthToGithubTestCase testMethod=test_auth_to_github_without_environment_variables&gt;
+
+    @patch.dict(
+        os.environ,
+        {
+            "GH_APP_ID": "",
+            "GH_APP_PRIVATE_KEY": "",
+            "GH_APP_INSTALLATION_ID": "",
+            "GH_ENTERPRISE_URL": "",
+            "GH_TOKEN": "",
+        },
+    )
+    def test_auth_to_github_without_environment_variables(self):
+        """
+        Test authentication with missing environment variables.
+    
+        This test verifies that when both the GH_ENTERPRISE_URL and GH_TOKEN environment
+        variables are empty, the auth_to_github() function raises a ValueError.
+    
+        """
+        with self.assertRaises(ValueError) as cm:
+&gt;           auth_to_github()
+
+test_stale_repos.py:141: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:348: in auth_to_github
+    gh_app_private_key_bytes = settings.GH_APP_PRIVATE_KEY.encode("utf8")
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'GH_APP_PRIVATE_KEY'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase><testcase classname="test_stale_repos.TestGetIntFromEnv" name="test_get_int_env_var" time="0.001"><failure message="AssertionError: None != 12345">self = &lt;test_stale_repos.TestGetIntFromEnv testMethod=test_get_int_env_var&gt;
+
+    @patch.dict(os.environ, {"INT_ENV_VAR": "12345"})
+    def test_get_int_env_var(self):
+        """
+        Test that get_int_env_var returns the expected integer value.
+        """
+        result = get_int_env_var("INT_ENV_VAR")
+&gt;       self.assertEqual(result, 12345)
+E       AssertionError: None != 12345
+
+test_stale_repos.py:214: AssertionError</failure></testcase><testcase classname="test_stale_repos.TestGetIntFromEnv" name="test_get_int_env_var_with_empty_env_var" time="0.001" /><testcase classname="test_stale_repos.TestGetIntFromEnv" name="test_get_int_env_var_with_non_integer" time="0.001" /><testcase classname="test_stale_repos.GetInactiveReposTestCase" name="test_get_inactive_repos_with_default_branch_updated" time="0.005"><failure message="AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'">self = &lt;test_stale_repos.GetInactiveReposTestCase testMethod=test_get_inactive_repos_with_default_branch_updated&gt;
+
+    @patch.dict(os.environ, {"ACTIVITY_METHOD": "default_branch_updated"})
+    def test_get_inactive_repos_with_default_branch_updated(self):
+        """Test that get_inactive_repos works with alternative method.
+    
+        This test uses a MagicMock object to simulate a GitHub API connection with a list
+        of repositories with varying levels of inactivity. It then calls the get_inactive_repos
+        function with the mock GitHub API connection, a threshold of 30 days, and the
+        default_branch_updated setting.  It mocks the branch method on the repo object to return
+        the necessary data for the active_date determination Finally, it checks that the function
+        returns the expected list of inactive repos.
+    
+        """
+        # Create a MagicMock object to simulate a GitHub API connection
+        mock_github = MagicMock()
+    
+        # Create a MagicMock object to simulate the organization object returned by the
+        # GitHub API connection
+        mock_org = MagicMock()
+    
+        # Create MagicMock objects to simulate the repositories returned by the organization object
+        forty_days_ago = datetime.now(timezone.utc) - timedelta(days=40)
+        twenty_days_ago = datetime.now(timezone.utc) - timedelta(days=20)
+        mock_repo1 = MagicMock(
+            html_url="https://github.com/example/repo1",
+            default_branch="master",
+            archived=False,
+            private=True,
+        )
+        mock_repo1.topics().names = []
+        mock_repo1.branch().commit.commit.as_dict = MagicMock(
+            return_value={"committer": {"date": twenty_days_ago.isoformat()}}
+        )
+        mock_repo2 = MagicMock(
+            html_url="https://github.com/example/repo2",
+            archived=False,
+            private=True,
+        )
+        mock_repo2.topics().names = []
+        mock_repo2.branch().commit.commit.as_dict = MagicMock(
+            return_value={"committer": {"date": forty_days_ago.isoformat()}}
+        )
+        mock_repo3 = MagicMock(
+            html_url="https://github.com/example/repo3",
+            archived=True,
+            private=True,
+        )
+        mock_repo3.topics().names = []
+        mock_repo3.branch().commit.commit.as_dict = MagicMock(
+            return_value={"committer": {"date": forty_days_ago.isoformat()}}
+        )
+    
+        # Set up the MagicMock objects to return the expected values when called
+        mock_github.organization.return_value = mock_org
+        mock_org.repositories.return_value = [
+            mock_repo1,
+            mock_repo2,
+            mock_repo3,
+        ]
+    
+        # Call the get_inactive_repos function with the mock GitHub API
+        # connection and a threshold of 30 days
+&gt;       inactive_repos = get_inactive_repos(mock_github, 30, "example")
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_stale_repos.py:540: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:116: in get_inactive_repos
+    exempt_topics = settings.EXEMPT_TOPICS
+                    ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;dynaconf.base.Settings object at 0x103e8ccd0&gt;, name = 'EXEMPT_TOPICS'
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase><testcase classname="test_stale_repos.GetInactiveReposTestCase" name="test_get_inactive_repos_with_exempt_topics" time="0.002"><failure message="AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'">self = &lt;test_stale_repos.GetInactiveReposTestCase testMethod=test_get_inactive_repos_with_exempt_topics&gt;
+
+    def test_get_inactive_repos_with_exempt_topics(self):
+        """Test that the get_inactive_repos function does not return exempt repos."""
+    
+        mock_github = MagicMock()
+        mock_org = MagicMock()
+    
+        # create a mock repository with exempt topics
+        thirty_days_ago = datetime.now(timezone.utc) - timedelta(days=30)
+        mock_repo1 = MagicMock(
+            pushed_at=thirty_days_ago.isoformat(),
+            html_url="https://github.com/example/repo",
+            archived=False,
+        )
+        mock_repo1.topics().names = ["topic1", "topic2"]
+    
+        mock_repo2 = MagicMock(
+            pushed_at=thirty_days_ago.isoformat(),
+            html_url="https://github.com/example/repo2",
+            archived=False,
+        )
+        mock_repo2.topics().names = ["topic3", "topic4"]
+    
+        mock_github.organization.return_value = mock_org
+        mock_org.repositories.return_value = [
+            mock_repo1,
+            mock_repo2,
+        ]
+    
+        # Call the function with a threshold of 20 days
+        inactive_days_threshold = 20
+        organization = "example"
+        with patch("sys.stdout", new_callable=io.StringIO) as mock_stdout:
+&gt;           get_inactive_repos(mock_github, inactive_days_threshold, organization)
+
+test_stale_repos.py:404: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:116: in get_inactive_repos
+    exempt_topics = settings.EXEMPT_TOPICS
+                    ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;dynaconf.base.Settings object at 0x103e8ccd0&gt;, name = 'EXEMPT_TOPICS'
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase><testcase classname="test_stale_repos.GetInactiveReposTestCase" name="test_get_inactive_repos_with_inactive_repos" time="0.003"><failure message="AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'">self = &lt;test_stale_repos.GetInactiveReposTestCase testMethod=test_get_inactive_repos_with_inactive_repos&gt;
+
+    def test_get_inactive_repos_with_inactive_repos(self):
+        """Test that get_inactive_repos returns the expected list of inactive repos.
+    
+        This test uses a MagicMock object to simulate a GitHub API connection with a list
+        of repositories with varying levels of inactivity. It then calls the get_inactive_repos
+        function with the mock GitHub API connection and a threshold of 30 days. Finally, it
+        checks that the function returns the expected list of inactive repos.
+    
+        """
+        # Create a MagicMock object to simulate a GitHub API connection
+        mock_github = MagicMock()
+    
+        # Create a MagicMock object to simulate the organization object returned by the
+        # GitHub API connection
+        mock_org = MagicMock()
+    
+        # Create MagicMock objects to simulate the repositories returned by the organization object
+        forty_days_ago = datetime.now(timezone.utc) - timedelta(days=40)
+        twenty_days_ago = datetime.now(timezone.utc) - timedelta(days=20)
+        mock_repo1 = MagicMock(
+            html_url="https://github.com/example/repo1",
+            pushed_at=twenty_days_ago.isoformat(),
+            archived=False,
+            private=True,
+        )
+        mock_repo1.topics().names = []
+        mock_repo2 = MagicMock(
+            html_url="https://github.com/example/repo2",
+            pushed_at=forty_days_ago.isoformat(),
+            archived=False,
+            private=True,
+        )
+        mock_repo2.topics().names = []
+        mock_repo3 = MagicMock(
+            html_url="https://github.com/example/repo3",
+            pushed_at=forty_days_ago.isoformat(),
+            archived=True,
+            private=True,
+        )
+        mock_repo3.topics().names = []
+    
+        # Set up the MagicMock objects to return the expected values when called
+        mock_github.organization.return_value = mock_org
+        mock_org.repositories.return_value = [
+            mock_repo1,
+            mock_repo2,
+            mock_repo3,
+        ]
+    
+        # Call the get_inactive_repos function with the mock GitHub API
+        # connection and a threshold of 30 days
+&gt;       inactive_repos = get_inactive_repos(mock_github, 30, "example")
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_stale_repos.py:313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:116: in get_inactive_repos
+    exempt_topics = settings.EXEMPT_TOPICS
+                    ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;dynaconf.base.Settings object at 0x103e8ccd0&gt;, name = 'EXEMPT_TOPICS'
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase><testcase classname="test_stale_repos.GetInactiveReposTestCase" name="test_get_inactive_repos_with_no_inactive_repos" time="0.002"><failure message="AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'">self = &lt;test_stale_repos.GetInactiveReposTestCase testMethod=test_get_inactive_repos_with_no_inactive_repos&gt;
+
+    def test_get_inactive_repos_with_no_inactive_repos(self):
+        """Test getting with no inactive repos.
+    
+        This test verifies that the get_inactive_repos() function
+        does not show anything when there are no repositories that
+        exceed the specified threshold.
+    
+        """
+        mock_github = MagicMock()
+        mock_org = MagicMock()
+    
+        # Create a mock repository objects
+        thirty_days_ago = datetime.now(timezone.utc) - timedelta(days=30)
+        mock_repo1 = MagicMock(
+            pushed_at=thirty_days_ago.isoformat(),
+            html_url="https://github.com/example/repo",
+            archived=False,
+        )
+        mock_repo2 = MagicMock(
+            pushed_at=None,
+            html_url="https://github.com/example/repo2",
+            archived=False,
+        )
+    
+        mock_github.organization.return_value = mock_org
+        mock_org.repositories.return_value = [
+            mock_repo1,
+            mock_repo2,
+        ]
+    
+        # Call the function with a threshold of 40 days
+        inactive_days_threshold = 40
+        organization = "example"
+        with patch("sys.stdout", new_callable=io.StringIO) as mock_stdout:
+&gt;           get_inactive_repos(mock_github, inactive_days_threshold, organization)
+
+test_stale_repos.py:362: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:116: in get_inactive_repos
+    exempt_topics = settings.EXEMPT_TOPICS
+                    ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;dynaconf.base.Settings object at 0x103e8ccd0&gt;, name = 'EXEMPT_TOPICS'
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase><testcase classname="test_stale_repos.GetInactiveReposTestCase" name="test_get_inactive_repos_with_no_organization_set" time="0.002"><failure message="AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'">self = &lt;test_stale_repos.GetInactiveReposTestCase testMethod=test_get_inactive_repos_with_no_organization_set&gt;
+
+    def test_get_inactive_repos_with_no_organization_set(self):
+        """Test that get_inactive_repos returns the expected list of inactive repos
+        when no organization is set.
+    
+        This test uses a MagicMock object to simulate a GitHub API connection with a list
+        of repositories with varying levels of inactivity. It then calls the get_inactive_repos
+        function with the mock GitHub API connection and a threshold of 30 days where
+        organization is set to None. Finally, it checks that the function returns the
+        expected list of inactive repos.
+    
+        """
+        # Create a MagicMock object to simulate a GitHub API connection
+        mock_github = MagicMock()
+    
+        # Create MagicMock objects to simulate the repositories returned by the organization object
+        forty_days_ago = datetime.now(timezone.utc) - timedelta(days=40)
+        twenty_days_ago = datetime.now(timezone.utc) - timedelta(days=20)
+        mock_repo1 = MagicMock(
+            html_url="https://github.com/example/repo1",
+            pushed_at=twenty_days_ago.isoformat(),
+            archived=False,
+            private=True,
+        )
+        mock_repo1.topics().names = []
+        mock_repo2 = MagicMock(
+            html_url="https://github.com/example/repo2",
+            pushed_at=forty_days_ago.isoformat(),
+            archived=False,
+            private=True,
+        )
+        mock_repo2.topics().names = []
+        mock_repo3 = MagicMock(
+            html_url="https://github.com/example/repo3",
+            pushed_at=forty_days_ago.isoformat(),
+            archived=True,
+            private=True,
+        )
+        mock_repo3.topics().names = []
+    
+        # Set up the MagicMock objects to return the expected values when called
+        mock_github.repositories.return_value = [
+            mock_repo1,
+            mock_repo2,
+            mock_repo3,
+        ]
+    
+        # Call the get_inactive_repos function with the mock GitHub API
+        # connection and a threshold of 30 days
+&gt;       inactive_repos = get_inactive_repos(mock_github, 30, None)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_stale_repos.py:464: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:116: in get_inactive_repos
+    exempt_topics = settings.EXEMPT_TOPICS
+                    ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;dynaconf.base.Settings object at 0x103e8ccd0&gt;, name = 'EXEMPT_TOPICS'
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase><testcase classname="test_stale_repos.WriteToMarkdownTestCase" name="test_write_to_markdown" time="0.003" /><testcase classname="test_stale_repos.GetActiveDateTestCase" name="test_returns_none_for_exception" time="0.003"><failure message="AttributeError: 'Settings' object has no attribute 'ACTIVITY_METHOD'">self = &lt;test_stale_repos.GetActiveDateTestCase testMethod=test_returns_none_for_exception&gt;
+
+    def test_returns_none_for_exception(self):
+        """Test that get will return None if github3 throws any kind of exception."""
+        repo = MagicMock(
+            name="repo", default_branch="main", spec=["branch", "html_url"]
+        )
+    
+        repo.branch.side_effect = github3.exceptions.NotFoundError(
+            resp=MagicMock(status_code=404)
+        )
+&gt;       result = get_active_date(repo)
+                 ^^^^^^^^^^^^^^^^^^^^^
+
+test_stale_repos.py:656: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:194: in get_active_date
+    activity_method = settings.ACTIVITY_METHOD.lower()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;dynaconf.base.Settings object at 0x103e8ccd0&gt;, name = 'ACTIVITY_METHOD'
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'ACTIVITY_METHOD'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase><testcase classname="test_stale_repos.OutputToJson" name="test_json_file" time="0.002" /><testcase classname="test_stale_repos.OutputToJson" name="test_output_to_json" time="0.001" /><testcase classname="test_stale_repos.TestIsRepoExempt" name="test_exempt_repos" time="0.002" /><testcase classname="test_stale_repos.TestIsRepoExempt" name="test_exempt_topics" time="0.001" /><testcase classname="test_stale_repos.TestIsRepoExempt" name="test_not_exempt" time="0.001" /><testcase classname="test_stale_repos.TestIsRepoExempt" name="test_not_found_error" time="0.002" /><testcase classname="test_stale_repos.TestAdditionalMetrics" name="test_days_since_last_pr" time="0.001" /><testcase classname="test_stale_repos.TestAdditionalMetrics" name="test_days_since_last_release" time="0.001" /><testcase classname="test_stale_repos.TestAdditionalMetrics" name="test_report_exclusion_with_additional_metrics_not_configured" time="0.001"><failure message="AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'">self = &lt;test_stale_repos.TestAdditionalMetrics testMethod=test_report_exclusion_with_additional_metrics_not_configured&gt;
+
+    def test_report_exclusion_with_additional_metrics_not_configured(self):
+        """
+        Test that the report excludes additional metrics when they are not configured.
+        """
+        forty_days_ago = datetime.now(timezone.utc) - timedelta(days=40)
+        mock_repo = MagicMock(
+            html_url="https://github.com/example/repo",
+            pushed_at=forty_days_ago.isoformat(),
+            archived=False,
+        )
+    
+        # Mock GitHub connection
+        mock_github = MagicMock()
+        mock_github.organization.return_value.repositories.return_value = [mock_repo]
+    
+        # Generate report without additional metrics configured
+&gt;       inactive_repos = get_inactive_repos(mock_github, 30, "example", [])
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_stale_repos.py:970: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:116: in get_inactive_repos
+    exempt_topics = settings.EXEMPT_TOPICS
+                    ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;dynaconf.base.Settings object at 0x103e8ccd0&gt;, name = 'EXEMPT_TOPICS'
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase><testcase classname="test_stale_repos.TestAdditionalMetrics" name="test_report_inclusion_with_additional_metrics_configured" time="0.004"><failure message="AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'">self = &lt;test_stale_repos.TestAdditionalMetrics testMethod=test_report_inclusion_with_additional_metrics_configured&gt;
+
+    def test_report_inclusion_with_additional_metrics_configured(self):
+        """
+        Test that the report includes additional metrics when they are configured.
+        """
+        # Mock repository with a release date 10 days ago and a PR date 5 days ago
+        ten_days_ago = datetime.now(timezone.utc) - timedelta(days=10)
+        five_days_ago = datetime.now(timezone.utc) - timedelta(days=5)
+        forty_days_ago = datetime.now(timezone.utc) - timedelta(days=40)
+        mock_repo = MagicMock(
+            html_url="https://github.com/example/repo",
+            pushed_at=forty_days_ago.isoformat(),
+            archived=False,
+        )
+        mock_repo.releases.return_value.__next__.return_value.created_at = ten_days_ago
+        mock_repo.pull_requests.return_value.__next__.return_value.created_at = (
+            five_days_ago
+        )
+    
+        # Mock GitHub connection
+        mock_github = MagicMock()
+        mock_github.organization.return_value.repositories.return_value = [mock_repo]
+    
+        # Generate report with additional metrics configured
+&gt;       inactive_repos = get_inactive_repos(
+            mock_github, 30, "example", ["release", "pr"]
+        )
+
+test_stale_repos.py:937: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+stale_repos.py:116: in get_inactive_repos
+    exempt_topics = settings.EXEMPT_TOPICS
+                    ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/dynaconf/base.py:144: in __getattr__
+    value = getattr(self._wrapped, name)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;dynaconf.base.Settings object at 0x103e8ccd0&gt;, name = 'EXEMPT_TOPICS'
+
+    def __getattribute__(self, name):
+        if (
+            name.startswith("__")
+            or name in RESERVED_ATTRS + UPPER_DEFAULT_SETTINGS
+        ):
+            return super().__getattribute__(name)
+    
+        # This is to keep the only upper case mode working
+        # self._store has Lazy values already evaluated
+        if (
+            name.islower()
+            and self._store.get("LOWERCASE_READ_FOR_DYNACONF", empty) is False
+        ):
+            try:
+                # only matches exact casing, first levels always upper
+                return self._store.__getattribute__(name)
+            except KeyError:
+                return super().__getattribute__(name)
+    
+        # then go to the regular .get which triggers hooks among other things
+        value = self.get(name, default=empty)
+        if value is empty:
+&gt;           return super().__getattribute__(name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Settings' object has no attribute 'EXEMPT_TOPICS'
+
+.venv/lib/python3.11/site-packages/dynaconf/base.py:325: AttributeError</failure></testcase></testsuite></testsuites>

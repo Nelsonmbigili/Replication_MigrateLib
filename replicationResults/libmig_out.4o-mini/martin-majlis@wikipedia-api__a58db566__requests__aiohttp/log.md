@@ -1,0 +1,165 @@
+## Running premig
+creating venv at /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/martin-majlis@wikipedia-api__a58db566__requests__aiohttp/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 1 files
+### migrating wikipediaapi/__init__.py
+### running tests
+- test finished with status 1, cov finished with status 0
+### test diff with round premig
+- `tests/backlinks_test.py::TestBackLinks::test_backlinks_multi_page_count: passed != failed`
+- `tests/backlinks_test.py::TestBackLinks::test_backlinks_multi_page_titles: passed != failed`
+- `tests/backlinks_test.py::TestBackLinks::test_backlinks_nonexistent_count: passed != failed`
+- `tests/backlinks_test.py::TestBackLinks::test_backlinks_single_page_count: passed != failed`
+- `tests/backlinks_test.py::TestBackLinks::test_backlinks_single_page_titles: passed != failed`
+- `tests/categories_test.py::TestCategories::test_categories_count: passed != failed`
+- `tests/categories_test.py::TestCategories::test_categories_nss: passed != failed`
+- `tests/categories_test.py::TestCategories::test_categories_titles: passed != failed`
+- `tests/categories_test.py::TestCategories::test_no_categories_count: passed != failed`
+- `tests/categorymembers_test.py::TestCategoryMembers::test_links_multi_page_count: passed != failed`
+- `tests/categorymembers_test.py::TestCategoryMembers::test_links_multi_page_titles: passed != failed`
+- `tests/categorymembers_test.py::TestCategoryMembers::test_links_single_page_count: passed != failed`
+- `tests/categorymembers_test.py::TestCategoryMembers::test_links_single_page_titles: passed != failed`
+- `tests/extract_errors_test.py::TestErrorsExtracts::test_pageid: passed != failed`
+- `tests/extract_errors_test.py::TestErrorsExtracts::test_title_before_fetching: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_pageid: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_section_count: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_subsection: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_subsection_by_title: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_subsection_by_title_return_last: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_subsection_by_title_with_multiple_spans: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_subsections_by_title: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_subsubsection: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_summary: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_text: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_title_after_fetching: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_title_before_fetching: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_top_level_section_titles: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_with_erroneous_edit: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_pageid: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_section_count: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_subsection: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_subsection_by_title: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_subsubsection: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_summary: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_text: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_text_and_summary_without_sections: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_title_after_fetching: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_title_before_fetching: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_top_level_section_titles: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_jump_between_languages: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_langlinks_count: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_langlinks_lang_keys: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_langlinks_lang_values: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_langlinks_no_langlink_count: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_langlinks_titles: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_langlinks_urls: passed != failed`
+- `tests/links_test.py::TestLinks::test_links_multi_page_count: passed != failed`
+- `tests/links_test.py::TestLinks::test_links_multi_page_titles: passed != failed`
+- `tests/links_test.py::TestLinks::test_links_no_links_count: passed != failed`
+- `tests/links_test.py::TestLinks::test_links_single_page_count: passed != failed`
+- `tests/links_test.py::TestLinks::test_links_single_page_titles: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_article_method: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_article_title_unquote: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_existing: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_extract: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_nonexisting: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_page_title_unquote: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_page_with_int_namespace: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_repr_after_fetching: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_repr_before_fetching: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_unknown_property: passed != failed`
+- `tests/wikipedia_test.py::TestWikipedia::test_user_agent_in_headers_is_fine: passed != failed`
+- `tests/wikipedia_test.py::TestWikipedia::test_user_agent_in_headers_win: passed != failed`
+- `tests/wikipedia_test.py::TestWikipedia::test_user_agent_is_used: passed != failed`
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+### Finding async transforms
+- Found 87 functions to mark async including 62 tests
+- Found 172 calls to await
+- 10 files requires transformation
+- transforming tests/wikipedia_page_test.py
+- transforming tests/categorymembers_test.py
+- transforming tests/extract_html_format_test.py
+- transforming tests/extract_wiki_format_test.py
+- transforming tests/backlinks_test.py
+- transforming tests/langlinks_test.py
+- transforming tests/categories_test.py
+- transforming tests/extract_errors_test.py
+- transforming wikipediaapi/__init__.py
+- transforming tests/links_test.py
+### running tests
+- test finished with status 1, cov finished with status 0
+### test diff with round premig
+- `tests/backlinks_test.py::TestBackLinks::test_backlinks_multi_page_count: passed != failed`
+- `tests/backlinks_test.py::TestBackLinks::test_backlinks_multi_page_titles: passed != failed`
+- `tests/backlinks_test.py::TestBackLinks::test_backlinks_nonexistent_count: passed != failed`
+- `tests/backlinks_test.py::TestBackLinks::test_backlinks_single_page_count: passed != failed`
+- `tests/backlinks_test.py::TestBackLinks::test_backlinks_single_page_titles: passed != failed`
+- `tests/categories_test.py::TestCategories::test_categories_count: passed != failed`
+- `tests/categories_test.py::TestCategories::test_categories_nss: passed != failed`
+- `tests/categories_test.py::TestCategories::test_categories_titles: passed != failed`
+- `tests/categories_test.py::TestCategories::test_no_categories_count: passed != failed`
+- `tests/categorymembers_test.py::TestCategoryMembers::test_links_multi_page_count: passed != failed`
+- `tests/categorymembers_test.py::TestCategoryMembers::test_links_multi_page_titles: passed != failed`
+- `tests/categorymembers_test.py::TestCategoryMembers::test_links_single_page_count: passed != failed`
+- `tests/categorymembers_test.py::TestCategoryMembers::test_links_single_page_titles: passed != failed`
+- `tests/extract_errors_test.py::TestErrorsExtracts::test_pageid: passed != failed`
+- `tests/extract_errors_test.py::TestErrorsExtracts::test_title_before_fetching: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_pageid: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_section_count: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_subsection: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_subsection_by_title: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_subsection_by_title_return_last: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_subsection_by_title_with_multiple_spans: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_subsections_by_title: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_subsubsection: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_summary: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_text: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_title_after_fetching: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_title_before_fetching: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_top_level_section_titles: passed != failed`
+- `tests/extract_html_format_test.py::TestHtmlFormatExtracts::test_with_erroneous_edit: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_pageid: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_section_count: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_subsection: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_subsection_by_title: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_subsubsection: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_summary: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_text: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_text_and_summary_without_sections: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_title_after_fetching: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_title_before_fetching: passed != failed`
+- `tests/extract_wiki_format_test.py::TestWikiFormatExtracts::test_top_level_section_titles: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_jump_between_languages: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_langlinks_count: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_langlinks_lang_keys: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_langlinks_lang_values: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_langlinks_no_langlink_count: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_langlinks_titles: passed != failed`
+- `tests/langlinks_test.py::TestLangLinks::test_langlinks_urls: passed != failed`
+- `tests/links_test.py::TestLinks::test_links_multi_page_count: passed != failed`
+- `tests/links_test.py::TestLinks::test_links_multi_page_titles: passed != failed`
+- `tests/links_test.py::TestLinks::test_links_no_links_count: passed != failed`
+- `tests/links_test.py::TestLinks::test_links_single_page_count: passed != failed`
+- `tests/links_test.py::TestLinks::test_links_single_page_titles: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_article_method: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_article_title_unquote: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_existing: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_extract: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_nonexisting: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_page_title_unquote: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_page_with_int_namespace: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_repr_after_fetching: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_repr_before_fetching: passed != failed`
+- `tests/wikipedia_page_test.py::TestWikipediaPage::test_unknown_property: passed != failed`
+- `tests/wikipedia_test.py::TestWikipedia::test_user_agent_in_headers_is_fine: passed != failed`
+- `tests/wikipedia_test.py::TestWikipedia::test_user_agent_in_headers_win: passed != failed`
+- `tests/wikipedia_test.py::TestWikipedia::test_user_agent_is_used: passed != failed`
+- async_transform finished

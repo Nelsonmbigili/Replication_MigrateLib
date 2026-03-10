@@ -1,0 +1,81 @@
+mig: jannisborn@paperscraper__fa7c5e26__tqdm__progressbar2__fa7c5e26__tqdm__progressbar2
+repo: jannisborn@paperscraper__fa7c5e26__tqdm__progressbar2
+commit: fa7c5e268fb9df477f8764ade4badc8e52faf144
+source: tqdm
+target: progressbar2
+premig:
+  name: premig
+  status: finished
+  source_version: 4.67.3
+  target_version: 4.5.0
+  finished_at: '2026-03-10 01:57:21'
+  project_coverage: 81.42470694319206
+  total_tests: 47
+  passed_tests: 37
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 52.94117647058823
+  files:
+  - path: paperscraper/arxiv/arxiv.py
+    file_change_coverage: 50.0
+    covered_changed_lines: '5'
+    uncovered_changed_lines: '65'
+  - path: paperscraper/get_dumps/biorxiv.py
+    file_change_coverage: 33.333333333333336
+    covered_changed_lines: 9,45-46
+    uncovered_changed_lines: 48-53
+  - path: paperscraper/get_dumps/medrxiv.py
+    file_change_coverage: 83.33333333333333
+    covered_changed_lines: 9,42-43,46-47
+    uncovered_changed_lines: '44'
+  - path: paperscraper/get_dumps/utils/chemrxiv/utils.py
+    file_change_coverage: 27.272727272727273
+    covered_changed_lines: 12,136-137
+    uncovered_changed_lines: 92-95,121,138-139,154
+  - path: paperscraper/pdf.py
+    file_change_coverage: 100.0
+    covered_changed_lines: 13,152-155,166
+    uncovered_changed_lines: ''
+  test_diffs:
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_biorxiv
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: biorxiv should still be running after 15 seconds\n\
+      assert False\n +  where False = run_function_with_timeout(<function TestDumper.setup_biorxiv.<locals>.<lambda>\
+      \ at 0x10fb68a40>, 15)\n +    where run_function_with_timeout = <paperscraper.tests.test_dump.TestDumper\
+      \ object at 0x1088f07d0>.run_function_with_timeout"
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_biorxiv_date
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: object of type ''generator'' has no len()'
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_dump_existence_initial
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: Initial length of QUERY_FN_DICT should be 2\n\
+      assert 3 == 2\n +  where 3 = len({'arxiv': <function get_and_dump_arxiv_papers\
+      \ at 0x10806f060>, 'medrxiv': <bound method XRXivQuery.search_keywords of ...r.xrxiv.xrxiv_query.XRXivQuery\
+      \ object at 0x105035dd0>>, 'pubmed': <function get_and_dump_pubmed_papers at\
+      \ 0x1080be8e0>})"
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

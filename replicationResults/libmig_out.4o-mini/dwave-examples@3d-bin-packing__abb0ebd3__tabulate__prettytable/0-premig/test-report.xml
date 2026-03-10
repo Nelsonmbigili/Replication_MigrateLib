@@ -1,0 +1,3471 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="17" skipped="0" tests="18" time="43.005" timestamp="2026-03-10T06:36:10.155506+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_mip_solver.TestMIPCQMSolver" name="test_bounds" time="0.020"><failure message="NameError: name 'cbclib' is not defined">self = &lt;tests.test_mip_solver.TestMIPCQMSolver testMethod=test_bounds&gt;
+
+    def test_bounds(self):
+        cqm = dimod.ConstrainedQuadraticModel()
+    
+        i = dimod.Integer('i', lower_bound=-5, upper_bound=5)
+    
+        cqm.set_objective(i)
+&gt;       sampleset = MIPCQMSolver().sample_cqm(cqm)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_mip_solver.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/mip_solver.py:74: in sample_cqm
+    model = mip.Model()
+            ^^^^^^^^^^^
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/.venv/lib/python3.11/site-packages/mip/model.py:98: in __init__
+    import mip.cbc
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Python-MIP interface to the COIN-OR Branch-and-Cut solver CBC"""
+    
+    import logging
+    from typing import Dict, List, Tuple, Optional, Union
+    from sys import platform, maxsize
+    from os.path import dirname, isfile, exists
+    import os
+    import multiprocessing as multip
+    import numbers
+    from cffi import FFI
+    from mip.model import xsum
+    import mip
+    from mip.lists import EmptyVarSol, EmptyRowSol
+    from mip.exceptions import (
+        ParameterNotAvailable,
+        InvalidParameter,
+        MipBaseException,
+    )
+    from mip import (
+        Model,
+        Var,
+        Constr,
+        Column,
+        LinExpr,
+        VConstrList,
+        VVarList,
+        Solver,
+        MAXIMIZE,
+        SearchEmphasis,
+        CONTINUOUS,
+        BINARY,
+        INTEGER,
+        MINIMIZE,
+        EQUAL,
+        LESS_OR_EQUAL,
+        GREATER_OR_EQUAL,
+        OptimizationStatus,
+        LP_Method,
+        CutType,
+        CutPool,
+    )
+    
+    logger = logging.getLogger(__name__)
+    warningMessages = 0
+    
+    ffi = FFI()
+    has_cbc = False
+    os_is_64_bit = maxsize &gt; 2 ** 32
+    INF = float("inf")
+    cut_idx = 0
+    
+    # for variables and rows
+    MAX_NAME_SIZE = 512
+    
+    DEF_PUMPP = 30
+    
+    try:
+        pathmip = dirname(mip.__file__)
+        pathlib = os.path.join(pathmip, "libraries")
+        libfile = ""
+        # if user wants to force the loading of an specific CBC library
+        # (for debugging purposes, for example)
+        if "PMIP_CBC_LIBRARY" in os.environ:
+            libfile = os.environ["PMIP_CBC_LIBRARY"]
+            pathlib = dirname(libfile)
+    
+            if platform.lower().startswith("win"):
+                if pathlib not in os.environ["PATH"]:
+                    os.environ["PATH"] += ";" + pathlib
+        else:
+            if "linux" in platform.lower():
+                if os_is_64_bit:
+                    pathlibe = os.path.join(pathlib, "lin64")
+                    libfile = os.path.join(pathlibe, "libCbcSolver.so")
+                    if not exists(libfile):
+                        pathlibe = pathlib
+                        libfile = os.path.join(pathlib, "cbc-c-linux-x86-64.so")
+                    pathlib = pathlibe
+                else:
+                    raise NotImplementedError("Linux 32 bits platform not supported.")
+            elif platform.lower().startswith("win"):
+                if os_is_64_bit:
+                    pathlibe = os.path.join(pathlib, "win64")
+                    libfile = os.path.join(pathlibe, "libCbcSolver-0.dll")
+                    if exists(libfile):
+                        if pathlibe not in os.environ["PATH"]:
+                            os.environ["PATH"] = pathlibe + ";" + os.environ["PATH"]
+                    else:
+                        pathlibe = pathlib
+                        libfile = os.path.join(pathlibe, "cbc-c-windows-x86-64.dll")
+                        if pathlibe not in os.environ["PATH"]:
+                            os.environ["PATH"] = pathlibe + ";" + os.environ["PATH"]
+                    pathlib = pathlibe
+    
+                else:
+                    raise NotImplementedError("Win32 platform not supported.")
+            elif platform.lower().startswith("darwin") or platform.lower().startswith(
+                "macos"
+            ):
+                if os_is_64_bit:
+                    libfile = os.path.join(pathlib, "cbc-c-darwin-x86-64.dylib")
+            if not libfile:
+                raise NotImplementedError("You operating system/platform is not supported")
+        old_dir = os.getcwd()
+        os.chdir(pathlib)
+        cbclib = ffi.dlopen(libfile)
+        os.chdir(old_dir)
+        has_cbc = True
+    except Exception as e:
+        logger.error("An error occurred while loading the CBC library:\t " "{}\n".format(e))
+        has_cbc = False
+    
+    if has_cbc:
+        ffi.cdef(
+            """
+        typedef int(*cbc_progress_callback)(void *model,
+                                            int phase,
+                                            int step,
+                                            const char *phaseName,
+                                            double seconds,
+                                            double lb,
+                                            double ub,
+                                            int nint,
+                                            int *vecint,
+                                            void *cbData
+                                            );
+    
+        typedef void(*cbc_callback)(void *model, int msgno, int ndouble,
+            const double *dvec, int nint, const int *ivec,
+            int nchar, char **cvec);
+    
+        typedef void(*cbc_cut_callback)(void *osiSolver, void *osiCuts, void *appdata, int level, int npass);
+    
+        typedef int (*cbc_incumbent_callback)(void *cbcModel,
+            double obj, int nz,
+            char **vnames, double *x, void *appData);
+    
+        typedef void Cbc_Model;
+    
+        void *Cbc_newModel();
+    
+        void Cbc_readLp(Cbc_Model *model, const char *file);
+    
+        int Cbc_readBasis(Cbc_Model *model, const char *filename);
+    
+        int Cbc_writeBasis(Cbc_Model *model, const char *filename, char
+            writeValues, int formatType);
+    
+        void Cbc_readMps(Cbc_Model *model, const char *file);
+    
+        char Cbc_supportsGzip();
+    
+        char Cbc_supportsBzip2();
+    
+        void Cbc_writeLp(Cbc_Model *model, const char *file);
+    
+        void Cbc_writeMps(Cbc_Model *model, const char *file);
+    
+        int Cbc_getNumCols(Cbc_Model *model);
+    
+        int Cbc_getNumRows(Cbc_Model *model);
+    
+        int Cbc_getNumIntegers(Cbc_Model *model);
+    
+        int Cbc_getNumElements(Cbc_Model *model);
+    
+        int Cbc_getRowNz(Cbc_Model *model, int row);
+    
+        int *Cbc_getRowIndices(Cbc_Model *model, int row);
+    
+        double *Cbc_getRowCoeffs(Cbc_Model *model, int row);
+    
+        double Cbc_getRowRHS(Cbc_Model *model, int row);
+    
+        void Cbc_setRowRHS(Cbc_Model *model, int row, double rhs);
+    
+        char Cbc_getRowSense(Cbc_Model *model, int row);
+    
+        const double *Cbc_getRowActivity(Cbc_Model *model);
+    
+        const double *Cbc_getRowSlack(Cbc_Model *model);
+    
+        int Cbc_getColNz(Cbc_Model *model, int col);
+    
+        int *Cbc_getColIndices(Cbc_Model *model, int col);
+    
+        double *Cbc_getColCoeffs(Cbc_Model *model, int col);
+    
+        void Cbc_addCol(Cbc_Model *model, const char *name,
+            double lb, double ub, double obj, char isInteger,
+            int nz, int *rows, double *coefs);
+    
+        void Cbc_addRow(Cbc_Model *model, const char *name, int nz,
+            const int *cols, const double *coefs, char sense, double rhs);
+    
+        void Cbc_addLazyConstraint(Cbc_Model *model, int nz,
+            int *cols, double *coefs, char sense, double rhs);
+    
+        void Cbc_addSOS(Cbc_Model *model, int numRows, const int *rowStarts,
+            const int *colIndices, const double *weights, const int type);
+    
+        int Cbc_numberSOS(Cbc_Model *model);
+    
+        void Cbc_setObjCoeff(Cbc_Model *model, int index, double value);
+    
+        double Cbc_getObjSense(Cbc_Model *model);
+    
+        const double *Cbc_getObjCoefficients(Cbc_Model *model);
+    
+        const double *Cbc_getColSolution(Cbc_Model *model);
+    
+        const double *Cbc_getReducedCost(Cbc_Model *model);
+    
+        double *Cbc_bestSolution(Cbc_Model *model);
+    
+        int Cbc_numberSavedSolutions(Cbc_Model *model);
+    
+        const double *Cbc_savedSolution(Cbc_Model *model, int whichSol);
+    
+        double Cbc_savedSolutionObj(Cbc_Model *model, int whichSol);
+    
+        double Cbc_getObjValue(Cbc_Model *model);
+    
+        void Cbc_setObjSense(Cbc_Model *model, double sense);
+    
+        int Cbc_isProvenOptimal(Cbc_Model *model);
+    
+        int Cbc_isProvenInfeasible(Cbc_Model *model);
+    
+        int Cbc_isContinuousUnbounded(Cbc_Model *model);
+    
+        int Cbc_isAbandoned(Cbc_Model *model);
+    
+        const double *Cbc_getColLower(Cbc_Model *model);
+    
+        const double *Cbc_getColUpper(Cbc_Model *model);
+    
+        double Cbc_getColObj(Cbc_Model *model, int colIdx);
+    
+        double Cbc_getColLB(Cbc_Model *model, int colIdx);
+    
+        double Cbc_getColUB(Cbc_Model *model, int colIdx);
+    
+        void Cbc_setColLower(Cbc_Model *model, int index, double value);
+    
+        void Cbc_setColUpper(Cbc_Model *model, int index, double value);
+    
+        int Cbc_isInteger(Cbc_Model *model, int i);
+    
+        void Cbc_getColName(Cbc_Model *model,
+            int iColumn, char *name, size_t maxLength);
+    
+        void Cbc_getRowName(Cbc_Model *model,
+            int iRow, char *name, size_t maxLength);
+    
+        void Cbc_setContinuous(Cbc_Model *model, int iColumn);
+    
+        void Cbc_setInteger(Cbc_Model *model, int iColumn);
+    
+        /*! Integer parameters */
+        enum IntParam {
+          INT_PARAM_PERT_VALUE              = 0,  /*! Method of perturbation, -5000 to 102, default 50 */
+          INT_PARAM_IDIOT                   = 1,  /*! Parameter of the "idiot" method to try to produce an initial feasible basis. -1 let the solver decide if this should be applied; 0 deactivates it and &gt;0 sets number of passes. */
+          INT_PARAM_STRONG_BRANCHING        = 2,  /*! Number of variables to be evaluated in strong branching. */
+          INT_PARAM_CUT_DEPTH               = 3,  /*! Sets the application of cuts to every depth multiple of this value. -1, the default value, let the solve decide. */
+          INT_PARAM_MAX_NODES               = 4,  /*! Maximum number of nodes to be explored in the search tree */
+          INT_PARAM_NUMBER_BEFORE           = 5,  /*! Number of branches before trusting pseudocodes computed in strong branching. */
+          INT_PARAM_FPUMP_ITS               = 6,  /*! Maximum number of iterations in the feasibility pump method. */
+          INT_PARAM_MAX_SOLS                = 7,  /*! Maximum number of solutions generated during the search. Stops the search when this number of solutions is found. */
+          INT_PARAM_CUT_PASS_IN_TREE        = 8,  /*! Maximum number of cuts passes in the search tree (with the exception of the root node). Default 1. */
+          INT_PARAM_THREADS                 = 9,  /*! Number of threads that can be used in the branch-and-bound method.*/
+          INT_PARAM_CUT_PASS                = 10, /*! Number of cut passes in the root node. Default -1, solver decides */
+          INT_PARAM_LOG_LEVEL               = 11, /*! Verbosity level, from 0 to 2 */
+          INT_PARAM_MAX_SAVED_SOLS          = 12, /*! Size of the pool to save the best solutions found during the search. */
+          INT_PARAM_MULTIPLE_ROOTS          = 13, /*! Multiple root passes to get additional cuts and solutions. */
+          INT_PARAM_ROUND_INT_VARS          = 14, /*! If integer variables should be round to remove small infeasibilities. This can increase the overall amount of infeasibilities in problems with both continuous and integer variables */
+          INT_PARAM_RANDOM_SEED             = 15, /*! When solving LP and MIP, randomization is used to break ties in some decisions. This changes the random seed so that multiple executions can produce different results */
+          INT_PARAM_ELAPSED_TIME            = 16, /*! When =1 use elapsed (wallclock) time, otherwise use CPU time */
+          INT_PARAM_CGRAPH                  = 17, /*! Conflict graph: controls if the conflict graph is created or not. 0: off, 1: auto, 2: on 3: fast weaker clique sep */
+          INT_PARAM_CLIQUE_MERGING          = 18, /*! Clique merging options: 0: off , 1 auto , 2 before solving LP, 3 after solving LP and pre-processing */
+          INT_PARAM_MAX_NODES_NOT_IMPROV_FS = 19, /*! Maximum number of nodes processed without improving best solution, after a feasible solution is found */
+        };
+        #define N_INT_PARAMS 20
+    
+        void Cbc_setIntParam(Cbc_Model *model, enum IntParam which, const int val);
+    
+        /*! Double parameters
+         * */
+        enum DblParam {
+          DBL_PARAM_PRIMAL_TOL              = 0,  /*! Tollerance to consider a solution feasible in the linear programming solver. */
+          DBL_PARAM_DUAL_TOL                = 1,  /*! Tollerance for a solution to be considered optimal in the linear programming solver. */
+          DBL_PARAM_ZERO_TOL                = 2,  /*! Coefficients less that this value will be ignored when reading instances */
+          DBL_PARAM_INT_TOL                 = 3,  /*! Maximum allowed distance from integer value for a variable to be considered integral */
+          DBL_PARAM_PRESOLVE_TOL            = 4,  /*! Tollerance used in the presolver, should be increased if the pre-solver is declaring infeasible a feasible problem */
+          DBL_PARAM_TIME_LIMIT              = 5,  /*! Time limit in seconds */
+          DBL_PARAM_PSI                     = 6,  /*! Two dimensional princing factor in the Positive Edge pivot strategy. */
+          DBL_PARAM_CUTOFF                  = 7,  /*! Only search for solutions with cost less-or-equal to this value. */
+          DBL_PARAM_ALLOWABLE_GAP           = 8,  /*! Allowable gap between the lower and upper bound to conclude the search */
+          DBL_PARAM_GAP_RATIO               = 9,   /*! Stops the search when the difference between the upper and lower bound is less than this fraction of the larger value */
+          DBL_PARAM_MAX_SECS_NOT_IMPROV_FS  = 10, /*! Maximum processing time without improving best solution, after a feasible solution is found */
+        };
+        #define N_DBL_PARAMS 11
+    
+        void Cbc_setDblParam(Cbc_Model *model, enum DblParam which, const double val);
+    
+        void Cbc_setParameter(Cbc_Model *model, const char *name,
+            const char *value);
+    
+        double Cbc_getCutoff(Cbc_Model *model);
+    
+        void Cbc_setCutoff(Cbc_Model *model, double cutoff);
+    
+        double Cbc_getAllowableGap(Cbc_Model *model);
+    
+        void Cbc_setAllowableGap(Cbc_Model *model, double allowedGap);
+    
+        double Cbc_getAllowableFractionGap(Cbc_Model *model);
+    
+        void Cbc_setAllowableFractionGap(Cbc_Model *model,
+            double allowedFracionGap);
+    
+        double Cbc_getAllowablePercentageGap(Cbc_Model *model);
+    
+        void Cbc_setAllowablePercentageGap(Cbc_Model *model,
+            double allowedPercentageGap);
+    
+        double Cbc_getMaximumSeconds(Cbc_Model *model);
+    
+        void Cbc_setMaximumSeconds(Cbc_Model *model, double maxSeconds);
+    
+        int Cbc_getMaximumNodes(Cbc_Model *model);
+    
+        void Cbc_setMaximumNodes(Cbc_Model *model, int maxNodes);
+    
+        int Cbc_getMaximumSolutions(Cbc_Model *model);
+    
+        void Cbc_setMaximumSolutions(Cbc_Model *model, int maxSolutions);
+    
+        int Cbc_getLogLevel(Cbc_Model *model);
+    
+        void Cbc_setLogLevel(Cbc_Model *model, int logLevel);
+    
+        double Cbc_getBestPossibleObjValue(Cbc_Model *model);
+    
+        void Cbc_setMIPStart(Cbc_Model *model, int count,
+            const char **colNames, const double colValues[]);
+    
+        void Cbc_setMIPStartI(Cbc_Model *model, int count, const int colIdxs[],
+            const double colValues[]);
+    
+        enum LPMethod {
+          LPM_Auto    = 0,  /*! Solver will decide automatically which method to use */
+          LPM_Dual    = 1,  /*! Dual simplex */
+          LPM_Primal  = 2,  /*! Primal simplex */
+          LPM_Barrier = 3   /*! The barrier algorithm. */
+        };
+    
+        void
+        Cbc_setLPmethod(Cbc_Model *model, enum LPMethod lpm );
+    
+        void Cbc_updateConflictGraph( Cbc_Model *model );
+    
+        const void *Cbc_conflictGraph( Cbc_Model *model );
+    
+        int Cbc_solve(Cbc_Model *model);
+    
+        int Cbc_solveLinearProgram(Cbc_Model *model);
+    
+        /*! Type of cutting plane */
+        enum CutType {
+          CT_Probing          =  0,  /*! Cuts generated evaluating the impact of fixing bounds for integer variables */
+          CT_Gomory           =  1,  /*! Gomory cuts obtained from the tableau, implemented by John Forrest  */
+          CT_GMI              =  2,  /*! Gomory cuts obtained from the tableau, implementation from Giacomo Nannicini focusing on safer cuts */
+          CT_LaGomory         =  3,  /*! Additional gomory cuts, simplification of 'A Relax-and-Cut Framework for Gomory's Mixed-Integer Cuts' by Matteo Fischetti &amp; Domenico Salvagnin */
+          CT_RedSplit         =  4,  /*! Reduce and split cuts, implemented by Francois Margot */
+          CT_RedSplitG        =  5,  /*! Reduce and split cuts, implemented by Giacomo Nannicini */
+          CT_FlowCover        =  6,  /*! Flow cover cuts */
+          CT_MIR              =  7,  /*! Mixed-integer rounding cuts */
+          CT_TwoMIR           =  8,  /*! Two-phase Mixed-integer rounding cuts */
+          CT_LaTwoMIR         =  9,  /*! Lagrangean relaxation for two-phase Mixed-integer rounding cuts, as in CT_LaGomory */
+          CT_LiftAndProject   = 10,  /*! Lift and project cuts */
+          CT_ResidualCapacity = 11,  /*! Residual capacity cuts */
+          CT_ZeroHalf         = 12,  /*! Zero-half cuts */
+          CT_Clique           = 13,  /*! Clique cuts */
+          CT_OddWheel         = 14,  /*! Lifted odd-hole inequalities */
+          CT_KnapsackCover    = 15,  /*! Knapsack cover cuts */
+        };
+    
+        void Cbc_generateCuts( Cbc_Model *cbcModel, enum CutType ct, void *oc, int depth, int pass );
+    
+        void Cbc_strengthenPacking(Cbc_Model *model);
+    
+        void Cbc_strengthenPackingRows(Cbc_Model *model, size_t n, const size_t rows[]);
+    
+        void *Cbc_getSolverPtr(Cbc_Model *model);
+    
+        void *Cbc_deleteModel(Cbc_Model *model);
+    
+        int Osi_getNumIntegers( void *osi );
+    
+        const double *Osi_getReducedCost( void *osi );
+    
+        const double *Osi_getObjCoefficients();
+    
+        double Osi_getObjSense();
+    
+        void *Osi_newSolver();
+    
+        void Osi_deleteSolver( void *osi );
+    
+        void Osi_initialSolve(void *osi);
+    
+        void Osi_resolve(void *osi);
+    
+        void Osi_branchAndBound(void *osi);
+    
+        char Osi_isAbandoned(void *osi);
+    
+        char Osi_isProvenOptimal(void *osi);
+    
+        char Osi_isProvenPrimalInfeasible(void *osi);
+    
+        char Osi_isProvenDualInfeasible(void *osi);
+    
+        char Osi_isPrimalObjectiveLimitReached(void *osi);
+    
+        char Osi_isDualObjectiveLimitReached(void *osi);
+    
+        char Osi_isIterationLimitReached(void *osi);
+    
+        double Osi_getObjValue( void *osi );
+    
+        void Osi_setColUpper (void *osi, int elementIndex, double ub);
+    
+        void Osi_setColLower(void *osi, int elementIndex, double lb);
+    
+        int Osi_getNumCols( void *osi );
+    
+        void Osi_getColName( void *osi, int i, char *name, int maxLen );
+    
+        const double *Osi_getColLower( void *osi );
+    
+        const double *Osi_getColUpper( void *osi );
+    
+        int Osi_isInteger( void *osi, int col );
+    
+        int Osi_getNumRows( void *osi );
+    
+        int Osi_getRowNz(void *osi, int row);
+    
+        const int *Osi_getRowIndices(void *osi, int row);
+    
+        const double *Osi_getRowCoeffs(void *osi, int row);
+    
+        double Osi_getRowRHS(void *osi, int row);
+    
+        char Osi_getRowSense(void *osi, int row);
+    
+        void Osi_setObjCoef(void *osi, int index, double obj);
+    
+        void Osi_setObjSense(void *osi, double sense);
+    
+        const double *Osi_getColSolution(void *osi);
+    
+        void *OsiCuts_new();
+    
+        void OsiCuts_addRowCut( void *osiCuts, int nz, const int *idx,
+            const double *coef, char sense, double rhs );
+    
+        void OsiCuts_addGlobalRowCut( void *osiCuts, int nz, const int *idx,
+            const double *coef, char sense, double rhs );
+    
+        int OsiCuts_sizeRowCuts( void *osiCuts );
+    
+        int OsiCuts_nzRowCut( void *osiCuts, int iRowCut );
+    
+        const int * OsiCuts_idxRowCut( void *osiCuts, int iRowCut );
+    
+        const double *OsiCuts_coefRowCut( void *osiCuts, int iRowCut );
+    
+        double OsiCuts_rhsRowCut( void *osiCuts, int iRowCut );
+    
+        char OsiCuts_senseRowCut( void *osiCuts, int iRowCut );
+    
+        void OsiCuts_delete( void *osiCuts );
+    
+        void Osi_addCol(void *osi, const char *name, double lb, double ub,
+           double obj, char isInteger, int nz, int *rows, double *coefs);
+    
+        void Osi_addRow(void *osi, const char *name, int nz,
+            const int *cols, const double *coefs, char sense, double rhs);
+    
+        void Cbc_deleteRows(Cbc_Model *model, int numRows, const int rows[]);
+    
+        void Cbc_deleteCols(Cbc_Model *model, int numCols, const int cols[]);
+    
+        void Cbc_storeNameIndexes(Cbc_Model *model, char _store);
+    
+        int Cbc_getColNameIndex(Cbc_Model *model, const char *name);
+    
+        int Cbc_getRowNameIndex(Cbc_Model *model, const char *name);
+    
+        void Cbc_problemName(Cbc_Model *model, int maxNumberCharacters,
+                             char *array);
+    
+        int Cbc_setProblemName(Cbc_Model *model, const char *array);
+    
+        double Cbc_getPrimalTolerance(Cbc_Model *model);
+    
+        void Cbc_setPrimalTolerance(Cbc_Model *model, double tol);
+    
+        double Cbc_getDualTolerance(Cbc_Model *model);
+    
+        void Cbc_setDualTolerance(Cbc_Model *model, double tol);
+    
+        void Cbc_addCutCallback(Cbc_Model *model, cbc_cut_callback cutcb,
+            const char *name, void *appData, int howOften, char atSolution );
+    
+        void Cbc_addIncCallback(
+            void *model, cbc_incumbent_callback inccb,
+            void *appData );
+    
+        void Cbc_registerCallBack(Cbc_Model *model,
+            cbc_callback userCallBack);
+    
+        void Cbc_addProgrCallback(void *model,
+            cbc_progress_callback prgcbc, void *appData);
+    
+        void Cbc_clearCallBack(Cbc_Model *model);
+    
+        const double *Cbc_getRowPrice(Cbc_Model *model);
+    
+        const double *Osi_getRowPrice(void *osi);
+    
+        double Osi_getIntegerTolerance(void *osi);
+    
+        void Osi_checkCGraph( void *osi );
+    
+        const void * Osi_CGraph( void *osi );
+    
+        size_t CG_nodes( void *cgraph );
+    
+        char CG_conflicting( void *cgraph, int n1, int n2 );
+    
+        double CG_density( void *cgraph );
+    
+        typedef struct {
+          size_t n;
+          const size_t *neigh;
+        } CGNeighbors;
+    
+        CGNeighbors CG_conflictingNodes(Cbc_Model *model, void *cgraph, size_t node);
+    
+        void Cbc_computeFeatures(Cbc_Model *model, double *features);
+    
+        int Cbc_nFeatures();
+    
+        const char *Cbc_featureName(int i);
+        """
+        )
+    
+    CHAR_ONE = "{}".format(chr(1)).encode("utf-8")
+    CHAR_ZERO = "\0".encode("utf-8")
+    
+    
+    DBL_PARAM_PRIMAL_TOL = 0
+    DBL_PARAM_DUAL_TOL = 1
+    DBL_PARAM_ZERO_TOL = 2
+    DBL_PARAM_INT_TOL = 3
+    DBL_PARAM_PRESOLVE_TOL = 4
+    DBL_PARAM_TIME_LIMIT = 5
+    DBL_PARAM_PSI = 6
+    DBL_PARAM_CUTOFF = 7
+    DBL_PARAM_ALLOWABLE_GAP = 8
+    DBL_PARAM_GAP_RATIO = 9
+    DBL_PARAM_MAX_SECS_NOT_IMPROV_FS = 10
+    
+    INT_PARAM_PERT_VALUE = 0
+    INT_PARAM_IDIOT = 1
+    INT_PARAM_STRONG_BRANCHING = 2
+    INT_PARAM_CUT_DEPTH = 3
+    INT_PARAM_MAX_NODES = 4
+    INT_PARAM_NUMBER_BEFORE = 5
+    INT_PARAM_FPUMP_ITS = 6
+    INT_PARAM_MAX_SOLS = 7
+    INT_PARAM_CUT_PASS_IN_TREE = 8
+    INT_PARAM_THREADS = 9
+    INT_PARAM_CUT_PASS = 10
+    INT_PARAM_LOG_LEVEL = 11
+    INT_PARAM_MAX_SAVED_SOLS = 12
+    INT_PARAM_MULTIPLE_ROOTS = 13
+    INT_PARAM_ROUND_INT_VARS = 14
+    INT_PARAM_RANDOM_SEED = 15
+    INT_PARAM_ELAPSED_TIME = 16
+    INT_PARAM_CGRAPH = 17
+    INT_PARAM_CLIQUE_MERGING = 18
+    INT_PARAM_MAX_NODES_NOT_IMPROV_FS = 19
+    
+    
+&gt;   Osi_getNumCols = cbclib.Osi_getNumCols
+                     ^^^^^^
+E   NameError: name 'cbclib' is not defined
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/.venv/lib/python3.11/site-packages/mip/cbc.py:600: NameError</failure></testcase><testcase classname="tests.test_mip_solver.TestMIPCQMSolver" name="test_empty" time="0.002"><failure message="NameError: name 'cbclib' is not defined">self = &lt;tests.test_mip_solver.TestMIPCQMSolver testMethod=test_empty&gt;
+
+    def test_empty(self):
+        cqm = dimod.ConstrainedQuadraticModel()
+&gt;       sampleset = MIPCQMSolver().sample_cqm(cqm)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_mip_solver.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/mip_solver.py:74: in sample_cqm
+    model = mip.Model()
+            ^^^^^^^^^^^
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/.venv/lib/python3.11/site-packages/mip/model.py:98: in __init__
+    import mip.cbc
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Python-MIP interface to the COIN-OR Branch-and-Cut solver CBC"""
+    
+    import logging
+    from typing import Dict, List, Tuple, Optional, Union
+    from sys import platform, maxsize
+    from os.path import dirname, isfile, exists
+    import os
+    import multiprocessing as multip
+    import numbers
+    from cffi import FFI
+    from mip.model import xsum
+    import mip
+    from mip.lists import EmptyVarSol, EmptyRowSol
+    from mip.exceptions import (
+        ParameterNotAvailable,
+        InvalidParameter,
+        MipBaseException,
+    )
+    from mip import (
+        Model,
+        Var,
+        Constr,
+        Column,
+        LinExpr,
+        VConstrList,
+        VVarList,
+        Solver,
+        MAXIMIZE,
+        SearchEmphasis,
+        CONTINUOUS,
+        BINARY,
+        INTEGER,
+        MINIMIZE,
+        EQUAL,
+        LESS_OR_EQUAL,
+        GREATER_OR_EQUAL,
+        OptimizationStatus,
+        LP_Method,
+        CutType,
+        CutPool,
+    )
+    
+    logger = logging.getLogger(__name__)
+    warningMessages = 0
+    
+    ffi = FFI()
+    has_cbc = False
+    os_is_64_bit = maxsize &gt; 2 ** 32
+    INF = float("inf")
+    cut_idx = 0
+    
+    # for variables and rows
+    MAX_NAME_SIZE = 512
+    
+    DEF_PUMPP = 30
+    
+    try:
+        pathmip = dirname(mip.__file__)
+        pathlib = os.path.join(pathmip, "libraries")
+        libfile = ""
+        # if user wants to force the loading of an specific CBC library
+        # (for debugging purposes, for example)
+        if "PMIP_CBC_LIBRARY" in os.environ:
+            libfile = os.environ["PMIP_CBC_LIBRARY"]
+            pathlib = dirname(libfile)
+    
+            if platform.lower().startswith("win"):
+                if pathlib not in os.environ["PATH"]:
+                    os.environ["PATH"] += ";" + pathlib
+        else:
+            if "linux" in platform.lower():
+                if os_is_64_bit:
+                    pathlibe = os.path.join(pathlib, "lin64")
+                    libfile = os.path.join(pathlibe, "libCbcSolver.so")
+                    if not exists(libfile):
+                        pathlibe = pathlib
+                        libfile = os.path.join(pathlib, "cbc-c-linux-x86-64.so")
+                    pathlib = pathlibe
+                else:
+                    raise NotImplementedError("Linux 32 bits platform not supported.")
+            elif platform.lower().startswith("win"):
+                if os_is_64_bit:
+                    pathlibe = os.path.join(pathlib, "win64")
+                    libfile = os.path.join(pathlibe, "libCbcSolver-0.dll")
+                    if exists(libfile):
+                        if pathlibe not in os.environ["PATH"]:
+                            os.environ["PATH"] = pathlibe + ";" + os.environ["PATH"]
+                    else:
+                        pathlibe = pathlib
+                        libfile = os.path.join(pathlibe, "cbc-c-windows-x86-64.dll")
+                        if pathlibe not in os.environ["PATH"]:
+                            os.environ["PATH"] = pathlibe + ";" + os.environ["PATH"]
+                    pathlib = pathlibe
+    
+                else:
+                    raise NotImplementedError("Win32 platform not supported.")
+            elif platform.lower().startswith("darwin") or platform.lower().startswith(
+                "macos"
+            ):
+                if os_is_64_bit:
+                    libfile = os.path.join(pathlib, "cbc-c-darwin-x86-64.dylib")
+            if not libfile:
+                raise NotImplementedError("You operating system/platform is not supported")
+        old_dir = os.getcwd()
+        os.chdir(pathlib)
+        cbclib = ffi.dlopen(libfile)
+        os.chdir(old_dir)
+        has_cbc = True
+    except Exception as e:
+        logger.error("An error occurred while loading the CBC library:\t " "{}\n".format(e))
+        has_cbc = False
+    
+    if has_cbc:
+        ffi.cdef(
+            """
+        typedef int(*cbc_progress_callback)(void *model,
+                                            int phase,
+                                            int step,
+                                            const char *phaseName,
+                                            double seconds,
+                                            double lb,
+                                            double ub,
+                                            int nint,
+                                            int *vecint,
+                                            void *cbData
+                                            );
+    
+        typedef void(*cbc_callback)(void *model, int msgno, int ndouble,
+            const double *dvec, int nint, const int *ivec,
+            int nchar, char **cvec);
+    
+        typedef void(*cbc_cut_callback)(void *osiSolver, void *osiCuts, void *appdata, int level, int npass);
+    
+        typedef int (*cbc_incumbent_callback)(void *cbcModel,
+            double obj, int nz,
+            char **vnames, double *x, void *appData);
+    
+        typedef void Cbc_Model;
+    
+        void *Cbc_newModel();
+    
+        void Cbc_readLp(Cbc_Model *model, const char *file);
+    
+        int Cbc_readBasis(Cbc_Model *model, const char *filename);
+    
+        int Cbc_writeBasis(Cbc_Model *model, const char *filename, char
+            writeValues, int formatType);
+    
+        void Cbc_readMps(Cbc_Model *model, const char *file);
+    
+        char Cbc_supportsGzip();
+    
+        char Cbc_supportsBzip2();
+    
+        void Cbc_writeLp(Cbc_Model *model, const char *file);
+    
+        void Cbc_writeMps(Cbc_Model *model, const char *file);
+    
+        int Cbc_getNumCols(Cbc_Model *model);
+    
+        int Cbc_getNumRows(Cbc_Model *model);
+    
+        int Cbc_getNumIntegers(Cbc_Model *model);
+    
+        int Cbc_getNumElements(Cbc_Model *model);
+    
+        int Cbc_getRowNz(Cbc_Model *model, int row);
+    
+        int *Cbc_getRowIndices(Cbc_Model *model, int row);
+    
+        double *Cbc_getRowCoeffs(Cbc_Model *model, int row);
+    
+        double Cbc_getRowRHS(Cbc_Model *model, int row);
+    
+        void Cbc_setRowRHS(Cbc_Model *model, int row, double rhs);
+    
+        char Cbc_getRowSense(Cbc_Model *model, int row);
+    
+        const double *Cbc_getRowActivity(Cbc_Model *model);
+    
+        const double *Cbc_getRowSlack(Cbc_Model *model);
+    
+        int Cbc_getColNz(Cbc_Model *model, int col);
+    
+        int *Cbc_getColIndices(Cbc_Model *model, int col);
+    
+        double *Cbc_getColCoeffs(Cbc_Model *model, int col);
+    
+        void Cbc_addCol(Cbc_Model *model, const char *name,
+            double lb, double ub, double obj, char isInteger,
+            int nz, int *rows, double *coefs);
+    
+        void Cbc_addRow(Cbc_Model *model, const char *name, int nz,
+            const int *cols, const double *coefs, char sense, double rhs);
+    
+        void Cbc_addLazyConstraint(Cbc_Model *model, int nz,
+            int *cols, double *coefs, char sense, double rhs);
+    
+        void Cbc_addSOS(Cbc_Model *model, int numRows, const int *rowStarts,
+            const int *colIndices, const double *weights, const int type);
+    
+        int Cbc_numberSOS(Cbc_Model *model);
+    
+        void Cbc_setObjCoeff(Cbc_Model *model, int index, double value);
+    
+        double Cbc_getObjSense(Cbc_Model *model);
+    
+        const double *Cbc_getObjCoefficients(Cbc_Model *model);
+    
+        const double *Cbc_getColSolution(Cbc_Model *model);
+    
+        const double *Cbc_getReducedCost(Cbc_Model *model);
+    
+        double *Cbc_bestSolution(Cbc_Model *model);
+    
+        int Cbc_numberSavedSolutions(Cbc_Model *model);
+    
+        const double *Cbc_savedSolution(Cbc_Model *model, int whichSol);
+    
+        double Cbc_savedSolutionObj(Cbc_Model *model, int whichSol);
+    
+        double Cbc_getObjValue(Cbc_Model *model);
+    
+        void Cbc_setObjSense(Cbc_Model *model, double sense);
+    
+        int Cbc_isProvenOptimal(Cbc_Model *model);
+    
+        int Cbc_isProvenInfeasible(Cbc_Model *model);
+    
+        int Cbc_isContinuousUnbounded(Cbc_Model *model);
+    
+        int Cbc_isAbandoned(Cbc_Model *model);
+    
+        const double *Cbc_getColLower(Cbc_Model *model);
+    
+        const double *Cbc_getColUpper(Cbc_Model *model);
+    
+        double Cbc_getColObj(Cbc_Model *model, int colIdx);
+    
+        double Cbc_getColLB(Cbc_Model *model, int colIdx);
+    
+        double Cbc_getColUB(Cbc_Model *model, int colIdx);
+    
+        void Cbc_setColLower(Cbc_Model *model, int index, double value);
+    
+        void Cbc_setColUpper(Cbc_Model *model, int index, double value);
+    
+        int Cbc_isInteger(Cbc_Model *model, int i);
+    
+        void Cbc_getColName(Cbc_Model *model,
+            int iColumn, char *name, size_t maxLength);
+    
+        void Cbc_getRowName(Cbc_Model *model,
+            int iRow, char *name, size_t maxLength);
+    
+        void Cbc_setContinuous(Cbc_Model *model, int iColumn);
+    
+        void Cbc_setInteger(Cbc_Model *model, int iColumn);
+    
+        /*! Integer parameters */
+        enum IntParam {
+          INT_PARAM_PERT_VALUE              = 0,  /*! Method of perturbation, -5000 to 102, default 50 */
+          INT_PARAM_IDIOT                   = 1,  /*! Parameter of the "idiot" method to try to produce an initial feasible basis. -1 let the solver decide if this should be applied; 0 deactivates it and &gt;0 sets number of passes. */
+          INT_PARAM_STRONG_BRANCHING        = 2,  /*! Number of variables to be evaluated in strong branching. */
+          INT_PARAM_CUT_DEPTH               = 3,  /*! Sets the application of cuts to every depth multiple of this value. -1, the default value, let the solve decide. */
+          INT_PARAM_MAX_NODES               = 4,  /*! Maximum number of nodes to be explored in the search tree */
+          INT_PARAM_NUMBER_BEFORE           = 5,  /*! Number of branches before trusting pseudocodes computed in strong branching. */
+          INT_PARAM_FPUMP_ITS               = 6,  /*! Maximum number of iterations in the feasibility pump method. */
+          INT_PARAM_MAX_SOLS                = 7,  /*! Maximum number of solutions generated during the search. Stops the search when this number of solutions is found. */
+          INT_PARAM_CUT_PASS_IN_TREE        = 8,  /*! Maximum number of cuts passes in the search tree (with the exception of the root node). Default 1. */
+          INT_PARAM_THREADS                 = 9,  /*! Number of threads that can be used in the branch-and-bound method.*/
+          INT_PARAM_CUT_PASS                = 10, /*! Number of cut passes in the root node. Default -1, solver decides */
+          INT_PARAM_LOG_LEVEL               = 11, /*! Verbosity level, from 0 to 2 */
+          INT_PARAM_MAX_SAVED_SOLS          = 12, /*! Size of the pool to save the best solutions found during the search. */
+          INT_PARAM_MULTIPLE_ROOTS          = 13, /*! Multiple root passes to get additional cuts and solutions. */
+          INT_PARAM_ROUND_INT_VARS          = 14, /*! If integer variables should be round to remove small infeasibilities. This can increase the overall amount of infeasibilities in problems with both continuous and integer variables */
+          INT_PARAM_RANDOM_SEED             = 15, /*! When solving LP and MIP, randomization is used to break ties in some decisions. This changes the random seed so that multiple executions can produce different results */
+          INT_PARAM_ELAPSED_TIME            = 16, /*! When =1 use elapsed (wallclock) time, otherwise use CPU time */
+          INT_PARAM_CGRAPH                  = 17, /*! Conflict graph: controls if the conflict graph is created or not. 0: off, 1: auto, 2: on 3: fast weaker clique sep */
+          INT_PARAM_CLIQUE_MERGING          = 18, /*! Clique merging options: 0: off , 1 auto , 2 before solving LP, 3 after solving LP and pre-processing */
+          INT_PARAM_MAX_NODES_NOT_IMPROV_FS = 19, /*! Maximum number of nodes processed without improving best solution, after a feasible solution is found */
+        };
+        #define N_INT_PARAMS 20
+    
+        void Cbc_setIntParam(Cbc_Model *model, enum IntParam which, const int val);
+    
+        /*! Double parameters
+         * */
+        enum DblParam {
+          DBL_PARAM_PRIMAL_TOL              = 0,  /*! Tollerance to consider a solution feasible in the linear programming solver. */
+          DBL_PARAM_DUAL_TOL                = 1,  /*! Tollerance for a solution to be considered optimal in the linear programming solver. */
+          DBL_PARAM_ZERO_TOL                = 2,  /*! Coefficients less that this value will be ignored when reading instances */
+          DBL_PARAM_INT_TOL                 = 3,  /*! Maximum allowed distance from integer value for a variable to be considered integral */
+          DBL_PARAM_PRESOLVE_TOL            = 4,  /*! Tollerance used in the presolver, should be increased if the pre-solver is declaring infeasible a feasible problem */
+          DBL_PARAM_TIME_LIMIT              = 5,  /*! Time limit in seconds */
+          DBL_PARAM_PSI                     = 6,  /*! Two dimensional princing factor in the Positive Edge pivot strategy. */
+          DBL_PARAM_CUTOFF                  = 7,  /*! Only search for solutions with cost less-or-equal to this value. */
+          DBL_PARAM_ALLOWABLE_GAP           = 8,  /*! Allowable gap between the lower and upper bound to conclude the search */
+          DBL_PARAM_GAP_RATIO               = 9,   /*! Stops the search when the difference between the upper and lower bound is less than this fraction of the larger value */
+          DBL_PARAM_MAX_SECS_NOT_IMPROV_FS  = 10, /*! Maximum processing time without improving best solution, after a feasible solution is found */
+        };
+        #define N_DBL_PARAMS 11
+    
+        void Cbc_setDblParam(Cbc_Model *model, enum DblParam which, const double val);
+    
+        void Cbc_setParameter(Cbc_Model *model, const char *name,
+            const char *value);
+    
+        double Cbc_getCutoff(Cbc_Model *model);
+    
+        void Cbc_setCutoff(Cbc_Model *model, double cutoff);
+    
+        double Cbc_getAllowableGap(Cbc_Model *model);
+    
+        void Cbc_setAllowableGap(Cbc_Model *model, double allowedGap);
+    
+        double Cbc_getAllowableFractionGap(Cbc_Model *model);
+    
+        void Cbc_setAllowableFractionGap(Cbc_Model *model,
+            double allowedFracionGap);
+    
+        double Cbc_getAllowablePercentageGap(Cbc_Model *model);
+    
+        void Cbc_setAllowablePercentageGap(Cbc_Model *model,
+            double allowedPercentageGap);
+    
+        double Cbc_getMaximumSeconds(Cbc_Model *model);
+    
+        void Cbc_setMaximumSeconds(Cbc_Model *model, double maxSeconds);
+    
+        int Cbc_getMaximumNodes(Cbc_Model *model);
+    
+        void Cbc_setMaximumNodes(Cbc_Model *model, int maxNodes);
+    
+        int Cbc_getMaximumSolutions(Cbc_Model *model);
+    
+        void Cbc_setMaximumSolutions(Cbc_Model *model, int maxSolutions);
+    
+        int Cbc_getLogLevel(Cbc_Model *model);
+    
+        void Cbc_setLogLevel(Cbc_Model *model, int logLevel);
+    
+        double Cbc_getBestPossibleObjValue(Cbc_Model *model);
+    
+        void Cbc_setMIPStart(Cbc_Model *model, int count,
+            const char **colNames, const double colValues[]);
+    
+        void Cbc_setMIPStartI(Cbc_Model *model, int count, const int colIdxs[],
+            const double colValues[]);
+    
+        enum LPMethod {
+          LPM_Auto    = 0,  /*! Solver will decide automatically which method to use */
+          LPM_Dual    = 1,  /*! Dual simplex */
+          LPM_Primal  = 2,  /*! Primal simplex */
+          LPM_Barrier = 3   /*! The barrier algorithm. */
+        };
+    
+        void
+        Cbc_setLPmethod(Cbc_Model *model, enum LPMethod lpm );
+    
+        void Cbc_updateConflictGraph( Cbc_Model *model );
+    
+        const void *Cbc_conflictGraph( Cbc_Model *model );
+    
+        int Cbc_solve(Cbc_Model *model);
+    
+        int Cbc_solveLinearProgram(Cbc_Model *model);
+    
+        /*! Type of cutting plane */
+        enum CutType {
+          CT_Probing          =  0,  /*! Cuts generated evaluating the impact of fixing bounds for integer variables */
+          CT_Gomory           =  1,  /*! Gomory cuts obtained from the tableau, implemented by John Forrest  */
+          CT_GMI              =  2,  /*! Gomory cuts obtained from the tableau, implementation from Giacomo Nannicini focusing on safer cuts */
+          CT_LaGomory         =  3,  /*! Additional gomory cuts, simplification of 'A Relax-and-Cut Framework for Gomory's Mixed-Integer Cuts' by Matteo Fischetti &amp; Domenico Salvagnin */
+          CT_RedSplit         =  4,  /*! Reduce and split cuts, implemented by Francois Margot */
+          CT_RedSplitG        =  5,  /*! Reduce and split cuts, implemented by Giacomo Nannicini */
+          CT_FlowCover        =  6,  /*! Flow cover cuts */
+          CT_MIR              =  7,  /*! Mixed-integer rounding cuts */
+          CT_TwoMIR           =  8,  /*! Two-phase Mixed-integer rounding cuts */
+          CT_LaTwoMIR         =  9,  /*! Lagrangean relaxation for two-phase Mixed-integer rounding cuts, as in CT_LaGomory */
+          CT_LiftAndProject   = 10,  /*! Lift and project cuts */
+          CT_ResidualCapacity = 11,  /*! Residual capacity cuts */
+          CT_ZeroHalf         = 12,  /*! Zero-half cuts */
+          CT_Clique           = 13,  /*! Clique cuts */
+          CT_OddWheel         = 14,  /*! Lifted odd-hole inequalities */
+          CT_KnapsackCover    = 15,  /*! Knapsack cover cuts */
+        };
+    
+        void Cbc_generateCuts( Cbc_Model *cbcModel, enum CutType ct, void *oc, int depth, int pass );
+    
+        void Cbc_strengthenPacking(Cbc_Model *model);
+    
+        void Cbc_strengthenPackingRows(Cbc_Model *model, size_t n, const size_t rows[]);
+    
+        void *Cbc_getSolverPtr(Cbc_Model *model);
+    
+        void *Cbc_deleteModel(Cbc_Model *model);
+    
+        int Osi_getNumIntegers( void *osi );
+    
+        const double *Osi_getReducedCost( void *osi );
+    
+        const double *Osi_getObjCoefficients();
+    
+        double Osi_getObjSense();
+    
+        void *Osi_newSolver();
+    
+        void Osi_deleteSolver( void *osi );
+    
+        void Osi_initialSolve(void *osi);
+    
+        void Osi_resolve(void *osi);
+    
+        void Osi_branchAndBound(void *osi);
+    
+        char Osi_isAbandoned(void *osi);
+    
+        char Osi_isProvenOptimal(void *osi);
+    
+        char Osi_isProvenPrimalInfeasible(void *osi);
+    
+        char Osi_isProvenDualInfeasible(void *osi);
+    
+        char Osi_isPrimalObjectiveLimitReached(void *osi);
+    
+        char Osi_isDualObjectiveLimitReached(void *osi);
+    
+        char Osi_isIterationLimitReached(void *osi);
+    
+        double Osi_getObjValue( void *osi );
+    
+        void Osi_setColUpper (void *osi, int elementIndex, double ub);
+    
+        void Osi_setColLower(void *osi, int elementIndex, double lb);
+    
+        int Osi_getNumCols( void *osi );
+    
+        void Osi_getColName( void *osi, int i, char *name, int maxLen );
+    
+        const double *Osi_getColLower( void *osi );
+    
+        const double *Osi_getColUpper( void *osi );
+    
+        int Osi_isInteger( void *osi, int col );
+    
+        int Osi_getNumRows( void *osi );
+    
+        int Osi_getRowNz(void *osi, int row);
+    
+        const int *Osi_getRowIndices(void *osi, int row);
+    
+        const double *Osi_getRowCoeffs(void *osi, int row);
+    
+        double Osi_getRowRHS(void *osi, int row);
+    
+        char Osi_getRowSense(void *osi, int row);
+    
+        void Osi_setObjCoef(void *osi, int index, double obj);
+    
+        void Osi_setObjSense(void *osi, double sense);
+    
+        const double *Osi_getColSolution(void *osi);
+    
+        void *OsiCuts_new();
+    
+        void OsiCuts_addRowCut( void *osiCuts, int nz, const int *idx,
+            const double *coef, char sense, double rhs );
+    
+        void OsiCuts_addGlobalRowCut( void *osiCuts, int nz, const int *idx,
+            const double *coef, char sense, double rhs );
+    
+        int OsiCuts_sizeRowCuts( void *osiCuts );
+    
+        int OsiCuts_nzRowCut( void *osiCuts, int iRowCut );
+    
+        const int * OsiCuts_idxRowCut( void *osiCuts, int iRowCut );
+    
+        const double *OsiCuts_coefRowCut( void *osiCuts, int iRowCut );
+    
+        double OsiCuts_rhsRowCut( void *osiCuts, int iRowCut );
+    
+        char OsiCuts_senseRowCut( void *osiCuts, int iRowCut );
+    
+        void OsiCuts_delete( void *osiCuts );
+    
+        void Osi_addCol(void *osi, const char *name, double lb, double ub,
+           double obj, char isInteger, int nz, int *rows, double *coefs);
+    
+        void Osi_addRow(void *osi, const char *name, int nz,
+            const int *cols, const double *coefs, char sense, double rhs);
+    
+        void Cbc_deleteRows(Cbc_Model *model, int numRows, const int rows[]);
+    
+        void Cbc_deleteCols(Cbc_Model *model, int numCols, const int cols[]);
+    
+        void Cbc_storeNameIndexes(Cbc_Model *model, char _store);
+    
+        int Cbc_getColNameIndex(Cbc_Model *model, const char *name);
+    
+        int Cbc_getRowNameIndex(Cbc_Model *model, const char *name);
+    
+        void Cbc_problemName(Cbc_Model *model, int maxNumberCharacters,
+                             char *array);
+    
+        int Cbc_setProblemName(Cbc_Model *model, const char *array);
+    
+        double Cbc_getPrimalTolerance(Cbc_Model *model);
+    
+        void Cbc_setPrimalTolerance(Cbc_Model *model, double tol);
+    
+        double Cbc_getDualTolerance(Cbc_Model *model);
+    
+        void Cbc_setDualTolerance(Cbc_Model *model, double tol);
+    
+        void Cbc_addCutCallback(Cbc_Model *model, cbc_cut_callback cutcb,
+            const char *name, void *appData, int howOften, char atSolution );
+    
+        void Cbc_addIncCallback(
+            void *model, cbc_incumbent_callback inccb,
+            void *appData );
+    
+        void Cbc_registerCallBack(Cbc_Model *model,
+            cbc_callback userCallBack);
+    
+        void Cbc_addProgrCallback(void *model,
+            cbc_progress_callback prgcbc, void *appData);
+    
+        void Cbc_clearCallBack(Cbc_Model *model);
+    
+        const double *Cbc_getRowPrice(Cbc_Model *model);
+    
+        const double *Osi_getRowPrice(void *osi);
+    
+        double Osi_getIntegerTolerance(void *osi);
+    
+        void Osi_checkCGraph( void *osi );
+    
+        const void * Osi_CGraph( void *osi );
+    
+        size_t CG_nodes( void *cgraph );
+    
+        char CG_conflicting( void *cgraph, int n1, int n2 );
+    
+        double CG_density( void *cgraph );
+    
+        typedef struct {
+          size_t n;
+          const size_t *neigh;
+        } CGNeighbors;
+    
+        CGNeighbors CG_conflictingNodes(Cbc_Model *model, void *cgraph, size_t node);
+    
+        void Cbc_computeFeatures(Cbc_Model *model, double *features);
+    
+        int Cbc_nFeatures();
+    
+        const char *Cbc_featureName(int i);
+        """
+        )
+    
+    CHAR_ONE = "{}".format(chr(1)).encode("utf-8")
+    CHAR_ZERO = "\0".encode("utf-8")
+    
+    
+    DBL_PARAM_PRIMAL_TOL = 0
+    DBL_PARAM_DUAL_TOL = 1
+    DBL_PARAM_ZERO_TOL = 2
+    DBL_PARAM_INT_TOL = 3
+    DBL_PARAM_PRESOLVE_TOL = 4
+    DBL_PARAM_TIME_LIMIT = 5
+    DBL_PARAM_PSI = 6
+    DBL_PARAM_CUTOFF = 7
+    DBL_PARAM_ALLOWABLE_GAP = 8
+    DBL_PARAM_GAP_RATIO = 9
+    DBL_PARAM_MAX_SECS_NOT_IMPROV_FS = 10
+    
+    INT_PARAM_PERT_VALUE = 0
+    INT_PARAM_IDIOT = 1
+    INT_PARAM_STRONG_BRANCHING = 2
+    INT_PARAM_CUT_DEPTH = 3
+    INT_PARAM_MAX_NODES = 4
+    INT_PARAM_NUMBER_BEFORE = 5
+    INT_PARAM_FPUMP_ITS = 6
+    INT_PARAM_MAX_SOLS = 7
+    INT_PARAM_CUT_PASS_IN_TREE = 8
+    INT_PARAM_THREADS = 9
+    INT_PARAM_CUT_PASS = 10
+    INT_PARAM_LOG_LEVEL = 11
+    INT_PARAM_MAX_SAVED_SOLS = 12
+    INT_PARAM_MULTIPLE_ROOTS = 13
+    INT_PARAM_ROUND_INT_VARS = 14
+    INT_PARAM_RANDOM_SEED = 15
+    INT_PARAM_ELAPSED_TIME = 16
+    INT_PARAM_CGRAPH = 17
+    INT_PARAM_CLIQUE_MERGING = 18
+    INT_PARAM_MAX_NODES_NOT_IMPROV_FS = 19
+    
+    
+&gt;   Osi_getNumCols = cbclib.Osi_getNumCols
+                     ^^^^^^
+E   NameError: name 'cbclib' is not defined
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/.venv/lib/python3.11/site-packages/mip/cbc.py:600: NameError</failure></testcase><testcase classname="tests.test_mip_solver.TestMIPCQMSolver" name="test_infease" time="0.002"><failure message="NameError: name 'cbclib' is not defined">self = &lt;tests.test_mip_solver.TestMIPCQMSolver testMethod=test_infease&gt;
+
+    def test_infease(self):
+        cqm = dimod.ConstrainedQuadraticModel()
+    
+        i, j = dimod.Integers('ij')
+    
+        cqm.add_constraint(i - j &lt;= -1)
+        cqm.add_constraint(i - j &gt;= +1)
+    
+&gt;       sampleset = MIPCQMSolver().sample_cqm(cqm)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_mip_solver.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/mip_solver.py:74: in sample_cqm
+    model = mip.Model()
+            ^^^^^^^^^^^
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/.venv/lib/python3.11/site-packages/mip/model.py:98: in __init__
+    import mip.cbc
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Python-MIP interface to the COIN-OR Branch-and-Cut solver CBC"""
+    
+    import logging
+    from typing import Dict, List, Tuple, Optional, Union
+    from sys import platform, maxsize
+    from os.path import dirname, isfile, exists
+    import os
+    import multiprocessing as multip
+    import numbers
+    from cffi import FFI
+    from mip.model import xsum
+    import mip
+    from mip.lists import EmptyVarSol, EmptyRowSol
+    from mip.exceptions import (
+        ParameterNotAvailable,
+        InvalidParameter,
+        MipBaseException,
+    )
+    from mip import (
+        Model,
+        Var,
+        Constr,
+        Column,
+        LinExpr,
+        VConstrList,
+        VVarList,
+        Solver,
+        MAXIMIZE,
+        SearchEmphasis,
+        CONTINUOUS,
+        BINARY,
+        INTEGER,
+        MINIMIZE,
+        EQUAL,
+        LESS_OR_EQUAL,
+        GREATER_OR_EQUAL,
+        OptimizationStatus,
+        LP_Method,
+        CutType,
+        CutPool,
+    )
+    
+    logger = logging.getLogger(__name__)
+    warningMessages = 0
+    
+    ffi = FFI()
+    has_cbc = False
+    os_is_64_bit = maxsize &gt; 2 ** 32
+    INF = float("inf")
+    cut_idx = 0
+    
+    # for variables and rows
+    MAX_NAME_SIZE = 512
+    
+    DEF_PUMPP = 30
+    
+    try:
+        pathmip = dirname(mip.__file__)
+        pathlib = os.path.join(pathmip, "libraries")
+        libfile = ""
+        # if user wants to force the loading of an specific CBC library
+        # (for debugging purposes, for example)
+        if "PMIP_CBC_LIBRARY" in os.environ:
+            libfile = os.environ["PMIP_CBC_LIBRARY"]
+            pathlib = dirname(libfile)
+    
+            if platform.lower().startswith("win"):
+                if pathlib not in os.environ["PATH"]:
+                    os.environ["PATH"] += ";" + pathlib
+        else:
+            if "linux" in platform.lower():
+                if os_is_64_bit:
+                    pathlibe = os.path.join(pathlib, "lin64")
+                    libfile = os.path.join(pathlibe, "libCbcSolver.so")
+                    if not exists(libfile):
+                        pathlibe = pathlib
+                        libfile = os.path.join(pathlib, "cbc-c-linux-x86-64.so")
+                    pathlib = pathlibe
+                else:
+                    raise NotImplementedError("Linux 32 bits platform not supported.")
+            elif platform.lower().startswith("win"):
+                if os_is_64_bit:
+                    pathlibe = os.path.join(pathlib, "win64")
+                    libfile = os.path.join(pathlibe, "libCbcSolver-0.dll")
+                    if exists(libfile):
+                        if pathlibe not in os.environ["PATH"]:
+                            os.environ["PATH"] = pathlibe + ";" + os.environ["PATH"]
+                    else:
+                        pathlibe = pathlib
+                        libfile = os.path.join(pathlibe, "cbc-c-windows-x86-64.dll")
+                        if pathlibe not in os.environ["PATH"]:
+                            os.environ["PATH"] = pathlibe + ";" + os.environ["PATH"]
+                    pathlib = pathlibe
+    
+                else:
+                    raise NotImplementedError("Win32 platform not supported.")
+            elif platform.lower().startswith("darwin") or platform.lower().startswith(
+                "macos"
+            ):
+                if os_is_64_bit:
+                    libfile = os.path.join(pathlib, "cbc-c-darwin-x86-64.dylib")
+            if not libfile:
+                raise NotImplementedError("You operating system/platform is not supported")
+        old_dir = os.getcwd()
+        os.chdir(pathlib)
+        cbclib = ffi.dlopen(libfile)
+        os.chdir(old_dir)
+        has_cbc = True
+    except Exception as e:
+        logger.error("An error occurred while loading the CBC library:\t " "{}\n".format(e))
+        has_cbc = False
+    
+    if has_cbc:
+        ffi.cdef(
+            """
+        typedef int(*cbc_progress_callback)(void *model,
+                                            int phase,
+                                            int step,
+                                            const char *phaseName,
+                                            double seconds,
+                                            double lb,
+                                            double ub,
+                                            int nint,
+                                            int *vecint,
+                                            void *cbData
+                                            );
+    
+        typedef void(*cbc_callback)(void *model, int msgno, int ndouble,
+            const double *dvec, int nint, const int *ivec,
+            int nchar, char **cvec);
+    
+        typedef void(*cbc_cut_callback)(void *osiSolver, void *osiCuts, void *appdata, int level, int npass);
+    
+        typedef int (*cbc_incumbent_callback)(void *cbcModel,
+            double obj, int nz,
+            char **vnames, double *x, void *appData);
+    
+        typedef void Cbc_Model;
+    
+        void *Cbc_newModel();
+    
+        void Cbc_readLp(Cbc_Model *model, const char *file);
+    
+        int Cbc_readBasis(Cbc_Model *model, const char *filename);
+    
+        int Cbc_writeBasis(Cbc_Model *model, const char *filename, char
+            writeValues, int formatType);
+    
+        void Cbc_readMps(Cbc_Model *model, const char *file);
+    
+        char Cbc_supportsGzip();
+    
+        char Cbc_supportsBzip2();
+    
+        void Cbc_writeLp(Cbc_Model *model, const char *file);
+    
+        void Cbc_writeMps(Cbc_Model *model, const char *file);
+    
+        int Cbc_getNumCols(Cbc_Model *model);
+    
+        int Cbc_getNumRows(Cbc_Model *model);
+    
+        int Cbc_getNumIntegers(Cbc_Model *model);
+    
+        int Cbc_getNumElements(Cbc_Model *model);
+    
+        int Cbc_getRowNz(Cbc_Model *model, int row);
+    
+        int *Cbc_getRowIndices(Cbc_Model *model, int row);
+    
+        double *Cbc_getRowCoeffs(Cbc_Model *model, int row);
+    
+        double Cbc_getRowRHS(Cbc_Model *model, int row);
+    
+        void Cbc_setRowRHS(Cbc_Model *model, int row, double rhs);
+    
+        char Cbc_getRowSense(Cbc_Model *model, int row);
+    
+        const double *Cbc_getRowActivity(Cbc_Model *model);
+    
+        const double *Cbc_getRowSlack(Cbc_Model *model);
+    
+        int Cbc_getColNz(Cbc_Model *model, int col);
+    
+        int *Cbc_getColIndices(Cbc_Model *model, int col);
+    
+        double *Cbc_getColCoeffs(Cbc_Model *model, int col);
+    
+        void Cbc_addCol(Cbc_Model *model, const char *name,
+            double lb, double ub, double obj, char isInteger,
+            int nz, int *rows, double *coefs);
+    
+        void Cbc_addRow(Cbc_Model *model, const char *name, int nz,
+            const int *cols, const double *coefs, char sense, double rhs);
+    
+        void Cbc_addLazyConstraint(Cbc_Model *model, int nz,
+            int *cols, double *coefs, char sense, double rhs);
+    
+        void Cbc_addSOS(Cbc_Model *model, int numRows, const int *rowStarts,
+            const int *colIndices, const double *weights, const int type);
+    
+        int Cbc_numberSOS(Cbc_Model *model);
+    
+        void Cbc_setObjCoeff(Cbc_Model *model, int index, double value);
+    
+        double Cbc_getObjSense(Cbc_Model *model);
+    
+        const double *Cbc_getObjCoefficients(Cbc_Model *model);
+    
+        const double *Cbc_getColSolution(Cbc_Model *model);
+    
+        const double *Cbc_getReducedCost(Cbc_Model *model);
+    
+        double *Cbc_bestSolution(Cbc_Model *model);
+    
+        int Cbc_numberSavedSolutions(Cbc_Model *model);
+    
+        const double *Cbc_savedSolution(Cbc_Model *model, int whichSol);
+    
+        double Cbc_savedSolutionObj(Cbc_Model *model, int whichSol);
+    
+        double Cbc_getObjValue(Cbc_Model *model);
+    
+        void Cbc_setObjSense(Cbc_Model *model, double sense);
+    
+        int Cbc_isProvenOptimal(Cbc_Model *model);
+    
+        int Cbc_isProvenInfeasible(Cbc_Model *model);
+    
+        int Cbc_isContinuousUnbounded(Cbc_Model *model);
+    
+        int Cbc_isAbandoned(Cbc_Model *model);
+    
+        const double *Cbc_getColLower(Cbc_Model *model);
+    
+        const double *Cbc_getColUpper(Cbc_Model *model);
+    
+        double Cbc_getColObj(Cbc_Model *model, int colIdx);
+    
+        double Cbc_getColLB(Cbc_Model *model, int colIdx);
+    
+        double Cbc_getColUB(Cbc_Model *model, int colIdx);
+    
+        void Cbc_setColLower(Cbc_Model *model, int index, double value);
+    
+        void Cbc_setColUpper(Cbc_Model *model, int index, double value);
+    
+        int Cbc_isInteger(Cbc_Model *model, int i);
+    
+        void Cbc_getColName(Cbc_Model *model,
+            int iColumn, char *name, size_t maxLength);
+    
+        void Cbc_getRowName(Cbc_Model *model,
+            int iRow, char *name, size_t maxLength);
+    
+        void Cbc_setContinuous(Cbc_Model *model, int iColumn);
+    
+        void Cbc_setInteger(Cbc_Model *model, int iColumn);
+    
+        /*! Integer parameters */
+        enum IntParam {
+          INT_PARAM_PERT_VALUE              = 0,  /*! Method of perturbation, -5000 to 102, default 50 */
+          INT_PARAM_IDIOT                   = 1,  /*! Parameter of the "idiot" method to try to produce an initial feasible basis. -1 let the solver decide if this should be applied; 0 deactivates it and &gt;0 sets number of passes. */
+          INT_PARAM_STRONG_BRANCHING        = 2,  /*! Number of variables to be evaluated in strong branching. */
+          INT_PARAM_CUT_DEPTH               = 3,  /*! Sets the application of cuts to every depth multiple of this value. -1, the default value, let the solve decide. */
+          INT_PARAM_MAX_NODES               = 4,  /*! Maximum number of nodes to be explored in the search tree */
+          INT_PARAM_NUMBER_BEFORE           = 5,  /*! Number of branches before trusting pseudocodes computed in strong branching. */
+          INT_PARAM_FPUMP_ITS               = 6,  /*! Maximum number of iterations in the feasibility pump method. */
+          INT_PARAM_MAX_SOLS                = 7,  /*! Maximum number of solutions generated during the search. Stops the search when this number of solutions is found. */
+          INT_PARAM_CUT_PASS_IN_TREE        = 8,  /*! Maximum number of cuts passes in the search tree (with the exception of the root node). Default 1. */
+          INT_PARAM_THREADS                 = 9,  /*! Number of threads that can be used in the branch-and-bound method.*/
+          INT_PARAM_CUT_PASS                = 10, /*! Number of cut passes in the root node. Default -1, solver decides */
+          INT_PARAM_LOG_LEVEL               = 11, /*! Verbosity level, from 0 to 2 */
+          INT_PARAM_MAX_SAVED_SOLS          = 12, /*! Size of the pool to save the best solutions found during the search. */
+          INT_PARAM_MULTIPLE_ROOTS          = 13, /*! Multiple root passes to get additional cuts and solutions. */
+          INT_PARAM_ROUND_INT_VARS          = 14, /*! If integer variables should be round to remove small infeasibilities. This can increase the overall amount of infeasibilities in problems with both continuous and integer variables */
+          INT_PARAM_RANDOM_SEED             = 15, /*! When solving LP and MIP, randomization is used to break ties in some decisions. This changes the random seed so that multiple executions can produce different results */
+          INT_PARAM_ELAPSED_TIME            = 16, /*! When =1 use elapsed (wallclock) time, otherwise use CPU time */
+          INT_PARAM_CGRAPH                  = 17, /*! Conflict graph: controls if the conflict graph is created or not. 0: off, 1: auto, 2: on 3: fast weaker clique sep */
+          INT_PARAM_CLIQUE_MERGING          = 18, /*! Clique merging options: 0: off , 1 auto , 2 before solving LP, 3 after solving LP and pre-processing */
+          INT_PARAM_MAX_NODES_NOT_IMPROV_FS = 19, /*! Maximum number of nodes processed without improving best solution, after a feasible solution is found */
+        };
+        #define N_INT_PARAMS 20
+    
+        void Cbc_setIntParam(Cbc_Model *model, enum IntParam which, const int val);
+    
+        /*! Double parameters
+         * */
+        enum DblParam {
+          DBL_PARAM_PRIMAL_TOL              = 0,  /*! Tollerance to consider a solution feasible in the linear programming solver. */
+          DBL_PARAM_DUAL_TOL                = 1,  /*! Tollerance for a solution to be considered optimal in the linear programming solver. */
+          DBL_PARAM_ZERO_TOL                = 2,  /*! Coefficients less that this value will be ignored when reading instances */
+          DBL_PARAM_INT_TOL                 = 3,  /*! Maximum allowed distance from integer value for a variable to be considered integral */
+          DBL_PARAM_PRESOLVE_TOL            = 4,  /*! Tollerance used in the presolver, should be increased if the pre-solver is declaring infeasible a feasible problem */
+          DBL_PARAM_TIME_LIMIT              = 5,  /*! Time limit in seconds */
+          DBL_PARAM_PSI                     = 6,  /*! Two dimensional princing factor in the Positive Edge pivot strategy. */
+          DBL_PARAM_CUTOFF                  = 7,  /*! Only search for solutions with cost less-or-equal to this value. */
+          DBL_PARAM_ALLOWABLE_GAP           = 8,  /*! Allowable gap between the lower and upper bound to conclude the search */
+          DBL_PARAM_GAP_RATIO               = 9,   /*! Stops the search when the difference between the upper and lower bound is less than this fraction of the larger value */
+          DBL_PARAM_MAX_SECS_NOT_IMPROV_FS  = 10, /*! Maximum processing time without improving best solution, after a feasible solution is found */
+        };
+        #define N_DBL_PARAMS 11
+    
+        void Cbc_setDblParam(Cbc_Model *model, enum DblParam which, const double val);
+    
+        void Cbc_setParameter(Cbc_Model *model, const char *name,
+            const char *value);
+    
+        double Cbc_getCutoff(Cbc_Model *model);
+    
+        void Cbc_setCutoff(Cbc_Model *model, double cutoff);
+    
+        double Cbc_getAllowableGap(Cbc_Model *model);
+    
+        void Cbc_setAllowableGap(Cbc_Model *model, double allowedGap);
+    
+        double Cbc_getAllowableFractionGap(Cbc_Model *model);
+    
+        void Cbc_setAllowableFractionGap(Cbc_Model *model,
+            double allowedFracionGap);
+    
+        double Cbc_getAllowablePercentageGap(Cbc_Model *model);
+    
+        void Cbc_setAllowablePercentageGap(Cbc_Model *model,
+            double allowedPercentageGap);
+    
+        double Cbc_getMaximumSeconds(Cbc_Model *model);
+    
+        void Cbc_setMaximumSeconds(Cbc_Model *model, double maxSeconds);
+    
+        int Cbc_getMaximumNodes(Cbc_Model *model);
+    
+        void Cbc_setMaximumNodes(Cbc_Model *model, int maxNodes);
+    
+        int Cbc_getMaximumSolutions(Cbc_Model *model);
+    
+        void Cbc_setMaximumSolutions(Cbc_Model *model, int maxSolutions);
+    
+        int Cbc_getLogLevel(Cbc_Model *model);
+    
+        void Cbc_setLogLevel(Cbc_Model *model, int logLevel);
+    
+        double Cbc_getBestPossibleObjValue(Cbc_Model *model);
+    
+        void Cbc_setMIPStart(Cbc_Model *model, int count,
+            const char **colNames, const double colValues[]);
+    
+        void Cbc_setMIPStartI(Cbc_Model *model, int count, const int colIdxs[],
+            const double colValues[]);
+    
+        enum LPMethod {
+          LPM_Auto    = 0,  /*! Solver will decide automatically which method to use */
+          LPM_Dual    = 1,  /*! Dual simplex */
+          LPM_Primal  = 2,  /*! Primal simplex */
+          LPM_Barrier = 3   /*! The barrier algorithm. */
+        };
+    
+        void
+        Cbc_setLPmethod(Cbc_Model *model, enum LPMethod lpm );
+    
+        void Cbc_updateConflictGraph( Cbc_Model *model );
+    
+        const void *Cbc_conflictGraph( Cbc_Model *model );
+    
+        int Cbc_solve(Cbc_Model *model);
+    
+        int Cbc_solveLinearProgram(Cbc_Model *model);
+    
+        /*! Type of cutting plane */
+        enum CutType {
+          CT_Probing          =  0,  /*! Cuts generated evaluating the impact of fixing bounds for integer variables */
+          CT_Gomory           =  1,  /*! Gomory cuts obtained from the tableau, implemented by John Forrest  */
+          CT_GMI              =  2,  /*! Gomory cuts obtained from the tableau, implementation from Giacomo Nannicini focusing on safer cuts */
+          CT_LaGomory         =  3,  /*! Additional gomory cuts, simplification of 'A Relax-and-Cut Framework for Gomory's Mixed-Integer Cuts' by Matteo Fischetti &amp; Domenico Salvagnin */
+          CT_RedSplit         =  4,  /*! Reduce and split cuts, implemented by Francois Margot */
+          CT_RedSplitG        =  5,  /*! Reduce and split cuts, implemented by Giacomo Nannicini */
+          CT_FlowCover        =  6,  /*! Flow cover cuts */
+          CT_MIR              =  7,  /*! Mixed-integer rounding cuts */
+          CT_TwoMIR           =  8,  /*! Two-phase Mixed-integer rounding cuts */
+          CT_LaTwoMIR         =  9,  /*! Lagrangean relaxation for two-phase Mixed-integer rounding cuts, as in CT_LaGomory */
+          CT_LiftAndProject   = 10,  /*! Lift and project cuts */
+          CT_ResidualCapacity = 11,  /*! Residual capacity cuts */
+          CT_ZeroHalf         = 12,  /*! Zero-half cuts */
+          CT_Clique           = 13,  /*! Clique cuts */
+          CT_OddWheel         = 14,  /*! Lifted odd-hole inequalities */
+          CT_KnapsackCover    = 15,  /*! Knapsack cover cuts */
+        };
+    
+        void Cbc_generateCuts( Cbc_Model *cbcModel, enum CutType ct, void *oc, int depth, int pass );
+    
+        void Cbc_strengthenPacking(Cbc_Model *model);
+    
+        void Cbc_strengthenPackingRows(Cbc_Model *model, size_t n, const size_t rows[]);
+    
+        void *Cbc_getSolverPtr(Cbc_Model *model);
+    
+        void *Cbc_deleteModel(Cbc_Model *model);
+    
+        int Osi_getNumIntegers( void *osi );
+    
+        const double *Osi_getReducedCost( void *osi );
+    
+        const double *Osi_getObjCoefficients();
+    
+        double Osi_getObjSense();
+    
+        void *Osi_newSolver();
+    
+        void Osi_deleteSolver( void *osi );
+    
+        void Osi_initialSolve(void *osi);
+    
+        void Osi_resolve(void *osi);
+    
+        void Osi_branchAndBound(void *osi);
+    
+        char Osi_isAbandoned(void *osi);
+    
+        char Osi_isProvenOptimal(void *osi);
+    
+        char Osi_isProvenPrimalInfeasible(void *osi);
+    
+        char Osi_isProvenDualInfeasible(void *osi);
+    
+        char Osi_isPrimalObjectiveLimitReached(void *osi);
+    
+        char Osi_isDualObjectiveLimitReached(void *osi);
+    
+        char Osi_isIterationLimitReached(void *osi);
+    
+        double Osi_getObjValue( void *osi );
+    
+        void Osi_setColUpper (void *osi, int elementIndex, double ub);
+    
+        void Osi_setColLower(void *osi, int elementIndex, double lb);
+    
+        int Osi_getNumCols( void *osi );
+    
+        void Osi_getColName( void *osi, int i, char *name, int maxLen );
+    
+        const double *Osi_getColLower( void *osi );
+    
+        const double *Osi_getColUpper( void *osi );
+    
+        int Osi_isInteger( void *osi, int col );
+    
+        int Osi_getNumRows( void *osi );
+    
+        int Osi_getRowNz(void *osi, int row);
+    
+        const int *Osi_getRowIndices(void *osi, int row);
+    
+        const double *Osi_getRowCoeffs(void *osi, int row);
+    
+        double Osi_getRowRHS(void *osi, int row);
+    
+        char Osi_getRowSense(void *osi, int row);
+    
+        void Osi_setObjCoef(void *osi, int index, double obj);
+    
+        void Osi_setObjSense(void *osi, double sense);
+    
+        const double *Osi_getColSolution(void *osi);
+    
+        void *OsiCuts_new();
+    
+        void OsiCuts_addRowCut( void *osiCuts, int nz, const int *idx,
+            const double *coef, char sense, double rhs );
+    
+        void OsiCuts_addGlobalRowCut( void *osiCuts, int nz, const int *idx,
+            const double *coef, char sense, double rhs );
+    
+        int OsiCuts_sizeRowCuts( void *osiCuts );
+    
+        int OsiCuts_nzRowCut( void *osiCuts, int iRowCut );
+    
+        const int * OsiCuts_idxRowCut( void *osiCuts, int iRowCut );
+    
+        const double *OsiCuts_coefRowCut( void *osiCuts, int iRowCut );
+    
+        double OsiCuts_rhsRowCut( void *osiCuts, int iRowCut );
+    
+        char OsiCuts_senseRowCut( void *osiCuts, int iRowCut );
+    
+        void OsiCuts_delete( void *osiCuts );
+    
+        void Osi_addCol(void *osi, const char *name, double lb, double ub,
+           double obj, char isInteger, int nz, int *rows, double *coefs);
+    
+        void Osi_addRow(void *osi, const char *name, int nz,
+            const int *cols, const double *coefs, char sense, double rhs);
+    
+        void Cbc_deleteRows(Cbc_Model *model, int numRows, const int rows[]);
+    
+        void Cbc_deleteCols(Cbc_Model *model, int numCols, const int cols[]);
+    
+        void Cbc_storeNameIndexes(Cbc_Model *model, char _store);
+    
+        int Cbc_getColNameIndex(Cbc_Model *model, const char *name);
+    
+        int Cbc_getRowNameIndex(Cbc_Model *model, const char *name);
+    
+        void Cbc_problemName(Cbc_Model *model, int maxNumberCharacters,
+                             char *array);
+    
+        int Cbc_setProblemName(Cbc_Model *model, const char *array);
+    
+        double Cbc_getPrimalTolerance(Cbc_Model *model);
+    
+        void Cbc_setPrimalTolerance(Cbc_Model *model, double tol);
+    
+        double Cbc_getDualTolerance(Cbc_Model *model);
+    
+        void Cbc_setDualTolerance(Cbc_Model *model, double tol);
+    
+        void Cbc_addCutCallback(Cbc_Model *model, cbc_cut_callback cutcb,
+            const char *name, void *appData, int howOften, char atSolution );
+    
+        void Cbc_addIncCallback(
+            void *model, cbc_incumbent_callback inccb,
+            void *appData );
+    
+        void Cbc_registerCallBack(Cbc_Model *model,
+            cbc_callback userCallBack);
+    
+        void Cbc_addProgrCallback(void *model,
+            cbc_progress_callback prgcbc, void *appData);
+    
+        void Cbc_clearCallBack(Cbc_Model *model);
+    
+        const double *Cbc_getRowPrice(Cbc_Model *model);
+    
+        const double *Osi_getRowPrice(void *osi);
+    
+        double Osi_getIntegerTolerance(void *osi);
+    
+        void Osi_checkCGraph( void *osi );
+    
+        const void * Osi_CGraph( void *osi );
+    
+        size_t CG_nodes( void *cgraph );
+    
+        char CG_conflicting( void *cgraph, int n1, int n2 );
+    
+        double CG_density( void *cgraph );
+    
+        typedef struct {
+          size_t n;
+          const size_t *neigh;
+        } CGNeighbors;
+    
+        CGNeighbors CG_conflictingNodes(Cbc_Model *model, void *cgraph, size_t node);
+    
+        void Cbc_computeFeatures(Cbc_Model *model, double *features);
+    
+        int Cbc_nFeatures();
+    
+        const char *Cbc_featureName(int i);
+        """
+        )
+    
+    CHAR_ONE = "{}".format(chr(1)).encode("utf-8")
+    CHAR_ZERO = "\0".encode("utf-8")
+    
+    
+    DBL_PARAM_PRIMAL_TOL = 0
+    DBL_PARAM_DUAL_TOL = 1
+    DBL_PARAM_ZERO_TOL = 2
+    DBL_PARAM_INT_TOL = 3
+    DBL_PARAM_PRESOLVE_TOL = 4
+    DBL_PARAM_TIME_LIMIT = 5
+    DBL_PARAM_PSI = 6
+    DBL_PARAM_CUTOFF = 7
+    DBL_PARAM_ALLOWABLE_GAP = 8
+    DBL_PARAM_GAP_RATIO = 9
+    DBL_PARAM_MAX_SECS_NOT_IMPROV_FS = 10
+    
+    INT_PARAM_PERT_VALUE = 0
+    INT_PARAM_IDIOT = 1
+    INT_PARAM_STRONG_BRANCHING = 2
+    INT_PARAM_CUT_DEPTH = 3
+    INT_PARAM_MAX_NODES = 4
+    INT_PARAM_NUMBER_BEFORE = 5
+    INT_PARAM_FPUMP_ITS = 6
+    INT_PARAM_MAX_SOLS = 7
+    INT_PARAM_CUT_PASS_IN_TREE = 8
+    INT_PARAM_THREADS = 9
+    INT_PARAM_CUT_PASS = 10
+    INT_PARAM_LOG_LEVEL = 11
+    INT_PARAM_MAX_SAVED_SOLS = 12
+    INT_PARAM_MULTIPLE_ROOTS = 13
+    INT_PARAM_ROUND_INT_VARS = 14
+    INT_PARAM_RANDOM_SEED = 15
+    INT_PARAM_ELAPSED_TIME = 16
+    INT_PARAM_CGRAPH = 17
+    INT_PARAM_CLIQUE_MERGING = 18
+    INT_PARAM_MAX_NODES_NOT_IMPROV_FS = 19
+    
+    
+&gt;   Osi_getNumCols = cbclib.Osi_getNumCols
+                     ^^^^^^
+E   NameError: name 'cbclib' is not defined
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/.venv/lib/python3.11/site-packages/mip/cbc.py:600: NameError</failure></testcase><testcase classname="tests.test_mip_solver.TestMIPCQMSolver" name="test_quadratic" time="0.002"><failure message="NameError: name 'cbclib' is not defined">self = &lt;tests.test_mip_solver.TestMIPCQMSolver testMethod=test_quadratic&gt;
+
+    def test_quadratic(self):
+        cqm = dimod.ConstrainedQuadraticModel()
+    
+        i, j = dimod.Integers('ij')
+    
+        cqm.add_constraint(i*j &lt;= 5)
+    
+        with self.assertRaises(ValueError):
+&gt;           MIPCQMSolver().sample_cqm(cqm)
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_mip_solver.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/mip_solver.py:74: in sample_cqm
+    model = mip.Model()
+            ^^^^^^^^^^^
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/.venv/lib/python3.11/site-packages/mip/model.py:98: in __init__
+    import mip.cbc
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Python-MIP interface to the COIN-OR Branch-and-Cut solver CBC"""
+    
+    import logging
+    from typing import Dict, List, Tuple, Optional, Union
+    from sys import platform, maxsize
+    from os.path import dirname, isfile, exists
+    import os
+    import multiprocessing as multip
+    import numbers
+    from cffi import FFI
+    from mip.model import xsum
+    import mip
+    from mip.lists import EmptyVarSol, EmptyRowSol
+    from mip.exceptions import (
+        ParameterNotAvailable,
+        InvalidParameter,
+        MipBaseException,
+    )
+    from mip import (
+        Model,
+        Var,
+        Constr,
+        Column,
+        LinExpr,
+        VConstrList,
+        VVarList,
+        Solver,
+        MAXIMIZE,
+        SearchEmphasis,
+        CONTINUOUS,
+        BINARY,
+        INTEGER,
+        MINIMIZE,
+        EQUAL,
+        LESS_OR_EQUAL,
+        GREATER_OR_EQUAL,
+        OptimizationStatus,
+        LP_Method,
+        CutType,
+        CutPool,
+    )
+    
+    logger = logging.getLogger(__name__)
+    warningMessages = 0
+    
+    ffi = FFI()
+    has_cbc = False
+    os_is_64_bit = maxsize &gt; 2 ** 32
+    INF = float("inf")
+    cut_idx = 0
+    
+    # for variables and rows
+    MAX_NAME_SIZE = 512
+    
+    DEF_PUMPP = 30
+    
+    try:
+        pathmip = dirname(mip.__file__)
+        pathlib = os.path.join(pathmip, "libraries")
+        libfile = ""
+        # if user wants to force the loading of an specific CBC library
+        # (for debugging purposes, for example)
+        if "PMIP_CBC_LIBRARY" in os.environ:
+            libfile = os.environ["PMIP_CBC_LIBRARY"]
+            pathlib = dirname(libfile)
+    
+            if platform.lower().startswith("win"):
+                if pathlib not in os.environ["PATH"]:
+                    os.environ["PATH"] += ";" + pathlib
+        else:
+            if "linux" in platform.lower():
+                if os_is_64_bit:
+                    pathlibe = os.path.join(pathlib, "lin64")
+                    libfile = os.path.join(pathlibe, "libCbcSolver.so")
+                    if not exists(libfile):
+                        pathlibe = pathlib
+                        libfile = os.path.join(pathlib, "cbc-c-linux-x86-64.so")
+                    pathlib = pathlibe
+                else:
+                    raise NotImplementedError("Linux 32 bits platform not supported.")
+            elif platform.lower().startswith("win"):
+                if os_is_64_bit:
+                    pathlibe = os.path.join(pathlib, "win64")
+                    libfile = os.path.join(pathlibe, "libCbcSolver-0.dll")
+                    if exists(libfile):
+                        if pathlibe not in os.environ["PATH"]:
+                            os.environ["PATH"] = pathlibe + ";" + os.environ["PATH"]
+                    else:
+                        pathlibe = pathlib
+                        libfile = os.path.join(pathlibe, "cbc-c-windows-x86-64.dll")
+                        if pathlibe not in os.environ["PATH"]:
+                            os.environ["PATH"] = pathlibe + ";" + os.environ["PATH"]
+                    pathlib = pathlibe
+    
+                else:
+                    raise NotImplementedError("Win32 platform not supported.")
+            elif platform.lower().startswith("darwin") or platform.lower().startswith(
+                "macos"
+            ):
+                if os_is_64_bit:
+                    libfile = os.path.join(pathlib, "cbc-c-darwin-x86-64.dylib")
+            if not libfile:
+                raise NotImplementedError("You operating system/platform is not supported")
+        old_dir = os.getcwd()
+        os.chdir(pathlib)
+        cbclib = ffi.dlopen(libfile)
+        os.chdir(old_dir)
+        has_cbc = True
+    except Exception as e:
+        logger.error("An error occurred while loading the CBC library:\t " "{}\n".format(e))
+        has_cbc = False
+    
+    if has_cbc:
+        ffi.cdef(
+            """
+        typedef int(*cbc_progress_callback)(void *model,
+                                            int phase,
+                                            int step,
+                                            const char *phaseName,
+                                            double seconds,
+                                            double lb,
+                                            double ub,
+                                            int nint,
+                                            int *vecint,
+                                            void *cbData
+                                            );
+    
+        typedef void(*cbc_callback)(void *model, int msgno, int ndouble,
+            const double *dvec, int nint, const int *ivec,
+            int nchar, char **cvec);
+    
+        typedef void(*cbc_cut_callback)(void *osiSolver, void *osiCuts, void *appdata, int level, int npass);
+    
+        typedef int (*cbc_incumbent_callback)(void *cbcModel,
+            double obj, int nz,
+            char **vnames, double *x, void *appData);
+    
+        typedef void Cbc_Model;
+    
+        void *Cbc_newModel();
+    
+        void Cbc_readLp(Cbc_Model *model, const char *file);
+    
+        int Cbc_readBasis(Cbc_Model *model, const char *filename);
+    
+        int Cbc_writeBasis(Cbc_Model *model, const char *filename, char
+            writeValues, int formatType);
+    
+        void Cbc_readMps(Cbc_Model *model, const char *file);
+    
+        char Cbc_supportsGzip();
+    
+        char Cbc_supportsBzip2();
+    
+        void Cbc_writeLp(Cbc_Model *model, const char *file);
+    
+        void Cbc_writeMps(Cbc_Model *model, const char *file);
+    
+        int Cbc_getNumCols(Cbc_Model *model);
+    
+        int Cbc_getNumRows(Cbc_Model *model);
+    
+        int Cbc_getNumIntegers(Cbc_Model *model);
+    
+        int Cbc_getNumElements(Cbc_Model *model);
+    
+        int Cbc_getRowNz(Cbc_Model *model, int row);
+    
+        int *Cbc_getRowIndices(Cbc_Model *model, int row);
+    
+        double *Cbc_getRowCoeffs(Cbc_Model *model, int row);
+    
+        double Cbc_getRowRHS(Cbc_Model *model, int row);
+    
+        void Cbc_setRowRHS(Cbc_Model *model, int row, double rhs);
+    
+        char Cbc_getRowSense(Cbc_Model *model, int row);
+    
+        const double *Cbc_getRowActivity(Cbc_Model *model);
+    
+        const double *Cbc_getRowSlack(Cbc_Model *model);
+    
+        int Cbc_getColNz(Cbc_Model *model, int col);
+    
+        int *Cbc_getColIndices(Cbc_Model *model, int col);
+    
+        double *Cbc_getColCoeffs(Cbc_Model *model, int col);
+    
+        void Cbc_addCol(Cbc_Model *model, const char *name,
+            double lb, double ub, double obj, char isInteger,
+            int nz, int *rows, double *coefs);
+    
+        void Cbc_addRow(Cbc_Model *model, const char *name, int nz,
+            const int *cols, const double *coefs, char sense, double rhs);
+    
+        void Cbc_addLazyConstraint(Cbc_Model *model, int nz,
+            int *cols, double *coefs, char sense, double rhs);
+    
+        void Cbc_addSOS(Cbc_Model *model, int numRows, const int *rowStarts,
+            const int *colIndices, const double *weights, const int type);
+    
+        int Cbc_numberSOS(Cbc_Model *model);
+    
+        void Cbc_setObjCoeff(Cbc_Model *model, int index, double value);
+    
+        double Cbc_getObjSense(Cbc_Model *model);
+    
+        const double *Cbc_getObjCoefficients(Cbc_Model *model);
+    
+        const double *Cbc_getColSolution(Cbc_Model *model);
+    
+        const double *Cbc_getReducedCost(Cbc_Model *model);
+    
+        double *Cbc_bestSolution(Cbc_Model *model);
+    
+        int Cbc_numberSavedSolutions(Cbc_Model *model);
+    
+        const double *Cbc_savedSolution(Cbc_Model *model, int whichSol);
+    
+        double Cbc_savedSolutionObj(Cbc_Model *model, int whichSol);
+    
+        double Cbc_getObjValue(Cbc_Model *model);
+    
+        void Cbc_setObjSense(Cbc_Model *model, double sense);
+    
+        int Cbc_isProvenOptimal(Cbc_Model *model);
+    
+        int Cbc_isProvenInfeasible(Cbc_Model *model);
+    
+        int Cbc_isContinuousUnbounded(Cbc_Model *model);
+    
+        int Cbc_isAbandoned(Cbc_Model *model);
+    
+        const double *Cbc_getColLower(Cbc_Model *model);
+    
+        const double *Cbc_getColUpper(Cbc_Model *model);
+    
+        double Cbc_getColObj(Cbc_Model *model, int colIdx);
+    
+        double Cbc_getColLB(Cbc_Model *model, int colIdx);
+    
+        double Cbc_getColUB(Cbc_Model *model, int colIdx);
+    
+        void Cbc_setColLower(Cbc_Model *model, int index, double value);
+    
+        void Cbc_setColUpper(Cbc_Model *model, int index, double value);
+    
+        int Cbc_isInteger(Cbc_Model *model, int i);
+    
+        void Cbc_getColName(Cbc_Model *model,
+            int iColumn, char *name, size_t maxLength);
+    
+        void Cbc_getRowName(Cbc_Model *model,
+            int iRow, char *name, size_t maxLength);
+    
+        void Cbc_setContinuous(Cbc_Model *model, int iColumn);
+    
+        void Cbc_setInteger(Cbc_Model *model, int iColumn);
+    
+        /*! Integer parameters */
+        enum IntParam {
+          INT_PARAM_PERT_VALUE              = 0,  /*! Method of perturbation, -5000 to 102, default 50 */
+          INT_PARAM_IDIOT                   = 1,  /*! Parameter of the "idiot" method to try to produce an initial feasible basis. -1 let the solver decide if this should be applied; 0 deactivates it and &gt;0 sets number of passes. */
+          INT_PARAM_STRONG_BRANCHING        = 2,  /*! Number of variables to be evaluated in strong branching. */
+          INT_PARAM_CUT_DEPTH               = 3,  /*! Sets the application of cuts to every depth multiple of this value. -1, the default value, let the solve decide. */
+          INT_PARAM_MAX_NODES               = 4,  /*! Maximum number of nodes to be explored in the search tree */
+          INT_PARAM_NUMBER_BEFORE           = 5,  /*! Number of branches before trusting pseudocodes computed in strong branching. */
+          INT_PARAM_FPUMP_ITS               = 6,  /*! Maximum number of iterations in the feasibility pump method. */
+          INT_PARAM_MAX_SOLS                = 7,  /*! Maximum number of solutions generated during the search. Stops the search when this number of solutions is found. */
+          INT_PARAM_CUT_PASS_IN_TREE        = 8,  /*! Maximum number of cuts passes in the search tree (with the exception of the root node). Default 1. */
+          INT_PARAM_THREADS                 = 9,  /*! Number of threads that can be used in the branch-and-bound method.*/
+          INT_PARAM_CUT_PASS                = 10, /*! Number of cut passes in the root node. Default -1, solver decides */
+          INT_PARAM_LOG_LEVEL               = 11, /*! Verbosity level, from 0 to 2 */
+          INT_PARAM_MAX_SAVED_SOLS          = 12, /*! Size of the pool to save the best solutions found during the search. */
+          INT_PARAM_MULTIPLE_ROOTS          = 13, /*! Multiple root passes to get additional cuts and solutions. */
+          INT_PARAM_ROUND_INT_VARS          = 14, /*! If integer variables should be round to remove small infeasibilities. This can increase the overall amount of infeasibilities in problems with both continuous and integer variables */
+          INT_PARAM_RANDOM_SEED             = 15, /*! When solving LP and MIP, randomization is used to break ties in some decisions. This changes the random seed so that multiple executions can produce different results */
+          INT_PARAM_ELAPSED_TIME            = 16, /*! When =1 use elapsed (wallclock) time, otherwise use CPU time */
+          INT_PARAM_CGRAPH                  = 17, /*! Conflict graph: controls if the conflict graph is created or not. 0: off, 1: auto, 2: on 3: fast weaker clique sep */
+          INT_PARAM_CLIQUE_MERGING          = 18, /*! Clique merging options: 0: off , 1 auto , 2 before solving LP, 3 after solving LP and pre-processing */
+          INT_PARAM_MAX_NODES_NOT_IMPROV_FS = 19, /*! Maximum number of nodes processed without improving best solution, after a feasible solution is found */
+        };
+        #define N_INT_PARAMS 20
+    
+        void Cbc_setIntParam(Cbc_Model *model, enum IntParam which, const int val);
+    
+        /*! Double parameters
+         * */
+        enum DblParam {
+          DBL_PARAM_PRIMAL_TOL              = 0,  /*! Tollerance to consider a solution feasible in the linear programming solver. */
+          DBL_PARAM_DUAL_TOL                = 1,  /*! Tollerance for a solution to be considered optimal in the linear programming solver. */
+          DBL_PARAM_ZERO_TOL                = 2,  /*! Coefficients less that this value will be ignored when reading instances */
+          DBL_PARAM_INT_TOL                 = 3,  /*! Maximum allowed distance from integer value for a variable to be considered integral */
+          DBL_PARAM_PRESOLVE_TOL            = 4,  /*! Tollerance used in the presolver, should be increased if the pre-solver is declaring infeasible a feasible problem */
+          DBL_PARAM_TIME_LIMIT              = 5,  /*! Time limit in seconds */
+          DBL_PARAM_PSI                     = 6,  /*! Two dimensional princing factor in the Positive Edge pivot strategy. */
+          DBL_PARAM_CUTOFF                  = 7,  /*! Only search for solutions with cost less-or-equal to this value. */
+          DBL_PARAM_ALLOWABLE_GAP           = 8,  /*! Allowable gap between the lower and upper bound to conclude the search */
+          DBL_PARAM_GAP_RATIO               = 9,   /*! Stops the search when the difference between the upper and lower bound is less than this fraction of the larger value */
+          DBL_PARAM_MAX_SECS_NOT_IMPROV_FS  = 10, /*! Maximum processing time without improving best solution, after a feasible solution is found */
+        };
+        #define N_DBL_PARAMS 11
+    
+        void Cbc_setDblParam(Cbc_Model *model, enum DblParam which, const double val);
+    
+        void Cbc_setParameter(Cbc_Model *model, const char *name,
+            const char *value);
+    
+        double Cbc_getCutoff(Cbc_Model *model);
+    
+        void Cbc_setCutoff(Cbc_Model *model, double cutoff);
+    
+        double Cbc_getAllowableGap(Cbc_Model *model);
+    
+        void Cbc_setAllowableGap(Cbc_Model *model, double allowedGap);
+    
+        double Cbc_getAllowableFractionGap(Cbc_Model *model);
+    
+        void Cbc_setAllowableFractionGap(Cbc_Model *model,
+            double allowedFracionGap);
+    
+        double Cbc_getAllowablePercentageGap(Cbc_Model *model);
+    
+        void Cbc_setAllowablePercentageGap(Cbc_Model *model,
+            double allowedPercentageGap);
+    
+        double Cbc_getMaximumSeconds(Cbc_Model *model);
+    
+        void Cbc_setMaximumSeconds(Cbc_Model *model, double maxSeconds);
+    
+        int Cbc_getMaximumNodes(Cbc_Model *model);
+    
+        void Cbc_setMaximumNodes(Cbc_Model *model, int maxNodes);
+    
+        int Cbc_getMaximumSolutions(Cbc_Model *model);
+    
+        void Cbc_setMaximumSolutions(Cbc_Model *model, int maxSolutions);
+    
+        int Cbc_getLogLevel(Cbc_Model *model);
+    
+        void Cbc_setLogLevel(Cbc_Model *model, int logLevel);
+    
+        double Cbc_getBestPossibleObjValue(Cbc_Model *model);
+    
+        void Cbc_setMIPStart(Cbc_Model *model, int count,
+            const char **colNames, const double colValues[]);
+    
+        void Cbc_setMIPStartI(Cbc_Model *model, int count, const int colIdxs[],
+            const double colValues[]);
+    
+        enum LPMethod {
+          LPM_Auto    = 0,  /*! Solver will decide automatically which method to use */
+          LPM_Dual    = 1,  /*! Dual simplex */
+          LPM_Primal  = 2,  /*! Primal simplex */
+          LPM_Barrier = 3   /*! The barrier algorithm. */
+        };
+    
+        void
+        Cbc_setLPmethod(Cbc_Model *model, enum LPMethod lpm );
+    
+        void Cbc_updateConflictGraph( Cbc_Model *model );
+    
+        const void *Cbc_conflictGraph( Cbc_Model *model );
+    
+        int Cbc_solve(Cbc_Model *model);
+    
+        int Cbc_solveLinearProgram(Cbc_Model *model);
+    
+        /*! Type of cutting plane */
+        enum CutType {
+          CT_Probing          =  0,  /*! Cuts generated evaluating the impact of fixing bounds for integer variables */
+          CT_Gomory           =  1,  /*! Gomory cuts obtained from the tableau, implemented by John Forrest  */
+          CT_GMI              =  2,  /*! Gomory cuts obtained from the tableau, implementation from Giacomo Nannicini focusing on safer cuts */
+          CT_LaGomory         =  3,  /*! Additional gomory cuts, simplification of 'A Relax-and-Cut Framework for Gomory's Mixed-Integer Cuts' by Matteo Fischetti &amp; Domenico Salvagnin */
+          CT_RedSplit         =  4,  /*! Reduce and split cuts, implemented by Francois Margot */
+          CT_RedSplitG        =  5,  /*! Reduce and split cuts, implemented by Giacomo Nannicini */
+          CT_FlowCover        =  6,  /*! Flow cover cuts */
+          CT_MIR              =  7,  /*! Mixed-integer rounding cuts */
+          CT_TwoMIR           =  8,  /*! Two-phase Mixed-integer rounding cuts */
+          CT_LaTwoMIR         =  9,  /*! Lagrangean relaxation for two-phase Mixed-integer rounding cuts, as in CT_LaGomory */
+          CT_LiftAndProject   = 10,  /*! Lift and project cuts */
+          CT_ResidualCapacity = 11,  /*! Residual capacity cuts */
+          CT_ZeroHalf         = 12,  /*! Zero-half cuts */
+          CT_Clique           = 13,  /*! Clique cuts */
+          CT_OddWheel         = 14,  /*! Lifted odd-hole inequalities */
+          CT_KnapsackCover    = 15,  /*! Knapsack cover cuts */
+        };
+    
+        void Cbc_generateCuts( Cbc_Model *cbcModel, enum CutType ct, void *oc, int depth, int pass );
+    
+        void Cbc_strengthenPacking(Cbc_Model *model);
+    
+        void Cbc_strengthenPackingRows(Cbc_Model *model, size_t n, const size_t rows[]);
+    
+        void *Cbc_getSolverPtr(Cbc_Model *model);
+    
+        void *Cbc_deleteModel(Cbc_Model *model);
+    
+        int Osi_getNumIntegers( void *osi );
+    
+        const double *Osi_getReducedCost( void *osi );
+    
+        const double *Osi_getObjCoefficients();
+    
+        double Osi_getObjSense();
+    
+        void *Osi_newSolver();
+    
+        void Osi_deleteSolver( void *osi );
+    
+        void Osi_initialSolve(void *osi);
+    
+        void Osi_resolve(void *osi);
+    
+        void Osi_branchAndBound(void *osi);
+    
+        char Osi_isAbandoned(void *osi);
+    
+        char Osi_isProvenOptimal(void *osi);
+    
+        char Osi_isProvenPrimalInfeasible(void *osi);
+    
+        char Osi_isProvenDualInfeasible(void *osi);
+    
+        char Osi_isPrimalObjectiveLimitReached(void *osi);
+    
+        char Osi_isDualObjectiveLimitReached(void *osi);
+    
+        char Osi_isIterationLimitReached(void *osi);
+    
+        double Osi_getObjValue( void *osi );
+    
+        void Osi_setColUpper (void *osi, int elementIndex, double ub);
+    
+        void Osi_setColLower(void *osi, int elementIndex, double lb);
+    
+        int Osi_getNumCols( void *osi );
+    
+        void Osi_getColName( void *osi, int i, char *name, int maxLen );
+    
+        const double *Osi_getColLower( void *osi );
+    
+        const double *Osi_getColUpper( void *osi );
+    
+        int Osi_isInteger( void *osi, int col );
+    
+        int Osi_getNumRows( void *osi );
+    
+        int Osi_getRowNz(void *osi, int row);
+    
+        const int *Osi_getRowIndices(void *osi, int row);
+    
+        const double *Osi_getRowCoeffs(void *osi, int row);
+    
+        double Osi_getRowRHS(void *osi, int row);
+    
+        char Osi_getRowSense(void *osi, int row);
+    
+        void Osi_setObjCoef(void *osi, int index, double obj);
+    
+        void Osi_setObjSense(void *osi, double sense);
+    
+        const double *Osi_getColSolution(void *osi);
+    
+        void *OsiCuts_new();
+    
+        void OsiCuts_addRowCut( void *osiCuts, int nz, const int *idx,
+            const double *coef, char sense, double rhs );
+    
+        void OsiCuts_addGlobalRowCut( void *osiCuts, int nz, const int *idx,
+            const double *coef, char sense, double rhs );
+    
+        int OsiCuts_sizeRowCuts( void *osiCuts );
+    
+        int OsiCuts_nzRowCut( void *osiCuts, int iRowCut );
+    
+        const int * OsiCuts_idxRowCut( void *osiCuts, int iRowCut );
+    
+        const double *OsiCuts_coefRowCut( void *osiCuts, int iRowCut );
+    
+        double OsiCuts_rhsRowCut( void *osiCuts, int iRowCut );
+    
+        char OsiCuts_senseRowCut( void *osiCuts, int iRowCut );
+    
+        void OsiCuts_delete( void *osiCuts );
+    
+        void Osi_addCol(void *osi, const char *name, double lb, double ub,
+           double obj, char isInteger, int nz, int *rows, double *coefs);
+    
+        void Osi_addRow(void *osi, const char *name, int nz,
+            const int *cols, const double *coefs, char sense, double rhs);
+    
+        void Cbc_deleteRows(Cbc_Model *model, int numRows, const int rows[]);
+    
+        void Cbc_deleteCols(Cbc_Model *model, int numCols, const int cols[]);
+    
+        void Cbc_storeNameIndexes(Cbc_Model *model, char _store);
+    
+        int Cbc_getColNameIndex(Cbc_Model *model, const char *name);
+    
+        int Cbc_getRowNameIndex(Cbc_Model *model, const char *name);
+    
+        void Cbc_problemName(Cbc_Model *model, int maxNumberCharacters,
+                             char *array);
+    
+        int Cbc_setProblemName(Cbc_Model *model, const char *array);
+    
+        double Cbc_getPrimalTolerance(Cbc_Model *model);
+    
+        void Cbc_setPrimalTolerance(Cbc_Model *model, double tol);
+    
+        double Cbc_getDualTolerance(Cbc_Model *model);
+    
+        void Cbc_setDualTolerance(Cbc_Model *model, double tol);
+    
+        void Cbc_addCutCallback(Cbc_Model *model, cbc_cut_callback cutcb,
+            const char *name, void *appData, int howOften, char atSolution );
+    
+        void Cbc_addIncCallback(
+            void *model, cbc_incumbent_callback inccb,
+            void *appData );
+    
+        void Cbc_registerCallBack(Cbc_Model *model,
+            cbc_callback userCallBack);
+    
+        void Cbc_addProgrCallback(void *model,
+            cbc_progress_callback prgcbc, void *appData);
+    
+        void Cbc_clearCallBack(Cbc_Model *model);
+    
+        const double *Cbc_getRowPrice(Cbc_Model *model);
+    
+        const double *Osi_getRowPrice(void *osi);
+    
+        double Osi_getIntegerTolerance(void *osi);
+    
+        void Osi_checkCGraph( void *osi );
+    
+        const void * Osi_CGraph( void *osi );
+    
+        size_t CG_nodes( void *cgraph );
+    
+        char CG_conflicting( void *cgraph, int n1, int n2 );
+    
+        double CG_density( void *cgraph );
+    
+        typedef struct {
+          size_t n;
+          const size_t *neigh;
+        } CGNeighbors;
+    
+        CGNeighbors CG_conflictingNodes(Cbc_Model *model, void *cgraph, size_t node);
+    
+        void Cbc_computeFeatures(Cbc_Model *model, double *features);
+    
+        int Cbc_nFeatures();
+    
+        const char *Cbc_featureName(int i);
+        """
+        )
+    
+    CHAR_ONE = "{}".format(chr(1)).encode("utf-8")
+    CHAR_ZERO = "\0".encode("utf-8")
+    
+    
+    DBL_PARAM_PRIMAL_TOL = 0
+    DBL_PARAM_DUAL_TOL = 1
+    DBL_PARAM_ZERO_TOL = 2
+    DBL_PARAM_INT_TOL = 3
+    DBL_PARAM_PRESOLVE_TOL = 4
+    DBL_PARAM_TIME_LIMIT = 5
+    DBL_PARAM_PSI = 6
+    DBL_PARAM_CUTOFF = 7
+    DBL_PARAM_ALLOWABLE_GAP = 8
+    DBL_PARAM_GAP_RATIO = 9
+    DBL_PARAM_MAX_SECS_NOT_IMPROV_FS = 10
+    
+    INT_PARAM_PERT_VALUE = 0
+    INT_PARAM_IDIOT = 1
+    INT_PARAM_STRONG_BRANCHING = 2
+    INT_PARAM_CUT_DEPTH = 3
+    INT_PARAM_MAX_NODES = 4
+    INT_PARAM_NUMBER_BEFORE = 5
+    INT_PARAM_FPUMP_ITS = 6
+    INT_PARAM_MAX_SOLS = 7
+    INT_PARAM_CUT_PASS_IN_TREE = 8
+    INT_PARAM_THREADS = 9
+    INT_PARAM_CUT_PASS = 10
+    INT_PARAM_LOG_LEVEL = 11
+    INT_PARAM_MAX_SAVED_SOLS = 12
+    INT_PARAM_MULTIPLE_ROOTS = 13
+    INT_PARAM_ROUND_INT_VARS = 14
+    INT_PARAM_RANDOM_SEED = 15
+    INT_PARAM_ELAPSED_TIME = 16
+    INT_PARAM_CGRAPH = 17
+    INT_PARAM_CLIQUE_MERGING = 18
+    INT_PARAM_MAX_NODES_NOT_IMPROV_FS = 19
+    
+    
+&gt;   Osi_getNumCols = cbclib.Osi_getNumCols
+                     ^^^^^^
+E   NameError: name 'cbclib' is not defined
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/.venv/lib/python3.11/site-packages/mip/cbc.py:600: NameError</failure></testcase><testcase classname="tests.test_mip_solver.TestMIPCQMSolver" name="test_vartypes" time="0.002"><failure message="NameError: name 'cbclib' is not defined">self = &lt;tests.test_mip_solver.TestMIPCQMSolver testMethod=test_vartypes&gt;
+
+    def test_vartypes(self):
+    
+        cqm = dimod.ConstrainedQuadraticModel()
+    
+        i = dimod.Integer('i')
+        a = dimod.Real('a')
+        x = dimod.Binary('x')
+        s = dimod.Spin('s')
+    
+        cqm.set_objective(-i - a - x)
+        cqm.add_constraint(i &lt;= 5.5)
+        cqm.add_constraint(a &lt;= 6.5)
+        cqm.add_constraint(x &lt;= 7.5)
+    
+&gt;       sampleset = MIPCQMSolver().sample_cqm(cqm)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_mip_solver.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/mip_solver.py:74: in sample_cqm
+    model = mip.Model()
+            ^^^^^^^^^^^
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/.venv/lib/python3.11/site-packages/mip/model.py:98: in __init__
+    import mip.cbc
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """Python-MIP interface to the COIN-OR Branch-and-Cut solver CBC"""
+    
+    import logging
+    from typing import Dict, List, Tuple, Optional, Union
+    from sys import platform, maxsize
+    from os.path import dirname, isfile, exists
+    import os
+    import multiprocessing as multip
+    import numbers
+    from cffi import FFI
+    from mip.model import xsum
+    import mip
+    from mip.lists import EmptyVarSol, EmptyRowSol
+    from mip.exceptions import (
+        ParameterNotAvailable,
+        InvalidParameter,
+        MipBaseException,
+    )
+    from mip import (
+        Model,
+        Var,
+        Constr,
+        Column,
+        LinExpr,
+        VConstrList,
+        VVarList,
+        Solver,
+        MAXIMIZE,
+        SearchEmphasis,
+        CONTINUOUS,
+        BINARY,
+        INTEGER,
+        MINIMIZE,
+        EQUAL,
+        LESS_OR_EQUAL,
+        GREATER_OR_EQUAL,
+        OptimizationStatus,
+        LP_Method,
+        CutType,
+        CutPool,
+    )
+    
+    logger = logging.getLogger(__name__)
+    warningMessages = 0
+    
+    ffi = FFI()
+    has_cbc = False
+    os_is_64_bit = maxsize &gt; 2 ** 32
+    INF = float("inf")
+    cut_idx = 0
+    
+    # for variables and rows
+    MAX_NAME_SIZE = 512
+    
+    DEF_PUMPP = 30
+    
+    try:
+        pathmip = dirname(mip.__file__)
+        pathlib = os.path.join(pathmip, "libraries")
+        libfile = ""
+        # if user wants to force the loading of an specific CBC library
+        # (for debugging purposes, for example)
+        if "PMIP_CBC_LIBRARY" in os.environ:
+            libfile = os.environ["PMIP_CBC_LIBRARY"]
+            pathlib = dirname(libfile)
+    
+            if platform.lower().startswith("win"):
+                if pathlib not in os.environ["PATH"]:
+                    os.environ["PATH"] += ";" + pathlib
+        else:
+            if "linux" in platform.lower():
+                if os_is_64_bit:
+                    pathlibe = os.path.join(pathlib, "lin64")
+                    libfile = os.path.join(pathlibe, "libCbcSolver.so")
+                    if not exists(libfile):
+                        pathlibe = pathlib
+                        libfile = os.path.join(pathlib, "cbc-c-linux-x86-64.so")
+                    pathlib = pathlibe
+                else:
+                    raise NotImplementedError("Linux 32 bits platform not supported.")
+            elif platform.lower().startswith("win"):
+                if os_is_64_bit:
+                    pathlibe = os.path.join(pathlib, "win64")
+                    libfile = os.path.join(pathlibe, "libCbcSolver-0.dll")
+                    if exists(libfile):
+                        if pathlibe not in os.environ["PATH"]:
+                            os.environ["PATH"] = pathlibe + ";" + os.environ["PATH"]
+                    else:
+                        pathlibe = pathlib
+                        libfile = os.path.join(pathlibe, "cbc-c-windows-x86-64.dll")
+                        if pathlibe not in os.environ["PATH"]:
+                            os.environ["PATH"] = pathlibe + ";" + os.environ["PATH"]
+                    pathlib = pathlibe
+    
+                else:
+                    raise NotImplementedError("Win32 platform not supported.")
+            elif platform.lower().startswith("darwin") or platform.lower().startswith(
+                "macos"
+            ):
+                if os_is_64_bit:
+                    libfile = os.path.join(pathlib, "cbc-c-darwin-x86-64.dylib")
+            if not libfile:
+                raise NotImplementedError("You operating system/platform is not supported")
+        old_dir = os.getcwd()
+        os.chdir(pathlib)
+        cbclib = ffi.dlopen(libfile)
+        os.chdir(old_dir)
+        has_cbc = True
+    except Exception as e:
+        logger.error("An error occurred while loading the CBC library:\t " "{}\n".format(e))
+        has_cbc = False
+    
+    if has_cbc:
+        ffi.cdef(
+            """
+        typedef int(*cbc_progress_callback)(void *model,
+                                            int phase,
+                                            int step,
+                                            const char *phaseName,
+                                            double seconds,
+                                            double lb,
+                                            double ub,
+                                            int nint,
+                                            int *vecint,
+                                            void *cbData
+                                            );
+    
+        typedef void(*cbc_callback)(void *model, int msgno, int ndouble,
+            const double *dvec, int nint, const int *ivec,
+            int nchar, char **cvec);
+    
+        typedef void(*cbc_cut_callback)(void *osiSolver, void *osiCuts, void *appdata, int level, int npass);
+    
+        typedef int (*cbc_incumbent_callback)(void *cbcModel,
+            double obj, int nz,
+            char **vnames, double *x, void *appData);
+    
+        typedef void Cbc_Model;
+    
+        void *Cbc_newModel();
+    
+        void Cbc_readLp(Cbc_Model *model, const char *file);
+    
+        int Cbc_readBasis(Cbc_Model *model, const char *filename);
+    
+        int Cbc_writeBasis(Cbc_Model *model, const char *filename, char
+            writeValues, int formatType);
+    
+        void Cbc_readMps(Cbc_Model *model, const char *file);
+    
+        char Cbc_supportsGzip();
+    
+        char Cbc_supportsBzip2();
+    
+        void Cbc_writeLp(Cbc_Model *model, const char *file);
+    
+        void Cbc_writeMps(Cbc_Model *model, const char *file);
+    
+        int Cbc_getNumCols(Cbc_Model *model);
+    
+        int Cbc_getNumRows(Cbc_Model *model);
+    
+        int Cbc_getNumIntegers(Cbc_Model *model);
+    
+        int Cbc_getNumElements(Cbc_Model *model);
+    
+        int Cbc_getRowNz(Cbc_Model *model, int row);
+    
+        int *Cbc_getRowIndices(Cbc_Model *model, int row);
+    
+        double *Cbc_getRowCoeffs(Cbc_Model *model, int row);
+    
+        double Cbc_getRowRHS(Cbc_Model *model, int row);
+    
+        void Cbc_setRowRHS(Cbc_Model *model, int row, double rhs);
+    
+        char Cbc_getRowSense(Cbc_Model *model, int row);
+    
+        const double *Cbc_getRowActivity(Cbc_Model *model);
+    
+        const double *Cbc_getRowSlack(Cbc_Model *model);
+    
+        int Cbc_getColNz(Cbc_Model *model, int col);
+    
+        int *Cbc_getColIndices(Cbc_Model *model, int col);
+    
+        double *Cbc_getColCoeffs(Cbc_Model *model, int col);
+    
+        void Cbc_addCol(Cbc_Model *model, const char *name,
+            double lb, double ub, double obj, char isInteger,
+            int nz, int *rows, double *coefs);
+    
+        void Cbc_addRow(Cbc_Model *model, const char *name, int nz,
+            const int *cols, const double *coefs, char sense, double rhs);
+    
+        void Cbc_addLazyConstraint(Cbc_Model *model, int nz,
+            int *cols, double *coefs, char sense, double rhs);
+    
+        void Cbc_addSOS(Cbc_Model *model, int numRows, const int *rowStarts,
+            const int *colIndices, const double *weights, const int type);
+    
+        int Cbc_numberSOS(Cbc_Model *model);
+    
+        void Cbc_setObjCoeff(Cbc_Model *model, int index, double value);
+    
+        double Cbc_getObjSense(Cbc_Model *model);
+    
+        const double *Cbc_getObjCoefficients(Cbc_Model *model);
+    
+        const double *Cbc_getColSolution(Cbc_Model *model);
+    
+        const double *Cbc_getReducedCost(Cbc_Model *model);
+    
+        double *Cbc_bestSolution(Cbc_Model *model);
+    
+        int Cbc_numberSavedSolutions(Cbc_Model *model);
+    
+        const double *Cbc_savedSolution(Cbc_Model *model, int whichSol);
+    
+        double Cbc_savedSolutionObj(Cbc_Model *model, int whichSol);
+    
+        double Cbc_getObjValue(Cbc_Model *model);
+    
+        void Cbc_setObjSense(Cbc_Model *model, double sense);
+    
+        int Cbc_isProvenOptimal(Cbc_Model *model);
+    
+        int Cbc_isProvenInfeasible(Cbc_Model *model);
+    
+        int Cbc_isContinuousUnbounded(Cbc_Model *model);
+    
+        int Cbc_isAbandoned(Cbc_Model *model);
+    
+        const double *Cbc_getColLower(Cbc_Model *model);
+    
+        const double *Cbc_getColUpper(Cbc_Model *model);
+    
+        double Cbc_getColObj(Cbc_Model *model, int colIdx);
+    
+        double Cbc_getColLB(Cbc_Model *model, int colIdx);
+    
+        double Cbc_getColUB(Cbc_Model *model, int colIdx);
+    
+        void Cbc_setColLower(Cbc_Model *model, int index, double value);
+    
+        void Cbc_setColUpper(Cbc_Model *model, int index, double value);
+    
+        int Cbc_isInteger(Cbc_Model *model, int i);
+    
+        void Cbc_getColName(Cbc_Model *model,
+            int iColumn, char *name, size_t maxLength);
+    
+        void Cbc_getRowName(Cbc_Model *model,
+            int iRow, char *name, size_t maxLength);
+    
+        void Cbc_setContinuous(Cbc_Model *model, int iColumn);
+    
+        void Cbc_setInteger(Cbc_Model *model, int iColumn);
+    
+        /*! Integer parameters */
+        enum IntParam {
+          INT_PARAM_PERT_VALUE              = 0,  /*! Method of perturbation, -5000 to 102, default 50 */
+          INT_PARAM_IDIOT                   = 1,  /*! Parameter of the "idiot" method to try to produce an initial feasible basis. -1 let the solver decide if this should be applied; 0 deactivates it and &gt;0 sets number of passes. */
+          INT_PARAM_STRONG_BRANCHING        = 2,  /*! Number of variables to be evaluated in strong branching. */
+          INT_PARAM_CUT_DEPTH               = 3,  /*! Sets the application of cuts to every depth multiple of this value. -1, the default value, let the solve decide. */
+          INT_PARAM_MAX_NODES               = 4,  /*! Maximum number of nodes to be explored in the search tree */
+          INT_PARAM_NUMBER_BEFORE           = 5,  /*! Number of branches before trusting pseudocodes computed in strong branching. */
+          INT_PARAM_FPUMP_ITS               = 6,  /*! Maximum number of iterations in the feasibility pump method. */
+          INT_PARAM_MAX_SOLS                = 7,  /*! Maximum number of solutions generated during the search. Stops the search when this number of solutions is found. */
+          INT_PARAM_CUT_PASS_IN_TREE        = 8,  /*! Maximum number of cuts passes in the search tree (with the exception of the root node). Default 1. */
+          INT_PARAM_THREADS                 = 9,  /*! Number of threads that can be used in the branch-and-bound method.*/
+          INT_PARAM_CUT_PASS                = 10, /*! Number of cut passes in the root node. Default -1, solver decides */
+          INT_PARAM_LOG_LEVEL               = 11, /*! Verbosity level, from 0 to 2 */
+          INT_PARAM_MAX_SAVED_SOLS          = 12, /*! Size of the pool to save the best solutions found during the search. */
+          INT_PARAM_MULTIPLE_ROOTS          = 13, /*! Multiple root passes to get additional cuts and solutions. */
+          INT_PARAM_ROUND_INT_VARS          = 14, /*! If integer variables should be round to remove small infeasibilities. This can increase the overall amount of infeasibilities in problems with both continuous and integer variables */
+          INT_PARAM_RANDOM_SEED             = 15, /*! When solving LP and MIP, randomization is used to break ties in some decisions. This changes the random seed so that multiple executions can produce different results */
+          INT_PARAM_ELAPSED_TIME            = 16, /*! When =1 use elapsed (wallclock) time, otherwise use CPU time */
+          INT_PARAM_CGRAPH                  = 17, /*! Conflict graph: controls if the conflict graph is created or not. 0: off, 1: auto, 2: on 3: fast weaker clique sep */
+          INT_PARAM_CLIQUE_MERGING          = 18, /*! Clique merging options: 0: off , 1 auto , 2 before solving LP, 3 after solving LP and pre-processing */
+          INT_PARAM_MAX_NODES_NOT_IMPROV_FS = 19, /*! Maximum number of nodes processed without improving best solution, after a feasible solution is found */
+        };
+        #define N_INT_PARAMS 20
+    
+        void Cbc_setIntParam(Cbc_Model *model, enum IntParam which, const int val);
+    
+        /*! Double parameters
+         * */
+        enum DblParam {
+          DBL_PARAM_PRIMAL_TOL              = 0,  /*! Tollerance to consider a solution feasible in the linear programming solver. */
+          DBL_PARAM_DUAL_TOL                = 1,  /*! Tollerance for a solution to be considered optimal in the linear programming solver. */
+          DBL_PARAM_ZERO_TOL                = 2,  /*! Coefficients less that this value will be ignored when reading instances */
+          DBL_PARAM_INT_TOL                 = 3,  /*! Maximum allowed distance from integer value for a variable to be considered integral */
+          DBL_PARAM_PRESOLVE_TOL            = 4,  /*! Tollerance used in the presolver, should be increased if the pre-solver is declaring infeasible a feasible problem */
+          DBL_PARAM_TIME_LIMIT              = 5,  /*! Time limit in seconds */
+          DBL_PARAM_PSI                     = 6,  /*! Two dimensional princing factor in the Positive Edge pivot strategy. */
+          DBL_PARAM_CUTOFF                  = 7,  /*! Only search for solutions with cost less-or-equal to this value. */
+          DBL_PARAM_ALLOWABLE_GAP           = 8,  /*! Allowable gap between the lower and upper bound to conclude the search */
+          DBL_PARAM_GAP_RATIO               = 9,   /*! Stops the search when the difference between the upper and lower bound is less than this fraction of the larger value */
+          DBL_PARAM_MAX_SECS_NOT_IMPROV_FS  = 10, /*! Maximum processing time without improving best solution, after a feasible solution is found */
+        };
+        #define N_DBL_PARAMS 11
+    
+        void Cbc_setDblParam(Cbc_Model *model, enum DblParam which, const double val);
+    
+        void Cbc_setParameter(Cbc_Model *model, const char *name,
+            const char *value);
+    
+        double Cbc_getCutoff(Cbc_Model *model);
+    
+        void Cbc_setCutoff(Cbc_Model *model, double cutoff);
+    
+        double Cbc_getAllowableGap(Cbc_Model *model);
+    
+        void Cbc_setAllowableGap(Cbc_Model *model, double allowedGap);
+    
+        double Cbc_getAllowableFractionGap(Cbc_Model *model);
+    
+        void Cbc_setAllowableFractionGap(Cbc_Model *model,
+            double allowedFracionGap);
+    
+        double Cbc_getAllowablePercentageGap(Cbc_Model *model);
+    
+        void Cbc_setAllowablePercentageGap(Cbc_Model *model,
+            double allowedPercentageGap);
+    
+        double Cbc_getMaximumSeconds(Cbc_Model *model);
+    
+        void Cbc_setMaximumSeconds(Cbc_Model *model, double maxSeconds);
+    
+        int Cbc_getMaximumNodes(Cbc_Model *model);
+    
+        void Cbc_setMaximumNodes(Cbc_Model *model, int maxNodes);
+    
+        int Cbc_getMaximumSolutions(Cbc_Model *model);
+    
+        void Cbc_setMaximumSolutions(Cbc_Model *model, int maxSolutions);
+    
+        int Cbc_getLogLevel(Cbc_Model *model);
+    
+        void Cbc_setLogLevel(Cbc_Model *model, int logLevel);
+    
+        double Cbc_getBestPossibleObjValue(Cbc_Model *model);
+    
+        void Cbc_setMIPStart(Cbc_Model *model, int count,
+            const char **colNames, const double colValues[]);
+    
+        void Cbc_setMIPStartI(Cbc_Model *model, int count, const int colIdxs[],
+            const double colValues[]);
+    
+        enum LPMethod {
+          LPM_Auto    = 0,  /*! Solver will decide automatically which method to use */
+          LPM_Dual    = 1,  /*! Dual simplex */
+          LPM_Primal  = 2,  /*! Primal simplex */
+          LPM_Barrier = 3   /*! The barrier algorithm. */
+        };
+    
+        void
+        Cbc_setLPmethod(Cbc_Model *model, enum LPMethod lpm );
+    
+        void Cbc_updateConflictGraph( Cbc_Model *model );
+    
+        const void *Cbc_conflictGraph( Cbc_Model *model );
+    
+        int Cbc_solve(Cbc_Model *model);
+    
+        int Cbc_solveLinearProgram(Cbc_Model *model);
+    
+        /*! Type of cutting plane */
+        enum CutType {
+          CT_Probing          =  0,  /*! Cuts generated evaluating the impact of fixing bounds for integer variables */
+          CT_Gomory           =  1,  /*! Gomory cuts obtained from the tableau, implemented by John Forrest  */
+          CT_GMI              =  2,  /*! Gomory cuts obtained from the tableau, implementation from Giacomo Nannicini focusing on safer cuts */
+          CT_LaGomory         =  3,  /*! Additional gomory cuts, simplification of 'A Relax-and-Cut Framework for Gomory's Mixed-Integer Cuts' by Matteo Fischetti &amp; Domenico Salvagnin */
+          CT_RedSplit         =  4,  /*! Reduce and split cuts, implemented by Francois Margot */
+          CT_RedSplitG        =  5,  /*! Reduce and split cuts, implemented by Giacomo Nannicini */
+          CT_FlowCover        =  6,  /*! Flow cover cuts */
+          CT_MIR              =  7,  /*! Mixed-integer rounding cuts */
+          CT_TwoMIR           =  8,  /*! Two-phase Mixed-integer rounding cuts */
+          CT_LaTwoMIR         =  9,  /*! Lagrangean relaxation for two-phase Mixed-integer rounding cuts, as in CT_LaGomory */
+          CT_LiftAndProject   = 10,  /*! Lift and project cuts */
+          CT_ResidualCapacity = 11,  /*! Residual capacity cuts */
+          CT_ZeroHalf         = 12,  /*! Zero-half cuts */
+          CT_Clique           = 13,  /*! Clique cuts */
+          CT_OddWheel         = 14,  /*! Lifted odd-hole inequalities */
+          CT_KnapsackCover    = 15,  /*! Knapsack cover cuts */
+        };
+    
+        void Cbc_generateCuts( Cbc_Model *cbcModel, enum CutType ct, void *oc, int depth, int pass );
+    
+        void Cbc_strengthenPacking(Cbc_Model *model);
+    
+        void Cbc_strengthenPackingRows(Cbc_Model *model, size_t n, const size_t rows[]);
+    
+        void *Cbc_getSolverPtr(Cbc_Model *model);
+    
+        void *Cbc_deleteModel(Cbc_Model *model);
+    
+        int Osi_getNumIntegers( void *osi );
+    
+        const double *Osi_getReducedCost( void *osi );
+    
+        const double *Osi_getObjCoefficients();
+    
+        double Osi_getObjSense();
+    
+        void *Osi_newSolver();
+    
+        void Osi_deleteSolver( void *osi );
+    
+        void Osi_initialSolve(void *osi);
+    
+        void Osi_resolve(void *osi);
+    
+        void Osi_branchAndBound(void *osi);
+    
+        char Osi_isAbandoned(void *osi);
+    
+        char Osi_isProvenOptimal(void *osi);
+    
+        char Osi_isProvenPrimalInfeasible(void *osi);
+    
+        char Osi_isProvenDualInfeasible(void *osi);
+    
+        char Osi_isPrimalObjectiveLimitReached(void *osi);
+    
+        char Osi_isDualObjectiveLimitReached(void *osi);
+    
+        char Osi_isIterationLimitReached(void *osi);
+    
+        double Osi_getObjValue( void *osi );
+    
+        void Osi_setColUpper (void *osi, int elementIndex, double ub);
+    
+        void Osi_setColLower(void *osi, int elementIndex, double lb);
+    
+        int Osi_getNumCols( void *osi );
+    
+        void Osi_getColName( void *osi, int i, char *name, int maxLen );
+    
+        const double *Osi_getColLower( void *osi );
+    
+        const double *Osi_getColUpper( void *osi );
+    
+        int Osi_isInteger( void *osi, int col );
+    
+        int Osi_getNumRows( void *osi );
+    
+        int Osi_getRowNz(void *osi, int row);
+    
+        const int *Osi_getRowIndices(void *osi, int row);
+    
+        const double *Osi_getRowCoeffs(void *osi, int row);
+    
+        double Osi_getRowRHS(void *osi, int row);
+    
+        char Osi_getRowSense(void *osi, int row);
+    
+        void Osi_setObjCoef(void *osi, int index, double obj);
+    
+        void Osi_setObjSense(void *osi, double sense);
+    
+        const double *Osi_getColSolution(void *osi);
+    
+        void *OsiCuts_new();
+    
+        void OsiCuts_addRowCut( void *osiCuts, int nz, const int *idx,
+            const double *coef, char sense, double rhs );
+    
+        void OsiCuts_addGlobalRowCut( void *osiCuts, int nz, const int *idx,
+            const double *coef, char sense, double rhs );
+    
+        int OsiCuts_sizeRowCuts( void *osiCuts );
+    
+        int OsiCuts_nzRowCut( void *osiCuts, int iRowCut );
+    
+        const int * OsiCuts_idxRowCut( void *osiCuts, int iRowCut );
+    
+        const double *OsiCuts_coefRowCut( void *osiCuts, int iRowCut );
+    
+        double OsiCuts_rhsRowCut( void *osiCuts, int iRowCut );
+    
+        char OsiCuts_senseRowCut( void *osiCuts, int iRowCut );
+    
+        void OsiCuts_delete( void *osiCuts );
+    
+        void Osi_addCol(void *osi, const char *name, double lb, double ub,
+           double obj, char isInteger, int nz, int *rows, double *coefs);
+    
+        void Osi_addRow(void *osi, const char *name, int nz,
+            const int *cols, const double *coefs, char sense, double rhs);
+    
+        void Cbc_deleteRows(Cbc_Model *model, int numRows, const int rows[]);
+    
+        void Cbc_deleteCols(Cbc_Model *model, int numCols, const int cols[]);
+    
+        void Cbc_storeNameIndexes(Cbc_Model *model, char _store);
+    
+        int Cbc_getColNameIndex(Cbc_Model *model, const char *name);
+    
+        int Cbc_getRowNameIndex(Cbc_Model *model, const char *name);
+    
+        void Cbc_problemName(Cbc_Model *model, int maxNumberCharacters,
+                             char *array);
+    
+        int Cbc_setProblemName(Cbc_Model *model, const char *array);
+    
+        double Cbc_getPrimalTolerance(Cbc_Model *model);
+    
+        void Cbc_setPrimalTolerance(Cbc_Model *model, double tol);
+    
+        double Cbc_getDualTolerance(Cbc_Model *model);
+    
+        void Cbc_setDualTolerance(Cbc_Model *model, double tol);
+    
+        void Cbc_addCutCallback(Cbc_Model *model, cbc_cut_callback cutcb,
+            const char *name, void *appData, int howOften, char atSolution );
+    
+        void Cbc_addIncCallback(
+            void *model, cbc_incumbent_callback inccb,
+            void *appData );
+    
+        void Cbc_registerCallBack(Cbc_Model *model,
+            cbc_callback userCallBack);
+    
+        void Cbc_addProgrCallback(void *model,
+            cbc_progress_callback prgcbc, void *appData);
+    
+        void Cbc_clearCallBack(Cbc_Model *model);
+    
+        const double *Cbc_getRowPrice(Cbc_Model *model);
+    
+        const double *Osi_getRowPrice(void *osi);
+    
+        double Osi_getIntegerTolerance(void *osi);
+    
+        void Osi_checkCGraph( void *osi );
+    
+        const void * Osi_CGraph( void *osi );
+    
+        size_t CG_nodes( void *cgraph );
+    
+        char CG_conflicting( void *cgraph, int n1, int n2 );
+    
+        double CG_density( void *cgraph );
+    
+        typedef struct {
+          size_t n;
+          const size_t *neigh;
+        } CGNeighbors;
+    
+        CGNeighbors CG_conflictingNodes(Cbc_Model *model, void *cgraph, size_t node);
+    
+        void Cbc_computeFeatures(Cbc_Model *model, double *features);
+    
+        int Cbc_nFeatures();
+    
+        const char *Cbc_featureName(int i);
+        """
+        )
+    
+    CHAR_ONE = "{}".format(chr(1)).encode("utf-8")
+    CHAR_ZERO = "\0".encode("utf-8")
+    
+    
+    DBL_PARAM_PRIMAL_TOL = 0
+    DBL_PARAM_DUAL_TOL = 1
+    DBL_PARAM_ZERO_TOL = 2
+    DBL_PARAM_INT_TOL = 3
+    DBL_PARAM_PRESOLVE_TOL = 4
+    DBL_PARAM_TIME_LIMIT = 5
+    DBL_PARAM_PSI = 6
+    DBL_PARAM_CUTOFF = 7
+    DBL_PARAM_ALLOWABLE_GAP = 8
+    DBL_PARAM_GAP_RATIO = 9
+    DBL_PARAM_MAX_SECS_NOT_IMPROV_FS = 10
+    
+    INT_PARAM_PERT_VALUE = 0
+    INT_PARAM_IDIOT = 1
+    INT_PARAM_STRONG_BRANCHING = 2
+    INT_PARAM_CUT_DEPTH = 3
+    INT_PARAM_MAX_NODES = 4
+    INT_PARAM_NUMBER_BEFORE = 5
+    INT_PARAM_FPUMP_ITS = 6
+    INT_PARAM_MAX_SOLS = 7
+    INT_PARAM_CUT_PASS_IN_TREE = 8
+    INT_PARAM_THREADS = 9
+    INT_PARAM_CUT_PASS = 10
+    INT_PARAM_LOG_LEVEL = 11
+    INT_PARAM_MAX_SAVED_SOLS = 12
+    INT_PARAM_MULTIPLE_ROOTS = 13
+    INT_PARAM_ROUND_INT_VARS = 14
+    INT_PARAM_RANDOM_SEED = 15
+    INT_PARAM_ELAPSED_TIME = 16
+    INT_PARAM_CGRAPH = 17
+    INT_PARAM_CLIQUE_MERGING = 18
+    INT_PARAM_MAX_NODES_NOT_IMPROV_FS = 19
+    
+    
+&gt;   Osi_getNumCols = cbclib.Osi_getNumCols
+                     ^^^^^^
+E   NameError: name 'cbclib' is not defined
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/.venv/lib/python3.11/site-packages/mip/cbc.py:600: NameError</failure></testcase><testcase classname="tests.test_packing3d.TestPacking3d" name="test_add_bin_on_constraint" time="0.001"><failure message="FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'">self = &lt;tests.test_packing3d.TestPacking3d testMethod=test_add_bin_on_constraint&gt;
+
+    def setUp(self):
+&gt;       self.data = read_instance("./tests/test_data_1.txt")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_packing3d.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+instance_path = './tests/test_data_1.txt'
+
+    def read_instance(instance_path: str) -&gt; dict:
+        """Convert instance input files into raw problem data.
+    
+        Args:
+            instance_path:  Path to the bin packing problem instance file.
+    
+        Returns:
+            data: dictionary containing raw information for both bins and cases.
+    
+        """
+    
+        data = {"num_bins": 0, "bin_dimensions": [], "quantity": [], "case_ids": [],
+                "case_length": [], "case_width": [], "case_height": []}
+    
+&gt;       with open(instance_path) as f:
+             ^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/utils.py:201: FileNotFoundError</failure></testcase><testcase classname="tests.test_packing3d.TestPacking3d" name="test_add_boundary_constraints" time="0.000"><failure message="FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'">self = &lt;tests.test_packing3d.TestPacking3d testMethod=test_add_boundary_constraints&gt;
+
+    def setUp(self):
+&gt;       self.data = read_instance("./tests/test_data_1.txt")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_packing3d.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+instance_path = './tests/test_data_1.txt'
+
+    def read_instance(instance_path: str) -&gt; dict:
+        """Convert instance input files into raw problem data.
+    
+        Args:
+            instance_path:  Path to the bin packing problem instance file.
+    
+        Returns:
+            data: dictionary containing raw information for both bins and cases.
+    
+        """
+    
+        data = {"num_bins": 0, "bin_dimensions": [], "quantity": [], "case_ids": [],
+                "case_length": [], "case_width": [], "case_height": []}
+    
+&gt;       with open(instance_path) as f:
+             ^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/utils.py:201: FileNotFoundError</failure></testcase><testcase classname="tests.test_packing3d.TestPacking3d" name="test_add_geometric" time="0.000"><failure message="FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'">self = &lt;tests.test_packing3d.TestPacking3d testMethod=test_add_geometric&gt;
+
+    def setUp(self):
+&gt;       self.data = read_instance("./tests/test_data_1.txt")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_packing3d.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+instance_path = './tests/test_data_1.txt'
+
+    def read_instance(instance_path: str) -&gt; dict:
+        """Convert instance input files into raw problem data.
+    
+        Args:
+            instance_path:  Path to the bin packing problem instance file.
+    
+        Returns:
+            data: dictionary containing raw information for both bins and cases.
+    
+        """
+    
+        data = {"num_bins": 0, "bin_dimensions": [], "quantity": [], "case_ids": [],
+                "case_length": [], "case_width": [], "case_height": []}
+    
+&gt;       with open(instance_path) as f:
+             ^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/utils.py:201: FileNotFoundError</failure></testcase><testcase classname="tests.test_packing3d.TestPacking3d" name="test_add_orientation_constraints" time="0.000"><failure message="FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'">self = &lt;tests.test_packing3d.TestPacking3d testMethod=test_add_orientation_constraints&gt;
+
+    def setUp(self):
+&gt;       self.data = read_instance("./tests/test_data_1.txt")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_packing3d.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+instance_path = './tests/test_data_1.txt'
+
+    def read_instance(instance_path: str) -&gt; dict:
+        """Convert instance input files into raw problem data.
+    
+        Args:
+            instance_path:  Path to the bin packing problem instance file.
+    
+        Returns:
+            data: dictionary containing raw information for both bins and cases.
+    
+        """
+    
+        data = {"num_bins": 0, "bin_dimensions": [], "quantity": [], "case_ids": [],
+                "case_length": [], "case_width": [], "case_height": []}
+    
+&gt;       with open(instance_path) as f:
+             ^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/utils.py:201: FileNotFoundError</failure></testcase><testcase classname="tests.test_packing3d.TestPacking3d" name="test_bins" time="0.000"><failure message="FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'">self = &lt;tests.test_packing3d.TestPacking3d testMethod=test_bins&gt;
+
+    def setUp(self):
+&gt;       self.data = read_instance("./tests/test_data_1.txt")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_packing3d.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+instance_path = './tests/test_data_1.txt'
+
+    def read_instance(instance_path: str) -&gt; dict:
+        """Convert instance input files into raw problem data.
+    
+        Args:
+            instance_path:  Path to the bin packing problem instance file.
+    
+        Returns:
+            data: dictionary containing raw information for both bins and cases.
+    
+        """
+    
+        data = {"num_bins": 0, "bin_dimensions": [], "quantity": [], "case_ids": [],
+                "case_length": [], "case_width": [], "case_height": []}
+    
+&gt;       with open(instance_path) as f:
+             ^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/utils.py:201: FileNotFoundError</failure></testcase><testcase classname="tests.test_packing3d.TestPacking3d" name="test_build_cqm" time="0.000"><failure message="FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'">self = &lt;tests.test_packing3d.TestPacking3d testMethod=test_build_cqm&gt;
+
+    def setUp(self):
+&gt;       self.data = read_instance("./tests/test_data_1.txt")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_packing3d.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+instance_path = './tests/test_data_1.txt'
+
+    def read_instance(instance_path: str) -&gt; dict:
+        """Convert instance input files into raw problem data.
+    
+        Args:
+            instance_path:  Path to the bin packing problem instance file.
+    
+        Returns:
+            data: dictionary containing raw information for both bins and cases.
+    
+        """
+    
+        data = {"num_bins": 0, "bin_dimensions": [], "quantity": [], "case_ids": [],
+                "case_length": [], "case_width": [], "case_height": []}
+    
+&gt;       with open(instance_path) as f:
+             ^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/utils.py:201: FileNotFoundError</failure></testcase><testcase classname="tests.test_packing3d.TestPacking3d" name="test_call_solver" time="0.000"><failure message="FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'">self = &lt;tests.test_packing3d.TestPacking3d testMethod=test_call_solver&gt;
+
+    def setUp(self):
+&gt;       self.data = read_instance("./tests/test_data_1.txt")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_packing3d.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+instance_path = './tests/test_data_1.txt'
+
+    def read_instance(instance_path: str) -&gt; dict:
+        """Convert instance input files into raw problem data.
+    
+        Args:
+            instance_path:  Path to the bin packing problem instance file.
+    
+        Returns:
+            data: dictionary containing raw information for both bins and cases.
+    
+        """
+    
+        data = {"num_bins": 0, "bin_dimensions": [], "quantity": [], "case_ids": [],
+                "case_length": [], "case_width": [], "case_height": []}
+    
+&gt;       with open(instance_path) as f:
+             ^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/utils.py:201: FileNotFoundError</failure></testcase><testcase classname="tests.test_packing3d.TestPacking3d" name="test_cases" time="0.000"><failure message="FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'">self = &lt;tests.test_packing3d.TestPacking3d testMethod=test_cases&gt;
+
+    def setUp(self):
+&gt;       self.data = read_instance("./tests/test_data_1.txt")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_packing3d.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+instance_path = './tests/test_data_1.txt'
+
+    def read_instance(instance_path: str) -&gt; dict:
+        """Convert instance input files into raw problem data.
+    
+        Args:
+            instance_path:  Path to the bin packing problem instance file.
+    
+        Returns:
+            data: dictionary containing raw information for both bins and cases.
+    
+        """
+    
+        data = {"num_bins": 0, "bin_dimensions": [], "quantity": [], "case_ids": [],
+                "case_length": [], "case_width": [], "case_height": []}
+    
+&gt;       with open(instance_path) as f:
+             ^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/utils.py:201: FileNotFoundError</failure></testcase><testcase classname="tests.test_packing3d.TestPacking3d" name="test_variables" time="0.000"><failure message="FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'">self = &lt;tests.test_packing3d.TestPacking3d testMethod=test_variables&gt;
+
+    def setUp(self):
+&gt;       self.data = read_instance("./tests/test_data_1.txt")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_packing3d.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+instance_path = './tests/test_data_1.txt'
+
+    def read_instance(instance_path: str) -&gt; dict:
+        """Convert instance input files into raw problem data.
+    
+        Args:
+            instance_path:  Path to the bin packing problem instance file.
+    
+        Returns:
+            data: dictionary containing raw information for both bins and cases.
+    
+        """
+    
+        data = {"num_bins": 0, "bin_dimensions": [], "quantity": [], "case_ids": [],
+                "case_length": [], "case_width": [], "case_height": []}
+    
+&gt;       with open(instance_path) as f:
+             ^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/utils.py:201: FileNotFoundError</failure></testcase><testcase classname="tests.test_utils.TestUtils" name="test_plot_cuboids" time="0.001"><failure message="FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'">self = &lt;tests.test_utils.TestUtils testMethod=test_plot_cuboids&gt;
+
+    def test_plot_cuboids(self):
+&gt;       data = read_instance(instance_path='./tests/test_data_1.txt')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_utils.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+instance_path = './tests/test_data_1.txt'
+
+    def read_instance(instance_path: str) -&gt; dict:
+        """Convert instance input files into raw problem data.
+    
+        Args:
+            instance_path:  Path to the bin packing problem instance file.
+    
+        Returns:
+            data: dictionary containing raw information for both bins and cases.
+    
+        """
+    
+        data = {"num_bins": 0, "bin_dimensions": [], "quantity": [], "case_ids": [],
+                "case_length": [], "case_width": [], "case_height": []}
+    
+&gt;       with open(instance_path) as f:
+             ^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/utils.py:201: FileNotFoundError</failure></testcase><testcase classname="tests.test_utils.TestUtils" name="test_print_cqm_stats" time="0.001" /><testcase classname="tests.test_utils.TestUtils" name="test_read_write_input_data" time="0.000"><failure message="FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'">self = &lt;tests.test_utils.TestUtils testMethod=test_read_write_input_data&gt;
+
+    def test_read_write_input_data(self):
+&gt;       data = read_instance(instance_path='./tests/test_data_1.txt')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_utils.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+instance_path = './tests/test_data_1.txt'
+
+    def read_instance(instance_path: str) -&gt; dict:
+        """Convert instance input files into raw problem data.
+    
+        Args:
+            instance_path:  Path to the bin packing problem instance file.
+    
+        Returns:
+            data: dictionary containing raw information for both bins and cases.
+    
+        """
+    
+        data = {"num_bins": 0, "bin_dimensions": [], "quantity": [], "case_ids": [],
+                "case_length": [], "case_width": [], "case_height": []}
+    
+&gt;       with open(instance_path) as f:
+             ^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/utils.py:201: FileNotFoundError</failure></testcase><testcase classname="tests.test_utils.TestUtils" name="test_write_solution_to_file" time="0.000"><failure message="FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'">self = &lt;tests.test_utils.TestUtils testMethod=test_write_solution_to_file&gt;
+
+    def test_write_solution_to_file(self):
+&gt;       data = read_instance(instance_path='./tests/test_data_1.txt')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/tests/test_utils.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+instance_path = './tests/test_data_1.txt'
+
+    def read_instance(instance_path: str) -&gt; dict:
+        """Convert instance input files into raw problem data.
+    
+        Args:
+            instance_path:  Path to the bin packing problem instance file.
+    
+        Returns:
+            data: dictionary containing raw information for both bins and cases.
+    
+        """
+    
+        data = {"num_bins": 0, "bin_dimensions": [], "quantity": [], "case_ids": [],
+                "case_length": [], "case_width": [], "case_height": []}
+    
+&gt;       with open(instance_path) as f:
+             ^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: './tests/test_data_1.txt'
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dwave-examples@3d-bin-packing__abb0ebd3__tabulate__prettytable/utils.py:201: FileNotFoundError</failure></testcase></testsuite></testsuites>

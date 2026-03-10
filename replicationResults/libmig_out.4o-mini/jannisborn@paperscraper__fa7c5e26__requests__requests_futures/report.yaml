@@ -1,0 +1,89 @@
+mig: jannisborn@paperscraper__fa7c5e26__requests__requests_futures__fa7c5e26__requests__requests_futures
+repo: jannisborn@paperscraper__fa7c5e26__requests__requests_futures
+commit: fa7c5e268fb9df477f8764ade4badc8e52faf144
+source: requests
+target: requests_futures
+premig:
+  name: premig
+  status: finished
+  source_version: 2.32.5
+  target_version: 1.0.2
+  finished_at: '2026-03-09 22:38:10'
+  project_coverage: 81.06402164111813
+  total_tests: 47
+  passed_tests: 38
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 64.28571428571429
+  files:
+  - path: paperscraper/get_dumps/utils/chemrxiv/chemrxiv_api.py
+    file_change_coverage: 54.54545454545455
+    covered_changed_lines: 8,70,76,82,105-106
+    uncovered_changed_lines: 71,78,81,87-88
+  - path: paperscraper/get_dumps/utils/chemrxiv/utils.py
+    file_change_coverage: 50.0
+    covered_changed_lines: 12,133
+    uncovered_changed_lines: 141-142
+  - path: paperscraper/pdf.py
+    file_change_coverage: 85.71428571428571
+    covered_changed_lines: 10,28,56-57,68-69
+    uncovered_changed_lines: '27'
+  - path: paperscraper/xrxiv/xrxiv_api.py
+    file_change_coverage: 66.66666666666667
+    covered_changed_lines: 11,18,80,86
+    uncovered_changed_lines: 17,85
+  test_diffs:
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_dump_existence_initial
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: Initial length of QUERY_FN_DICT should be 2\n\
+      assert 3 == 2\n +  where 3 = len({'arxiv': <function get_and_dump_arxiv_papers\
+      \ at 0x112c7f740>, 'medrxiv': <bound method XRXivQuery.search_keywords of ...r.xrxiv.xrxiv_query.XRXivQuery\
+      \ object at 0x111953550>>, 'pubmed': <function get_and_dump_pubmed_papers at\
+      \ 0x112c95c60>})"
+  - test_id: paperscraper/tests/test_pdf.py::TestPDF::test_missing_pdf_url_in_meta_tags
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert not True\n +  where True = <function exists\
+      \ at 0x1030b7420>('output.pdf')\n +    where <function exists at 0x1030b7420>\
+      \ = <module 'posixpath' (frozen)>.exists\n +      where <module 'posixpath'\
+      \ (frozen)> = os.path"
+  - test_id: paperscraper/tests/test_pdf.py::TestPDF::test_network_issues_on_doi_url_request
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert not True\n +  where True = <function exists\
+      \ at 0x1030b7420>('output.pdf')\n +    where <function exists at 0x1030b7420>\
+      \ = <module 'posixpath' (frozen)>.exists\n +      where <module 'posixpath'\
+      \ (frozen)> = os.path"
+  - test_id: paperscraper/tests/test_pdf.py::TestPDF::test_network_issues_on_pdf_url_request
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: assert not True\n +  where True = <function exists\
+      \ at 0x1030b7420>('output.pdf')\n +    where <function exists at 0x1030b7420>\
+      \ = <module 'posixpath' (frozen)>.exists\n +      where <module 'posixpath'\
+      \ (frozen)> = os.path"
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

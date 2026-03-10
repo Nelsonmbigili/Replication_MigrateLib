@@ -1,0 +1,2510 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="3" failures="87" skipped="0" tests="107" time="4.105" timestamp="2026-03-10T07:06:35.620970+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.audiovisual_test" name="test_status" time="0.001"><failure message="AssertionError: assert &lt;coroutine object AudioVisual.status at 0x1038d1240&gt; == 'completed'&#10; +  where &lt;coroutine object AudioVisual.status at 0x1038d1240&gt; = &lt;filestack.models.audiovisual.AudioVisual object at 0x102d91d90&gt;.status">av = &lt;filestack.models.audiovisual.AudioVisual object at 0x102d91d90&gt;
+
+    @responses.activate
+    def test_status(av):
+        responses.add(responses.GET, 'https://process.filestackapi.com/SOMEHANDLE', json={'status': 'completed'})
+&gt;       assert av.status == 'completed'
+E       AssertionError: assert &lt;coroutine object AudioVisual.status at 0x1038d1240&gt; == 'completed'
+E        +  where &lt;coroutine object AudioVisual.status at 0x1038d1240&gt; = &lt;filestack.models.audiovisual.AudioVisual object at 0x102d91d90&gt;.status
+
+tests/audiovisual_test.py:21: AssertionError</failure></testcase><testcase classname="tests.audiovisual_test" name="test_convert" time="0.000"><failure message="assert False&#10; +  where False = isinstance(&lt;coroutine object AudioVisual.to_filelink at 0x1038d6ac0&gt;, Filelink)">av = &lt;filestack.models.audiovisual.AudioVisual object at 0x103b46890&gt;
+
+    @responses.activate
+    def test_convert(av):
+        responses.add(
+            responses.GET, 'https://process.filestackapi.com/SOMEHANDLE',
+            json={'status': 'completed', 'data': {'url': URL}}
+        )
+        filelink = av.to_filelink()
+&gt;       assert isinstance(filelink, Filelink)
+E       assert False
+E        +  where False = isinstance(&lt;coroutine object AudioVisual.to_filelink at 0x1038d6ac0&gt;, Filelink)
+
+tests/audiovisual_test.py:31: AssertionError</failure></testcase><testcase classname="tests.client_test" name="test_api_set" time="0.000" /><testcase classname="tests.client_test" name="test_wrong_storage" time="0.000" /><testcase classname="tests.client_test" name="test_store_external_url" time="0.000"><failure message="assert False&#10; +  where False = isinstance(&lt;coroutine object Client.upload_url at 0x1038d6bd0&gt;, Filelink)">client = &lt;filestack.models.client.Client object at 0x103b2d710&gt;
+
+    @responses.activate
+    def test_store_external_url(client):
+        responses.add(
+            responses.POST, 'https://cdn.filestackcontent.com/process', json={'handle': HANDLE}
+        )
+        filelink = client.upload_url(url='http://a.bc')
+    
+&gt;       assert isinstance(filelink, Filelink)
+E       assert False
+E        +  where False = isinstance(&lt;coroutine object Client.upload_url at 0x1038d6bd0&gt;, Filelink)
+
+tests/client_test.py:37: AssertionError</failure></testcase><testcase classname="tests.client_test" name="test_store_filepath" time="0.001"><failure message="assert False&#10; +  where False = isinstance(&lt;coroutine object Client.upload at 0x103b396d0&gt;, Filelink)">upload_mock = &lt;AsyncMock name='multipart_upload' id='4357062224'&gt;
+client = &lt;filestack.models.client.Client object at 0x103b37250&gt;
+
+    @patch('filestack.models.client.multipart_upload')
+    def test_store_filepath(upload_mock, client):
+        upload_mock.return_value = {'handle': HANDLE}
+        filelink = client.upload(filepath='path/to/image.jpg')
+    
+&gt;       assert isinstance(filelink, Filelink)
+E       assert False
+E        +  where False = isinstance(&lt;coroutine object Client.upload at 0x103b396d0&gt;, Filelink)
+
+tests/client_test.py:46: AssertionError</failure></testcase><testcase classname="tests.client_test" name="test_security_inheritance" time="0.001"><failure message="AttributeError: 'coroutine' object has no attribute 'handle'">upload_external_mock = &lt;AsyncMock name='upload_external_url' id='4357122768'&gt;
+multipart_mock = &lt;AsyncMock name='multipart_upload' id='4357116304'&gt;
+
+    @patch('filestack.models.client.multipart_upload')
+    @patch('filestack.models.client.upload_external_url')
+    def test_security_inheritance(upload_external_mock, multipart_mock):
+        upload_external_mock.return_value = {'handle': 'URL_HANDLE'}
+        multipart_mock.return_value = {'handle': 'FILE_HANDLE'}
+    
+        policy = {'expiry': 1900}
+        cli = Client(APIKEY, security=Security(policy, 'SECRET'))
+    
+        flink_from_url = cli.upload_url('https://just.some/url')
+&gt;       assert flink_from_url.handle == 'URL_HANDLE'
+               ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'handle'
+
+tests/client_test.py:61: AttributeError</failure></testcase><testcase classname="tests.client_test" name="test_url_screenshot" time="0.000" /><testcase classname="tests.client_test" name="test_transform_external" time="0.000" /><testcase classname="tests.client_test" name="test_zip" time="0.002"><failure message="assert &lt;coroutine object Client.zip at 0x10385a500&gt; == 9">client = &lt;filestack.models.client.Client object at 0x103b9bd90&gt;
+
+    @responses.activate
+    def test_zip(client):
+        responses.add(
+            responses.GET, re.compile('https://cdn.filestackcontent.com/APIKEY/zip*'),
+            body=b'zip-bytes'
+        )
+        m = mock_open()
+        with patch('filestack.models.client.open', m):
+            zip_size = client.zip('test.zip', ['handle1', 'handle2'])
+    
+&gt;       assert zip_size == 9
+E       assert &lt;coroutine object Client.zip at 0x10385a500&gt; == 9
+
+tests/client_test.py:91: AssertionError</failure></testcase><testcase classname="tests.filelink_test" name="test_handle" time="0.000" /><testcase classname="tests.filelink_test" name="test_url" time="0.000" /><testcase classname="tests.filelink_test" name="test_signed_url[None-security=p:eyJjYWxsIjogWyJyZWFkIl0sICJleHBpcnkiOiAxMDIzODIzOX0=,s:858d1ee9c0a1f06283e495f78dc7950ff6e64136ce960465f35539791fcd486b]" time="0.000" /><testcase classname="tests.filelink_test" name="test_signed_url[security_obj1-security=p:eyJjYWxsIjogWyJ3cml0ZSJdLCAiZXhwaXJ5IjogMTY1NTk5MjQzMn0=,s:625cc5b9beab3e939fb53935f7795919c9f57f628d43adfc14566d2ad9a4ad47]" time="0.000" /><testcase classname="tests.filelink_test" name="test_get_content" time="0.000"><failure message="AssertionError: assert &lt;coroutine object CommonMixin.get_content at 0x103bd89d0&gt; == b'file-content'">filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_get_content(filelink):
+        responses.add(
+            responses.GET, 'https://cdn.filestackcontent.com/{}'.format(HANDLE), body=b'file-content'
+        )
+        content = filelink.get_content()
+&gt;       assert content == b'file-content'
+E       AssertionError: assert &lt;coroutine object CommonMixin.get_content at 0x103bd89d0&gt; == b'file-content'
+
+tests/filelink_test.py:62: AssertionError</failure></testcase><testcase classname="tests.filelink_test" name="test_bad_call" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'filestack.exceptions.FilestackHTTPError'&gt;">filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_bad_call(filelink):
+        responses.add(
+            responses.GET, 'https://cdn.filestackcontent.com/{}'.format(HANDLE), status=400
+        )
+&gt;       with pytest.raises(exceptions.FilestackHTTPError):
+E       Failed: DID NOT RAISE &lt;class 'filestack.exceptions.FilestackHTTPError'&gt;
+
+tests/filelink_test.py:70: Failed</failure></testcase><testcase classname="tests.filelink_test" name="test_metadata[None-None-expected_params0]" time="0.001"><failure message="AssertionError: assert &lt;coroutine object Filelink.metadata at 0x103bc9120&gt; == {'metadata': 'content'}">attributes = None, security = None, expected_params = {}
+filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @pytest.mark.parametrize('attributes, security, expected_params', [
+        (None, None, {}),
+        (
+            None,
+            Security({'expiry': 123}, 'secret'),
+            {
+                'policy': 'eyJleHBpcnkiOiAxMjN9',
+                'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'
+            }
+        ),
+        (
+            ['size', 'filename'],
+            Security({'expiry': 123}, 'secret'),
+            {
+                'size': 'true',
+                'filename': 'true',
+                'policy': 'eyJleHBpcnkiOiAxMjN9',
+                'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'
+            }
+        ),
+    ])
+    @responses.activate
+    def test_metadata(attributes, security, expected_params, filelink):
+        responses.add(
+            responses.GET,
+            re.compile('https://cdn.filestackcontent.com/SOMEHANDLE/metadata.*'),
+            json={'metadata': 'content'}
+        )
+        metadata_response = filelink.metadata(attributes_list=attributes, security=security)
+&gt;       assert metadata_response == {'metadata': 'content'}
+E       AssertionError: assert &lt;coroutine object Filelink.metadata at 0x103bc9120&gt; == {'metadata': 'content'}
+
+tests/filelink_test.py:103: AssertionError</failure></testcase><testcase classname="tests.filelink_test" name="test_metadata[None-security1-expected_params1]" time="0.001"><failure message="AssertionError: assert &lt;coroutine object Filelink.metadata at 0x1038628c0&gt; == {'metadata': 'content'}">attributes = None
+security = &lt;filestack.models.security.Security object at 0x1037a9190&gt;
+expected_params = {'policy': 'eyJleHBpcnkiOiAxMjN9', 'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'}
+filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @pytest.mark.parametrize('attributes, security, expected_params', [
+        (None, None, {}),
+        (
+            None,
+            Security({'expiry': 123}, 'secret'),
+            {
+                'policy': 'eyJleHBpcnkiOiAxMjN9',
+                'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'
+            }
+        ),
+        (
+            ['size', 'filename'],
+            Security({'expiry': 123}, 'secret'),
+            {
+                'size': 'true',
+                'filename': 'true',
+                'policy': 'eyJleHBpcnkiOiAxMjN9',
+                'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'
+            }
+        ),
+    ])
+    @responses.activate
+    def test_metadata(attributes, security, expected_params, filelink):
+        responses.add(
+            responses.GET,
+            re.compile('https://cdn.filestackcontent.com/SOMEHANDLE/metadata.*'),
+            json={'metadata': 'content'}
+        )
+        metadata_response = filelink.metadata(attributes_list=attributes, security=security)
+&gt;       assert metadata_response == {'metadata': 'content'}
+E       AssertionError: assert &lt;coroutine object Filelink.metadata at 0x1038628c0&gt; == {'metadata': 'content'}
+
+tests/filelink_test.py:103: AssertionError</failure></testcase><testcase classname="tests.filelink_test" name="test_metadata[attributes2-security2-expected_params2]" time="0.001"><failure message="AssertionError: assert &lt;coroutine object Filelink.metadata at 0x103862e60&gt; == {'metadata': 'content'}">attributes = ['size', 'filename']
+security = &lt;filestack.models.security.Security object at 0x1037a9290&gt;
+expected_params = {'filename': 'true', 'policy': 'eyJleHBpcnkiOiAxMjN9', 'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01', 'size': 'true'}
+filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @pytest.mark.parametrize('attributes, security, expected_params', [
+        (None, None, {}),
+        (
+            None,
+            Security({'expiry': 123}, 'secret'),
+            {
+                'policy': 'eyJleHBpcnkiOiAxMjN9',
+                'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'
+            }
+        ),
+        (
+            ['size', 'filename'],
+            Security({'expiry': 123}, 'secret'),
+            {
+                'size': 'true',
+                'filename': 'true',
+                'policy': 'eyJleHBpcnkiOiAxMjN9',
+                'signature': '4de8b7441b3daf0d68b4f8ebcf7e015d07aef43a1295476a1dde1aed327abc01'
+            }
+        ),
+    ])
+    @responses.activate
+    def test_metadata(attributes, security, expected_params, filelink):
+        responses.add(
+            responses.GET,
+            re.compile('https://cdn.filestackcontent.com/SOMEHANDLE/metadata.*'),
+            json={'metadata': 'content'}
+        )
+        metadata_response = filelink.metadata(attributes_list=attributes, security=security)
+&gt;       assert metadata_response == {'metadata': 'content'}
+E       AssertionError: assert &lt;coroutine object Filelink.metadata at 0x103862e60&gt; == {'metadata': 'content'}
+
+tests/filelink_test.py:103: AssertionError</failure></testcase><testcase classname="tests.filelink_test" name="test_download" time="0.002"><failure message="assert &lt;coroutine object CommonMixin.download at 0x103b396d0&gt; == 12">filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_download(filelink):
+        responses.add(
+            responses.GET, 'https://cdn.filestackcontent.com/{}'.format(HANDLE), body=b'file-content'
+        )
+        m = mock_open()
+        with patch('filestack.mixins.common.open', m):
+            file_size = filelink.download('tests/data/test_download.jpg')
+&gt;           assert file_size == 12
+E           assert &lt;coroutine object CommonMixin.download at 0x103b396d0&gt; == 12
+
+tests/filelink_test.py:115: AssertionError</failure></testcase><testcase classname="tests.filelink_test" name="test_tags_without_security" time="0.000"><failure message="Failed: DID NOT RAISE &lt;class 'Exception'&gt;">filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    def test_tags_without_security(filelink):
+&gt;       with pytest.raises(Exception, match=r'Security is required'):
+E       Failed: DID NOT RAISE &lt;class 'Exception'&gt;
+
+tests/filelink_test.py:120: Failed</failure></testcase><testcase classname="tests.filelink_test" name="test_tags" time="0.001"><failure message="AssertionError: assert &lt;coroutine object CommonMixin.tags at 0x103bd9030&gt; == {'tags': {'cat': 98}}&#10; +  where &lt;coroutine object CommonMixin.tags at 0x103bd9030&gt; = tags()&#10; +    where tags = &lt;Filelink SOMEHANDLE&gt;.tags">secure_filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_tags(secure_filelink):
+        responses.add(
+            responses.GET, re.compile('https://cdn.filestackcontent.com/tags/.*/{}$'.format(HANDLE)),
+            json={'tags': {'cat': 98}}
+        )
+&gt;       assert secure_filelink.tags() == {'tags': {'cat': 98}}
+E       AssertionError: assert &lt;coroutine object CommonMixin.tags at 0x103bd9030&gt; == {'tags': {'cat': 98}}
+E        +  where &lt;coroutine object CommonMixin.tags at 0x103bd9030&gt; = tags()
+E        +    where tags = &lt;Filelink SOMEHANDLE&gt;.tags
+
+tests/filelink_test.py:130: AssertionError</failure></testcase><testcase classname="tests.filelink_test" name="test_tags_on_transformation" time="0.001"><failure message="AssertionError: assert &lt;coroutine object CommonMixin.tags at 0x103bd86a0&gt; == {'tags': {'cat': 99}}&#10; +  where &lt;coroutine object CommonMixin.tags at 0x103bd86a0&gt; = tags()&#10; +    where tags = &lt;filestack.models.transformation.Transformation object at 0x103c5d010&gt;.tags">secure_filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_tags_on_transformation(secure_filelink):
+        transformation = secure_filelink.resize(width=100)
+        image_tags = {'tags': {'cat': 99}}
+        responses.add(
+            responses.GET, re.compile('{}/resize.*/{}$'.format(config.CDN_URL, HANDLE)),
+            json=image_tags
+        )
+&gt;       assert transformation.tags() == image_tags
+E       AssertionError: assert &lt;coroutine object CommonMixin.tags at 0x103bd86a0&gt; == {'tags': {'cat': 99}}
+E        +  where &lt;coroutine object CommonMixin.tags at 0x103bd86a0&gt; = tags()
+E        +    where tags = &lt;filestack.models.transformation.Transformation object at 0x103c5d010&gt;.tags
+
+tests/filelink_test.py:142: AssertionError</failure></testcase><testcase classname="tests.filelink_test" name="test_sfw_without_security" time="0.000"><failure message="Failed: DID NOT RAISE &lt;class 'Exception'&gt;">filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    def test_sfw_without_security(filelink):
+&gt;       with pytest.raises(Exception, match=r'Security is required'):
+E       Failed: DID NOT RAISE &lt;class 'Exception'&gt;
+
+tests/filelink_test.py:149: Failed</failure></testcase><testcase classname="tests.filelink_test" name="test_sfw" time="0.001"><failure message="AssertionError: assert &lt;coroutine object CommonMixin.sfw at 0x103bd89d0&gt; == {'sfw': False}&#10; +  where &lt;coroutine object CommonMixin.sfw at 0x103bd89d0&gt; = sfw()&#10; +    where sfw = &lt;Filelink SOMEHANDLE&gt;.sfw">secure_filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_sfw(secure_filelink):
+        sfw_response = {'sfw': False}
+        responses.add(responses.GET, re.compile('{}.*'.format(config.CDN_URL)), json=sfw_response)
+&gt;       assert secure_filelink.sfw() == sfw_response
+E       AssertionError: assert &lt;coroutine object CommonMixin.sfw at 0x103bd89d0&gt; == {'sfw': False}
+E        +  where &lt;coroutine object CommonMixin.sfw at 0x103bd89d0&gt; = sfw()
+E        +    where sfw = &lt;Filelink SOMEHANDLE&gt;.sfw
+
+tests/filelink_test.py:157: AssertionError</failure></testcase><testcase classname="tests.filelink_test" name="test_sfw_on_transformation" time="0.001"><failure message="AssertionError: assert &lt;coroutine object CommonMixin.sfw at 0x103bd8260&gt; == {'sfw': True}&#10; +  where &lt;coroutine object CommonMixin.sfw at 0x103bd8260&gt; = sfw()&#10; +    where sfw = &lt;filestack.models.transformation.Transformation object at 0x103c478d0&gt;.sfw">secure_filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    @responses.activate
+    def test_sfw_on_transformation(secure_filelink):
+        transformation = secure_filelink.resize(width=100)
+        sfw_response = {'sfw': True}
+        responses.add(responses.GET, re.compile('{}/resize.*'.format(config.CDN_URL)), json=sfw_response)
+&gt;       assert transformation.sfw() == sfw_response
+E       AssertionError: assert &lt;coroutine object CommonMixin.sfw at 0x103bd8260&gt; == {'sfw': True}
+E        +  where &lt;coroutine object CommonMixin.sfw at 0x103bd8260&gt; = sfw()
+E        +    where sfw = &lt;filestack.models.transformation.Transformation object at 0x103c478d0&gt;.sfw
+
+tests/filelink_test.py:166: AssertionError</failure></testcase><testcase classname="tests.filelink_test" name="test_overwrite_without_security" time="0.000"><failure message="Failed: DID NOT RAISE &lt;class 'Exception'&gt;">filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    def test_overwrite_without_security(filelink):
+&gt;       with pytest.raises(Exception, match='Security is required'):
+E       Failed: DID NOT RAISE &lt;class 'Exception'&gt;
+
+tests/filelink_test.py:173: Failed</failure></testcase><testcase classname="tests.filelink_test" name="test_invalid_overwrite_call" time="0.000"><failure message="Failed: DID NOT RAISE &lt;class 'Exception'&gt;">secure_filelink = &lt;Filelink SOMEHANDLE&gt;
+
+    def test_invalid_overwrite_call(secure_filelink):
+&gt;       with pytest.raises(Exception, match='filepath, file_obj or url argument must be provided'):
+E       Failed: DID NOT RAISE &lt;class 'Exception'&gt;
+
+tests/filelink_test.py:178: Failed</failure></testcase><testcase classname="tests.filelink_test" name="test_overwrite_with_url[True]" time="0.001"><failure message="AttributeError: module 'filestack.models.filelink' has no attribute 'requests'">args = ()
+keywargs = {'decode_base64': True, 'secure_filelink': &lt;Filelink SOMEHANDLE&gt;}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1427: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'filestack.models.filelink.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'filestack.models.filelink' has no attribute 'requests'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pkgutil.py:715: AttributeError</failure></testcase><testcase classname="tests.filelink_test" name="test_overwrite_with_url[False]" time="0.001"><failure message="AttributeError: module 'filestack.models.filelink' has no attribute 'requests'">args = ()
+keywargs = {'decode_base64': False, 'secure_filelink': &lt;Filelink SOMEHANDLE&gt;}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1427: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'filestack.models.filelink.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'filestack.models.filelink' has no attribute 'requests'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pkgutil.py:715: AttributeError</failure></testcase><testcase classname="tests.filelink_test" name="test_overwrite_with_filepath" time="0.000"><failure message="AttributeError: module 'filestack.models.filelink' has no attribute 'requests'">args = (), keywargs = {'secure_filelink': &lt;Filelink SOMEHANDLE&gt;}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1427: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'filestack.models.filelink.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'filestack.models.filelink' has no attribute 'requests'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pkgutil.py:715: AttributeError</failure></testcase><testcase classname="tests.filelink_test" name="test_overwrite_with_file_obj" time="0.000"><failure message="AttributeError: module 'filestack.models.filelink' has no attribute 'requests'">args = (), keywargs = {'secure_filelink': &lt;Filelink SOMEHANDLE&gt;}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1427: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'filestack.models.filelink.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'filestack.models.filelink' has no attribute 'requests'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pkgutil.py:715: AttributeError</failure></testcase><testcase classname="tests.filelink_test" name="test_delete_without_apikey_or_security[flink0-Security is required]" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'Exception'&gt;">flink = &lt;Filelink handle&gt;, exc_message = 'Security is required'
+
+    @pytest.mark.parametrize('flink, exc_message', [
+        (Filelink('handle', apikey=APIKEY), 'Security is required'),
+        (Filelink('handle', security=SECURITY), 'Apikey is required')
+    ])
+    def test_delete_without_apikey_or_security(flink, exc_message):
+&gt;       with pytest.raises(Exception, match=exc_message):
+E       Failed: DID NOT RAISE &lt;class 'Exception'&gt;
+
+tests/filelink_test.py:233: Failed</failure></testcase><testcase classname="tests.filelink_test" name="test_delete_without_apikey_or_security[flink1-Apikey is required]" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'Exception'&gt;">flink = &lt;Filelink handle&gt;, exc_message = 'Apikey is required'
+
+    @pytest.mark.parametrize('flink, exc_message', [
+        (Filelink('handle', apikey=APIKEY), 'Security is required'),
+        (Filelink('handle', security=SECURITY), 'Apikey is required')
+    ])
+    def test_delete_without_apikey_or_security(flink, exc_message):
+&gt;       with pytest.raises(Exception, match=exc_message):
+E       Failed: DID NOT RAISE &lt;class 'Exception'&gt;
+
+tests/filelink_test.py:233: Failed</failure></testcase><testcase classname="tests.filelink_test" name="test_successful_delete[flink0-security_arg0]" time="0.000"><failure message="AttributeError: module 'filestack.models.filelink' has no attribute 'requests'">args = ()
+keywargs = {'flink': &lt;Filelink SOMEHANDLE&gt;, 'security_arg': &lt;filestack.models.security.Security object at 0x10378ffd0&gt;}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1427: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'filestack.models.filelink.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'filestack.models.filelink' has no attribute 'requests'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pkgutil.py:715: AttributeError</failure></testcase><testcase classname="tests.filelink_test" name="test_successful_delete[flink1-None]" time="0.000"><failure message="AttributeError: module 'filestack.models.filelink' has no attribute 'requests'">args = (), keywargs = {'flink': &lt;Filelink SOMEHANDLE&gt;, 'security_arg': None}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+&gt;       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1354: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py:505: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1427: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'filestack.models.filelink.requests'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P&lt;pkg&gt;{dotted_words})'
+                                       f'(?P&lt;cln&gt;:(?P&lt;obj&gt;{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+&gt;           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'filestack.models.filelink' has no attribute 'requests'
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/pkgutil.py:715: AttributeError</failure></testcase><testcase classname="tests.filestack_helpers_test" name="test_webhook_verification[57cbb25386c3d6ff758a7a75cf52ba02cf2b0a1a2d6d5dfb9c886553ca6011cb-True]" time="0.000" /><testcase classname="tests.filestack_helpers_test" name="test_webhook_verification[incorrect-signature-False]" time="0.000" /><testcase classname="tests.filestack_helpers_test" name="test_agrument_validation[hook-secret-body-should be a dict-value is not a dict]" time="0.001" /><testcase classname="tests.filestack_helpers_test" name="test_agrument_validation[1-body-headers1-value is not a string]" time="0.000" /><testcase classname="tests.filestack_helpers_test" name="test_agrument_validation[hook-secret--headers2-fs-signature header is missing]" time="0.000" /><testcase classname="tests.filestack_helpers_test" name="test_agrument_validation[hook-secret-body3-headers3-Invalid webhook body]" time="0.000" /><testcase classname="tests.intelligent_ingestion_test" name="test_upload_part_success" time="0.000"><failure message="TypeError: upload_part() missing 1 required positional argument: 'part'">@responses.activate
+    def test_upload_part_success():
+        responses.add(
+            responses.POST, 'https://fs-upload.com/multipart/upload',
+            json={'url': 'http://s3.url', 'headers': {'filestack': 'headers'}}
+        )
+        responses.add(responses.PUT, 'http://s3.url')
+        responses.add(responses.POST, 'https://fs-upload.com/multipart/commit')
+    
+        part = {'seek_point': 0, 'num': 1}
+        start_response = {
+            'uri': 'fs-upload.com', 'location_url': 'fs-upload.com', 'region': 'region', 'upload_id': 'abc'
+        }
+&gt;       upload_part('Aaaaapikey', 'file.txt', 'tests/data/doom.mp4', 1234, 's3', start_response, part)
+E       TypeError: upload_part() missing 1 required positional argument: 'part'
+
+tests/intelligent_ingestion_test.py:22: TypeError</failure></testcase><testcase classname="tests.intelligent_ingestion_test" name="test_upload_part_with_resize" time="0.000"><failure message="TypeError: upload_part() missing 1 required positional argument: 'part'">@responses.activate
+    def test_upload_part_with_resize():
+        responses.add(
+            responses.POST, 'https://fs-upload.com/multipart/upload',
+            json={'url': 'https://s3.url', 'headers': {'filestack': 'headers'}}
+        )
+        responses.add(responses.PUT, 'https://s3.url', status=400)
+        responses.add(responses.PUT, 'https://s3.url')  # chunks 1 &amp; 2 of part 1
+        responses.add(responses.POST, 'https://fs-upload.com/multipart/commit')
+    
+        start_response = {
+            'uri': 'fs-upload.com', 'location_url': 'fs-upload.com', 'region': 'region', 'upload_id': 'abc'
+        }
+        part = {'seek_point': 0, 'num': 1}
+&gt;       upload_part('Aaaaapikey', 'file.txt', 'tests/data/doom.mp4', 5415034, 's3', start_response, part)
+E       TypeError: upload_part() missing 1 required positional argument: 'part'
+
+tests/intelligent_ingestion_test.py:52: TypeError</failure></testcase><testcase classname="tests.intelligent_ingestion_test" name="test_min_chunk_size_exception" time="0.000"><failure message="AssertionError: Regex pattern did not match.&#10;  Expected regex: 'Minimal chunk size failed'&#10;  Actual message: &quot;upload_part() missing 1 required positional argument: 'part'&quot;">@responses.activate
+    def test_min_chunk_size_exception():
+        responses.reset()
+        responses.add(
+            responses.POST, 'https://fs-upload.com/multipart/upload',
+            json={'url': 'https://upload.url', 'headers': {'filestack': 'headers'}}
+        )
+        responses.add(responses.PUT, 'https://upload.url', status=400)
+    
+        part = {'seek_point': 0, 'num': 1}
+        start_response = {
+            'uri': 'fs-upload.com', 'location_url': 'fs-upload.com', 'region': 'region', 'upload_id': 'abc'
+        }
+        with pytest.raises(Exception, match='Minimal chunk size failed'):
+&gt;           upload_part('Aaaaapikey', 'file.txt', 'tests/data/doom.mp4', 5415034, 's3', start_response, part)
+E           TypeError: upload_part() missing 1 required positional argument: 'part'
+
+tests/intelligent_ingestion_test.py:75: TypeError
+
+During handling of the above exception, another exception occurred:
+
+    @responses.activate
+    def test_min_chunk_size_exception():
+        responses.reset()
+        responses.add(
+            responses.POST, 'https://fs-upload.com/multipart/upload',
+            json={'url': 'https://upload.url', 'headers': {'filestack': 'headers'}}
+        )
+        responses.add(responses.PUT, 'https://upload.url', status=400)
+    
+        part = {'seek_point': 0, 'num': 1}
+        start_response = {
+            'uri': 'fs-upload.com', 'location_url': 'fs-upload.com', 'region': 'region', 'upload_id': 'abc'
+        }
+&gt;       with pytest.raises(Exception, match='Minimal chunk size failed'):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Minimal chunk size failed'
+E         Actual message: "upload_part() missing 1 required positional argument: 'part'"
+
+tests/intelligent_ingestion_test.py:74: AssertionError</failure></testcase><testcase classname="tests.multipart_test" name="test_upload_filepath" time="0.000"><error message="failed on setup with &quot;file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py, line 38&#10;  @pytest.mark.asyncio&#10;  async def test_upload_filepath(multipart_mock):&#10;      client = Client(APIKEY)&#10;      filelink = await client.upload(filepath='tests/data/doom.mp4')&#10;      assert filelink.handle == HANDLE&#10;      assert filelink.upload_response == {'url': 'https://cdn.filestackcontent.com/{}'.format(HANDLE), 'handle': HANDLE}&#10;file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py, line 17&#10;  @pytest.fixture&#10;  async def multipart_mock(aiohttp_client):&#10;      async def handler(request):&#10;          if request.method == 'POST' and request.path == config.MULTIPART_START_URL:&#10;              return web.json_response({&#10;                  'region': 'us-east-1', 'upload_id': 'someuuid', 'uri': 'someuri',&#10;                  'location_url': 'fs-uploads.com'&#10;              })&#10;          elif request.method == 'POST' and request.path == 'https://fs-uploads.com/multipart/upload':&#10;              return web.json_response({'url': 'http://somewhere.on.s3', 'headers': {'filestack': 'header'}})&#10;          elif request.method == 'PUT' and request.path == 'http://somewhere.on.s3':&#10;              return web.json_response({}, headers={'ETag': 'abc'})&#10;          elif request.method == 'POST' and request.path == 'https://fs-uploads.com/multipart/complete':&#10;              return web.json_response({'url': 'https://cdn.filestackcontent.com/{}'.format(HANDLE), 'handle': HANDLE})&#10;&#10;      app = web.Application()&#10;      app.router.add_route('*', '/{tail:.*}', handler)&#10;      client = await aiohttp_client(app)&#10;      return client&#10;E       fixture 'aiohttp_client' not found&#10;&gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, extra, extras, include_metadata_in_junit_xml, json_metadata, metadata, monkeypatch, multipart_mock, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory&#10;&gt;       use 'pytest --fixtures [testpath]' for help on them.&#10;&#10;/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py:17&quot;">file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py, line 38
+  @pytest.mark.asyncio
+  async def test_upload_filepath(multipart_mock):
+      client = Client(APIKEY)
+      filelink = await client.upload(filepath='tests/data/doom.mp4')
+      assert filelink.handle == HANDLE
+      assert filelink.upload_response == {'url': 'https://cdn.filestackcontent.com/{}'.format(HANDLE), 'handle': HANDLE}
+file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py, line 17
+  @pytest.fixture
+  async def multipart_mock(aiohttp_client):
+      async def handler(request):
+          if request.method == 'POST' and request.path == config.MULTIPART_START_URL:
+              return web.json_response({
+                  'region': 'us-east-1', 'upload_id': 'someuuid', 'uri': 'someuri',
+                  'location_url': 'fs-uploads.com'
+              })
+          elif request.method == 'POST' and request.path == 'https://fs-uploads.com/multipart/upload':
+              return web.json_response({'url': 'http://somewhere.on.s3', 'headers': {'filestack': 'header'}})
+          elif request.method == 'PUT' and request.path == 'http://somewhere.on.s3':
+              return web.json_response({}, headers={'ETag': 'abc'})
+          elif request.method == 'POST' and request.path == 'https://fs-uploads.com/multipart/complete':
+              return web.json_response({'url': 'https://cdn.filestackcontent.com/{}'.format(HANDLE), 'handle': HANDLE})
+
+      app = web.Application()
+      app.router.add_route('*', '/{tail:.*}', handler)
+      client = await aiohttp_client(app)
+      return client
+E       fixture 'aiohttp_client' not found
+&gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, extra, extras, include_metadata_in_junit_xml, json_metadata, metadata, monkeypatch, multipart_mock, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+&gt;       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py:17</error></testcase><testcase classname="tests.multipart_test" name="test_upload_file_obj" time="0.000"><error message="failed on setup with &quot;file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py, line 46&#10;  @pytest.mark.asyncio&#10;  async def test_upload_file_obj(multipart_mock):&#10;      file_content = b'file bytes'&#10;      filelink = await Client(APIKEY).upload(file_obj=io.BytesIO(file_content))&#10;      assert filelink.handle == HANDLE&#10;      assert multipart_mock.calls[2].request.headers['filestack'] == 'header'&#10;      assert multipart_mock.calls[2].request.body == file_content&#10;file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py, line 17&#10;  @pytest.fixture&#10;  async def multipart_mock(aiohttp_client):&#10;      async def handler(request):&#10;          if request.method == 'POST' and request.path == config.MULTIPART_START_URL:&#10;              return web.json_response({&#10;                  'region': 'us-east-1', 'upload_id': 'someuuid', 'uri': 'someuri',&#10;                  'location_url': 'fs-uploads.com'&#10;              })&#10;          elif request.method == 'POST' and request.path == 'https://fs-uploads.com/multipart/upload':&#10;              return web.json_response({'url': 'http://somewhere.on.s3', 'headers': {'filestack': 'header'}})&#10;          elif request.method == 'PUT' and request.path == 'http://somewhere.on.s3':&#10;              return web.json_response({}, headers={'ETag': 'abc'})&#10;          elif request.method == 'POST' and request.path == 'https://fs-uploads.com/multipart/complete':&#10;              return web.json_response({'url': 'https://cdn.filestackcontent.com/{}'.format(HANDLE), 'handle': HANDLE})&#10;&#10;      app = web.Application()&#10;      app.router.add_route('*', '/{tail:.*}', handler)&#10;      client = await aiohttp_client(app)&#10;      return client&#10;E       fixture 'aiohttp_client' not found&#10;&gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, extra, extras, include_metadata_in_junit_xml, json_metadata, metadata, monkeypatch, multipart_mock, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory&#10;&gt;       use 'pytest --fixtures [testpath]' for help on them.&#10;&#10;/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py:17&quot;">file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py, line 46
+  @pytest.mark.asyncio
+  async def test_upload_file_obj(multipart_mock):
+      file_content = b'file bytes'
+      filelink = await Client(APIKEY).upload(file_obj=io.BytesIO(file_content))
+      assert filelink.handle == HANDLE
+      assert multipart_mock.calls[2].request.headers['filestack'] == 'header'
+      assert multipart_mock.calls[2].request.body == file_content
+file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py, line 17
+  @pytest.fixture
+  async def multipart_mock(aiohttp_client):
+      async def handler(request):
+          if request.method == 'POST' and request.path == config.MULTIPART_START_URL:
+              return web.json_response({
+                  'region': 'us-east-1', 'upload_id': 'someuuid', 'uri': 'someuri',
+                  'location_url': 'fs-uploads.com'
+              })
+          elif request.method == 'POST' and request.path == 'https://fs-uploads.com/multipart/upload':
+              return web.json_response({'url': 'http://somewhere.on.s3', 'headers': {'filestack': 'header'}})
+          elif request.method == 'PUT' and request.path == 'http://somewhere.on.s3':
+              return web.json_response({}, headers={'ETag': 'abc'})
+          elif request.method == 'POST' and request.path == 'https://fs-uploads.com/multipart/complete':
+              return web.json_response({'url': 'https://cdn.filestackcontent.com/{}'.format(HANDLE), 'handle': HANDLE})
+
+      app = web.Application()
+      app.router.add_route('*', '/{tail:.*}', handler)
+      client = await aiohttp_client(app)
+      return client
+E       fixture 'aiohttp_client' not found
+&gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, extra, extras, include_metadata_in_junit_xml, json_metadata, metadata, monkeypatch, multipart_mock, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+&gt;       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py:17</error></testcase><testcase classname="tests.multipart_test" name="test_upload_with_workflows" time="0.000"><error message="failed on setup with &quot;file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py, line 55&#10;  @pytest.mark.asyncio&#10;  async def test_upload_with_workflows(multipart_mock):&#10;      workflow_ids = ['workflow-id-1', 'workflow-id-2']&#10;      store_params = {'workflows': workflow_ids}&#10;      client = Client(APIKEY)&#10;      filelink = await client.upload(filepath='tests/data/bird.jpg', store_params=store_params)&#10;      assert filelink.handle == HANDLE&#10;      multipart_complete_payload = json.loads(multipart_mock.calls[3].request.body.decode())&#10;      assert multipart_complete_payload['store']['workflows'] == workflow_ids&#10;file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py, line 17&#10;  @pytest.fixture&#10;  async def multipart_mock(aiohttp_client):&#10;      async def handler(request):&#10;          if request.method == 'POST' and request.path == config.MULTIPART_START_URL:&#10;              return web.json_response({&#10;                  'region': 'us-east-1', 'upload_id': 'someuuid', 'uri': 'someuri',&#10;                  'location_url': 'fs-uploads.com'&#10;              })&#10;          elif request.method == 'POST' and request.path == 'https://fs-uploads.com/multipart/upload':&#10;              return web.json_response({'url': 'http://somewhere.on.s3', 'headers': {'filestack': 'header'}})&#10;          elif request.method == 'PUT' and request.path == 'http://somewhere.on.s3':&#10;              return web.json_response({}, headers={'ETag': 'abc'})&#10;          elif request.method == 'POST' and request.path == 'https://fs-uploads.com/multipart/complete':&#10;              return web.json_response({'url': 'https://cdn.filestackcontent.com/{}'.format(HANDLE), 'handle': HANDLE})&#10;&#10;      app = web.Application()&#10;      app.router.add_route('*', '/{tail:.*}', handler)&#10;      client = await aiohttp_client(app)&#10;      return client&#10;E       fixture 'aiohttp_client' not found&#10;&gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, extra, extras, include_metadata_in_junit_xml, json_metadata, metadata, monkeypatch, multipart_mock, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory&#10;&gt;       use 'pytest --fixtures [testpath]' for help on them.&#10;&#10;/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py:17&quot;">file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py, line 55
+  @pytest.mark.asyncio
+  async def test_upload_with_workflows(multipart_mock):
+      workflow_ids = ['workflow-id-1', 'workflow-id-2']
+      store_params = {'workflows': workflow_ids}
+      client = Client(APIKEY)
+      filelink = await client.upload(filepath='tests/data/bird.jpg', store_params=store_params)
+      assert filelink.handle == HANDLE
+      multipart_complete_payload = json.loads(multipart_mock.calls[3].request.body.decode())
+      assert multipart_complete_payload['store']['workflows'] == workflow_ids
+file /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py, line 17
+  @pytest.fixture
+  async def multipart_mock(aiohttp_client):
+      async def handler(request):
+          if request.method == 'POST' and request.path == config.MULTIPART_START_URL:
+              return web.json_response({
+                  'region': 'us-east-1', 'upload_id': 'someuuid', 'uri': 'someuri',
+                  'location_url': 'fs-uploads.com'
+              })
+          elif request.method == 'POST' and request.path == 'https://fs-uploads.com/multipart/upload':
+              return web.json_response({'url': 'http://somewhere.on.s3', 'headers': {'filestack': 'header'}})
+          elif request.method == 'PUT' and request.path == 'http://somewhere.on.s3':
+              return web.json_response({}, headers={'ETag': 'abc'})
+          elif request.method == 'POST' and request.path == 'https://fs-uploads.com/multipart/complete':
+              return web.json_response({'url': 'https://cdn.filestackcontent.com/{}'.format(HANDLE), 'handle': HANDLE})
+
+      app = web.Application()
+      app.router.add_route('*', '/{tail:.*}', handler)
+      client = await aiohttp_client(app)
+      return client
+E       fixture 'aiohttp_client' not found
+&gt;       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, cov, doctest_namespace, extra, extras, include_metadata_in_junit_xml, json_metadata, metadata, monkeypatch, multipart_mock, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+&gt;       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/filestack@filestack-python__0e44e337__requests__aiohttp/tests/multipart_test.py:17</error></testcase><testcase classname="tests.multipart_test" name="test_upload_chunk" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.security_test" name="test_security" time="0.000" /><testcase classname="tests.security_test" name="test_security_as_url_string" time="0.000" /><testcase classname="tests.tasks_test" name="test_createpdf" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103c5d7d0&gt;
+
+    def test_createpdf(transform):
+        target_url = '{}/{}/pdfcreate/{}/[v7MSSKswR0mvEwZS9LD0,Sr5CrtQPSs5TTZzor1Cw]'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        obj = transform.pdfcreate(engine='mupdf')
+&gt;       assert obj.url
+               ^^^^^^^
+
+tests/tasks_test.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103c5d7d0&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.tasks_test" name="test_animate" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103c3c610&gt;
+
+    def test_animate(transform):
+        target_url = '{}/{}/animate=fit:scale,width:200,height:300/{}/[OjKeBAuBTIWygi1NE8fx,WTY6jjIaTPOvWY9KsNh9]'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        obj = transform.animate(fit='scale',width=200,height=300,loop=0,delay=1000)
+&gt;       assert obj.url
+               ^^^^^^^
+
+tests/tasks_test.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103c3c610&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.tasks_test" name="test_doc_to_images" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103b5eb90&gt;
+
+    def test_doc_to_images(transform):
+        target_url = '{}/{}/doc_to_images/{}/3zOWSOLQ0SEdphqVil9Q'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        obj = transform.doc_to_images(pages=[1], engine='imagemagick', format='png', quality=100, density=100, hidden_slides=False)
+&gt;       assert obj.url
+               ^^^^^^^
+
+tests/tasks_test.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103b5eb90&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.tasks_test" name="test_smart_crop" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103bde910&gt;
+
+    def test_smart_crop(transform):
+        target_url = '{}/{}/smart_crop=width:100,height:100/{}/v7MSSKswR0mvEwZS9LD0'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        obj = transform.smart_crop(width=100, height=100)
+&gt;       assert obj.url
+               ^^^^^^^
+
+tests/tasks_test.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103bde910&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.tasks_test" name="test_pdf_convert" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103c46910&gt;
+
+    def test_pdf_convert(transform):
+        target_url = '{}/{}/pdfconvert=pageorientation:landscape/{}/3zOWSOLQ0SEdphqVil9Q'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        obj = transform.pdf_convert(pageorientation='landscape', pageformat='a4', metadata=True)
+&gt;       assert obj.url
+               ^^^^^^^
+
+tests/tasks_test.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103c46910&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.tasks_test" name="test_fallback" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103b5dc10&gt;
+
+    def test_fallback(transform):
+        target_url = '{}/{}/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        obj = transform.fallback(file='3zOWSOLQ0SEdphqVil9Q', cache=12)
+&gt;       assert obj.url
+               ^^^^^^^
+
+tests/tasks_test.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103b5dc10&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_sanity" time="0.000" /><testcase classname="tests.transformation_test" name="test_resize" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x104120450&gt;
+
+    def test_resize(transform):
+        target_url = '{}/{}/resize=height:500,width:500/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        resize = transform.resize(width=500, height=500)
+&gt;       assert resize.url == target_url
+               ^^^^^^^^^^
+
+tests/transformation_test.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x104120450&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_crop" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103b2f610&gt;
+
+    def test_crop(transform):
+        target_url = '{}/{}/crop=dim:500/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        crop = transform.crop(dim=500)
+&gt;       assert crop.url == target_url
+               ^^^^^^^^
+
+tests/transformation_test.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103b2f610&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_rotate" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x104124790&gt;
+
+    def test_rotate(transform):
+        target_url = '{}/{}/rotate=deg:90/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        rotate = transform.rotate(deg=90)
+&gt;       assert rotate.url == target_url
+               ^^^^^^^^^^
+
+tests/transformation_test.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x104124790&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_flip" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x104112710&gt;
+
+    def test_flip(transform):
+        target_url = '{}/{}/flip/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        flip = transform.flip()
+&gt;       assert flip.url == target_url
+               ^^^^^^^^
+
+tests/transformation_test.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x104112710&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_flop" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103c82550&gt;
+
+    def test_flop(transform):
+        target_url = '{}/{}/flop/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        flop = transform.flop()
+&gt;       assert flop.url == target_url
+               ^^^^^^^^
+
+tests/transformation_test.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103c82550&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_watermark" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103b2ef50&gt;
+
+    def test_watermark(transform):
+        target_url = '{}/{}/watermark=file:somefile.jpg/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        watermark = transform.watermark(file="somefile.jpg")
+&gt;       assert watermark.url == target_url
+               ^^^^^^^^^^^^^
+
+tests/transformation_test.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103b2ef50&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_detect_faces" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103e21850&gt;
+
+    def test_detect_faces(transform):
+        target_url = '{}/{}/detect_faces=minsize:100/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        detect_faces = transform.detect_faces(minsize=100)
+&gt;       assert detect_faces.url == target_url
+               ^^^^^^^^^^^^^^^^
+
+tests/transformation_test.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103e21850&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_crop_faces" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103c05e10&gt;
+
+    def test_crop_faces(transform):
+    
+        target_url = '{}/{}/crop_faces=width:100/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        crop_faces = transform.crop_faces(width=100)
+&gt;       assert crop_faces.url == target_url
+               ^^^^^^^^^^^^^^
+
+tests/transformation_test.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103c05e10&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_pixelate_faces" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103ba8790&gt;
+
+    def test_pixelate_faces(transform):
+        target_url = '{}/{}/pixelate_faces=minsize:100/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        pixelate_faces = transform.pixelate_faces(minsize=100)
+&gt;       assert pixelate_faces.url == target_url
+               ^^^^^^^^^^^^^^^^^^
+
+tests/transformation_test.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103ba8790&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_round_corners" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103bfed50&gt;
+
+    def test_round_corners(transform):
+        target_url = '{}/{}/round_corners=radius:100/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        round_corners = transform.round_corners(radius=100)
+&gt;       assert round_corners.url == target_url
+               ^^^^^^^^^^^^^^^^^
+
+tests/transformation_test.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103bfed50&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_vignette" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103f542d0&gt;
+
+    def test_vignette(transform):
+        target_url = '{}/{}/vignette=amount:50/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        vignette = transform.vignette(amount=50)
+&gt;       assert vignette.url == target_url
+               ^^^^^^^^^^^^
+
+tests/transformation_test.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103f542d0&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_polaroid" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103b27750&gt;
+
+    def test_polaroid(transform):
+        target_url = '{}/{}/polaroid=color:blue/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        polaroid = transform.polaroid(color='blue')
+&gt;       assert polaroid.url == target_url
+               ^^^^^^^^^^^^
+
+tests/transformation_test.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103b27750&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_torn_edges" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103d81890&gt;
+
+    def test_torn_edges(transform):
+        target_url = '{}/{}/torn_edges/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        torn_edges = transform.torn_edges()
+&gt;       assert torn_edges.url == target_url
+               ^^^^^^^^^^^^^^
+
+tests/transformation_test.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103d81890&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_shadow" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103ed8d50&gt;
+
+    def test_shadow(transform):
+        target_url = '{}/{}/shadow=blur:true/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        shadow = transform.shadow(blur=True)
+&gt;       assert shadow.url == target_url
+               ^^^^^^^^^^
+
+tests/transformation_test.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103ed8d50&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_circle" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103c1c190&gt;
+
+    def test_circle(transform):
+        target_url = '{}/{}/circle=background:true/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        circle = transform.circle(background=True)
+&gt;       assert circle.url == target_url
+               ^^^^^^^^^^
+
+tests/transformation_test.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103c1c190&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_border" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x104120ed0&gt;
+
+    def test_border(transform):
+        target_url = '{}/{}/border=width:500/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        border = transform.border(width=500)
+&gt;       assert border.url == target_url
+               ^^^^^^^^^^
+
+tests/transformation_test.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x104120ed0&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_sharpen" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103e27190&gt;
+
+    def test_sharpen(transform):
+        target_url = '{}/{}/sharpen=amount:50/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        sharpen = transform.sharpen(amount=50)
+&gt;       assert sharpen.url == target_url
+               ^^^^^^^^^^^
+
+tests/transformation_test.py:124: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103e27190&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_blur" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103b50250&gt;
+
+    def test_blur(transform):
+        target_url = '{}/{}/blur=amount:10/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        blur = transform.blur(amount=10)
+&gt;       assert blur.url == target_url
+               ^^^^^^^^
+
+tests/transformation_test.py:130: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103b50250&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_monochrome" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x104125450&gt;
+
+    def test_monochrome(transform):
+        target_url = '{}/{}/monochrome/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        monochrome = transform.monochrome()
+&gt;       assert monochrome.url == target_url
+               ^^^^^^^^^^^^^^
+
+tests/transformation_test.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x104125450&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_blackwhite" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103c0ac10&gt;
+
+    def test_blackwhite(transform):
+        target_url = '{}/{}/blackwhite=threshold:50/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        blackwhite = transform.blackwhite(threshold=50)
+&gt;       assert blackwhite.url == target_url
+               ^^^^^^^^^^^^^^
+
+tests/transformation_test.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103c0ac10&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_sepia" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103b5f8d0&gt;
+
+    def test_sepia(transform):
+        target_url = '{}/{}/sepia=tone:80/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        sepia = transform.sepia(tone=80)
+&gt;       assert sepia.url == target_url
+               ^^^^^^^^^
+
+tests/transformation_test.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103b5f8d0&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_pixelate" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103e1b0d0&gt;
+
+    def test_pixelate(transform):
+        target_url = '{}/{}/pixelate=amount:10/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        pixelate = transform.pixelate(amount=10)
+&gt;       assert pixelate.url == target_url
+               ^^^^^^^^^^^^
+
+tests/transformation_test.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103e1b0d0&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_oil_paint" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103c4b190&gt;
+
+    def test_oil_paint(transform):
+        target_url = '{}/{}/oil_paint=amount:10/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        oil_paint = transform.oil_paint(amount=10)
+&gt;       assert oil_paint.url == target_url
+               ^^^^^^^^^^^^^
+
+tests/transformation_test.py:160: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103c4b190&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_negative" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103dd4c10&gt;
+
+    def test_negative(transform):
+        target_url = '{}/{}/negative/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        negative = transform.negative()
+&gt;       assert negative.url == target_url
+               ^^^^^^^^^^^^
+
+tests/transformation_test.py:166: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103dd4c10&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_modulate" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103d1acd0&gt;
+
+    def test_modulate(transform):
+        target_url = '{}/{}/modulate=brightness:155,hue:155,saturation:155/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        modulate = transform.modulate(brightness=155, hue=155, saturation=155)
+&gt;       assert modulate.url == target_url
+               ^^^^^^^^^^^^
+
+tests/transformation_test.py:172: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103d1acd0&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_partial_pixelate" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103f64050&gt;
+
+    def test_partial_pixelate(transform):
+        target_url = (
+            '{}/{}/partial_pixelate=amount:10,blur:10,'
+            'objects:[[x,y,width,height],[x,y,width,height]],type:rect/{}'
+        ).format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+    
+        partial_pixelate = transform.partial_pixelate(
+            amount=10, blur=10, type='rect', objects='[[x,y,width,height],[x,y,width,height]]'
+        )
+&gt;       assert partial_pixelate.url == target_url
+               ^^^^^^^^^^^^^^^^^^^^
+
+tests/transformation_test.py:184: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103f64050&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_partial_blur" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103b24ad0&gt;
+
+    def test_partial_blur(transform):
+        target_url = (
+            '{}/{}/partial_blur=amount:10,blur:10,'
+            'objects:[[x,y,width,height],[x,y,width,height]],type:rect/{}'
+        ).format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+    
+        partial_blur = transform.partial_blur(
+            amount=10, blur=10, type='rect', objects='[[x,y,width,height],[x,y,width,height]]'
+        )
+&gt;       assert partial_blur.url == target_url
+               ^^^^^^^^^^^^^^^^
+
+tests/transformation_test.py:196: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103b24ad0&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_collage" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x1041129d0&gt;
+
+    def test_collage(transform):
+        target_url = (
+            '{}/{}/collage=autorotate:true,color:white,'
+            'files:[FILEHANDLE,FILEHANDLE2,FILEHANDLE3],fit:crop,height:1000,margin:50,width:1000/{}'
+        ).format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+    
+        collage = transform.collage(
+            files='[FILEHANDLE,FILEHANDLE2,FILEHANDLE3]', margin=50, width=1000, height=1000, color='white',
+            fit='crop', autorotate=True
+        )
+&gt;       assert collage.url == target_url
+               ^^^^^^^^^^^
+
+tests/transformation_test.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x1041129d0&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_upscale" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103b44150&gt;
+
+    def test_upscale(transform):
+        target_url = '{}/{}/upscale=noise:low,style:artwork/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        upscale = transform.upscale(noise='low', style='artwork')
+&gt;       assert upscale.url == target_url
+               ^^^^^^^^^^^
+
+tests/transformation_test.py:215: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103b44150&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_enhance" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103b539d0&gt;
+
+    def test_enhance(transform):
+        target_url = '{}/{}/enhance/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        enhance = transform.enhance()
+&gt;       assert enhance.url == target_url
+               ^^^^^^^^^^^
+
+tests/transformation_test.py:221: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103b539d0&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_redeye" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103c0a3d0&gt;
+
+    def test_redeye(transform):
+        target_url = '{}/{}/redeye/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        redeye = transform.redeye()
+&gt;       assert redeye.url == target_url
+               ^^^^^^^^^^
+
+tests/transformation_test.py:227: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103c0a3d0&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_ascii" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103c49190&gt;
+
+    def test_ascii(transform):
+        target_url = (
+            '{}/{}/ascii=background:black,colored:true,foreground:black,reverse:true,size:100/{}'
+        ).format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+    
+        ascii = transform.ascii(background='black', foreground='black', colored=True, size=100, reverse=True)
+&gt;       assert ascii.url == target_url
+               ^^^^^^^^^
+
+tests/transformation_test.py:236: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103c49190&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_zip" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x104159990&gt;
+
+    def test_zip(transform):
+        target_url = ('{}/{}/zip/{}').format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+&gt;       assert transform.zip().url == target_url
+               ^^^^^^^^^^^^^^^^^^^
+
+tests/transformation_test.py:241: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x104159990&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_fallback" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103dd4550&gt;
+
+    def test_fallback(transform):
+        target_url = '{}/{}/fallback=cache:12,file:{}/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL, EXTERNAL_URL)
+        result = transform.fallback(file=EXTERNAL_URL, cache=12)
+&gt;       assert result.url == target_url
+               ^^^^^^^^^^
+
+tests/transformation_test.py:247: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103dd4550&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_pdf_info" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103d15890&gt;
+
+    def test_pdf_info(transform):
+        target_url = '{}/{}/pdfinfo=colorinfo:true/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        result = transform.pdf_info(colorinfo=True)
+&gt;       assert result.url == target_url
+               ^^^^^^^^^^
+
+tests/transformation_test.py:253: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103d15890&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_pdf_convert" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103e122d0&gt;
+
+    def test_pdf_convert(transform):
+        target_url = '{}/{}/pdfconvert=pageorientation:landscape/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        result = transform.pdf_convert(pageorientation='landscape')
+&gt;       assert result.url == target_url
+               ^^^^^^^^^^
+
+tests/transformation_test.py:259: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103e122d0&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_minify_css" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103e1b1d0&gt;
+
+    def test_minify_css(transform):
+        target_url = '{}/{}/minify_css/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        result = transform.minify_css()
+&gt;       assert result.url == target_url
+               ^^^^^^^^^^
+
+tests/transformation_test.py:265: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103e1b1d0&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_minify_css_with_params" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103fcd210&gt;
+
+    def test_minify_css_with_params(transform):
+        target_url = '{}/{}/minify_css=gzip:false,level:1/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        result = transform.minify_css(level=1, gzip=False)
+&gt;       assert result.url == target_url
+               ^^^^^^^^^^
+
+tests/transformation_test.py:271: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103fcd210&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_minify_js" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x104080790&gt;
+
+    def test_minify_js(transform):
+        target_url = '{}/{}/minify_js=gzip:false,targets:not dead,&gt; 1%/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        result = transform.minify_js(gzip=False, targets='not dead,&gt; 1%')
+&gt;       assert result.url == target_url
+               ^^^^^^^^^^
+
+tests/transformation_test.py:277: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x104080790&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_filetype_conversion" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x104158810&gt;
+
+    def test_filetype_conversion(transform):
+        target_url = (
+            '{}/{}/output=background:white,colorspace:input,compress:true,density:50,docinfo:true,format:png,'
+            'page:1,pageformat:legal,pageorientation:landscape,quality:80,secure:true,'
+            'strip:true/{}'
+        ).format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+    
+        filetype_conversion = transform.filetype_conversion(
+            format='png', background='white', page=1, density=50, compress=True,
+            quality=80, strip=True, colorspace='input', secure=True,
+            docinfo=True, pageformat='legal', pageorientation='landscape'
+        )
+&gt;       assert filetype_conversion.url == target_url
+               ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/transformation_test.py:299: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x104158810&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_no_metadata" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103c088d0&gt;
+
+    def test_no_metadata(transform):
+        target_url = ('{}/{}/no_metadata/{}').format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+    
+        no_metadata = transform.no_metadata()
+&gt;       assert no_metadata.url == target_url
+               ^^^^^^^^^^^^^^^
+
+tests/transformation_test.py:306: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103c088d0&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.transformation_test" name="test_chain_tasks_and_store" time="0.001"><failure message="AttributeError: 'coroutine' object has no attribute 'handle'">transform = &lt;filestack.models.transformation.Transformation object at 0x103e232d0&gt;
+
+    @responses.activate
+    def test_chain_tasks_and_store(transform):
+        responses.add(
+            responses.POST, re.compile('https://cdn.filestackcontent.com/SOMEAPIKEY*'),
+            json={'handle': HANDLE}
+        )
+        transform_obj = transform.flip().resize(width=100)
+        new_filelink = transform_obj.store(filename='filename', location='S3', container='bucket', path='folder/image.jpg')
+&gt;       assert new_filelink.handle == HANDLE
+               ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'handle'
+
+tests/transformation_test.py:317: AttributeError</failure></testcase><testcase classname="tests.transformation_test" name="test_av_convert" time="0.000"><failure message="assert False&#10; +  where False = isinstance(&lt;coroutine object ImageTransformationMixin.av_convert at 0x1036b3440&gt;, AudioVisual)">transform = &lt;filestack.models.transformation.Transformation object at 0x103f2a090&gt;
+
+    @responses.activate
+    def test_av_convert(transform):
+        responses.add(
+            responses.GET,
+            'https://cdn.filestackcontent.com/SOMEAPIKEY/video_convert=height:500,width:500/SOMEEXTERNALURL',
+            json={'url': transform.url, 'uuid': 'someuuid', 'timestamp': 'sometimestamp'}
+        )
+        new_av = transform.av_convert(width=500, height=500)
+&gt;       assert isinstance(new_av, AudioVisual)
+E       assert False
+E        +  where False = isinstance(&lt;coroutine object ImageTransformationMixin.av_convert at 0x1036b3440&gt;, AudioVisual)
+
+tests/transformation_test.py:332: AssertionError</failure></testcase><testcase classname="tests.transformation_test" name="test_auto_image" time="0.000"><failure message="TypeError: sequence item 0: expected str instance, coroutine found">transform = &lt;filestack.models.transformation.Transformation object at 0x103bdcc10&gt;
+
+    def test_auto_image(transform):
+        target_url = '{}/{}/auto_image/{}'.format(config.CDN_URL, APIKEY, EXTERNAL_URL)
+        auto_image = transform.auto_image()
+&gt;       assert auto_image.url == target_url
+               ^^^^^^^^^^^^^^
+
+tests/transformation_test.py:340: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+filestack/mixins/common.py:23: in url
+    return self._build_url()
+           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;filestack.models.transformation.Transformation object at 0x103bdcc10&gt;
+security = None
+
+    def _build_url(self, security=None):
+        url_elements = [config.CDN_URL, self.handle or self.external_url]
+    
+        if self._transformation_tasks:
+&gt;           tasks_str = '/'.join(self._transformation_tasks)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: sequence item 0: expected str instance, coroutine found
+
+filestack/models/transformation.py:33: TypeError</failure></testcase><testcase classname="tests.uploads.test_upload_external_url" name="test_upload_with_store_params[S3,-store_params0-None-expected_store_tasks0]" time="0.001"><failure message="TypeError: 'coroutine' object is not subscriptable">default_storage = 'S3,', store_params = {'location': 'gcs'}, security = None
+expected_store_tasks = [{'name': 'store', 'params': {'location': 'gcs'}}]
+
+    @pytest.mark.parametrize('default_storage, store_params, security, expected_store_tasks', [
+        (
+            'S3,',
+            {'location': 'gcs'},
+            None,
+            [
+                {
+                    'name': 'store', 'params': {'location': 'gcs'}
+                }
+            ]
+        ),
+        (
+            'gcs',
+            {'path': 'new-path/', 'mimetype': 'application/json'},
+            type('SecurityMock', (), {'policy_b64': 'abc', 'signature': '123'}),
+            [
+                {
+                    'name': 'store', 'params': {'path': 'new-path/', 'location': 'gcs'}
+                },
+                {
+                    'name': 'security', 'params': {'policy': 'abc', 'signature': '123'}
+                }
+            ]
+        )
+    ])
+    @responses.activate
+    def test_upload_with_store_params(default_storage, store_params, security, expected_store_tasks):
+        expected_payload = {
+            'apikey': 'TESTAPIKEY',
+            'sources': ['http://image.url'],
+            'tasks': expected_store_tasks
+        }
+        responses.add(responses.POST, PROCESS_URL, json={'handle': 'newHandle'})
+        upload_response = upload_external_url(
+            url, apikey, default_storage, store_params=store_params, security=security
+        )
+&gt;       assert upload_response['handle'] == 'newHandle'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'coroutine' object is not subscriptable
+
+tests/uploads/test_upload_external_url.py:49: TypeError</failure></testcase><testcase classname="tests.uploads.test_upload_external_url" name="test_upload_with_store_params[gcs-store_params1-SecurityMock-expected_store_tasks1]" time="0.001"><failure message="TypeError: 'coroutine' object is not subscriptable">default_storage = 'gcs'
+store_params = {'mimetype': 'application/json', 'path': 'new-path/'}
+security = &lt;class 'test_upload_external_url.SecurityMock'&gt;
+expected_store_tasks = [{'name': 'store', 'params': {'location': 'gcs', 'path': 'new-path/'}}, {'name': 'security', 'params': {'policy': 'abc', 'signature': '123'}}]
+
+    @pytest.mark.parametrize('default_storage, store_params, security, expected_store_tasks', [
+        (
+            'S3,',
+            {'location': 'gcs'},
+            None,
+            [
+                {
+                    'name': 'store', 'params': {'location': 'gcs'}
+                }
+            ]
+        ),
+        (
+            'gcs',
+            {'path': 'new-path/', 'mimetype': 'application/json'},
+            type('SecurityMock', (), {'policy_b64': 'abc', 'signature': '123'}),
+            [
+                {
+                    'name': 'store', 'params': {'path': 'new-path/', 'location': 'gcs'}
+                },
+                {
+                    'name': 'security', 'params': {'policy': 'abc', 'signature': '123'}
+                }
+            ]
+        )
+    ])
+    @responses.activate
+    def test_upload_with_store_params(default_storage, store_params, security, expected_store_tasks):
+        expected_payload = {
+            'apikey': 'TESTAPIKEY',
+            'sources': ['http://image.url'],
+            'tasks': expected_store_tasks
+        }
+        responses.add(responses.POST, PROCESS_URL, json={'handle': 'newHandle'})
+        upload_response = upload_external_url(
+            url, apikey, default_storage, store_params=store_params, security=security
+        )
+&gt;       assert upload_response['handle'] == 'newHandle'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'coroutine' object is not subscriptable
+
+tests/uploads/test_upload_external_url.py:49: TypeError</failure></testcase><testcase classname="tests.utils_test" name="test_req_wrapper_overwrite_headers" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.utils_test" name="test_req_wrapper_use_provided_headers" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase><testcase classname="tests.utils_test" name="test_req_wrapper_raise_exception" time="0.000"><failure message="Failed: async def functions are not natively supported.&#10;You need to install a suitable plugin for your async framework, for example:&#10;  - anyio&#10;  - pytest-asyncio&#10;  - pytest-tornasync&#10;  - pytest-trio&#10;  - pytest-twisted">async def functions are not natively supported.
+You need to install a suitable plugin for your async framework, for example:
+  - anyio
+  - pytest-asyncio
+  - pytest-tornasync
+  - pytest-trio
+  - pytest-twisted</failure></testcase></testsuite></testsuites>

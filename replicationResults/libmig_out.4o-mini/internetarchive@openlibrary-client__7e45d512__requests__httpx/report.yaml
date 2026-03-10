@@ -1,0 +1,61 @@
+mig: internetarchive@openlibrary-client__7e45d512__requests__httpx__7e45d512__requests__httpx
+repo: internetarchive@openlibrary-client__7e45d512__requests__httpx
+commit: 7e45d512d031970d2bf4f56ca23f6247f205a0a8
+source: requests
+target: httpx
+premig:
+  name: premig
+  status: finished
+  source_version: 2.31.0
+  target_version: 0.28.1
+  finished_at: '2026-03-07 22:46:08'
+  project_coverage: 82.174688057041
+  total_tests: 46
+  passed_tests: 46
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 60.60606060606061
+  files:
+  - path: olclient/entity_helpers/work.py
+    file_change_coverage: 100.0
+    covered_changed_lines: '9'
+    uncovered_changed_lines: ''
+  - path: olclient/openlibrary.py
+    file_change_coverage: 33.333333333333336
+    covered_changed_lines: 15-16,65,134,149,630
+    uncovered_changed_lines: 54,89,93,120,135,261,277,287,520,694,741,851
+  - path: tests/test_openlibrary.py
+    file_change_coverage: 92.85714285714286
+    covered_changed_lines: 8,50,54,62,80,86,103,132,145,249,257,261,307
+    uncovered_changed_lines: '251'
+  test_diffs:
+  - test_id: tests/test_openlibrary.py::TestOpenLibrary::test_get_notfound
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: HTTPStatusError.__init__() missing 1 required keyword-only
+      argument: ''request'''
+  - test_id: tests/test_openlibrary.py::TestOpenLibrary::test_get_work_by_metadata
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AttributeError
+    error_message: 'AttributeError: ''OpenLibrary'' object has no attribute ''session'''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

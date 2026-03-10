@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="7" time="0.854" timestamp="2026-03-09T19:16:58.990061+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_13f.Test" name="test_cik" time="0.001" /><testcase classname="tests.test_13f.Test" name="test_latest_13f_filing" time="0.033"><failure message="RuntimeError: Task got bad yield: &lt;Deferred at 0x113e3ce10&gt;">self = &lt;tests.test_13f.Test object at 0x1136a8390&gt;
+
+    @pytest.mark.asyncio
+    async def test_latest_13f_filing(self):
+&gt;       df = await self.filing.latest_13f_filing()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_13f.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+finsec/filing.py:15: in latest_13f_filing
+    return await self.get_latest_13f_filing(simplified, amend_filing)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+finsec/base.py:239: in get_latest_13f_filing
+    await self._get_last_100_13f_filings_url()
+finsec/base.py:40: in _get_last_100_13f_filings_url
+    webpage = await treq.get(_13F_SEARCH_URL_.format(self.cik), headers=_REQ_HEADERS_)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Deferred at 0x113e3ce10&gt;
+
+    def __iter__(self) -&gt; Generator[Deferred[_SelfResultT], None, _SelfResultT]:
+        while True:
+            if self.paused:
+                # If we're paused, we have no result to give
+                yield self
+                continue
+    
+            result = getattr(self, "result", _NO_RESULT)
+            if result is _NO_RESULT:
+&gt;               yield self
+E               RuntimeError: Task got bad yield: &lt;Deferred at 0x113e3ce10&gt;
+
+.venv/lib/python3.11/site-packages/twisted/internet/defer.py:1187: RuntimeError</failure></testcase><testcase classname="tests.test_13f.Test" name="test_latest_13f_filing_detailed" time="0.014"><failure message="RuntimeError: Task got bad yield: &lt;Deferred at 0x113f60c10&gt;">self = &lt;tests.test_13f.Test object at 0x1136a9150&gt;
+
+    @pytest.mark.asyncio
+    async def test_latest_13f_filing_detailed(self):
+&gt;       df = await self.filing.latest_13f_filing_detailed()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_13f.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+finsec/filing.py:26: in latest_13f_filing_detailed
+    return await self.get_latest_13f_filing(simplified=False, amend_filing=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+finsec/base.py:239: in get_latest_13f_filing
+    await self._get_last_100_13f_filings_url()
+finsec/base.py:40: in _get_last_100_13f_filings_url
+    webpage = await treq.get(_13F_SEARCH_URL_.format(self.cik), headers=_REQ_HEADERS_)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Deferred at 0x113f60c10&gt;
+
+    def __iter__(self) -&gt; Generator[Deferred[_SelfResultT], None, _SelfResultT]:
+        while True:
+            if self.paused:
+                # If we're paused, we have no result to give
+                yield self
+                continue
+    
+            result = getattr(self, "result", _NO_RESULT)
+            if result is _NO_RESULT:
+&gt;               yield self
+E               RuntimeError: Task got bad yield: &lt;Deferred at 0x113f60c10&gt;
+
+.venv/lib/python3.11/site-packages/twisted/internet/defer.py:1187: RuntimeError</failure></testcase><testcase classname="tests.test_13f.Test" name="test_latest_13f_filing_cover_page" time="0.001"><failure message="assert False&#10; +  where False = isinstance(&lt;coroutine object Filing.latest_13f_filing_cover_page at 0x113e41900&gt;, dict)">self = &lt;tests.test_13f.Test object at 0x1136a9350&gt;
+
+    @pytest.mark.asyncio
+    async def test_latest_13f_filing_cover_page(self):
+        result = self.filing.latest_13f_filing_cover_page
+&gt;       assert isinstance(result, dict)
+E       assert False
+E        +  where False = isinstance(&lt;coroutine object Filing.latest_13f_filing_cover_page at 0x113e41900&gt;, dict)
+
+tests/test_13f.py:32: AssertionError</failure></testcase><testcase classname="tests.test_13f.Test" name="test_latest_13f_portfolio_value" time="0.001"><failure message="assert False&#10; +  where False = isinstance(&lt;coroutine object Filing.latest_13f_portfolio_value at 0x113e41a80&gt;, int)">self = &lt;tests.test_13f.Test object at 0x1136aa850&gt;
+
+    @pytest.mark.asyncio
+    async def test_latest_13f_portfolio_value(self):
+        portfolio_value = self.filing.latest_13f_portfolio_value
+&gt;       assert isinstance(portfolio_value, int)
+E       assert False
+E        +  where False = isinstance(&lt;coroutine object Filing.latest_13f_portfolio_value at 0x113e41a80&gt;, int)
+
+tests/test_13f.py:37: AssertionError</failure></testcase><testcase classname="tests.test_13f.Test" name="test_latest_13f_count_holdings" time="0.001"><failure message="assert False&#10; +  where False = isinstance(&lt;coroutine object Filing.latest_13f_count_holdings at 0x113e42980&gt;, int)">self = &lt;tests.test_13f.Test object at 0x1136ab250&gt;
+
+    @pytest.mark.asyncio
+    async def test_latest_13f_count_holdings(self):
+        holdings_count = self.filing.latest_13f_count_holdings
+&gt;       assert isinstance(holdings_count, int)
+E       assert False
+E        +  where False = isinstance(&lt;coroutine object Filing.latest_13f_count_holdings at 0x113e42980&gt;, int)
+
+tests/test_13f.py:42: AssertionError</failure></testcase><testcase classname="tests.test_13f.Test" name="test_get_a_13f_filing" time="0.014"><failure message="RuntimeError: Task got bad yield: &lt;Deferred at 0x113f94ed0&gt;">self = &lt;tests.test_13f.Test object at 0x1136abb50&gt;
+
+    @pytest.mark.asyncio
+    async def test_get_a_13f_filing(self):
+&gt;       cover_page, holdings_table, simplified_holdings_table = await (
+            self.filing.get_a_13f_filing("Q2-2022")
+        )
+
+tests/test_13f.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+finsec/filing.py:9: in get_a_13f_filing
+    return await self.get_13f_filing(qtr_year, amend_filing)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+finsec/base.py:300: in get_13f_filing
+    await self._get_last_100_13f_filings_url()
+finsec/base.py:40: in _get_last_100_13f_filings_url
+    webpage = await treq.get(_13F_SEARCH_URL_.format(self.cik), headers=_REQ_HEADERS_)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Deferred at 0x113f94ed0&gt;
+
+    def __iter__(self) -&gt; Generator[Deferred[_SelfResultT], None, _SelfResultT]:
+        while True:
+            if self.paused:
+                # If we're paused, we have no result to give
+                yield self
+                continue
+    
+            result = getattr(self, "result", _NO_RESULT)
+            if result is _NO_RESULT:
+&gt;               yield self
+E               RuntimeError: Task got bad yield: &lt;Deferred at 0x113f94ed0&gt;
+
+.venv/lib/python3.11/site-packages/twisted/internet/defer.py:1187: RuntimeError</failure></testcase></testsuite></testsuites>

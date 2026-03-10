@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="11" failures="8" skipped="0" tests="26" time="6.833" timestamp="2026-03-09T17:12:41.469495+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_cache.TestUnpywallCache" name="test_reset_cache" time="0.003" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_delete" time="0.002" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_timeout" time="2.833"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.unpaywall.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')]">self = &lt;aiohttp.connector.TCPConnector object at 0x107ed8950&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x107da6e90&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'api.unpaywall.org', 'ssl': &lt;ssl.SSLContext object at 0x1079d1eb0&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+&gt;               return await self._loop.create_connection(*args, **kwargs, sock=sock)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x10ae25810&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;tests.test_cache.TestUnpywallCache object at 0x10aa22b90&gt;
+example_cache = &lt;unpywall.cache.UnpywallCache object at 0x1085af450&gt;
+
+    @pytest.mark.asyncio
+    async def test_timeout(self, example_cache):
+        timeout = 1
+        doi = '10.1016/j.jns.2020.116832'
+        example_cache.timeout = timeout
+        example_cache.delete(doi)
+        assert doi not in example_cache.content
+&gt;       await example_cache.get(doi)
+
+tests/test_cache.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+unpywall/cache.py:116: in get
+    downloaded = await self.download(doi, errors)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+unpywall/cache.py:192: in download
+    raise RequestException
+unpywall/cache.py:181: in download
+    async with session.get(url) as r:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x107ed8950&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x107da6e90&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'api.unpaywall.org', 'ssl': &lt;ssl.SSLContext object at 0x1079d1eb0&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.unpaywall.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1315: ClientConnectorCertificateError</failure></testcase><testcase classname="tests.test_cache.TestUnpywallCache" name="test_get" time="0.003"><failure message="TypeError: UnpywallCache.get() got an unexpected keyword argument 'session'">self = &lt;tests.test_cache.TestUnpywallCache object at 0x10aa234d0&gt;
+example_cache = &lt;unpywall.cache.UnpywallCache object at 0x10bd57210&gt;
+backup_cache = &lt;unpywall.cache.UnpywallCache object at 0x10bd57ed0&gt;
+
+    @pytest.mark.asyncio
+    async def test_get(self, example_cache, backup_cache):
+        doi = '10.1016/j.jns.2020.116832'
+        example_cache.delete(doi)
+        assert doi not in example_cache.content
+        assert doi not in example_cache.access_times
+        async with ClientSession() as session:
+&gt;           response: ClientResponse = await backup_cache.get(doi, session=session)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: UnpywallCache.get() got an unexpected keyword argument 'session'
+
+tests/test_cache.py:74: TypeError</failure></testcase><testcase classname="tests.test_cache.TestUnpywallCache" name="test_save_load" time="0.002"><failure message="TypeError: UnpywallCache.get() got an unexpected keyword argument 'session'">self = &lt;tests.test_cache.TestUnpywallCache object at 0x10aa23e10&gt;
+example_cache = &lt;unpywall.cache.UnpywallCache object at 0x10bee6710&gt;
+backup_cache = &lt;unpywall.cache.UnpywallCache object at 0x10bb8ce10&gt;
+
+    @pytest.mark.asyncio
+    async def test_save_load(self, example_cache, backup_cache):
+        doi = '10.1016/j.jns.2020.116832'
+        example_cache.delete(doi)
+        assert doi not in example_cache.content
+        assert doi not in example_cache.access_times
+        async with ClientSession() as session:
+&gt;           await backup_cache.get(doi, session=session)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: UnpywallCache.get() got an unexpected keyword argument 'session'
+
+tests/test_cache.py:86: TypeError</failure></testcase><testcase classname="tests.test_cache.TestUnpywallCache" name="test_download" time="2.691"><failure message="aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.unpaywall.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')]">self = &lt;aiohttp.connector.TCPConnector object at 0x10ae74090&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x10ae74410&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'api.unpaywall.org', 'ssl': &lt;ssl.SSLContext object at 0x1079d1eb0&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+&gt;               return await self._loop.create_connection(*args, **kwargs, sock=sock)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1112: in create_connection
+    transport, protocol = await self._create_connection_transport(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py:1145: in _create_connection_transport
+    await waiter
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:575: in _on_handshake_complete
+    raise handshake_exc
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/sslproto.py:557: in _do_handshake
+    self._sslobj.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLObject object at 0x10ae76150&gt;
+
+    def do_handshake(self):
+        """Start the SSL/TLS handshake."""
+&gt;       self._sslobj.do_handshake()
+E       ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:979: SSLCertVerificationError
+
+The above exception was the direct cause of the following exception:
+
+self = &lt;tests.test_cache.TestUnpywallCache object at 0x10aa10790&gt;
+example_cache = &lt;unpywall.cache.UnpywallCache object at 0x10bb8fed0&gt;
+
+    @pytest.mark.asyncio
+    async def test_download(self, example_cache):
+        doi = '10.1016/j.jns.2020.116832'
+&gt;       assert isinstance(await example_cache.download(doi, 'raise'), ClientResponse)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_cache.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+unpywall/cache.py:192: in download
+    raise RequestException
+unpywall/cache.py:181: in download
+    async with session.get(url) as r:
+.venv/lib/python3.11/site-packages/aiohttp/client.py:1510: in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:779: in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/client.py:734: in _connect_and_send_request
+    conn = await self._connector.connect(
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:672: in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1239: in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1611: in _create_direct_connection
+    raise last_exc
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1580: in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;aiohttp.connector.TCPConnector object at 0x10ae74090&gt;, addr_infos = []
+req = &lt;aiohttp.client_reqrep.ClientRequest object at 0x10ae74410&gt;
+timeout = ClientTimeout(total=300, connect=None, sock_read=None, sock_connect=30, ceil_threshold=5)
+client_error = &lt;class 'aiohttp.client_exceptions.ClientConnectorError'&gt;
+args = (functools.partial(&lt;class 'aiohttp.client_proto.ResponseHandler'&gt;, loop=&lt;_UnixSelectorEventLoop running=False closed=False debug=False&gt;),)
+kwargs = {'server_hostname': 'api.unpaywall.org', 'ssl': &lt;ssl.SSLContext object at 0x1079d1eb0&gt;}
+sock = &lt;socket.socket [closed] fd=-1, family=2, type=1, proto=6&gt;
+
+    async def _wrap_create_connection(
+        self,
+        *args: Any,
+        addr_infos: List[AddrInfoType],
+        req: ClientRequest,
+        timeout: "ClientTimeout",
+        client_error: Type[Exception] = ClientConnectorError,
+        **kwargs: Any,
+    ) -&gt; Tuple[asyncio.Transport, ResponseHandler]:
+        try:
+            async with ceil_timeout(
+                timeout.sock_connect, ceil_threshold=timeout.ceil_threshold
+            ):
+                sock = await aiohappyeyeballs.start_connection(
+                    addr_infos=addr_infos,
+                    local_addr_infos=self._local_addr_infos,
+                    happy_eyeballs_delay=self._happy_eyeballs_delay,
+                    interleave=self._interleave,
+                    loop=self._loop,
+                    socket_factory=self._socket_factory,
+                )
+                # Add ssl_shutdown_timeout for Python 3.11+ when SSL is used
+                if (
+                    kwargs.get("ssl")
+                    and self._ssl_shutdown_timeout
+                    and sys.version_info &gt;= (3, 11)
+                ):
+                    kwargs["ssl_shutdown_timeout"] = self._ssl_shutdown_timeout
+                return await self._loop.create_connection(*args, **kwargs, sock=sock)
+        except cert_errors as exc:
+&gt;           raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+E           aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.unpaywall.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)')]
+
+.venv/lib/python3.11/site-packages/aiohttp/connector.py:1315: ClientConnectorCertificateError</failure></testcase><testcase classname="tests.test_cli.TestUnpywallCli" name="test_main" time="0.001"><failure message="TypeError: __init__() should return None, not 'coroutine'">self = &lt;tests.test_cli.TestUnpywallCli object at 0x10aa52610&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_main(self):
+    
+        with pytest.raises(SystemExit) as pytest_raise_system_exit:
+&gt;           assert await main(test_args=['-h'])
+                         ^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: __init__() should return None, not 'coroutine'
+
+tests/test_cli.py:16: TypeError</failure></testcase><testcase classname="tests.test_cli.TestUnpywallCli" name="test_view" time="0.001"><failure message="TypeError: __init__() should return None, not 'coroutine'">self = &lt;tests.test_cli.TestUnpywallCli object at 0x10aa53d10&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_view(self):
+        with pytest.raises(SystemExit) as pytest_raise_system_exit:
+&gt;           await main(test_args=['view'])
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: __init__() should return None, not 'coroutine'
+
+tests/test_cli.py:28: TypeError</failure></testcase><testcase classname="tests.test_cli.TestUnpywallCli" name="test_download" time="0.002"><failure message="TypeError: __init__() should return None, not 'coroutine'">self = &lt;tests.test_cli.TestUnpywallCli object at 0x10aa53350&gt;
+capfd = &lt;_pytest.capture.CaptureFixture object at 0x10bcc8090&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_download(self, capfd):
+    
+        bad_doi = 'bad_doi'
+&gt;       await main(test_args=['download', bad_doi])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: __init__() should return None, not 'coroutine'
+
+tests/test_cli.py:41: TypeError</failure></testcase><testcase classname="tests.test_cli.TestUnpywallCli" name="test_link" time="0.001"><failure message="TypeError: __init__() should return None, not 'coroutine'">self = &lt;tests.test_cli.TestUnpywallCli object at 0x10aa50850&gt;
+
+    @pytest.mark.asyncio
+    @pytest.mark.asyncio
+    async def test_link(self):
+        with pytest.raises(SystemExit) as pytest_raise_system_exit:
+&gt;           await main(test_args=['link'])
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: __init__() should return None, not 'coroutine'
+
+tests/test_cli.py:54: TypeError</failure></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_init_cache" time="0.001" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_validate_dois" time="0.001" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_df" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_get_df' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_get_df&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='Unpywall' scope='function' baseid='tests/test_unpywall.py::TestUnpywall'&gt;
+request = &lt;SubRequest 'Unpywall' for &lt;Coroutine test_get_df&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_get_df' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_doi" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_doi' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_doi&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='Unpywall' scope='function' baseid='tests/test_unpywall.py::TestUnpywall'&gt;
+request = &lt;SubRequest 'Unpywall' for &lt;Coroutine test_doi&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_doi' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_query" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_query' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_query&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='Unpywall' scope='function' baseid='tests/test_unpywall.py::TestUnpywall'&gt;
+request = &lt;SubRequest 'Unpywall' for &lt;Coroutine test_query&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_query' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_json" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_get_json' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_get_json&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='Unpywall' scope='function' baseid='tests/test_unpywall.py::TestUnpywall'&gt;
+request = &lt;SubRequest 'Unpywall' for &lt;Coroutine test_get_json&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_get_json' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_pdf_link" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_get_pdf_link' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_get_pdf_link&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='Unpywall' scope='function' baseid='tests/test_unpywall.py::TestUnpywall'&gt;
+request = &lt;SubRequest 'Unpywall' for &lt;Coroutine test_get_pdf_link&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_get_pdf_link' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_doc_link" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_get_doc_link' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_get_doc_link&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='Unpywall' scope='function' baseid='tests/test_unpywall.py::TestUnpywall'&gt;
+request = &lt;SubRequest 'Unpywall' for &lt;Coroutine test_get_doc_link&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_get_doc_link' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_all_links" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_get_all_links' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_get_all_links&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='Unpywall' scope='function' baseid='tests/test_unpywall.py::TestUnpywall'&gt;
+request = &lt;SubRequest 'Unpywall' for &lt;Coroutine test_get_all_links&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_get_all_links' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_download_pdf_handle" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_download_pdf_handle' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_download_pdf_handle&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='Unpywall' scope='function' baseid='tests/test_unpywall.py::TestUnpywall'&gt;
+request = &lt;SubRequest 'Unpywall' for &lt;Coroutine test_download_pdf_handle&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_download_pdf_handle' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_progress" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_progress' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_progress&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='Unpywall' scope='function' baseid='tests/test_unpywall.py::TestUnpywall'&gt;
+request = &lt;SubRequest 'Unpywall' for &lt;Coroutine test_progress&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_progress' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_view_pdf" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_view_pdf' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">fixturedef = &lt;FixtureDef argname='Unpywall' scope='function' baseid='tests/test_unpywall.py::TestUnpywall'&gt;
+request = &lt;SubRequest 'Unpywall' for &lt;Function test_view_pdf&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_view_pdf' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_download_pdf_file" time="0.000"><error message="failed on setup with &quot;pytest.PytestRemovedIn9Warning: 'test_download_pdf_file' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.&#10;See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture&quot;">self = &lt;Coroutine test_download_pdf_file&gt;
+
+    def setup(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+&gt;       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fixturedef = &lt;FixtureDef argname='Unpywall' scope='function' baseid='tests/test_unpywall.py::TestUnpywall'&gt;
+request = &lt;SubRequest 'Unpywall' for &lt;Coroutine test_download_pdf_file&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_download_pdf_file' requested an async fixture 'Unpywall', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+.venv/lib/python3.11/site-packages/pytest_asyncio/plugin.py:728: PytestRemovedIn9Warning</error></testcase><testcase classname="tests.test_utils.TestUnpywallCredentials" name="test_validate_email" time="0.001" /><testcase classname="tests.test_utils.TestUnpywallURL" name="test_doi_url" time="0.000" /><testcase classname="tests.test_utils.TestUnpywallURL" name="test_query_url" time="0.000" /></testsuite></testsuites>

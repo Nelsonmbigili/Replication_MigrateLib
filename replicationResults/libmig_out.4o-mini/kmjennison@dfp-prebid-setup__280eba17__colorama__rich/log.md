@@ -1,0 +1,197 @@
+## Running premig
+creating venv at /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/kmjennison@dfp-prebid-setup__280eba17__colorama__rich/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 1 files
+### migrating tasks/add_new_prebid_partner.py
+### running tests
+- test finished with status 2, cov finished with status 1
+### test diff with round premig
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_create_line_item_configs: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_create_line_item_configs_video: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_custom_currency_code: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_custom_line_item_format: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_get_or_create_dfp_targeting_key_does_not_exist: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_get_or_create_dfp_targeting_key_exists: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_logging_unicode: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_missing_advertiser_setting: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_missing_bidder_code_setting: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_missing_email_setting: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_missing_order_setting: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_missing_placement_and_ad_units_setting: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_num_duplicate_creatives_from_settings: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_num_duplicate_creatives_no_settings_from_ad_units: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_num_duplicate_creatives_no_settings_from_placements: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_num_duplicate_creatives_no_settings_from_placements_and_ad_units: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_prebid_auto_price_bucket_granularity: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_prebid_dense_price_bucket_granularity: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_prebid_medium_price_bucket_granularity: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_price_bucket_array: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_price_bucket_validity_bad_values: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_price_bucket_validity_bad_values_again: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_price_bucket_validity_missing_key: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_setup_partner: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_user_confirmation_accepted: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_user_confirmation_not_accepted: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_user_confirmation_rejected: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_value_id_getter: passed != not found`
+- `tests/test_dfp_associate_line_items_and_creatives.py::DFPCreateLICAsTests::test_association: passed != not found`
+- `tests/test_dfp_associate_line_items_and_creatives.py::DFPCreateLICAsTests::test_association_with_size_overrides: passed != not found`
+- `tests/test_dfp_create_creatives.py::DFPCreateCreativesTests::test_build_creative_name: passed != not found`
+- `tests/test_dfp_create_creatives.py::DFPCreateCreativesTests::test_create_creative_config: passed != not found`
+- `tests/test_dfp_create_creatives.py::DFPCreateCreativesTests::test_create_creatives_items_call: passed != not found`
+- `tests/test_dfp_create_creatives.py::DFPCreateCreativesTests::test_create_creatives_returns_ids: passed != not found`
+- `tests/test_dfp_create_creatives.py::DFPCreateCreativesTests::test_create_duplicate_creative_configs: passed != not found`
+- `tests/test_dfp_create_custom_targeting.py::DFPCreateCustomTargetingTests::test_create_targeting_key: passed != not found`
+- `tests/test_dfp_create_custom_targeting.py::DFPCreateCustomTargetingTests::test_create_targeting_key_no_display_name: passed != not found`
+- `tests/test_dfp_create_custom_targeting.py::DFPCreateCustomTargetingTests::test_create_targeting_value: passed != not found`
+- `tests/test_dfp_create_line_items.py::DFPCreateLineItemsTests::test_create_line_item_config: passed != not found`
+- `tests/test_dfp_create_line_items.py::DFPCreateLineItemsTests::test_create_line_items_call: passed != not found`
+- `tests/test_dfp_create_line_items.py::DFPCreateLineItemsTests::test_create_line_items_returns_ids: passed != not found`
+- `tests/test_dfp_create_orders.py::DFPCreateOrderTests::test_create_orders_call: passed != not found`
+- `tests/test_dfp_create_orders.py::DFPCreateOrderTests::test_create_orders_duplicate_name_fail: passed != not found`
+- `tests/test_dfp_create_orders.py::DFPCreateOrderTests::test_create_orders_duplicate_name_success: passed != not found`
+- `tests/test_dfp_create_orders.py::DFPCreateOrderTests::test_order_config: passed != not found`
+- `tests/test_dfp_create_orders.py::DFPCreateOrderTests::test_return_order_id: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_create_orders_bad_ad_units_setting: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_create_orders_missing_ad_units_setting: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_get_ad_unit_ids_by_name: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_get_no_ad_unit_by_name: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_get_placement_by_name: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_get_placement_by_name_call: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_settings_placements: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_create_advertiser_call: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_get_advertiser_call: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_get_duplicate_advertisers: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_get_no_advertiser: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_get_no_advertiser_create: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_missing_advertiser_name_setting: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_settings_advertiser_name: passed != not found`
+- `tests/test_dfp_get_custom_targeting.py::DFPGetCustomTargetingTests::test_get_key_id_by_name: passed != not found`
+- `tests/test_dfp_get_custom_targeting.py::DFPGetCustomTargetingTests::test_get_key_id_by_name_no_key: passed != not found`
+- `tests/test_dfp_get_custom_targeting.py::DFPGetCustomTargetingTests::test_get_targeting_by_key_name_call_key_exists: passed != not found`
+- `tests/test_dfp_get_custom_targeting.py::DFPGetCustomTargetingTests::test_get_targeting_by_key_name_call_no_key: passed != not found`
+- `tests/test_dfp_get_orders.py::DFPServiceTests::test_get_all_orders: passed != not found`
+- `tests/test_dfp_get_orders.py::DFPServiceTests::test_get_all_orders_unicode: passed != not found`
+- `tests/test_dfp_get_orders.py::DFPServiceTests::test_get_no_order_by_name: passed != not found`
+- `tests/test_dfp_get_orders.py::DFPServiceTests::test_get_order_by_name: passed != not found`
+- `tests/test_dfp_get_orders.py::DFPServiceTests::test_get_order_by_name_return: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_create_orders_bad_placements_setting: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_create_orders_missing_placements_setting: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_get_no_placement_by_name: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_get_placement_by_name: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_get_placement_by_name_call: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_get_placement_ids_by_name: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_settings_placements: passed != not found`
+- `tests/test_dfp_get_users.py::DFPGetUsersTests::test_create_orders_missing_email: passed != not found`
+- `tests/test_dfp_get_users.py::DFPGetUsersTests::test_get_user_call: passed != not found`
+- `tests/test_dfp_get_users.py::DFPGetUsersTests::test_get_user_call_no_user: passed != not found`
+- `tests/test_dfp_get_users.py::DFPGetUsersTests::test_settings_user_email: passed != not found`
+- `tests/test_dfp_get_users.py::DFPGetUsersTests::test_user_id_returned: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_get_prices_array_changed_precision: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_get_prices_array_length: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_get_prices_array_normal: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_get_prices_summary_string: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_micro_amount_to_num: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_num_to_micro_amount: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_num_to_str: passed != not found`
+- llmmig finished
+## Running merge_skipped
+### running tests
+- test finished with status 2, cov finished with status 1
+### test diff with round premig
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_create_line_item_configs: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_create_line_item_configs_video: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_custom_currency_code: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_custom_line_item_format: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_get_or_create_dfp_targeting_key_does_not_exist: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_get_or_create_dfp_targeting_key_exists: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_logging_unicode: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_missing_advertiser_setting: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_missing_bidder_code_setting: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_missing_email_setting: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_missing_order_setting: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_missing_placement_and_ad_units_setting: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_num_duplicate_creatives_from_settings: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_num_duplicate_creatives_no_settings_from_ad_units: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_num_duplicate_creatives_no_settings_from_placements: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_num_duplicate_creatives_no_settings_from_placements_and_ad_units: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_prebid_auto_price_bucket_granularity: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_prebid_dense_price_bucket_granularity: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_prebid_medium_price_bucket_granularity: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_price_bucket_array: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_price_bucket_validity_bad_values: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_price_bucket_validity_bad_values_again: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_price_bucket_validity_missing_key: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_setup_partner: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_user_confirmation_accepted: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_user_confirmation_not_accepted: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_user_confirmation_rejected: passed != not found`
+- `tests/test_add_new_prebid_partner.py::AddNewPrebidPartnerTests::test_value_id_getter: passed != not found`
+- `tests/test_dfp_associate_line_items_and_creatives.py::DFPCreateLICAsTests::test_association: passed != not found`
+- `tests/test_dfp_associate_line_items_and_creatives.py::DFPCreateLICAsTests::test_association_with_size_overrides: passed != not found`
+- `tests/test_dfp_create_creatives.py::DFPCreateCreativesTests::test_build_creative_name: passed != not found`
+- `tests/test_dfp_create_creatives.py::DFPCreateCreativesTests::test_create_creative_config: passed != not found`
+- `tests/test_dfp_create_creatives.py::DFPCreateCreativesTests::test_create_creatives_items_call: passed != not found`
+- `tests/test_dfp_create_creatives.py::DFPCreateCreativesTests::test_create_creatives_returns_ids: passed != not found`
+- `tests/test_dfp_create_creatives.py::DFPCreateCreativesTests::test_create_duplicate_creative_configs: passed != not found`
+- `tests/test_dfp_create_custom_targeting.py::DFPCreateCustomTargetingTests::test_create_targeting_key: passed != not found`
+- `tests/test_dfp_create_custom_targeting.py::DFPCreateCustomTargetingTests::test_create_targeting_key_no_display_name: passed != not found`
+- `tests/test_dfp_create_custom_targeting.py::DFPCreateCustomTargetingTests::test_create_targeting_value: passed != not found`
+- `tests/test_dfp_create_line_items.py::DFPCreateLineItemsTests::test_create_line_item_config: passed != not found`
+- `tests/test_dfp_create_line_items.py::DFPCreateLineItemsTests::test_create_line_items_call: passed != not found`
+- `tests/test_dfp_create_line_items.py::DFPCreateLineItemsTests::test_create_line_items_returns_ids: passed != not found`
+- `tests/test_dfp_create_orders.py::DFPCreateOrderTests::test_create_orders_call: passed != not found`
+- `tests/test_dfp_create_orders.py::DFPCreateOrderTests::test_create_orders_duplicate_name_fail: passed != not found`
+- `tests/test_dfp_create_orders.py::DFPCreateOrderTests::test_create_orders_duplicate_name_success: passed != not found`
+- `tests/test_dfp_create_orders.py::DFPCreateOrderTests::test_order_config: passed != not found`
+- `tests/test_dfp_create_orders.py::DFPCreateOrderTests::test_return_order_id: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_create_orders_bad_ad_units_setting: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_create_orders_missing_ad_units_setting: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_get_ad_unit_ids_by_name: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_get_no_ad_unit_by_name: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_get_placement_by_name: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_get_placement_by_name_call: passed != not found`
+- `tests/test_dfp_get_ad_units.py::DFPGetAdUnitsTests::test_settings_placements: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_create_advertiser_call: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_get_advertiser_call: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_get_duplicate_advertisers: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_get_no_advertiser: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_get_no_advertiser_create: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_missing_advertiser_name_setting: passed != not found`
+- `tests/test_dfp_get_advertisers.py::DFPGetAdvertisersTests::test_settings_advertiser_name: passed != not found`
+- `tests/test_dfp_get_custom_targeting.py::DFPGetCustomTargetingTests::test_get_key_id_by_name: passed != not found`
+- `tests/test_dfp_get_custom_targeting.py::DFPGetCustomTargetingTests::test_get_key_id_by_name_no_key: passed != not found`
+- `tests/test_dfp_get_custom_targeting.py::DFPGetCustomTargetingTests::test_get_targeting_by_key_name_call_key_exists: passed != not found`
+- `tests/test_dfp_get_custom_targeting.py::DFPGetCustomTargetingTests::test_get_targeting_by_key_name_call_no_key: passed != not found`
+- `tests/test_dfp_get_orders.py::DFPServiceTests::test_get_all_orders: passed != not found`
+- `tests/test_dfp_get_orders.py::DFPServiceTests::test_get_all_orders_unicode: passed != not found`
+- `tests/test_dfp_get_orders.py::DFPServiceTests::test_get_no_order_by_name: passed != not found`
+- `tests/test_dfp_get_orders.py::DFPServiceTests::test_get_order_by_name: passed != not found`
+- `tests/test_dfp_get_orders.py::DFPServiceTests::test_get_order_by_name_return: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_create_orders_bad_placements_setting: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_create_orders_missing_placements_setting: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_get_no_placement_by_name: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_get_placement_by_name: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_get_placement_by_name_call: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_get_placement_ids_by_name: passed != not found`
+- `tests/test_dfp_get_placements.py::DFPGetPlacementsTests::test_settings_placements: passed != not found`
+- `tests/test_dfp_get_users.py::DFPGetUsersTests::test_create_orders_missing_email: passed != not found`
+- `tests/test_dfp_get_users.py::DFPGetUsersTests::test_get_user_call: passed != not found`
+- `tests/test_dfp_get_users.py::DFPGetUsersTests::test_get_user_call_no_user: passed != not found`
+- `tests/test_dfp_get_users.py::DFPGetUsersTests::test_settings_user_email: passed != not found`
+- `tests/test_dfp_get_users.py::DFPGetUsersTests::test_user_id_returned: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_get_prices_array_changed_precision: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_get_prices_array_length: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_get_prices_array_normal: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_get_prices_summary_string: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_micro_amount_to_num: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_num_to_micro_amount: passed != not found`
+- `tests/test_price_utils.py::UtilsTests::test_num_to_str: passed != not found`
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+- async_transform finished

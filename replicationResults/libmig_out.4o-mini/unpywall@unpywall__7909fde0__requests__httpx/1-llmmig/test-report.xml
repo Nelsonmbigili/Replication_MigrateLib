@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="26" time="17.837" timestamp="2026-03-07T18:56:33.449317+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_cache.TestUnpywallCache" name="test_reset_cache" time="0.001" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_delete" time="0.001" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_timeout" time="2.913" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_get" time="0.013"><failure message="AssertionError: assert False&#10; +  where False = isinstance(&lt;Response [200]&gt;, Response)&#10; +    where &lt;Response [200]&gt; = get('10.1016/j.jns.2020.116832')&#10; +      where get = &lt;unpywall.cache.UnpywallCache object at 0x10554f150&gt;.get">self = &lt;tests.test_cache.TestUnpywallCache object at 0x10537f150&gt;
+example_cache = &lt;unpywall.cache.UnpywallCache object at 0x10294f290&gt;
+backup_cache = &lt;unpywall.cache.UnpywallCache object at 0x10554f150&gt;
+
+    def test_get(self, example_cache, backup_cache):
+        doi = '10.1016/j.jns.2020.116832'
+        example_cache.delete(doi)
+        assert doi not in example_cache.content
+        assert doi not in example_cache.access_times
+&gt;       assert isinstance(backup_cache.get(doi), Response)
+E       AssertionError: assert False
+E        +  where False = isinstance(&lt;Response [200]&gt;, Response)
+E        +    where &lt;Response [200]&gt; = get('10.1016/j.jns.2020.116832')
+E        +      where get = &lt;unpywall.cache.UnpywallCache object at 0x10554f150&gt;.get
+
+tests/test_cache.py:69: AssertionError</failure></testcase><testcase classname="tests.test_cache.TestUnpywallCache" name="test_save_load" time="0.002" /><testcase classname="tests.test_cache.TestUnpywallCache" name="test_download" time="1.765" /><testcase classname="tests.test_cli.TestUnpywallCli" name="test_main" time="0.006" /><testcase classname="tests.test_cli.TestUnpywallCli" name="test_view" time="1.748" /><testcase classname="tests.test_cli.TestUnpywallCli" name="test_download" time="1.772" /><testcase classname="tests.test_cli.TestUnpywallCli" name="test_link" time="1.695" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_init_cache" time="0.003" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_validate_dois" time="0.003" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_df" time="0.034" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_doi" time="1.718" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_query" time="0.719"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;tests.test_unpywall.TestUnpywall object at 0x1055312d0&gt;
+Unpywall = &lt;class 'unpywall.Unpywall'&gt;
+
+    def test_query(self, Unpywall):
+    
+&gt;       df = Unpywall.query(query='test',
+                            is_oa=True,
+                            errors='ignore')
+
+tests/test_unpywall.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+unpywall/__init__.py:203: in query
+    data = Unpywall.get_json(query=query, is_oa=is_oa, errors=errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+unpywall/__init__.py:338: in get_json
+    return r.json()
+           ^^^^^^^^
+.venv/lib/python3.11/site-packages/httpx/_models.py:832: in json
+    return jsonlib.loads(self.content, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x100ca60d0&gt;
+s = '&lt;!doctype html&gt;\n&lt;html lang=en&gt;\n&lt;title&gt;500 Internal Server Error&lt;/title&gt;\n&lt;h1&gt;Internal Server Error&lt;/h1&gt;\n&lt;p&gt;The ser...nd was unable to complete your request. Either the server is overloaded or there is an error in the application.&lt;/p&gt;\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py:355: JSONDecodeError</failure></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_json" time="4.231"><failure message="json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">self = &lt;tests.test_unpywall.TestUnpywall object at 0x105531950&gt;
+Unpywall = &lt;class 'unpywall.Unpywall'&gt;
+
+    def test_get_json(self, Unpywall):
+    
+        with pytest.raises(HTTPStatusError):  # Changed from HTTPError
+            Unpywall.get_json(doi='a bad doi', errors='raise')
+    
+        with pytest.warns(UserWarning):
+            Unpywall.get_json(doi='a bad doi', errors='ignore')
+    
+        assert isinstance(Unpywall.get_json(doi='10.1016/j.tmaid.2020.101663',
+                                            errors='raise'), dict)
+    
+&gt;       assert isinstance(Unpywall.get_json(query='test',
+                                            is_oa=True,
+                                            errors='raise'), dict)
+
+tests/test_unpywall.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+unpywall/__init__.py:338: in get_json
+    return r.json()
+           ^^^^^^^^
+.venv/lib/python3.11/site-packages/httpx/_models.py:832: in json
+    return jsonlib.loads(self.content, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;json.decoder.JSONDecoder object at 0x100ca60d0&gt;
+s = '&lt;!doctype html&gt;\n&lt;html lang=en&gt;\n&lt;title&gt;500 Internal Server Error&lt;/title&gt;\n&lt;h1&gt;Internal Server Error&lt;/h1&gt;\n&lt;p&gt;The ser...nd was unable to complete your request. Either the server is overloaded or there is an error in the application.&lt;/p&gt;\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+&gt;           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py:355: JSONDecodeError</failure></testcase><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_pdf_link" time="0.001" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_doc_link" time="0.001" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_get_all_links" time="0.001" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_download_pdf_handle" time="0.269" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_progress" time="0.007" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_view_pdf" time="0.001" /><testcase classname="tests.test_unpywall.TestUnpywall" name="test_download_pdf_file" time="0.004"><failure message="TypeError: get() got an unexpected keyword argument 'stream'">self = &lt;tests.test_unpywall.TestUnpywall object at 0x105544c50&gt;
+Unpywall = &lt;class 'unpywall.Unpywall'&gt;
+capfd = &lt;_pytest.capture.CaptureFixture object at 0x10570ad50&gt;
+
+    def test_download_pdf_file(self, Unpywall, capfd):
+    
+        filename = 'test.pdf'
+        filepath = './test_dir'
+    
+&gt;       Unpywall.download_pdf_file('10.1038/nature12373',
+                                   filename=filename,
+                                   filepath=filepath,
+                                   progress=True)
+
+tests/test_unpywall.py:162: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+doi = '10.1038/nature12373', filename = 'test.pdf', filepath = './test_dir'
+progress = True
+
+    @staticmethod
+    def download_pdf_file(doi: str,
+                          filename: str,
+                          filepath: str = '.',
+                          progress: bool = False) -&gt; None:
+        """
+        This function downloads a PDF from a given DOI.
+    
+        Parameters
+        ----------
+        doi : str
+            The DOI of the requested paper.
+        filename : str
+            The filename for the PDF.
+        filepath : str
+            The path to store the downloaded PDF.
+        progress : bool
+            Whether the progress of the API call should be printed out or not.
+        """
+    
+        url = Unpywall.get_pdf_link(doi)
+&gt;       r = httpx.get(url, stream=True)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: get() got an unexpected keyword argument 'stream'
+
+unpywall/__init__.py:495: TypeError</failure></testcase><testcase classname="tests.test_utils.TestUnpywallCredentials" name="test_validate_email" time="0.001" /><testcase classname="tests.test_utils.TestUnpywallURL" name="test_doi_url" time="0.001" /><testcase classname="tests.test_utils.TestUnpywallURL" name="test_query_url" time="0.001" /></testsuite></testsuites>

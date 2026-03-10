@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="28" time="12.767" timestamp="2026-03-10T11:06:01.542560+04:00" hostname="nelsonmbigili.local"><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_uri_type" time="0.002" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_read" time="0.758" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_metadata_extract" time="1.876" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_metadata_split_to_dict" time="1.440" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_get_dimensions" time="1.702" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_build_dataframe" time="1.099" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_parse" time="1.117"><failure message="TypeError: string indices must be integers, not 'str'">def test_parse():
+        """Should parse a pc-axis into a dataframe and a metadata dictionary"""
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, 'https://www.ine.es/jaxi/files/_px/es/px/t20/e301/matri/a2000/l0/14001.px?nocab=1')
+        c.setopt(c.WRITEDATA, buffer)
+        c.setopt(c.ENCODING, 'ISO-8859-15')
+        c.perform()
+        c.close()
+        parsed_pcaxis = buffer.getvalue().decode('ISO-8859-15')
+&gt;       assert parsed_pcaxis['DATA'].dtypes['DATA'] == 'object'
+               ^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: string indices must be integers, not 'str'
+
+pyaxis/test/integration/test_pyaxis.py:125: TypeError</failure></testcase><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_http_error" time="0.703" /><testcase classname="pyaxis.test.integration.test_pyaxis" name="test_connection_error" time="0.218"><failure message="assert 6 == 7">def test_connection_error():
+        """Using parse() with a wrong URL should return a connection error."""
+        url = 'https://www.ine.net/jaxiT3/files/t/es/px/1001.px'
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, url)
+        c.setopt(c.WRITEDATA, buffer)
+        try:
+&gt;           c.perform()
+E           pycurl.error: (6, 'Could not resolve host: www.ine.net')
+
+pyaxis/test/integration/test_pyaxis.py:154: error
+
+During handling of the above exception, another exception occurred:
+
+    def test_connection_error():
+        """Using parse() with a wrong URL should return a connection error."""
+        url = 'https://www.ine.net/jaxiT3/files/t/es/px/1001.px'
+        buffer = BytesIO()
+        c = pycurl.Curl()
+        c.setopt(c.URL, url)
+        c.setopt(c.WRITEDATA, buffer)
+        try:
+            c.perform()
+        except pycurl.error as e:
+&gt;           assert e.args[0] == 7  # Connection error code
+            ^^^^^^^^^^^^^^^^^^^^^
+E           assert 6 == 7
+
+pyaxis/test/integration/test_pyaxis.py:156: AssertionError</failure></testcase><testcase classname="pyaxis.test.unit.test_json_stat" name="test_to_json_stat" time="0.102" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_uri_type" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_read" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_metadata_extract" time="0.001" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_metadata_split_to_dict" time="0.001" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_metadata_split_dict_quotation_marks" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_split_ignore_quotation_marks" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_get_dimensions" time="0.001" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_get_codes" time="0.001" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_build_dataframe" time="0.019" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_make_unique_list" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_brackets_stripper" time="0.000" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_multilingual_checker" time="0.011" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_get_default_lang" time="0.010" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_metadata_dict_maker" time="0.010" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_translation_dict_maker" time="0.011" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_multilingual_parse" time="0.011" /><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_parse" time="0.019"><failure message="AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'">def test_parse():
+        """Should parse a pc-axis into a dataframe and a metadata dictionary"""
+        parsed_pcaxis = pyaxis.parse(
+            data_path + '14001.px',
+            encoding='ISO-8859-15')
+&gt;       assert parsed_pcaxis['DATA'].dtypes['DATA'] == 'object'
+E       AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'
+
+pyaxis/test/unit/test_pyaxis.py:222: AssertionError</failure></testcase><testcase classname="pyaxis.test.unit.test_pyaxis" name="test_statistical_disclosure" time="0.004"><failure message="AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'">def test_statistical_disclosure():
+        """Should parse a pc-axis with statistical disclosure into a dataframe.
+    
+        Uses convenient Na or NaN representations and a metadata dict.
+        """
+        parsed_pcaxis = pyaxis.parse(
+            data_path + '27067.px',
+            encoding='ISO-8859-2')
+&gt;       assert parsed_pcaxis['DATA'].dtypes['DATA'] == 'object'
+E       AssertionError: assert &lt;StringDtype(storage='python', na_value=nan)&gt; == 'object'
+
+pyaxis/test/unit/test_pyaxis.py:240: AssertionError</failure></testcase></testsuite></testsuites>

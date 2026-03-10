@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="31" time="0.498" timestamp="2026-03-08T14:16:50.231687+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_is_valid" name="test_is_url[https://www.example.com-True]" time="0.001" /><testcase classname="tests.test_is_valid" name="test_is_url[http://example.com-True]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_url[ftp://ftp.example.com-True]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_url[www.example.com-False]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_url[example.com-False]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_url[just a string-False]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_url[-False]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_url[file:///C:/Users/username/Documents/file.txt-True]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_url[mailto:user@example.com-True]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_url_type_error" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url[https://github.com/user/repo/blob/master/font.ttf?raw=true-True]" time="0.001" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url[https://github.com/user/repo/raw/master/font.otf-True]" time="0.001" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url[https://raw.githubusercontent.com/user/repo/master/font.woff-True]" time="0.001" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url[https://raw.githubusercontent.com/user/repo/branch-name/subfolder/font.woff2-True]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url[https://github.com/user/repo/blob/master/font.ttf-False]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url[https://github.com/user/repo/raw/master/font.txt-False]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url[https://raw.githubusercontent.com/user/repo/master/font.exe-False]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url[https://example.com/font.ttf-False]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url[https://github.com/user/repo/tree/master/fonts/font.ttf-False]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url[https://github.com/user/repo/blob/master/font.ttf?raw=false-False]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url[https://github.com/user/repo/blob/master/font.ttf?raw=true&amp;param=value-False]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url[https://github.com/user/repo/raw/master/font.WOFF-False]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url[https://raw.githubusercontent.com/user/repo/master/font.ttf?raw=true-False]" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url_with_empty_string" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url_with_none" time="0.000" /><testcase classname="tests.test_is_valid" name="test_is_valid_raw_url_with_non_string" time="0.000" /><testcase classname="tests.test_load_font" name="test_load_font_with_url" time="0.083"><failure message="Exception: Failed to load font. This may be due to a lack of internet connection.">self = &lt;urllib.request.HTTPSHandler object at 0x107293210&gt;
+http_class = &lt;class 'http.client.HTTPSConnection'&gt;
+req = &lt;urllib.request.Request object at 0x107293390&gt;
+http_conn_args = {'check_hostname': None, 'context': None}, host = 'github.com'
+h = &lt;http.client.HTTPSConnection object at 0x107293990&gt;
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+&gt;               h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:1348: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1286: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1332: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1281: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1041: in _send_output
+    self.send(msg)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:979: in send
+    self.connect()
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py:1458: in connect
+    self.sock = self._context.wrap_socket(self.sock,
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:517: in wrap_socket
+    return self.sslsocket_class._create(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1108: in _create
+    self.do_handshake()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;ssl.SSLSocket [closed] fd=-1, family=2, type=1, proto=0&gt;, block = False
+
+    @_sslcopydoc
+    def do_handshake(self, block=False):
+        self._check_connected()
+        timeout = self.gettimeout()
+        try:
+            if timeout == 0.0 and block:
+                self.settimeout(None)
+&gt;           self._sslobj.do_handshake()
+E           ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py:1379: SSLCertVerificationError
+
+During handling of the above exception, another exception occurred:
+
+font_location = 'https://github.com/JosephBARBIERDARNAL/pyfonts/blob/main/tests/Ultra-Regular.ttf?raw=true'
+
+    def _get_font_from_url(font_location: str):
+        """
+        Retrieves a font from a Github url. The function attempts to access the font
+        at the given url by checking a few elements, creates a temporary file with the
+        font found and returns the path to the font file.
+    
+        Params:
+        - font_location: url that points to the binary font file on Github
+    
+        Returns:
+        - str: The path to the temporary font file.
+        """
+    
+        if not _is_url(font_location):
+            raise ValueError(f"`font_location` must be an url, not: {font_location}.")
+    
+        elif not _is_valid_raw_url(font_location):
+            raise ValueError(
+                f"""
+                The URL provided ({font_location}) does not appear to be valid.
+                It must point to a binary font file from Github.
+                Have you forgotten to append `?raw=true` to the end of the URL?
+                """
+            )
+    
+        else:
+            try:
+                with NamedTemporaryFile(delete=False) as temp_file:
+&gt;                   response = urlopen(font_location)
+
+pyfonts/get_font.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:216: in urlopen
+    return opener.open(url, data, timeout)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:519: in open
+    response = self._open(req, data)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:536: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:496: in _call_chain
+    result = func(*args)
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:1391: in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;urllib.request.HTTPSHandler object at 0x107293210&gt;
+http_class = &lt;class 'http.client.HTTPSConnection'&gt;
+req = &lt;urllib.request.Request object at 0x107293390&gt;
+http_conn_args = {'check_hostname': None, 'context': None}, host = 'github.com'
+h = &lt;http.client.HTTPSConnection object at 0x107293990&gt;
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+&gt;               raise URLError(err)
+E               urllib.error.URLError: &lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)&gt;
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/urllib/request.py:1351: URLError
+
+During handling of the above exception, another exception occurred:
+
+    def test_load_font_with_url():
+&gt;       font = load_font(
+            font_url="https://github.com/JosephBARBIERDARNAL/pyfonts/blob/main/tests/Ultra-Regular.ttf?raw=true"
+        )
+
+tests/test_load_font.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+pyfonts/main.py:25: in load_font
+    font = _get_font_from_url(font_url)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+font_location = 'https://github.com/JosephBARBIERDARNAL/pyfonts/blob/main/tests/Ultra-Regular.ttf?raw=true'
+
+    def _get_font_from_url(font_location: str):
+        """
+        Retrieves a font from a Github url. The function attempts to access the font
+        at the given url by checking a few elements, creates a temporary file with the
+        font found and returns the path to the font file.
+    
+        Params:
+        - font_location: url that points to the binary font file on Github
+    
+        Returns:
+        - str: The path to the temporary font file.
+        """
+    
+        if not _is_url(font_location):
+            raise ValueError(f"`font_location` must be an url, not: {font_location}.")
+    
+        elif not _is_valid_raw_url(font_location):
+            raise ValueError(
+                f"""
+                The URL provided ({font_location}) does not appear to be valid.
+                It must point to a binary font file from Github.
+                Have you forgotten to append `?raw=true` to the end of the URL?
+                """
+            )
+    
+        else:
+            try:
+                with NamedTemporaryFile(delete=False) as temp_file:
+                    response = urlopen(font_location)
+                    temp_file.write(response.read())
+    
+            except HTTPError as e:
+                if e.code == 404:
+                    raise Exception(
+                        "404 error. The url passed does not exist: font file not found."
+                    )
+    
+            except URLError:
+&gt;               raise Exception(
+                    "Failed to load font. This may be due to a lack of internet connection."
+                )
+E               Exception: Failed to load font. This may be due to a lack of internet connection.
+
+pyfonts/get_font.py:46: Exception</failure></testcase><testcase classname="tests.test_load_font" name="test_load_font_with_path" time="0.002" /><testcase classname="tests.test_load_font" name="test_load_font_invalid_input" time="0.000" /><testcase classname="tests.test_load_font" name="test_load_font_no_input" time="0.000" /><testcase classname="tests.test_preview_font" name="test_preview_font_raises_value_error_on_invalid_input" time="0.001" /></testsuite></testsuites>

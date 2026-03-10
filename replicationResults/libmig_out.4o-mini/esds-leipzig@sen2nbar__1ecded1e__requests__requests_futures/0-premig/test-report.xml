@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="5" time="71.293" timestamp="2026-03-10T11:46:44.560564+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_sen2nbar.Test" name="test_cubo" time="3.605"><failure message="KeyError: 'proj:epsg'">self = &lt;test_sen2nbar.Test testMethod=test_cubo&gt;
+
+    def test_cubo(self):
+        """Test the nbar_cubo"""
+&gt;       da = nbar_cubo(
+            cubo.create(
+                lat=50,
+                lon=10,
+                collection="sentinel-2-l2a",
+                bands=["B02", "B03", "B04"],
+                start_date="2021-06-01",
+                end_date="2021-06-10",
+                edge_size=32,
+                resolution=10,
+            )
+        )
+
+tests/test_sen2nbar.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sen2nbar/nbar.py:289: in nbar_cubo
+    da = nbar_stac(da, stac, collection, epsg, quiet)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sen2nbar/nbar.py:176: in nbar_stac
+    c = c_factor_from_item(item, epsg)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+item = &lt;Item id=S2A_MSIL2A_20210605T102021_R065_T32UNA_20210606T150833&gt;
+to_epsg = 'epsg:32632'
+
+    def c_factor_from_item(item: pystac.item.Item, to_epsg: str) -&gt; xr.DataArray:
+        """Gets the c-factor per band from a Sentinel-2 :code:`pystac.Item`.
+    
+        Parameters
+        ----------
+        item : pystac.item.Item
+            Item to get the c-factor from.
+        to_epsg : str
+            EPSG code to reproject the c-factor to (e.g. "epsg:3115")
+    
+        Returns
+        -------
+        xarray.DataArray
+            c-factor.
+        """
+        # Retrieve the EPSG from the item
+&gt;       SOURCE_EPSG = item.properties["proj:epsg"]
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'proj:epsg'
+
+sen2nbar/c_factor.py:95: KeyError</failure></testcase><testcase classname="tests.test_sen2nbar.Test" name="test_cubo_not_all_angles" time="1.934"><failure message="KeyError: 'proj:epsg'">self = &lt;test_sen2nbar.Test testMethod=test_cubo_not_all_angles&gt;
+
+    def test_cubo_not_all_angles(self):
+        """Test the nbar_cubo"""
+&gt;       da = nbar_cubo(
+            cubo.create(
+                lat=64.25611,
+                lon=19.7745,
+                collection="sentinel-2-l2a",
+                bands=["B02", "B03", "B04"],
+                start_date="2016-01-01",
+                end_date="2016-03-01",
+                edge_size=512,
+                resolution=10,
+            )
+        )
+
+tests/test_sen2nbar.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sen2nbar/nbar.py:289: in nbar_cubo
+    da = nbar_stac(da, stac, collection, epsg, quiet)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sen2nbar/nbar.py:176: in nbar_stac
+    c = c_factor_from_item(item, epsg)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+item = &lt;Item id=S2A_MSIL2A_20160130T101252_R022_T34WDS_20210528T002504&gt;
+to_epsg = 'epsg:32634'
+
+    def c_factor_from_item(item: pystac.item.Item, to_epsg: str) -&gt; xr.DataArray:
+        """Gets the c-factor per band from a Sentinel-2 :code:`pystac.Item`.
+    
+        Parameters
+        ----------
+        item : pystac.item.Item
+            Item to get the c-factor from.
+        to_epsg : str
+            EPSG code to reproject the c-factor to (e.g. "epsg:3115")
+    
+        Returns
+        -------
+        xarray.DataArray
+            c-factor.
+        """
+        # Retrieve the EPSG from the item
+&gt;       SOURCE_EPSG = item.properties["proj:epsg"]
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'proj:epsg'
+
+sen2nbar/c_factor.py:95: KeyError</failure></testcase><testcase classname="tests.test_sen2nbar.Test" name="test_cubo_not_all_angles_duplicated_indices" time="2.718"><failure message="KeyError: 'proj:epsg'">self = &lt;test_sen2nbar.Test testMethod=test_cubo_not_all_angles_duplicated_indices&gt;
+
+    def test_cubo_not_all_angles_duplicated_indices(self):
+        """Test the nbar_cubo"""
+&gt;       da = nbar_cubo(
+            cubo.create(
+                lat=51.079225,
+                lon=10.452173,
+                collection="sentinel-2-l2a",
+                bands=["B02", "B03", "B04"],
+                start_date="2016-01-01",
+                end_date="2016-03-01",
+                edge_size=512,
+                resolution=10,
+            )
+        )
+
+tests/test_sen2nbar.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sen2nbar/nbar.py:289: in nbar_cubo
+    da = nbar_stac(da, stac, collection, epsg, quiet)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sen2nbar/nbar.py:176: in nbar_stac
+    c = c_factor_from_item(item, epsg)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+item = &lt;Item id=S2A_MSIL2A_20160103T102432_R065_T32UPB_20210527T071833&gt;
+to_epsg = 'epsg:32632'
+
+    def c_factor_from_item(item: pystac.item.Item, to_epsg: str) -&gt; xr.DataArray:
+        """Gets the c-factor per band from a Sentinel-2 :code:`pystac.Item`.
+    
+        Parameters
+        ----------
+        item : pystac.item.Item
+            Item to get the c-factor from.
+        to_epsg : str
+            EPSG code to reproject the c-factor to (e.g. "epsg:3115")
+    
+        Returns
+        -------
+        xarray.DataArray
+            c-factor.
+        """
+        # Retrieve the EPSG from the item
+&gt;       SOURCE_EPSG = item.properties["proj:epsg"]
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'proj:epsg'
+
+sen2nbar/c_factor.py:95: KeyError</failure></testcase><testcase classname="tests.test_sen2nbar.Test" name="test_stac_c_factor_reprojection" time="2.855"><failure message="KeyError: 'proj:epsg'">self = &lt;test_sen2nbar.Test testMethod=test_stac_c_factor_reprojection&gt;
+
+    def test_stac_c_factor_reprojection(self):
+        """Test the nbar_cubo when items have different epsg"""
+&gt;       da = nbar_cubo(
+            cubo.create(
+                lat=60.64183,
+                lon=23.95952,
+                collection="sentinel-2-l2a",
+                bands=["B04", "B03", "B02"],
+                start_date=f"2016-01-01",
+                end_date=f"2016-03-31",
+                edge_size=512,
+                resolution=10,
+            )
+        )
+
+tests/test_sen2nbar.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+sen2nbar/nbar.py:289: in nbar_cubo
+    da = nbar_stac(da, stac, collection, epsg, quiet)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sen2nbar/nbar.py:176: in nbar_stac
+    c = c_factor_from_item(item, epsg)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+item = &lt;Item id=S2A_MSIL2A_20160121T094312_R036_T35VLH_20210527T211030&gt;
+to_epsg = 'epsg:32634'
+
+    def c_factor_from_item(item: pystac.item.Item, to_epsg: str) -&gt; xr.DataArray:
+        """Gets the c-factor per band from a Sentinel-2 :code:`pystac.Item`.
+    
+        Parameters
+        ----------
+        item : pystac.item.Item
+            Item to get the c-factor from.
+        to_epsg : str
+            EPSG code to reproject the c-factor to (e.g. "epsg:3115")
+    
+        Returns
+        -------
+        xarray.DataArray
+            c-factor.
+        """
+        # Retrieve the EPSG from the item
+&gt;       SOURCE_EPSG = item.properties["proj:epsg"]
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'proj:epsg'
+
+sen2nbar/c_factor.py:95: KeyError</failure></testcase><testcase classname="tests.test_sen2nbar.Test" name="test_stackstac" time="1.349"><failure message="ValueError: Cannot pick a common CRS, since asset 'B05' of item 0 'S2A_MSIL2A_20190607T213531_R086_T06VVN_20201005T231445' does not have one.&#10;&#10;Please specify a CRS with the `epsg=` argument.">self = &lt;test_sen2nbar.Test testMethod=test_stackstac&gt;
+
+    def test_stackstac(self):
+        """Test the nbar_stackstac with Planetary Computer"""
+        endpoint = "https://planetarycomputer.microsoft.com/api/stac/v1"
+        collection = "sentinel-2-l2a"
+        bounds = (-148.565368, 60.800723, -147.443389, 61.183638)
+    
+        catalog = pystac_client.Client.open(endpoint, modifier=pc.sign_inplace)
+    
+        area_of_interest = {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [bounds[0], bounds[1]],
+                    [bounds[2], bounds[1]],
+                    [bounds[2], bounds[3]],
+                    [bounds[0], bounds[3]],
+                    [bounds[0], bounds[1]],
+                ]
+            ],
+        }
+    
+        items = catalog.search(
+            collections=[collection],
+            intersects=area_of_interest,
+            datetime="2019-06-01/2019-08-01",
+            query={"eo:cloud_cover": {"lt": 10}},
+        ).get_all_items()
+    
+&gt;       stack = stackstac.stack(
+            items, assets=["B05", "B06", "B07"], bounds_latlon=bounds, resolution=20
+        )
+
+tests/test_sen2nbar.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/stackstac/stack.py:290: in stack
+    asset_table, spec, asset_ids, plain_items = prepare_items(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+items = [{'assets': {'AOT': {'gsd': 10.0, 'href': 'https://sentinel2l2a01.blob.core.windows.net/sentinel2-l2/06/V/VN/2019/06/0...121331], [-148.51688, 60.9808236], [-148.63188, 60.8404682], [-148.74884, 60.7008454], ...]], 'type': 'Polygon'}, ...}]
+assets = ['B05', 'B06', 'B07'], epsg = None, resolution = (20, 20)
+bounds = None, bounds_latlon = (-148.565368, 60.800723, -147.443389, 61.183638)
+snap_bounds = True, rescale = True, dtype = dtype('float64')
+
+    def prepare_items(
+        items: ItemSequence,
+        assets: Optional[Union[List[str], AbstractSet[str]]] = frozenset(
+            ["image/tiff", "image/x.geotiff", "image/vnd.stac.geotiff", "image/jp2"]
+        ),
+        epsg: Optional[int] = None,
+        resolution: Optional[Union[IntFloat, Resolutions]] = None,
+        bounds: Optional[Bbox] = None,
+        bounds_latlon: Optional[Bbox] = None,
+        snap_bounds: bool = True,
+        rescale: bool = True,
+        dtype: np.dtype = np.dtype("float64"),
+    ) -&gt; Tuple[np.ndarray, RasterSpec, List[str], ItemSequence]:
+        if bounds is not None and bounds_latlon is not None:
+            raise ValueError(
+                f"Cannot give both `bounds` {bounds} and `bounds_latlon` {bounds_latlon}."
+            )
+    
+        out_epsg = epsg
+        out_bounds = bounds
+        if resolution is not None and not isinstance(resolution, tuple):
+            resolution = (resolution, resolution)
+        out_resolutions_xy = resolution
+    
+        if assets is None:
+            # use the keys from the item with the most assets (do this rather than a `set()` to preserve order)
+            asset_ids = list(max((item["assets"] for item in items), key=len))
+        elif isinstance(assets, AbstractSet):
+            allowed_mimetypes = [Mimetype.from_str(t) for t in assets]
+            type_strs_by_id: dict[str, set[Optional[str]]] = collections.defaultdict(set)
+            for item in items:
+                for asset_id, asset in item["assets"].items():
+                    type_strs_by_id[asset_id].add(asset.get("type"))
+    
+            mimetypes_by_id = {
+                id: [Mimetype.from_str(t) for t in types if t is not None]
+                for id, types in type_strs_by_id.items()
+            }
+    
+            ids_without_type = [
+                id for id, mimetypes in mimetypes_by_id.items() if not mimetypes
+            ]
+            if ids_without_type:
+                warnings.warn(
+                    f"You're filtering for assets that match the mimetype(s) {assets}, but since {len(ids_without_type)} "
+                    f"(out of {len(type_strs_by_id)}) asset(s) have no `type` specified on any item, those will be "
+                    "dropped. Consider passing a list of asset IDs instead to the `assets=` parameter.\n"
+                    f"Assets with no type: {ids_without_type}",
+                )
+    
+            asset_ids = [
+                asset_id
+                for asset_id, asset_mimetypes in mimetypes_by_id.items()
+                if asset_mimetypes
+                and all(
+                    any(
+                        asset_mt.is_valid_for(allowed_mt)
+                        for allowed_mt in allowed_mimetypes
+                    )
+                    for asset_mt in asset_mimetypes
+                )
+            ]
+        else:
+            asset_ids = assets
+    
+        asset_table = np.full((len(items), len(asset_ids)), None, dtype=ASSET_TABLE_DT)
+    
+        # TODO support item-assets https://github.com/radiantearth/stac-spec/tree/master/extensions/item-assets
+    
+        if len(items) == 0:
+            raise ValueError("No items")
+        if len(asset_ids) == 0:
+            raise ValueError("Zero asset IDs requested")
+    
+        for item_i, item in enumerate(items):
+            item_epsg = item["properties"].get("proj:epsg")
+            item_bbox = item["properties"].get("proj:bbox")
+            item_shape = item["properties"].get("proj:shape")
+            item_transform = item["properties"].get("proj:transform")
+    
+            item_bbox_proj = None
+            for asset_i, id in enumerate(asset_ids):
+                try:
+                    asset = item["assets"][id]
+                except KeyError:
+                    continue
+    
+                asset_epsg = asset.get("proj:epsg", item_epsg)
+                asset_bbox = asset.get("proj:bbox", item_bbox)
+                asset_shape = asset.get("proj:shape", item_shape)
+                asset_transform = asset.get("proj:transform", item_transform)
+                raster_bands = asset.get("raster:bands")
+    
+                if raster_bands is not None:
+                    if len(raster_bands) != 1:
+                        raise ValueError(
+                            f"raster:bands has {len(raster_bands)} elements for asset {id!r}. "
+                            "Multi-band rasters are not currently supported.\n"
+                            "If you don't care about this asset, you can skip it by giving a list "
+                            "of asset IDs you *do* want in `assets=`, and leaving this one out."
+                        )
+                    asset_scale = raster_bands[0].get("scale", 1)
+                    asset_offset = raster_bands[0].get("offset", 0)
+                else:
+                    asset_scale = 1
+                    asset_offset = 0
+    
+                if rescale:
+                    if not np.can_cast(type(asset_scale), dtype):
+                        raise ValueError(
+                            f"`rescale=True`, but safe casting cannot be completed between "
+                            f"asset scale value {asset_scale} and output dtype {dtype}.\n"
+                            f"To continue using `{dtype=}`, pass `rescale=False` to retrieve "
+                            "data in its raw, unscaled values. Or, if you want rescaled "
+                            "values, pass a different `dtype=` (typically `float`)."
+                        )
+    
+                    if not np.can_cast(type(asset_offset), dtype):
+                        raise ValueError(
+                            f"`rescale=True`, but safe casting cannot be completed between "
+                            f"asset offset value {asset_offset} and output dtype {dtype}.\n"
+                            f"To continue using `{dtype=}`, pass `rescale=False` to retrieve "
+                            "data in its raw, unscaled values. Or, if you want rescaled "
+                            "values, pass a different `dtype=` (typically `float`)."
+                        )
+    
+                asset_affine = None
+    
+                # Auto-compute CRS
+                if epsg is None:
+                    if asset_epsg is None:
+&gt;                       raise ValueError(
+                            f"Cannot pick a common CRS, since asset {id!r} of item "
+                            f"{item_i} {item['id']!r} does not have one.\n\n"
+                            "Please specify a CRS with the `epsg=` argument."
+                        )
+E                       ValueError: Cannot pick a common CRS, since asset 'B05' of item 0 'S2A_MSIL2A_20190607T213531_R086_T06VVN_20201005T231445' does not have one.
+E                       
+E                       Please specify a CRS with the `epsg=` argument.
+
+.venv/lib/python3.11/site-packages/stackstac/prepare.py:190: ValueError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,2119 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="3" failures="19" skipped="0" tests="25" time="11.979" timestamp="2026-03-10T05:38:50.036552+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_api_bugs.TestAPIBugs" name="test_missing_title" time="0.029"><failure message="AssertionError: got AttributeError fetching paper without title">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=2104.12255v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=2104.12255v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_api_bugs.TestAPIBugs testMethod=test_missing_title&gt;
+
+    def test_missing_title(self):
+        """
+        Papers with the title "0" do not have a title element in the Atom feed.
+    
+        It's unclear whether other falsey titles (e.g. "False", "null", or empty
+        titles) are allowed by arXiv and are impacted by this bug. This may also
+        surface for other expected fields (e.g. author names).
+    
+        + GitHub issue: https://github.com/lukasschwab/arxiv.py/issues/71
+        + Bug report: https://groups.google.com/u/1/g/arxiv-api/c/ORENISrc5gc
+        """
+        paper_without_title = "2104.12255v1"
+        try:
+&gt;           results = list(arxiv.Search(id_list=[paper_without_title]).results())
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_api_bugs.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=2104.12255v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_api_bugs.TestAPIBugs testMethod=test_missing_title&gt;
+
+    def test_missing_title(self):
+        """
+        Papers with the title "0" do not have a title element in the Atom feed.
+    
+        It's unclear whether other falsey titles (e.g. "False", "null", or empty
+        titles) are allowed by arXiv and are impacted by this bug. This may also
+        surface for other expected fields (e.g. author names).
+    
+        + GitHub issue: https://github.com/lukasschwab/arxiv.py/issues/71
+        + Bug report: https://groups.google.com/u/1/g/arxiv-api/c/ORENISrc5gc
+        """
+        paper_without_title = "2104.12255v1"
+        try:
+            results = list(arxiv.Search(id_list=[paper_without_title]).results())
+            self.assertEqual(len(results), 1)
+            self.assertEqual(results[0].get_short_id(), paper_without_title)
+        except AttributeError:
+&gt;           self.fail("got AttributeError fetching paper without title")
+E           AssertionError: got AttributeError fetching paper without title
+
+tests/test_api_bugs.py:26: AssertionError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_invalid_format_id" time="0.013"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=0)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=abc&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_invalid_format_id&gt;
+
+    def test_invalid_format_id(self):
+        with self.assertRaises(arxiv.HTTPError):
+&gt;           list(arxiv.Client(num_retries=0).results(arxiv.Search(id_list=["abc"])))
+
+tests/test_client.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_invalid_id" time="0.012"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=0000.0000&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=0000.0000&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_invalid_id&gt;
+
+    def test_invalid_id(self):
+&gt;       results = list(arxiv.Search(id_list=["0000.0000"]).results())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_client.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=0000.0000&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_max_results" time="0.013"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=10, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=10'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=10, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=10'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_max_results&gt;
+
+    def test_max_results(self):
+        client = arxiv.Client(page_size=10)
+        search = arxiv.Search(query="testing", max_results=2)
+&gt;       results = [r for r in client.results(search)]
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_client.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_client.py:42: in &lt;listcomp&gt;
+    results = [r for r in client.results(search)]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=10, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=10'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_no_duplicates" time="0.012"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_no_duplicates&gt;
+
+    def test_no_duplicates(self):
+        search = arxiv.Search("testing", max_results=100)
+        ids = set()
+&gt;       for r in search.results():
+
+tests/test_client.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_nonexistent_id_in_list" time="0.013"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=0808.05394&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=0808.05394&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_nonexistent_id_in_list&gt;
+
+    def test_nonexistent_id_in_list(self):
+        client = arxiv.Client()
+        # Assert thrown error is handled and hidden by generator.
+&gt;       results = list(client.results(arxiv.Search(id_list=["0808.05394"])))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_client.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=0808.05394&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_offset" time="0.013"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=10, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=10'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=10, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=10'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_offset&gt;
+
+    def test_offset(self):
+        max_results = 10
+        search = arxiv.Search(query="testing", max_results=max_results)
+        client = arxiv.Client(page_size=10)
+    
+&gt;       default = list(client.results(search))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_client.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=10, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=10'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_query_page_count" time="0.013"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=10, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=10'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=10, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=10'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_query_page_count&gt;
+
+    def test_query_page_count(self):
+        client = arxiv.Client(page_size=10)
+        client._parse_feed = MagicMock(wraps=client._parse_feed)
+        generator = client.results(arxiv.Search(query="testing", max_results=55))
+&gt;       results = [r for r in generator]
+                  ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_client.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_client.py:49: in &lt;listcomp&gt;
+    results = [r for r in generator]
+              ^^^^^^^^^^^^^^^^^^^^^^
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1124: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1128: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/unittest/mock.py:1198: in _execute_mock_call
+    return self._mock_wraps(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=10, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=10'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_retry" time="0.001"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+        if resp.status_code != 200:
+&gt;           raise HTTPError(url, try_index, resp.status_code)
+E           arxiv.HTTPError: Page request resulted in HTTP 500 (https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100)
+
+arxiv/__init__.py:661: HTTPError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_retry&gt;
+mock_sleep = &lt;MagicMock name='sleep' id='4566260624'&gt;
+mock_get = &lt;MagicMock name='get' id='4566217104'&gt;
+
+    @patch("treq.get", return_value=empty_response(500))
+    @patch("time.sleep", return_value=None)
+    def test_retry(self, mock_sleep, mock_get):
+        broken_client = arxiv.Client()
+    
+        def broken_get():
+            search = arxiv.Search(query="quantum")
+            return next(broken_client.results(search))
+    
+&gt;       self.assertRaises(arxiv.HTTPError, broken_get)
+
+tests/test_client.py:115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_client.py:113: in broken_get
+    return next(broken_client.results(search))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_search_results_offset" time="0.012"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=15, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=15'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=15, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=15'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_search_results_offset&gt;
+
+    def test_search_results_offset(self):
+        # NOTE: page size is irrelevant here.
+        client = arxiv.Client(page_size=15)
+        search = arxiv.Search(query="testing", max_results=10)
+&gt;       all_results = list(client.results(search, offset=0))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_client.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=15, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=15'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_sleep_between_errors" time="0.001"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+        if resp.status_code != 200:
+&gt;           raise HTTPError(url, try_index, resp.status_code)
+E           arxiv.HTTPError: Page request resulted in HTTP 500 (https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1)
+
+arxiv/__init__.py:661: HTTPError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_sleep_between_errors&gt;
+mock_sleep = &lt;MagicMock name='sleep' id='4566220368'&gt;
+mock_get = &lt;MagicMock name='get' id='4566185104'&gt;
+
+    @patch("treq.get", return_value=empty_response(500))
+    @patch("time.sleep", return_value=None)
+    def test_sleep_between_errors(self, mock_sleep, mock_get):
+        client = arxiv.Client()
+        url = client._format_url(arxiv.Search(query="quantum"), 0, 1)
+        try:
+&gt;           client._parse_feed(url)
+
+tests/test_client.py:184: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_sleep_elapsed" time="0.001"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+        if resp.status_code != 200:
+            raise HTTPError(url, try_index, resp.status_code)
+    
+&gt;       feed = feedparser.parse(resp.content)
+                                ^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'content'
+
+arxiv/__init__.py:663: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_sleep_elapsed&gt;
+mock_sleep = &lt;MagicMock name='sleep' id='4567199056'&gt;
+mock_get = &lt;MagicMock name='get' id='4567189776'&gt;
+
+    @patch("treq.get", return_value=empty_response(200))
+    @patch("time.sleep", return_value=None)
+    def test_sleep_elapsed(self, mock_sleep, mock_get):
+        client = arxiv.Client()
+        url = client._format_url(arxiv.Search(query="quantum"), 0, 1)
+        # If _last_request_dt is less than delay_seconds ago, sleep.
+        client._last_request_dt = datetime.now() - timedelta(seconds=client.delay_seconds - 1)
+&gt;       client._parse_feed(url)
+
+tests/test_client.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_sleep_multiple_requests" time="0.001"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+        if resp.status_code != 200:
+            raise HTTPError(url, try_index, resp.status_code)
+    
+&gt;       feed = feedparser.parse(resp.content)
+                                ^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'content'
+
+arxiv/__init__.py:663: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_sleep_multiple_requests&gt;
+mock_sleep = &lt;MagicMock name='sleep' id='4566873360'&gt;
+mock_get = &lt;MagicMock name='get' id='4566274576'&gt;
+
+    @patch("treq.get", return_value=empty_response(200))
+    @patch("time.sleep", return_value=None)
+    def test_sleep_multiple_requests(self, mock_sleep, mock_get):
+        client = arxiv.Client()
+        url1 = client._format_url(arxiv.Search(query="quantum"), 0, 1)
+        url2 = client._format_url(arxiv.Search(query="testing"), 0, 1)
+        # Rate limiting is URL-independent; expect same behavior as in
+        # `test_sleep_standard`.
+&gt;       client._parse_feed(url1)
+
+tests/test_client.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_sleep_standard" time="0.001"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+        if resp.status_code != 200:
+            raise HTTPError(url, try_index, resp.status_code)
+    
+&gt;       feed = feedparser.parse(resp.content)
+                                ^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'content'
+
+arxiv/__init__.py:663: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_sleep_standard&gt;
+mock_sleep = &lt;MagicMock name='sleep' id='4567553616'&gt;
+mock_get = &lt;MagicMock name='get' id='4567559504'&gt;
+
+    @patch("treq.get", return_value=empty_response(200))
+    @patch("time.sleep", return_value=None)
+    def test_sleep_standard(self, mock_sleep, mock_get):
+        client = arxiv.Client()
+        url = client._format_url(arxiv.Search(query="quantum"), 0, 1)
+        # A client should sleep until delay_seconds have passed.
+&gt;       client._parse_feed(url)
+
+tests/test_client.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_client.TestClient" name="test_sleep_zero_delay" time="0.001"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=100, delay_seconds=0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+        if resp.status_code != 200:
+            raise HTTPError(url, try_index, resp.status_code)
+    
+&gt;       feed = feedparser.parse(resp.content)
+                                ^^^^^^^^^^^^
+E       AttributeError: 'MockResponse' object has no attribute 'content'
+
+arxiv/__init__.py:663: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_client.TestClient testMethod=test_sleep_zero_delay&gt;
+mock_sleep = &lt;MagicMock name='sleep' id='4570459024'&gt;
+mock_get = &lt;MagicMock name='get' id='4570459216'&gt;
+
+    @patch("treq.get", return_value=empty_response(200))
+    @patch("time.sleep", return_value=None)
+    def test_sleep_zero_delay(self, mock_sleep, mock_get):
+        client = arxiv.Client(delay_seconds=0)
+        url = client._format_url(arxiv.Search(query="quantum"), 0, 1)
+&gt;       client._parse_feed(url)
+
+tests/test_client.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=quantum&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=1'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_download.TestDownload" name="test_download_from_query" time="0.013"><error message="failed on setup with &quot;AttributeError: module 'treq' has no attribute 'exceptions'&quot;">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=1605.08386&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=1605.08386&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;class 'tests.test_download.TestDownload'&gt;
+
+    @classmethod
+    def setUpClass(self):
+&gt;       self.fetched_result = next(arxiv.Search(id_list=["1605.08386"]).results())
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_download.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=1605.08386&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</error></testcase><testcase classname="tests.test_download.TestDownload" name="test_download_tarfile_from_query" time="0.000"><error message="failed on setup with &quot;AttributeError: module 'treq' has no attribute 'exceptions'&quot;">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=1605.08386&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=1605.08386&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;class 'tests.test_download.TestDownload'&gt;
+
+    @classmethod
+    def setUpClass(self):
+&gt;       self.fetched_result = next(arxiv.Search(id_list=["1605.08386"]).results())
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_download.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=1605.08386&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</error></testcase><testcase classname="tests.test_download.TestDownload" name="test_download_with_custom_slugify_from_query" time="0.000"><error message="failed on setup with &quot;AttributeError: module 'treq' has no attribute 'exceptions'&quot;">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=1605.08386&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=1605.08386&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;class 'tests.test_download.TestDownload'&gt;
+
+    @classmethod
+    def setUpClass(self):
+&gt;       self.fetched_result = next(arxiv.Search(id_list=["1605.08386"]).results())
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_download.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=1605.08386&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</error></testcase><testcase classname="tests.test_package.TestPackage" name="test_deprecated_import_pattern" time="0.000" /><testcase classname="tests.test_result.TestResult" name="test_eq" time="0.000" /><testcase classname="tests.test_result.TestResult" name="test_from_feed_entry" time="0.013"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_result.TestResult testMethod=test_from_feed_entry&gt;
+
+    def test_from_feed_entry(self):
+&gt;       feed = self.client._parse_feed("https://export.arxiv.org/api/query?search_query=testing")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_result.py:47: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_result.TestResult" name="test_get_short_id" time="3.032"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=1707.08567&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=1707.08567&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_result.TestResult testMethod=test_get_short_id&gt;
+
+    def test_get_short_id(self):
+        result_id = "1707.08567"
+&gt;       result = next(self.client.results(arxiv.Search(id_list=[result_id])))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_result.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=1707.08567&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_result.TestResult" name="test_legacy_ids" time="3.010"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_result.TestResult testMethod=test_legacy_ids&gt;
+
+    def test_legacy_ids(self):
+        full_legacy_id = "quant-ph/0201082v1"
+&gt;       result = next(self.client.results(arxiv.Search(id_list=[full_legacy_id])))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_result.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=&amp;id_list=quant-ph%2F0201082v1&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_result.TestResult" name="test_result_shape" time="3.012"><failure message="AttributeError: module 'treq' has no attribute 'exceptions'">self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+&gt;           return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+arxiv/__init__.py:624: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, try_index = 0
+
+    def __try_parse_feed(
+        self,
+        url: str,
+        first_page: bool,
+        try_index: int,
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Recursive helper for _parse_feed. Enforces `self.delay_seconds`: if that
+        number of seconds has not passed since `_parse_feed` was last called,
+        sleeps until delay_seconds seconds have passed.
+        """
+        # If this call would violate the rate limit, sleep until it doesn't.
+        if self._last_request_dt is not None:
+            required = timedelta(seconds=self.delay_seconds)
+            since_last_request = datetime.now() - self._last_request_dt
+            if since_last_request &lt; required:
+                to_sleep = (required - since_last_request).total_seconds()
+                logger.info("Sleeping: %f seconds", to_sleep)
+                time.sleep(to_sleep)
+    
+        logger.info("Requesting page (first: %r, try: %d): %s", first_page, try_index, url)
+    
+        resp = treq.get(url, headers={"user-agent": "arxiv.py/2.1.3"})
+        self._last_request_dt = datetime.now()
+&gt;       if resp.status_code != 200:
+           ^^^^^^^^^^^^^^^^
+E       AttributeError: 'Deferred' object has no attribute 'status_code'
+
+arxiv/__init__.py:660: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;tests.test_result.TestResult testMethod=test_result_shape&gt;
+
+    def test_result_shape(self):
+        max_results = 100
+        search = arxiv.Search("testing", max_results=max_results)
+&gt;       results = [r for r in self.client.results(search)]
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_result.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_result.py:41: in &lt;listcomp&gt;
+    results = [r for r in self.client.results(search)]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+arxiv/__init__.py:577: in _results
+    feed = self._parse_feed(page_url, first_page=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=3)
+url = 'https://export.arxiv.org/api/query?search_query=testing&amp;id_list=&amp;sortBy=relevance&amp;sortOrder=descending&amp;start=0&amp;max_results=100'
+first_page = True, _try_index = 0
+
+    def _parse_feed(
+        self, url: str, first_page: bool = True, _try_index: int = 0
+    ) -&gt; feedparser.FeedParserDict:
+        """
+        Fetches the specified URL and parses it with feedparser.
+    
+        If a request fails or is unexpectedly empty, retries the request up to
+        `self.num_retries` times.
+        """
+        try:
+            return self.__try_parse_feed(url, first_page=first_page, try_index=_try_index)
+        except (
+            HTTPError,
+            UnexpectedEmptyPageError,
+&gt;           treq.exceptions.ConnectionError,
+            ^^^^^^^^^^^^^^^
+        ) as err:
+E       AttributeError: module 'treq' has no attribute 'exceptions'
+
+arxiv/__init__.py:628: AttributeError</failure></testcase><testcase classname="tests.test_result.TestResult" name="test_to_datetime" time="0.001" /></testsuite></testsuites>

@@ -1,0 +1,122 @@
+mig: jannisborn@paperscraper__fa7c5e26__tqdm__alive-progress__fa7c5e26__tqdm__alive-progress
+repo: jannisborn@paperscraper__fa7c5e26__tqdm__alive-progress
+commit: fa7c5e268fb9df477f8764ade4badc8e52faf144
+source: tqdm
+target: alive-progress
+premig:
+  name: premig
+  status: finished
+  source_version: 4.67.3
+  target_version: 3.3.0
+  finished_at: '2026-03-09 00:30:11'
+  project_coverage: 81.69522091974753
+  total_tests: 47
+  passed_tests: 38
+llmmig:
+  name: llmmig
+  base_round: premig
+  status: finished
+  project_change_coverage: 21.05263157894737
+  files:
+  - path: paperscraper/arxiv/arxiv.py
+    file_change_coverage: 50.0
+    covered_changed_lines: '5'
+    uncovered_changed_lines: '65'
+  - path: paperscraper/get_dumps/biorxiv.py
+    file_change_coverage: 37.5
+    covered_changed_lines: 9,46-47
+    uncovered_changed_lines: 48-52
+  - path: paperscraper/get_dumps/medrxiv.py
+    file_change_coverage: 28.571428571428573
+    covered_changed_lines: 9,43
+    uncovered_changed_lines: 44-48
+  - path: paperscraper/get_dumps/utils/chemrxiv/utils.py
+    file_change_coverage: 4.444444444444445
+    covered_changed_lines: 12,135
+    uncovered_changed_lines: 92-98,100-120,136-147,149-151
+  - path: paperscraper/pdf.py
+    file_change_coverage: 57.142857142857146
+    covered_changed_lines: 13,152-154,156,159-160,165
+    uncovered_changed_lines: 157-158,161-164
+  test_diffs:
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_arxiv_dumping
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''_GeneratorContextManager'' object is not iterable'
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_biorxiv
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: biorxiv should still be running after 15 seconds\n\
+      assert False\n +  where False = run_function_with_timeout(<function TestDumper.setup_biorxiv.<locals>.<lambda>\
+      \ at 0x12769c180>, 15)\n +    where run_function_with_timeout = <paperscraper.tests.test_dump.TestDumper\
+      \ object at 0x115d78450>.run_function_with_timeout"
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_biorxiv_date
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: object of type ''generator'' has no len()'
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_dump_existence
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: Expected QUERY_FN_DICT to be updated by previous\
+      \ tests\nassert 2 > 2\n +  where 2 = len({'arxiv': <function get_and_dump_arxiv_papers\
+      \ at 0x1119763e0>, 'pubmed': <function get_and_dump_pubmed_papers at 0x1119c5ee0>})"
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_dump_existence_initial
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: Initial length of QUERY_FN_DICT should be 2\n\
+      assert 3 == 2\n +  where 3 = len({'arxiv': <function get_and_dump_arxiv_papers\
+      \ at 0x1119763e0>, 'medrxiv': <bound method XRXivQuery.search_keywords of ...r.xrxiv.xrxiv_query.XRXivQuery\
+      \ object at 0x1060d7490>>, 'pubmed': <function get_and_dump_pubmed_papers at\
+      \ 0x1119c5ee0>})"
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_dumping
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: ''_GeneratorContextManager'' object is not iterable'
+  - test_id: paperscraper/tests/test_dump.py::TestDumper::test_medrxiv
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: AssertionError
+    error_message: "AssertionError: medrxiv should still be running after 15 seconds\n\
+      assert False\n +  where False = run_function_with_timeout(<function medrxiv\
+      \ at 0x123e65800>, 15)\n +    where run_function_with_timeout = <paperscraper.tests.test_dump.TestDumper\
+      \ object at 0x115d76650>.run_function_with_timeout"
+  - test_id: paperscraper/xrxiv/tests/test_xrxiv.py::TestXRXiv::test_get_medrxiv
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: TypeError
+    error_message: 'TypeError: object of type ''generator'' has no len()'
+  - test_id: paperscraper/xrxiv/tests/test_xrxiv.py::TestXRXiv::test_xriv_querier
+    before: passed
+    after: failed
+    failed_phase: call
+    exception: KeyError
+    error_message: 'KeyError: ''title'''
+merge_skipped:
+  name: merge_skipped
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+async_transform:
+  name: async_transform
+  base_round: llmmig
+  status: finished - no files to migrate
+  project_change_coverage: 0
+  files: []
+  test_diffs: []
+manual_edit: null

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="21" time="4.405" timestamp="2026-03-07T17:57:20.436212+04:00" hostname="nelsonmbigili.local"><testcase classname="src.formatter_test.TestFormatter" name="test_format" time="0.007" /><testcase classname="src.formatter_test.TestFormatter" name="test_format_uptime" time="0.006" /><testcase classname="src.formatter_test.TestFormatter" name="test_get_format" time="0.001" /><testcase classname="src.handlers_test.TestHandlers" name="test_DiskUsageCommandHandler" time="0.001" /><testcase classname="src.handlers_test.TestHandlers" name="test_IndexCommandHandler" time="0.001" /><testcase classname="src.handlers_test.TestHandlers" name="test_ProcessesCommandHandler" time="0.024"><failure message="psutil.AccessDenied: (pid=0, name='kernel_task')">self = &lt;psutil._psosx.Process object at 0x102817e80&gt;, args = (), kwargs = {}
+
+    @functools.wraps(fun)
+    def wrapper(self, *args, **kwargs):
+        try:
+&gt;           return fun(self, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.venv/lib/python3.11/site-packages/psutil/_psosx.py:346: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.11/site-packages/psutil/_common.py:480: in wrapper
+    raise raise_from(err, None)
+          ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/psutil/_common.py:478: in wrapper
+    return fun(self)
+           ^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;psutil._psosx.Process object at 0x102817e80&gt;
+
+    @wrap_exceptions
+    @memoize_when_activated
+    def _get_pidtaskinfo(self):
+        # Note: should work for PIDs owned by user only.
+&gt;       ret = cext.proc_pidtaskinfo_oneshot(self.pid)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       PermissionError: [Errno 1] Operation not permitted (originated from proc_pidinfo())
+
+.venv/lib/python3.11/site-packages/psutil/_psosx.py:381: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+self = &lt;src.handlers_test.TestHandlers testMethod=test_ProcessesCommandHandler&gt;
+
+    def test_ProcessesCommandHandler(self) -&gt; None:
+        handler = ProcessesCommandHandler()
+        processes = handler.handle('*/name')
+        self.assertIsInstance(processes, dict)
+        assert isinstance(processes, dict)
+        self.assertGreater(len(processes), 3)
+        last_pid = 0
+        last_name = ''
+        for k,v in processes.items():
+            if not last_name:
+                assert isinstance(k, int)
+                last_pid = k
+                last_name = v
+            assert isinstance(k, int)
+            assert isinstance(v, str)
+            assert isinstance(k, int)
+    
+        res = handler.handle(f'{last_pid}/name')
+        self.assertEqual(res, last_name)
+    
+&gt;       processes = handler.handle('top_cpu/name')
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/handlers_test.py:340: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/handlers.py:453: in handle
+    pid = self.find_process(process, lambda p: p.cpu_percent(), True)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/handlers.py:477: in find_process
+    p._sort_value = cmp_func(p)
+                    ^^^^^^^^^^^
+src/handlers.py:453: in &lt;lambda&gt;
+    pid = self.find_process(process, lambda p: p.cpu_percent(), True)
+                                               ^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/psutil/__init__.py:1004: in cpu_percent
+    pt2 = self._proc.cpu_times()
+          ^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/psutil/_psosx.py:346: in wrapper
+    return fun(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/psutil/_psosx.py:462: in cpu_times
+    rawtuple = self._get_pidtaskinfo()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;psutil._psosx.Process object at 0x102817e80&gt;, args = (), kwargs = {}
+
+    @functools.wraps(fun)
+    def wrapper(self, *args, **kwargs):
+        try:
+            return fun(self, *args, **kwargs)
+        except ProcessLookupError:
+            if is_zombie(self.pid):
+                raise ZombieProcess(self.pid, self._name, self._ppid)
+            else:
+                raise NoSuchProcess(self.pid, self._name)
+        except PermissionError:
+&gt;           raise AccessDenied(self.pid, self._name)
+E           psutil.AccessDenied: (pid=0, name='kernel_task')
+
+.venv/lib/python3.11/site-packages/psutil/_psosx.py:353: AccessDenied</failure></testcase><testcase classname="src.handlers_test.TestHandlers" name="test_SensorsFansCommandHandler" time="0.000"><failure message="Exception: psutil 'sensors_fans' not implemented">self = &lt;src.handlers_test.TestHandlers testMethod=test_SensorsFansCommandHandler&gt;
+
+    def test_SensorsFansCommandHandler(self) -&gt; None:
+        handler = SensorsFansCommandHandler()
+&gt;       val = handler.get_value()
+              ^^^^^^^^^^^^^^^^^^^
+
+src/handlers_test.py:309: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;src.handlers.SensorsFansCommandHandler object at 0x102c612d0&gt;
+
+    def get_value(self) -&gt; Payload:
+        if self.method is None:
+&gt;           raise Exception(f"psutil '{self.name}' not implemented")
+E           Exception: psutil 'sensors_fans' not implemented
+
+src/handlers.py:65: Exception</failure></testcase><testcase classname="src.handlers_test.TestHandlers" name="test_SmartCommandHandler" time="0.000" /><testcase classname="src.handlers_test.TestHandlers" name="test_TupleCommandHandler" time="0.001" /><testcase classname="src.handlers_test.TestHandlers" name="test_ValueCommandHandler" time="0.000" /><testcase classname="src.handlers_test.TestHandlers" name="test_disk_usage_command_handler" time="0.001" /><testcase classname="src.handlers_test.TestHandlers" name="test_get_value" time="0.000" /><testcase classname="src.handlers_test.TestHandlers" name="test_index_command_handler" time="0.000" /><testcase classname="src.handlers_test.TestHandlers" name="test_index_or_total_command_handler" time="0.000" /><testcase classname="src.handlers_test.TestHandlers" name="test_index_or_total_tuple_command_handler" time="0.001" /><testcase classname="src.handlers_test.TestHandlers" name="test_index_tuple_command_handler" time="0.000" /><testcase classname="src.handlers_test.TestHandlers" name="test_name_or_total_tuple_command_handler" time="0.001" /><testcase classname="src.handlers_test.TestHandlers" name="test_temperature_sensors" time="0.001" /><testcase classname="src.handlers_test.TestHandlers" name="test_tuple_command_handler" time="0.000" /><testcase classname="src.handlers_test.TestHandlers" name="test_value_command_handler" time="0.000" /><testcase classname="src.topic_test.TopicTest" name="test_get_subtopic" time="0.001" /></testsuite></testsuites>

@@ -1,0 +1,365 @@
+## Running premig
+creating venv at /Users/nelsonmbigili/Desktop/Spring 2026/Software Analysis/migratelib-artifact/repos/dell@python-powerflex__d590af9d__requests__treq/.venv
+installing dependencies
+### running tests
+- test finished with status 0, cov finished with status 0
+## Running llmmig
+## starting llmmig round
+- migrating 19 files
+### migrating PyPowerFlex/base_client.py
+### migrating PyPowerFlex/objects/deployment.py
+### migrating PyPowerFlex/objects/device.py
+### migrating PyPowerFlex/objects/fault_set.py
+### migrating PyPowerFlex/objects/firmware_repository.py
+### migrating PyPowerFlex/objects/managed_device.py
+### migrating PyPowerFlex/objects/protection_domain.py
+### migrating PyPowerFlex/objects/replication_consistency_group.py
+### migrating PyPowerFlex/objects/replication_pair.py
+### migrating PyPowerFlex/objects/sdc.py
+### migrating PyPowerFlex/objects/sds.py
+### migrating PyPowerFlex/objects/sdt.py
+### migrating PyPowerFlex/objects/service_template.py
+### migrating PyPowerFlex/objects/snapshot_policy.py
+### migrating PyPowerFlex/objects/storage_pool.py
+### migrating PyPowerFlex/objects/system.py
+### migrating PyPowerFlex/objects/utility.py
+### migrating PyPowerFlex/objects/volume.py
+### migrating tests/__init__.py
+### running tests
+- test finished with status 2, cov finished with status 1
+### test diff with round premig
+- `tests/test_acceleration_pool.py::TestAccelerationPoolClient::test_acceleration_pool_create: passed != not found`
+- `tests/test_acceleration_pool.py::TestAccelerationPoolClient::test_acceleration_pool_create_bad_status: passed != not found`
+- `tests/test_acceleration_pool.py::TestAccelerationPoolClient::test_acceleration_pool_create_no_id_in_response: passed != not found`
+- `tests/test_acceleration_pool.py::TestAccelerationPoolClient::test_acceleration_pool_delete: passed != not found`
+- `tests/test_acceleration_pool.py::TestAccelerationPoolClient::test_acceleration_pool_delete_bad_status: passed != not found`
+- `tests/test_acceleration_pool.py::TestAccelerationPoolClient::test_acceleration_pool_query_selected_statistics: passed != not found`
+- `tests/test_acceleration_pool.py::TestAccelerationPoolClient::test_acceleration_pool_query_selected_statistics_bad_status: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_client_initialize: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_client_initialize_api_version_not_supported: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_client_initialize_required_params_not_set: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_client_not_initialized: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_utils_filter_response: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_utils_filter_response_invalid_field: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_utils_filter_response_iterable_filter_field: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_utils_filter_response_iterable_filter_field_no_match: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_utils_filter_response_iterable_in_response: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_utils_prepare_params: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_utils_prepare_params_with_lists: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_utils_query_response_fields_dict: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_utils_query_response_fields_invalid_field: passed != not found`
+- `tests/test_base.py::TestBaseClient::test_utils_query_response_fields_list: passed != not found`
+- `tests/test_deployment.py::TestDeploymentClient::test_deployment_create: passed != not found`
+- `tests/test_deployment.py::TestDeploymentClient::test_deployment_create_bad_status: passed != not found`
+- `tests/test_deployment.py::TestDeploymentClient::test_deployment_delete: passed != not found`
+- `tests/test_deployment.py::TestDeploymentClient::test_deployment_delete_bad_status: passed != not found`
+- `tests/test_deployment.py::TestDeploymentClient::test_deployment_edit: passed != not found`
+- `tests/test_deployment.py::TestDeploymentClient::test_deployment_edit_bad_status: passed != not found`
+- `tests/test_deployment.py::TestDeploymentClient::test_deployment_get: passed != not found`
+- `tests/test_deployment.py::TestDeploymentClient::test_deployment_get_bad_status: passed != not found`
+- `tests/test_deployment.py::TestDeploymentClient::test_deployment_get_by_id: passed != not found`
+- `tests/test_deployment.py::TestDeploymentClient::test_deployment_get_by_id_bad_status: passed != not found`
+- `tests/test_deployment.py::TestDeploymentClient::test_deployment_get_with_query_params: passed != not found`
+- `tests/test_deployment.py::TestDeploymentClient::test_deployment_validate: passed != not found`
+- `tests/test_deployment.py::TestDeploymentClient::test_deployment_validate_bad_status: passed != not found`
+- `tests/test_device.py::TestDeviceClient::test_device_create: passed != not found`
+- `tests/test_device.py::TestDeviceClient::test_device_create_bad_status: passed != not found`
+- `tests/test_device.py::TestDeviceClient::test_device_create_no_id_in_response: passed != not found`
+- `tests/test_device.py::TestDeviceClient::test_device_create_storage_pool_id_and_acc_pool_id_are_set: passed != not found`
+- `tests/test_device.py::TestDeviceClient::test_device_delete: passed != not found`
+- `tests/test_device.py::TestDeviceClient::test_device_delete_bad_status: passed != not found`
+- `tests/test_device.py::TestDeviceClient::test_device_query_selected_statistics: passed != not found`
+- `tests/test_device.py::TestDeviceClient::test_device_query_selected_statistics_bad_status: passed != not found`
+- `tests/test_device.py::TestDeviceClient::test_device_rename: passed != not found`
+- `tests/test_device.py::TestDeviceClient::test_device_rename_bad_status: passed != not found`
+- `tests/test_device.py::TestDeviceClient::test_device_set_media_type: passed != not found`
+- `tests/test_device.py::TestDeviceClient::test_device_set_media_type_bad_status: passed != not found`
+- `tests/test_fault_set.py::TestFaultSetClient::test_fault_set_clear: passed != not found`
+- `tests/test_fault_set.py::TestFaultSetClient::test_fault_set_clear_bad_status: passed != not found`
+- `tests/test_fault_set.py::TestFaultSetClient::test_fault_set_create: passed != not found`
+- `tests/test_fault_set.py::TestFaultSetClient::test_fault_set_create_bad_status: passed != not found`
+- `tests/test_fault_set.py::TestFaultSetClient::test_fault_set_create_no_id_in_response: passed != not found`
+- `tests/test_fault_set.py::TestFaultSetClient::test_fault_set_delete: passed != not found`
+- `tests/test_fault_set.py::TestFaultSetClient::test_fault_set_delete_bad_status: passed != not found`
+- `tests/test_fault_set.py::TestFaultSetClient::test_fault_set_get_sdss: passed != not found`
+- `tests/test_fault_set.py::TestFaultSetClient::test_fault_set_get_sdss_bad_status: passed != not found`
+- `tests/test_fault_set.py::TestFaultSetClient::test_fault_set_query_selected_statistics: passed != not found`
+- `tests/test_fault_set.py::TestFaultSetClient::test_fault_set_query_selected_statistics_bad_status: passed != not found`
+- `tests/test_fault_set.py::TestFaultSetClient::test_fault_set_rename: passed != not found`
+- `tests/test_fault_set.py::TestFaultSetClient::test_fault_set_rename_bad_status: passed != not found`
+- `tests/test_firmware_repository.py::TestFirmwareRepositoryClient::test_firmware_repository_get: passed != not found`
+- `tests/test_firmware_repository.py::TestFirmwareRepositoryClient::test_firmware_repository_get_bad_status: passed != not found`
+- `tests/test_firmware_repository.py::TestFirmwareRepositoryClient::test_firmware_repository_get_with_query_params: passed != not found`
+- `tests/test_host.py::TestHostClient::test_sdc_host_create: passed != not found`
+- `tests/test_host.py::TestHostClient::test_sdc_host_create_bad_status: passed != not found`
+- `tests/test_host.py::TestHostClient::test_sdc_modify_max_num_paths: passed != not found`
+- `tests/test_host.py::TestHostClient::test_sdc_modify_max_num_paths_bad_status: passed != not found`
+- `tests/test_host.py::TestHostClient::test_sdc_modify_max_num_sys_ports: passed != not found`
+- `tests/test_host.py::TestHostClient::test_sdc_modify_max_num_sys_ports_bad_status: passed != not found`
+- `tests/test_managed_device.py::TestManagedDeviceClient::test_managed_device_get: passed != not found`
+- `tests/test_managed_device.py::TestManagedDeviceClient::test_managed_device_get_bad_status: passed != not found`
+- `tests/test_managed_device.py::TestManagedDeviceClient::test_managed_device_get_with_query_params: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_activate: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_activate_bad_status: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_create: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_create_bad_status: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_create_no_id_in_response: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_delete: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_delete_bad_status: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_get_sdss: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_get_sdss_bad_status: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_get_storage_pools: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_get_storage_pools_bad_status: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_inactivate: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_inactivate_bad_status: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_network_limits: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_network_limits_bad_status: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_query_selected_statistics: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_query_selected_statistics_bad_status: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_rename: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_rename_bad_status: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_rfcache_parameters: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_rfcache_parameters_bad_status: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_set_rfcache_enabled: passed != not found`
+- `tests/test_protection_domain.py::TestProtectionDomainClient::test_protection_domain_set_rfcache_enabled_bad_status: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_activate: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_add_rcg: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_create_rcg_bad_status: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_delete_rcg_bad_status: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_failover: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_freeze_rcg: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_get_all_statistics: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_get_all_statistics_bad_status: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_get_replication_pairs: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_inactivate: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_modify_rpo: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_modify_target_volume_access_mode: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_pause: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_rcg_create_snapshots: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_remove_rcg: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_rename_rcg: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_rename_rcg_bad_status: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_replication_consistency_group_query_selected_statistics: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_replication_consistency_group_query_selected_statistics_bad_status: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_restore: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_resume: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_reverse: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_set_as_consistent: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_set_as_inconsistent: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_switchover: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_sync: passed != not found`
+- `tests/test_replication_consistency_group.py::TestReplicationConsistencyGroupClient::test_unfreeze_rcg: passed != not found`
+- `tests/test_replication_pair.py::TestReplicationPairClient::test_add_replication_pair: passed != not found`
+- `tests/test_replication_pair.py::TestReplicationPairClient::test_add_replication_pair_bad_status: passed != not found`
+- `tests/test_replication_pair.py::TestReplicationPairClient::test_get_all_statistics: passed != not found`
+- `tests/test_replication_pair.py::TestReplicationPairClient::test_get_all_statistics_bad_status: passed != not found`
+- `tests/test_replication_pair.py::TestReplicationPairClient::test_pause_online_copy: passed != not found`
+- `tests/test_replication_pair.py::TestReplicationPairClient::test_remove_replication_pair: passed != not found`
+- `tests/test_replication_pair.py::TestReplicationPairClient::test_remove_replication_pair_bad_status: passed != not found`
+- `tests/test_replication_pair.py::TestReplicationPairClient::test_replication_pair_query_selected_statistics: passed != not found`
+- `tests/test_replication_pair.py::TestReplicationPairClient::test_replication_pair_query_selected_statistics_bad_status: passed != not found`
+- `tests/test_replication_pair.py::TestReplicationPairClient::test_resume_online_copy: passed != not found`
+- `tests/test_sdc.py::TestSdcClient::test_sdc_delete: passed != not found`
+- `tests/test_sdc.py::TestSdcClient::test_sdc_delete_bad_status: passed != not found`
+- `tests/test_sdc.py::TestSdcClient::test_sdc_get_mapped_volumes: passed != not found`
+- `tests/test_sdc.py::TestSdcClient::test_sdc_get_mapped_volumes_bad_status: passed != not found`
+- `tests/test_sdc.py::TestSdcClient::test_sdc_query_selected_statistics: passed != not found`
+- `tests/test_sdc.py::TestSdcClient::test_sdc_query_selected_statistics_bad_status: passed != not found`
+- `tests/test_sdc.py::TestSdcClient::test_sdc_rename: passed != not found`
+- `tests/test_sdc.py::TestSdcClient::test_sdc_rename_bad_status: passed != not found`
+- `tests/test_sdc.py::TestSdcClient::test_set_performance_profile: passed != not found`
+- `tests/test_sdc.py::TestSdcClient::test_set_performance_profile_bad_status: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_add_ip: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_add_ip_bad_status: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_create: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_create_bad_status: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_create_no_id_in_response: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_delete: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_delete_bad_status: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_get_devices: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_get_devices_bad_status: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_query_selected_statistics: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_query_selected_statistics_bad_status: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_remove_ip: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_remove_ip_bad_status: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_rename: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_rename_bad_status: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_set_ip_role: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_set_ip_role_bad_status: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_set_performance_parameters: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_set_performance_parameters_bad_status: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_set_port: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_set_port_bad_status: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_set_rfcache_enabled: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_set_rfcache_enabled_bad_status: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_set_rmcache_enabled: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_set_rmcache_enabled_bad_status: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_set_rmcache_size: passed != not found`
+- `tests/test_sds.py::TestSdsClient::test_sds_set_rmcache_size_bad_status: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_add_ip: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_add_ip_bad_status: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_create: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_create_bad_status: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_create_no_id_in_response: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_delete: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_delete_bad_status: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_enter_maintenance_mode: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_enter_maintenance_mode_bad_status: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_exit_maintenance_mode: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_exit_maintenance_mode_bad_status: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_remove_ip: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_remove_ip_bad_status: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_rename: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_rename_bad_status: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_set_discovery_port: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_set_discovery_port_bad_status: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_set_ip_role: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_set_ip_role_bad_status: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_set_nvme_port: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_set_nvme_port_bad_status: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_set_storage_port: passed != not found`
+- `tests/test_sdt.py::TestSdtClient::test_sdt_set_storage_port_bad_status: passed != not found`
+- `tests/test_service_template.py::TestServiceTemplateClient::test_service_template_get: passed != not found`
+- `tests/test_service_template.py::TestServiceTemplateClient::test_service_template_get_bad_status: passed != not found`
+- `tests/test_service_template.py::TestServiceTemplateClient::test_service_template_get_by_id: passed != not found`
+- `tests/test_service_template.py::TestServiceTemplateClient::test_service_template_get_by_id_bad_status: passed != not found`
+- `tests/test_service_template.py::TestServiceTemplateClient::test_service_template_get_with_filters: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_add_source_volume: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_add_source_volume_bad_status: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_create: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_create_bad_status: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_create_no_id_in_response: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_delete: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_delete_bad_status: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_modify: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_modify_bad_status: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_pause: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_pause_bad_status: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_query_selected_statistics: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_query_selected_statistics_bad_status: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_remove_source_volume: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_remove_source_volume_bad_status: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_rename: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_rename_bad_status: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_resume: passed != not found`
+- `tests/test_snapshot_policy.py::TestSnapshotPolicyClient::test_snapshot_policy_resume_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_create: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_create_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_create_no_id_in_response: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_delete: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_delete_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_get_devices: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_get_devices_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_get_sdss: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_get_sdss_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_get_statistics: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_get_statistics_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_get_volumes: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_get_volumes_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_query_selected_statistics: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_query_selected_statistics_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_rename: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_rename_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_cap_alert_thresholds: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_cap_alert_thresholds_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_checksum_enabled: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_checksum_enabled_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_compression_method: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_compression_method_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_external_acceleration_type: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_external_acceleration_type_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_external_acceleration_type_invalid_input: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_fragmentation_enabled: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_fragmentation_enabled_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_media_type: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_media_type_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_persistent_checksum: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_persistent_checksum_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_protected_maintenance_mode_io_priority_policy: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_rebalance_enabled: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_rebalance_enabled_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_rebuild_enabled: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_rebuild_enabled_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_rebuild_rebalance_parallelism_limit: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_rebuild_rebalance_parallelism_limit_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_rep_cap_max_ratio: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_rep_cap_max_ratio_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_rmcache_write_handling_mode: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_rmcache_write_handling_mode_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_spare_percentage: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_spare_percentage_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_use_rfcache_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_use_rfcache_disabled: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_use_rfcache_enabled: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_use_rmcache: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_use_rmcache_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_vtree_migration_io_priority_policy: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_vtree_migration_io_priority_policy_bad_status: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_zero_padding_policy: passed != not found`
+- `tests/test_storage_pool.py::TestStoragePoolClient::test_storage_pool_set_zero_padding_policy_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_add_standby_mdm: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_add_standby_mdm_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_change_mdm_ownership: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_change_mdm_ownership_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_change_performance_profile: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_change_performance_profile_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_clear_virtual_ip_interface: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_clear_virtual_ip_interface_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_get_gateway_configuration_details: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_get_gateway_configuration_details_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_get_mdm_cluster: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_get_mdm_cluster_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_modify_virtual_ip_interface: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_modify_virtual_ip_interface_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_remove_standby_mdm: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_remove_standby_mdm_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_rename_mdm: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_rename_mdm_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_switch_cluster_mode: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_switch_cluster_mode_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_system_api_version: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_system_api_version_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_system_api_version_cached: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_system_api_version_invalid_format: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_system_query_selected_statistics: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_system_query_selected_statistics_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_system_remove_cg_snapshots: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_system_remove_cg_snapshots_bad_status: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_system_snapshot_volumes: passed != not found`
+- `tests/test_system.py::TestSystemClient::test_system_snapshot_volumes_bad_status: passed != not found`
+- `tests/test_utility.py::TestPowerFlexUtility::test_get_statistics_for_all_storagepools: passed != not found`
+- `tests/test_utility.py::TestPowerFlexUtility::test_get_statistics_for_all_storagepools_bad_status: passed != not found`
+- `tests/test_utility.py::TestPowerFlexUtility::test_get_statistics_for_all_volumes: passed != not found`
+- `tests/test_utility.py::TestPowerFlexUtility::test_get_statistics_for_all_volumes_bad_status: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_add_mapped_sdc: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_add_mapped_sdc_bad_status: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_add_mapped_sdc_id_and_guid_are_set: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_create: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_create_bad_status: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_create_no_id_in_response: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_delete: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_delete_bad_status: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_extend: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_extend_bad_status: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_get_statistics: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_get_statistics_bad_status: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_lock_auto_snapshot: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_lock_auto_snapshot_bad_status: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_query_selected_statistics: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_query_selected_statistics_bad_status: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_remove_mapped_sdc: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_remove_mapped_sdc_bad_status: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_remove_mapped_sdc_id_guid_and_all_sdcs_are_set: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_rename: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_rename_bad_status: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_unlock_auto_snapshot: passed != not found`
+- `tests/test_volume.py::TestVolumeClient::test_volume_unlock_auto_snapshot_bad_status: passed != not found`
+- llmmig finished
+## Running merge_skipped
+- merge_skipped finished
+## Running async_transform
+## Running inferred async transform
+### Finding async transforms
+- Found 0 functions to mark async including 0 tests
+- Found 0 calls to await
+- async_transform finished

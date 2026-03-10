@@ -1,0 +1,791 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="27" time="9.384" timestamp="2026-03-07T18:40:24.854410+04:00" hostname="nelsonmbigili.local"><testcase classname="tests.test_calc" name="test_frequent_words_in_cluster" time="0.007" /><testcase classname="tests.test_calc" name="test_frequent_words_in_cluster_handle_empty" time="0.001" /><testcase classname="tests.test_calc" name="test_frequent_words_by_class_in_cluster" time="0.005" /><testcase classname="tests.test_calc" name="test_sort_salience_map" time="0.000" /><testcase classname="tests.test_dashboard" name="test_dashboard_init_no_crash" time="4.982" /><testcase classname="tests.test_dashboard" name="test_dashboard_render_no_crash" time="0.034"><failure message="NameError: name 'plt' is not defined">dummy_wrapper = &lt;tx2.wrapper.Wrapper object at 0x124148810&gt;
+clear_files_teardown = None
+
+    def test_dashboard_render_no_crash(dummy_wrapper, clear_files_teardown):
+        tx2.utils.DISABLE_DEBOUNCE = True
+        dash = Dashboard(dummy_wrapper)
+&gt;       dash.render()
+
+tests/test_dashboard.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;tx2.dashboard.Dashboard object at 0x135e8eb10&gt;
+
+    def render(self):
+        """Return combined layout widget"""
+        if self.show_wordclouds:
+            visualization.prepare_wordclouds(
+                self.transformer_wrapper.clusters, self.transformer_wrapper.test_texts
+            )
+            with self.out_wordcloud_set:
+                clear_output(wait=True)
+                fig_wordcloud_grid = visualization.plot_wordclouds(self)
+                self.current_figures["wordcloud_grid"] = fig_wordcloud_grid
+                fig_wordcloud_grid.show()
+    
+&gt;       plt.ioff()
+        ^^^
+E       NameError: name 'plt' is not defined
+
+tx2/dashboard.py:435: NameError</failure></testcase><testcase classname="tests.test_visualizations" name="test_gen_wordcloud_no_crash" time="0.272" /><testcase classname="tests.test_visualizations" name="test_gen_wordcloud_np_no_crash" time="0.039" /><testcase classname="tests.test_visualizations" name="test_prepare_wordclouds_no_crash" time="0.068" /><testcase classname="tests.test_visualizations" name="test_prepare_wordclouds_np_no_crash" time="0.065" /><testcase classname="tests.test_visualizations" name="test_prepare_wordclouds_calls_gen_correctly" time="0.002" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_w_labels" time="0.001" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_w_labels_np" time="0.001" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_wo_labels" time="0.000" /><testcase classname="tests.test_visualizations" name="test_get_scatterpoints_empty" time="0.000" /><testcase classname="tests.test_visualizations" name="test_plot_big_wordcloud_no_crash" time="0.222" /><testcase classname="tests.test_visualizations" name="test_plot_passed_wordcloud_no_crash" time="0.043" /><testcase classname="tests.test_visualizations" name="test_plot_wordclouds_no_crash" time="0.067"><failure message="NameError: name 'make_subplots' is not defined">dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+dummy_clusters = {'0': [0, 1], '1': [2, 3]}
+
+    def test_plot_wordclouds_no_crash(dummy_df, dummy_clusters):
+        dashboard = type("Dashboard", (object,), {})()
+        dashboard.transformer_wrapper = type("Wrapper", (object,), {})()
+        dashboard.transformer_wrapper.clusters = dummy_clusters
+        # forgive me for I have sinned...(I couldn't figure out how to do the equivalent with mocker)
+    
+        prepare_wordclouds(dummy_clusters, dummy_df.text)
+&gt;       plot_wordclouds(dashboard)
+
+tests/test_visualizations.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+dashboard = &lt;tests.test_visualizations.Dashboard object at 0x1484f2390&gt;
+
+    def plot_wordclouds(dashboard):
+        """Render the grid of all wordclouds.
+    
+        :param dashboard: The current dashboard, needed in order to grab the cluster data.
+        """
+        num_cols = 4
+        num_rows = max(math.ceil(len(dashboard.transformer_wrapper.clusters) / num_cols), 2)
+    
+&gt;       fig = make_subplots(rows=num_rows, cols=num_cols, specs=[[{'type': 'image'}]*num_cols]*num_rows)
+              ^^^^^^^^^^^^^
+E       NameError: name 'make_subplots' is not defined
+
+tx2/visualization.py:138: NameError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_embedding_projections_no_crash" time="1.702"><failure message="ValueError: Invalid property specified for object of type plotly.graph_objs.layout.Legend: 'items'&#10;&#10;Did you mean &quot;title&quot;?&#10;&#10;    Valid properties:&#10;        bgcolor&#10;            Sets the legend background color. Defaults to&#10;            `layout.paper_bgcolor`.&#10;        bordercolor&#10;            Sets the color of the border enclosing the legend.&#10;        borderwidth&#10;            Sets the width (in px) of the border enclosing the&#10;            legend.&#10;        entrywidth&#10;            Sets the width (in px or fraction) of the legend. Use 0&#10;            to size the entry based on the text width, when&#10;            `entrywidthmode` is set to &quot;pixels&quot;.&#10;        entrywidthmode&#10;            Determines what entrywidth means.&#10;        font&#10;            Sets the font used to text the legend items.&#10;        groupclick&#10;            Determines the behavior on legend group item click.&#10;            &quot;toggleitem&quot; toggles the visibility of the individual&#10;            item clicked on the graph. &quot;togglegroup&quot; toggles the&#10;            visibility of all items in the same legendgroup as the&#10;            item clicked on the graph.&#10;        grouptitlefont&#10;            Sets the font for group titles in legend. Defaults to&#10;            `legend.font` with its size increased about 10%.&#10;        indentation&#10;            Sets the indentation (in px) of the legend entries.&#10;        itemclick&#10;            Determines the behavior on legend item click. &quot;toggle&quot;&#10;            toggles the visibility of the item clicked on the&#10;            graph. &quot;toggleothers&quot; makes the clicked item the sole&#10;            visible item on the graph. False disables legend item&#10;            click interactions.&#10;        itemdoubleclick&#10;            Determines the behavior on legend item double-click.&#10;            &quot;toggle&quot; toggles the visibility of the item clicked on&#10;            the graph. &quot;toggleothers&quot; makes the clicked item the&#10;            sole visible item on the graph. False disables legend&#10;            item double-click interactions.&#10;        itemsizing&#10;            Determines if the legend items symbols scale with their&#10;            corresponding &quot;trace&quot; attributes or remain &quot;constant&quot;&#10;            independent of the symbol size on the graph.&#10;        itemwidth&#10;            Sets the width (in px) of the legend item symbols (the&#10;            part other than the title.text).&#10;        maxheight&#10;            Sets the max height (in px) of the legend, or max&#10;            height ratio (reference height * ratio) if less than or&#10;            equal to 1. Default value is: 0.5 for horizontal&#10;            legends; 1 for vertical legends. The minimum allowed&#10;            height is 30px. For a ratio of 0.5, the legend will&#10;            take up to 50% of the reference height before&#10;            displaying a scrollbar. The reference height is the&#10;            full layout height with the following exception:&#10;            vertically oriented legends with a `yref` of `&quot;paper&quot;,&#10;            located to the side of the plot. In this case, the&#10;            reference height is the plot height.&#10;        orientation&#10;            Sets the orientation of the legend.&#10;        title&#10;            :class:`plotly.graph_objects.layout.legend.Title`&#10;            instance or dict with compatible properties&#10;        titleclick&#10;            Determines the behavior on legend title click. &quot;toggle&quot;&#10;            toggles the visibility of all items in the legend.&#10;            &quot;toggleothers&quot; toggles the visibility of all other&#10;            legends. False disables legend title click&#10;            interactions. Defaults to &quot;toggle&quot; when there are&#10;            multiple legends, False otherwise. Not supported for&#10;            legends containing pie and pie-like traces.&#10;        titledoubleclick&#10;            Determines the behavior on legend title double-click.&#10;            &quot;toggle&quot; toggles the visibility of all items in the&#10;            legend. &quot;toggleothers&quot; toggles the visibility of all&#10;            other legends. False disables legend title double-click&#10;            interactions. Defaults to &quot;toggleothers&quot; when there are&#10;            multiple legends, False otherwise. Not supported for&#10;            legends containing pie and pie-like traces.&#10;        tracegroupgap&#10;            Sets the amount of vertical space (in px) between&#10;            legend groups.&#10;        traceorder&#10;            Determines the order at which the legend items are&#10;            displayed. If &quot;normal&quot;, the items are displayed top-to-&#10;            bottom in the same order as the input data. If&#10;            &quot;reversed&quot;, the items are displayed in the opposite&#10;            order as &quot;normal&quot;. If &quot;grouped&quot;, the items are&#10;            displayed in groups (when a trace `legendgroup` is&#10;            provided). if &quot;grouped+reversed&quot;, the items are&#10;            displayed in the opposite order as &quot;grouped&quot;.&#10;        uirevision&#10;            Controls persistence of legend-driven changes in trace&#10;            and pie label visibility. Defaults to&#10;            `layout.uirevision`.&#10;        valign&#10;            Sets the vertical alignment of the symbols with respect&#10;            to their associated text.&#10;        visible&#10;            Determines whether or not this legend is visible.&#10;        x&#10;            Sets the x position with respect to `xref` (in&#10;            normalized coordinates) of the legend. When `xref` is&#10;            &quot;paper&quot;, defaults to 1.02 for vertical legends and&#10;            defaults to 0 for horizontal legends. When `xref` is&#10;            &quot;container&quot;, defaults to 1 for vertical legends and&#10;            defaults to 0 for horizontal legends. Must be between 0&#10;            and 1 if `xref` is &quot;container&quot;. and between &quot;-2&quot; and 3&#10;            if `xref` is &quot;paper&quot;.&#10;        xanchor&#10;            Sets the legend's horizontal position anchor. This&#10;            anchor binds the `x` position to the &quot;left&quot;, &quot;center&quot;&#10;            or &quot;right&quot; of the legend. Value &quot;auto&quot; anchors legends&#10;            to the right for `x` values greater than or equal to&#10;            2/3, anchors legends to the left for `x` values less&#10;            than or equal to 1/3 and anchors legends with respect&#10;            to their center otherwise.&#10;        xref&#10;            Sets the container `x` refers to. &quot;container&quot; spans the&#10;            entire `width` of the plot. &quot;paper&quot; refers to the width&#10;            of the plotting area only.&#10;        y&#10;            Sets the y position with respect to `yref` (in&#10;            normalized coordinates) of the legend. When `yref` is&#10;            &quot;paper&quot;, defaults to 1 for vertical legends, defaults&#10;            to &quot;-0.1&quot; for horizontal legends on graphs w/o range&#10;            sliders and defaults to 1.1 for horizontal legends on&#10;            graph with one or multiple range sliders. When `yref`&#10;            is &quot;container&quot;, defaults to 1. Must be between 0 and 1&#10;            if `yref` is &quot;container&quot; and between &quot;-2&quot; and 3 if&#10;            `yref` is &quot;paper&quot;.&#10;        yanchor&#10;            Sets the legend's vertical position anchor. This anchor&#10;            binds the `y` position to the &quot;top&quot;, &quot;middle&quot; or&#10;            &quot;bottom&quot; of the legend. Value &quot;auto&quot; anchors legends at&#10;            their bottom for `y` values less than or equal to 1/3,&#10;            anchors legends to at their top for `y` values greater&#10;            than or equal to 2/3 and anchors legends with respect&#10;            to their middle otherwise.&#10;        yref&#10;            Sets the container `y` refers to. &quot;container&quot; spans the&#10;            entire `height` of the plot. &quot;paper&quot; refers to the&#10;            height of the plotting area only.&#10;        &#10;Did you mean &quot;title&quot;?&#10;&#10;Bad property path:&#10;items&#10;^^^^^">mocker = &lt;pytest_mock.plugin.MockerFixture object at 0x135da2950&gt;
+dummy_wrapper = &lt;tx2.wrapper.Wrapper object at 0x136c83b90&gt;
+dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+
+    def test_plot_embedding_projections_no_crash(
+        mocker,  # noqa: F811 -- mocker has to be passed in as fixture
+        dummy_wrapper,
+        dummy_df,
+    ):
+        tx2.utils.DISABLE_DEBOUNCE = True
+    
+        dash = Dashboard(dummy_wrapper)
+&gt;       plot_embedding_projections(dummy_df.text.iloc[0], dash)
+
+tests/test_visualizations.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/utils.py:103: in debounced
+    timer.start()
+tx2/utils.py:77: in start
+    self._callback()
+tx2/utils.py:98: in call_it
+    fn(*args, **kwargs)
+tx2/visualization.py:417: in plot_embedding_projections
+    fig.update_layout(legend=dict(items=legend_elements))
+.venv/lib/python3.11/site-packages/plotly/graph_objs/_figure.py:218: in update_layout
+    return super().update_layout(dict1, overwrite, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:1415: in update_layout
+    self.layout.update(dict1, overwrite=overwrite, **kwargs)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5195: in update
+    BaseFigure._perform_update(self, kwargs, overwrite=overwrite)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:3971: in _perform_update
+    BaseFigure._perform_update(plotly_obj[key], val)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+plotly_obj = layout.Legend()
+update_obj = {'items': [{'marker': {'color': '#1f77b4'}, 'mode': 'markers', 'name': 'awesome', 'showlegend': True, ...}, {'marker': {'color': '#ff7f0e'}, 'mode': 'markers', 'name': 'not-awesome', 'showlegend': True, ...}]}
+overwrite = False
+
+    @staticmethod
+    def _perform_update(plotly_obj, update_obj, overwrite=False):
+        """
+        Helper to support the update() methods on :class:`BaseFigure` and
+        :class:`BasePlotlyType`
+    
+        Parameters
+        ----------
+        plotly_obj : BasePlotlyType|tuple[BasePlotlyType]
+            Object to up updated
+        update_obj : dict|list[dict]|tuple[dict]
+            When ``plotly_obj`` is an instance of :class:`BaseFigure`,
+            ``update_obj`` should be a dict
+    
+            When ``plotly_obj`` is a tuple of instances of
+            :class:`BasePlotlyType`, ``update_obj`` should be a tuple or list
+            of dicts
+        """
+        from _plotly_utils.basevalidators import (
+            CompoundValidator,
+            CompoundArrayValidator,
+        )
+    
+        if update_obj is None:
+            # Nothing to do
+            return
+        elif isinstance(plotly_obj, BasePlotlyType):
+            # Handle initializing subplot ids
+            # -------------------------------
+            # This should be valid even if xaxis2 hasn't been initialized:
+            # &gt;&gt;&gt; layout.update(xaxis2={'title': 'xaxis 2'})
+            for key in update_obj:
+                # special handling for missing keys that match _subplot_re_match
+                if key not in plotly_obj and isinstance(plotly_obj, BaseLayoutType):
+                    # try _subplot_re_match
+                    match = plotly_obj._subplot_re_match(key)
+                    if match:
+                        # We need to create a subplotid object
+                        plotly_obj[key] = {}
+                        continue
+    
+                err = _check_path_in_prop_tree(plotly_obj, key, error_cast=ValueError)
+                if err is not None:
+&gt;                   raise err
+E                   ValueError: Invalid property specified for object of type plotly.graph_objs.layout.Legend: 'items'
+E                   
+E                   Did you mean "title"?
+E                   
+E                       Valid properties:
+E                           bgcolor
+E                               Sets the legend background color. Defaults to
+E                               `layout.paper_bgcolor`.
+E                           bordercolor
+E                               Sets the color of the border enclosing the legend.
+E                           borderwidth
+E                               Sets the width (in px) of the border enclosing the
+E                               legend.
+E                           entrywidth
+E                               Sets the width (in px or fraction) of the legend. Use 0
+E                               to size the entry based on the text width, when
+E                               `entrywidthmode` is set to "pixels".
+E                           entrywidthmode
+E                               Determines what entrywidth means.
+E                           font
+E                               Sets the font used to text the legend items.
+E                           groupclick
+E                               Determines the behavior on legend group item click.
+E                               "toggleitem" toggles the visibility of the individual
+E                               item clicked on the graph. "togglegroup" toggles the
+E                               visibility of all items in the same legendgroup as the
+E                               item clicked on the graph.
+E                           grouptitlefont
+E                               Sets the font for group titles in legend. Defaults to
+E                               `legend.font` with its size increased about 10%.
+E                           indentation
+E                               Sets the indentation (in px) of the legend entries.
+E                           itemclick
+E                               Determines the behavior on legend item click. "toggle"
+E                               toggles the visibility of the item clicked on the
+E                               graph. "toggleothers" makes the clicked item the sole
+E                               visible item on the graph. False disables legend item
+E                               click interactions.
+E                           itemdoubleclick
+E                               Determines the behavior on legend item double-click.
+E                               "toggle" toggles the visibility of the item clicked on
+E                               the graph. "toggleothers" makes the clicked item the
+E                               sole visible item on the graph. False disables legend
+E                               item double-click interactions.
+E                           itemsizing
+E                               Determines if the legend items symbols scale with their
+E                               corresponding "trace" attributes or remain "constant"
+E                               independent of the symbol size on the graph.
+E                           itemwidth
+E                               Sets the width (in px) of the legend item symbols (the
+E                               part other than the title.text).
+E                           maxheight
+E                               Sets the max height (in px) of the legend, or max
+E                               height ratio (reference height * ratio) if less than or
+E                               equal to 1. Default value is: 0.5 for horizontal
+E                               legends; 1 for vertical legends. The minimum allowed
+E                               height is 30px. For a ratio of 0.5, the legend will
+E                               take up to 50% of the reference height before
+E                               displaying a scrollbar. The reference height is the
+E                               full layout height with the following exception:
+E                               vertically oriented legends with a `yref` of `"paper",
+E                               located to the side of the plot. In this case, the
+E                               reference height is the plot height.
+E                           orientation
+E                               Sets the orientation of the legend.
+E                           title
+E                               :class:`plotly.graph_objects.layout.legend.Title`
+E                               instance or dict with compatible properties
+E                           titleclick
+E                               Determines the behavior on legend title click. "toggle"
+E                               toggles the visibility of all items in the legend.
+E                               "toggleothers" toggles the visibility of all other
+E                               legends. False disables legend title click
+E                               interactions. Defaults to "toggle" when there are
+E                               multiple legends, False otherwise. Not supported for
+E                               legends containing pie and pie-like traces.
+E                           titledoubleclick
+E                               Determines the behavior on legend title double-click.
+E                               "toggle" toggles the visibility of all items in the
+E                               legend. "toggleothers" toggles the visibility of all
+E                               other legends. False disables legend title double-click
+E                               interactions. Defaults to "toggleothers" when there are
+E                               multiple legends, False otherwise. Not supported for
+E                               legends containing pie and pie-like traces.
+E                           tracegroupgap
+E                               Sets the amount of vertical space (in px) between
+E                               legend groups.
+E                           traceorder
+E                               Determines the order at which the legend items are
+E                               displayed. If "normal", the items are displayed top-to-
+E                               bottom in the same order as the input data. If
+E                               "reversed", the items are displayed in the opposite
+E                               order as "normal". If "grouped", the items are
+E                               displayed in groups (when a trace `legendgroup` is
+E                               provided). if "grouped+reversed", the items are
+E                               displayed in the opposite order as "grouped".
+E                           uirevision
+E                               Controls persistence of legend-driven changes in trace
+E                               and pie label visibility. Defaults to
+E                               `layout.uirevision`.
+E                           valign
+E                               Sets the vertical alignment of the symbols with respect
+E                               to their associated text.
+E                           visible
+E                               Determines whether or not this legend is visible.
+E                           x
+E                               Sets the x position with respect to `xref` (in
+E                               normalized coordinates) of the legend. When `xref` is
+E                               "paper", defaults to 1.02 for vertical legends and
+E                               defaults to 0 for horizontal legends. When `xref` is
+E                               "container", defaults to 1 for vertical legends and
+E                               defaults to 0 for horizontal legends. Must be between 0
+E                               and 1 if `xref` is "container". and between "-2" and 3
+E                               if `xref` is "paper".
+E                           xanchor
+E                               Sets the legend's horizontal position anchor. This
+E                               anchor binds the `x` position to the "left", "center"
+E                               or "right" of the legend. Value "auto" anchors legends
+E                               to the right for `x` values greater than or equal to
+E                               2/3, anchors legends to the left for `x` values less
+E                               than or equal to 1/3 and anchors legends with respect
+E                               to their center otherwise.
+E                           xref
+E                               Sets the container `x` refers to. "container" spans the
+E                               entire `width` of the plot. "paper" refers to the width
+E                               of the plotting area only.
+E                           y
+E                               Sets the y position with respect to `yref` (in
+E                               normalized coordinates) of the legend. When `yref` is
+E                               "paper", defaults to 1 for vertical legends, defaults
+E                               to "-0.1" for horizontal legends on graphs w/o range
+E                               sliders and defaults to 1.1 for horizontal legends on
+E                               graph with one or multiple range sliders. When `yref`
+E                               is "container", defaults to 1. Must be between 0 and 1
+E                               if `yref` is "container" and between "-2" and 3 if
+E                               `yref` is "paper".
+E                           yanchor
+E                               Sets the legend's vertical position anchor. This anchor
+E                               binds the `y` position to the "top", "middle" or
+E                               "bottom" of the legend. Value "auto" anchors legends at
+E                               their bottom for `y` values less than or equal to 1/3,
+E                               anchors legends to at their top for `y` values greater
+E                               than or equal to 2/3 and anchors legends with respect
+E                               to their middle otherwise.
+E                           yref
+E                               Sets the container `y` refers to. "container" spans the
+E                               entire `height` of the plot. "paper" refers to the
+E                               height of the plotting area only.
+E                           
+E                   Did you mean "title"?
+E                   
+E                   Bad property path:
+E                   items
+E                   ^^^^^
+
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:3949: ValueError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_embedding_projections_w_training_no_crash" time="0.035"><failure message="ValueError: Invalid property specified for object of type plotly.graph_objs.layout.Legend: 'items'&#10;&#10;Did you mean &quot;title&quot;?&#10;&#10;    Valid properties:&#10;        bgcolor&#10;            Sets the legend background color. Defaults to&#10;            `layout.paper_bgcolor`.&#10;        bordercolor&#10;            Sets the color of the border enclosing the legend.&#10;        borderwidth&#10;            Sets the width (in px) of the border enclosing the&#10;            legend.&#10;        entrywidth&#10;            Sets the width (in px or fraction) of the legend. Use 0&#10;            to size the entry based on the text width, when&#10;            `entrywidthmode` is set to &quot;pixels&quot;.&#10;        entrywidthmode&#10;            Determines what entrywidth means.&#10;        font&#10;            Sets the font used to text the legend items.&#10;        groupclick&#10;            Determines the behavior on legend group item click.&#10;            &quot;toggleitem&quot; toggles the visibility of the individual&#10;            item clicked on the graph. &quot;togglegroup&quot; toggles the&#10;            visibility of all items in the same legendgroup as the&#10;            item clicked on the graph.&#10;        grouptitlefont&#10;            Sets the font for group titles in legend. Defaults to&#10;            `legend.font` with its size increased about 10%.&#10;        indentation&#10;            Sets the indentation (in px) of the legend entries.&#10;        itemclick&#10;            Determines the behavior on legend item click. &quot;toggle&quot;&#10;            toggles the visibility of the item clicked on the&#10;            graph. &quot;toggleothers&quot; makes the clicked item the sole&#10;            visible item on the graph. False disables legend item&#10;            click interactions.&#10;        itemdoubleclick&#10;            Determines the behavior on legend item double-click.&#10;            &quot;toggle&quot; toggles the visibility of the item clicked on&#10;            the graph. &quot;toggleothers&quot; makes the clicked item the&#10;            sole visible item on the graph. False disables legend&#10;            item double-click interactions.&#10;        itemsizing&#10;            Determines if the legend items symbols scale with their&#10;            corresponding &quot;trace&quot; attributes or remain &quot;constant&quot;&#10;            independent of the symbol size on the graph.&#10;        itemwidth&#10;            Sets the width (in px) of the legend item symbols (the&#10;            part other than the title.text).&#10;        maxheight&#10;            Sets the max height (in px) of the legend, or max&#10;            height ratio (reference height * ratio) if less than or&#10;            equal to 1. Default value is: 0.5 for horizontal&#10;            legends; 1 for vertical legends. The minimum allowed&#10;            height is 30px. For a ratio of 0.5, the legend will&#10;            take up to 50% of the reference height before&#10;            displaying a scrollbar. The reference height is the&#10;            full layout height with the following exception:&#10;            vertically oriented legends with a `yref` of `&quot;paper&quot;,&#10;            located to the side of the plot. In this case, the&#10;            reference height is the plot height.&#10;        orientation&#10;            Sets the orientation of the legend.&#10;        title&#10;            :class:`plotly.graph_objects.layout.legend.Title`&#10;            instance or dict with compatible properties&#10;        titleclick&#10;            Determines the behavior on legend title click. &quot;toggle&quot;&#10;            toggles the visibility of all items in the legend.&#10;            &quot;toggleothers&quot; toggles the visibility of all other&#10;            legends. False disables legend title click&#10;            interactions. Defaults to &quot;toggle&quot; when there are&#10;            multiple legends, False otherwise. Not supported for&#10;            legends containing pie and pie-like traces.&#10;        titledoubleclick&#10;            Determines the behavior on legend title double-click.&#10;            &quot;toggle&quot; toggles the visibility of all items in the&#10;            legend. &quot;toggleothers&quot; toggles the visibility of all&#10;            other legends. False disables legend title double-click&#10;            interactions. Defaults to &quot;toggleothers&quot; when there are&#10;            multiple legends, False otherwise. Not supported for&#10;            legends containing pie and pie-like traces.&#10;        tracegroupgap&#10;            Sets the amount of vertical space (in px) between&#10;            legend groups.&#10;        traceorder&#10;            Determines the order at which the legend items are&#10;            displayed. If &quot;normal&quot;, the items are displayed top-to-&#10;            bottom in the same order as the input data. If&#10;            &quot;reversed&quot;, the items are displayed in the opposite&#10;            order as &quot;normal&quot;. If &quot;grouped&quot;, the items are&#10;            displayed in groups (when a trace `legendgroup` is&#10;            provided). if &quot;grouped+reversed&quot;, the items are&#10;            displayed in the opposite order as &quot;grouped&quot;.&#10;        uirevision&#10;            Controls persistence of legend-driven changes in trace&#10;            and pie label visibility. Defaults to&#10;            `layout.uirevision`.&#10;        valign&#10;            Sets the vertical alignment of the symbols with respect&#10;            to their associated text.&#10;        visible&#10;            Determines whether or not this legend is visible.&#10;        x&#10;            Sets the x position with respect to `xref` (in&#10;            normalized coordinates) of the legend. When `xref` is&#10;            &quot;paper&quot;, defaults to 1.02 for vertical legends and&#10;            defaults to 0 for horizontal legends. When `xref` is&#10;            &quot;container&quot;, defaults to 1 for vertical legends and&#10;            defaults to 0 for horizontal legends. Must be between 0&#10;            and 1 if `xref` is &quot;container&quot;. and between &quot;-2&quot; and 3&#10;            if `xref` is &quot;paper&quot;.&#10;        xanchor&#10;            Sets the legend's horizontal position anchor. This&#10;            anchor binds the `x` position to the &quot;left&quot;, &quot;center&quot;&#10;            or &quot;right&quot; of the legend. Value &quot;auto&quot; anchors legends&#10;            to the right for `x` values greater than or equal to&#10;            2/3, anchors legends to the left for `x` values less&#10;            than or equal to 1/3 and anchors legends with respect&#10;            to their center otherwise.&#10;        xref&#10;            Sets the container `x` refers to. &quot;container&quot; spans the&#10;            entire `width` of the plot. &quot;paper&quot; refers to the width&#10;            of the plotting area only.&#10;        y&#10;            Sets the y position with respect to `yref` (in&#10;            normalized coordinates) of the legend. When `yref` is&#10;            &quot;paper&quot;, defaults to 1 for vertical legends, defaults&#10;            to &quot;-0.1&quot; for horizontal legends on graphs w/o range&#10;            sliders and defaults to 1.1 for horizontal legends on&#10;            graph with one or multiple range sliders. When `yref`&#10;            is &quot;container&quot;, defaults to 1. Must be between 0 and 1&#10;            if `yref` is &quot;container&quot; and between &quot;-2&quot; and 3 if&#10;            `yref` is &quot;paper&quot;.&#10;        yanchor&#10;            Sets the legend's vertical position anchor. This anchor&#10;            binds the `y` position to the &quot;top&quot;, &quot;middle&quot; or&#10;            &quot;bottom&quot; of the legend. Value &quot;auto&quot; anchors legends at&#10;            their bottom for `y` values less than or equal to 1/3,&#10;            anchors legends to at their top for `y` values greater&#10;            than or equal to 2/3 and anchors legends with respect&#10;            to their middle otherwise.&#10;        yref&#10;            Sets the container `y` refers to. &quot;container&quot; spans the&#10;            entire `height` of the plot. &quot;paper&quot; refers to the&#10;            height of the plotting area only.&#10;        &#10;Did you mean &quot;title&quot;?&#10;&#10;Bad property path:&#10;items&#10;^^^^^">mocker = &lt;pytest_mock.plugin.MockerFixture object at 0x14a1ed250&gt;
+dummy_wrapper = &lt;tx2.wrapper.Wrapper object at 0x14a1ec950&gt;
+dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+
+    def test_plot_embedding_projections_w_training_no_crash(
+        mocker,  # noqa: F811 -- mocker has to be passed in as fixture
+        dummy_wrapper,
+        dummy_df,
+    ):
+        tx2.utils.DISABLE_DEBOUNCE = True
+        dash = Dashboard(dummy_wrapper)
+        dash.chk_show_train = type("checkbox", (object,), {})()
+        dash.chk_show_train.value = True
+&gt;       plot_embedding_projections(dummy_df.text.iloc[0], dash)
+
+tests/test_visualizations.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/utils.py:103: in debounced
+    timer.start()
+tx2/utils.py:77: in start
+    self._callback()
+tx2/utils.py:98: in call_it
+    fn(*args, **kwargs)
+tx2/visualization.py:417: in plot_embedding_projections
+    fig.update_layout(legend=dict(items=legend_elements))
+.venv/lib/python3.11/site-packages/plotly/graph_objs/_figure.py:218: in update_layout
+    return super().update_layout(dict1, overwrite, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:1415: in update_layout
+    self.layout.update(dict1, overwrite=overwrite, **kwargs)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5195: in update
+    BaseFigure._perform_update(self, kwargs, overwrite=overwrite)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:3971: in _perform_update
+    BaseFigure._perform_update(plotly_obj[key], val)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+plotly_obj = layout.Legend()
+update_obj = {'items': [{'marker': {'color': '#1f77b4'}, 'mode': 'markers', 'name': 'awesome', 'showlegend': True, ...}, {'marker': {'color': '#ff7f0e'}, 'mode': 'markers', 'name': 'not-awesome', 'showlegend': True, ...}]}
+overwrite = False
+
+    @staticmethod
+    def _perform_update(plotly_obj, update_obj, overwrite=False):
+        """
+        Helper to support the update() methods on :class:`BaseFigure` and
+        :class:`BasePlotlyType`
+    
+        Parameters
+        ----------
+        plotly_obj : BasePlotlyType|tuple[BasePlotlyType]
+            Object to up updated
+        update_obj : dict|list[dict]|tuple[dict]
+            When ``plotly_obj`` is an instance of :class:`BaseFigure`,
+            ``update_obj`` should be a dict
+    
+            When ``plotly_obj`` is a tuple of instances of
+            :class:`BasePlotlyType`, ``update_obj`` should be a tuple or list
+            of dicts
+        """
+        from _plotly_utils.basevalidators import (
+            CompoundValidator,
+            CompoundArrayValidator,
+        )
+    
+        if update_obj is None:
+            # Nothing to do
+            return
+        elif isinstance(plotly_obj, BasePlotlyType):
+            # Handle initializing subplot ids
+            # -------------------------------
+            # This should be valid even if xaxis2 hasn't been initialized:
+            # &gt;&gt;&gt; layout.update(xaxis2={'title': 'xaxis 2'})
+            for key in update_obj:
+                # special handling for missing keys that match _subplot_re_match
+                if key not in plotly_obj and isinstance(plotly_obj, BaseLayoutType):
+                    # try _subplot_re_match
+                    match = plotly_obj._subplot_re_match(key)
+                    if match:
+                        # We need to create a subplotid object
+                        plotly_obj[key] = {}
+                        continue
+    
+                err = _check_path_in_prop_tree(plotly_obj, key, error_cast=ValueError)
+                if err is not None:
+&gt;                   raise err
+E                   ValueError: Invalid property specified for object of type plotly.graph_objs.layout.Legend: 'items'
+E                   
+E                   Did you mean "title"?
+E                   
+E                       Valid properties:
+E                           bgcolor
+E                               Sets the legend background color. Defaults to
+E                               `layout.paper_bgcolor`.
+E                           bordercolor
+E                               Sets the color of the border enclosing the legend.
+E                           borderwidth
+E                               Sets the width (in px) of the border enclosing the
+E                               legend.
+E                           entrywidth
+E                               Sets the width (in px or fraction) of the legend. Use 0
+E                               to size the entry based on the text width, when
+E                               `entrywidthmode` is set to "pixels".
+E                           entrywidthmode
+E                               Determines what entrywidth means.
+E                           font
+E                               Sets the font used to text the legend items.
+E                           groupclick
+E                               Determines the behavior on legend group item click.
+E                               "toggleitem" toggles the visibility of the individual
+E                               item clicked on the graph. "togglegroup" toggles the
+E                               visibility of all items in the same legendgroup as the
+E                               item clicked on the graph.
+E                           grouptitlefont
+E                               Sets the font for group titles in legend. Defaults to
+E                               `legend.font` with its size increased about 10%.
+E                           indentation
+E                               Sets the indentation (in px) of the legend entries.
+E                           itemclick
+E                               Determines the behavior on legend item click. "toggle"
+E                               toggles the visibility of the item clicked on the
+E                               graph. "toggleothers" makes the clicked item the sole
+E                               visible item on the graph. False disables legend item
+E                               click interactions.
+E                           itemdoubleclick
+E                               Determines the behavior on legend item double-click.
+E                               "toggle" toggles the visibility of the item clicked on
+E                               the graph. "toggleothers" makes the clicked item the
+E                               sole visible item on the graph. False disables legend
+E                               item double-click interactions.
+E                           itemsizing
+E                               Determines if the legend items symbols scale with their
+E                               corresponding "trace" attributes or remain "constant"
+E                               independent of the symbol size on the graph.
+E                           itemwidth
+E                               Sets the width (in px) of the legend item symbols (the
+E                               part other than the title.text).
+E                           maxheight
+E                               Sets the max height (in px) of the legend, or max
+E                               height ratio (reference height * ratio) if less than or
+E                               equal to 1. Default value is: 0.5 for horizontal
+E                               legends; 1 for vertical legends. The minimum allowed
+E                               height is 30px. For a ratio of 0.5, the legend will
+E                               take up to 50% of the reference height before
+E                               displaying a scrollbar. The reference height is the
+E                               full layout height with the following exception:
+E                               vertically oriented legends with a `yref` of `"paper",
+E                               located to the side of the plot. In this case, the
+E                               reference height is the plot height.
+E                           orientation
+E                               Sets the orientation of the legend.
+E                           title
+E                               :class:`plotly.graph_objects.layout.legend.Title`
+E                               instance or dict with compatible properties
+E                           titleclick
+E                               Determines the behavior on legend title click. "toggle"
+E                               toggles the visibility of all items in the legend.
+E                               "toggleothers" toggles the visibility of all other
+E                               legends. False disables legend title click
+E                               interactions. Defaults to "toggle" when there are
+E                               multiple legends, False otherwise. Not supported for
+E                               legends containing pie and pie-like traces.
+E                           titledoubleclick
+E                               Determines the behavior on legend title double-click.
+E                               "toggle" toggles the visibility of all items in the
+E                               legend. "toggleothers" toggles the visibility of all
+E                               other legends. False disables legend title double-click
+E                               interactions. Defaults to "toggleothers" when there are
+E                               multiple legends, False otherwise. Not supported for
+E                               legends containing pie and pie-like traces.
+E                           tracegroupgap
+E                               Sets the amount of vertical space (in px) between
+E                               legend groups.
+E                           traceorder
+E                               Determines the order at which the legend items are
+E                               displayed. If "normal", the items are displayed top-to-
+E                               bottom in the same order as the input data. If
+E                               "reversed", the items are displayed in the opposite
+E                               order as "normal". If "grouped", the items are
+E                               displayed in groups (when a trace `legendgroup` is
+E                               provided). if "grouped+reversed", the items are
+E                               displayed in the opposite order as "grouped".
+E                           uirevision
+E                               Controls persistence of legend-driven changes in trace
+E                               and pie label visibility. Defaults to
+E                               `layout.uirevision`.
+E                           valign
+E                               Sets the vertical alignment of the symbols with respect
+E                               to their associated text.
+E                           visible
+E                               Determines whether or not this legend is visible.
+E                           x
+E                               Sets the x position with respect to `xref` (in
+E                               normalized coordinates) of the legend. When `xref` is
+E                               "paper", defaults to 1.02 for vertical legends and
+E                               defaults to 0 for horizontal legends. When `xref` is
+E                               "container", defaults to 1 for vertical legends and
+E                               defaults to 0 for horizontal legends. Must be between 0
+E                               and 1 if `xref` is "container". and between "-2" and 3
+E                               if `xref` is "paper".
+E                           xanchor
+E                               Sets the legend's horizontal position anchor. This
+E                               anchor binds the `x` position to the "left", "center"
+E                               or "right" of the legend. Value "auto" anchors legends
+E                               to the right for `x` values greater than or equal to
+E                               2/3, anchors legends to the left for `x` values less
+E                               than or equal to 1/3 and anchors legends with respect
+E                               to their center otherwise.
+E                           xref
+E                               Sets the container `x` refers to. "container" spans the
+E                               entire `width` of the plot. "paper" refers to the width
+E                               of the plotting area only.
+E                           y
+E                               Sets the y position with respect to `yref` (in
+E                               normalized coordinates) of the legend. When `yref` is
+E                               "paper", defaults to 1 for vertical legends, defaults
+E                               to "-0.1" for horizontal legends on graphs w/o range
+E                               sliders and defaults to 1.1 for horizontal legends on
+E                               graph with one or multiple range sliders. When `yref`
+E                               is "container", defaults to 1. Must be between 0 and 1
+E                               if `yref` is "container" and between "-2" and 3 if
+E                               `yref` is "paper".
+E                           yanchor
+E                               Sets the legend's vertical position anchor. This anchor
+E                               binds the `y` position to the "top", "middle" or
+E                               "bottom" of the legend. Value "auto" anchors legends at
+E                               their bottom for `y` values less than or equal to 1/3,
+E                               anchors legends to at their top for `y` values greater
+E                               than or equal to 2/3 and anchors legends with respect
+E                               to their middle otherwise.
+E                           yref
+E                               Sets the container `y` refers to. "container" spans the
+E                               entire `height` of the plot. "paper" refers to the
+E                               height of the plotting area only.
+E                           
+E                   Did you mean "title"?
+E                   
+E                   Bad property path:
+E                   items
+E                   ^^^^^
+
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:3949: ValueError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_embedding_projections_w_errorfocus_no_crash" time="0.036"><failure message="ValueError: Invalid property specified for object of type plotly.graph_objs.layout.Legend: 'items'&#10;&#10;Did you mean &quot;title&quot;?&#10;&#10;    Valid properties:&#10;        bgcolor&#10;            Sets the legend background color. Defaults to&#10;            `layout.paper_bgcolor`.&#10;        bordercolor&#10;            Sets the color of the border enclosing the legend.&#10;        borderwidth&#10;            Sets the width (in px) of the border enclosing the&#10;            legend.&#10;        entrywidth&#10;            Sets the width (in px or fraction) of the legend. Use 0&#10;            to size the entry based on the text width, when&#10;            `entrywidthmode` is set to &quot;pixels&quot;.&#10;        entrywidthmode&#10;            Determines what entrywidth means.&#10;        font&#10;            Sets the font used to text the legend items.&#10;        groupclick&#10;            Determines the behavior on legend group item click.&#10;            &quot;toggleitem&quot; toggles the visibility of the individual&#10;            item clicked on the graph. &quot;togglegroup&quot; toggles the&#10;            visibility of all items in the same legendgroup as the&#10;            item clicked on the graph.&#10;        grouptitlefont&#10;            Sets the font for group titles in legend. Defaults to&#10;            `legend.font` with its size increased about 10%.&#10;        indentation&#10;            Sets the indentation (in px) of the legend entries.&#10;        itemclick&#10;            Determines the behavior on legend item click. &quot;toggle&quot;&#10;            toggles the visibility of the item clicked on the&#10;            graph. &quot;toggleothers&quot; makes the clicked item the sole&#10;            visible item on the graph. False disables legend item&#10;            click interactions.&#10;        itemdoubleclick&#10;            Determines the behavior on legend item double-click.&#10;            &quot;toggle&quot; toggles the visibility of the item clicked on&#10;            the graph. &quot;toggleothers&quot; makes the clicked item the&#10;            sole visible item on the graph. False disables legend&#10;            item double-click interactions.&#10;        itemsizing&#10;            Determines if the legend items symbols scale with their&#10;            corresponding &quot;trace&quot; attributes or remain &quot;constant&quot;&#10;            independent of the symbol size on the graph.&#10;        itemwidth&#10;            Sets the width (in px) of the legend item symbols (the&#10;            part other than the title.text).&#10;        maxheight&#10;            Sets the max height (in px) of the legend, or max&#10;            height ratio (reference height * ratio) if less than or&#10;            equal to 1. Default value is: 0.5 for horizontal&#10;            legends; 1 for vertical legends. The minimum allowed&#10;            height is 30px. For a ratio of 0.5, the legend will&#10;            take up to 50% of the reference height before&#10;            displaying a scrollbar. The reference height is the&#10;            full layout height with the following exception:&#10;            vertically oriented legends with a `yref` of `&quot;paper&quot;,&#10;            located to the side of the plot. In this case, the&#10;            reference height is the plot height.&#10;        orientation&#10;            Sets the orientation of the legend.&#10;        title&#10;            :class:`plotly.graph_objects.layout.legend.Title`&#10;            instance or dict with compatible properties&#10;        titleclick&#10;            Determines the behavior on legend title click. &quot;toggle&quot;&#10;            toggles the visibility of all items in the legend.&#10;            &quot;toggleothers&quot; toggles the visibility of all other&#10;            legends. False disables legend title click&#10;            interactions. Defaults to &quot;toggle&quot; when there are&#10;            multiple legends, False otherwise. Not supported for&#10;            legends containing pie and pie-like traces.&#10;        titledoubleclick&#10;            Determines the behavior on legend title double-click.&#10;            &quot;toggle&quot; toggles the visibility of all items in the&#10;            legend. &quot;toggleothers&quot; toggles the visibility of all&#10;            other legends. False disables legend title double-click&#10;            interactions. Defaults to &quot;toggleothers&quot; when there are&#10;            multiple legends, False otherwise. Not supported for&#10;            legends containing pie and pie-like traces.&#10;        tracegroupgap&#10;            Sets the amount of vertical space (in px) between&#10;            legend groups.&#10;        traceorder&#10;            Determines the order at which the legend items are&#10;            displayed. If &quot;normal&quot;, the items are displayed top-to-&#10;            bottom in the same order as the input data. If&#10;            &quot;reversed&quot;, the items are displayed in the opposite&#10;            order as &quot;normal&quot;. If &quot;grouped&quot;, the items are&#10;            displayed in groups (when a trace `legendgroup` is&#10;            provided). if &quot;grouped+reversed&quot;, the items are&#10;            displayed in the opposite order as &quot;grouped&quot;.&#10;        uirevision&#10;            Controls persistence of legend-driven changes in trace&#10;            and pie label visibility. Defaults to&#10;            `layout.uirevision`.&#10;        valign&#10;            Sets the vertical alignment of the symbols with respect&#10;            to their associated text.&#10;        visible&#10;            Determines whether or not this legend is visible.&#10;        x&#10;            Sets the x position with respect to `xref` (in&#10;            normalized coordinates) of the legend. When `xref` is&#10;            &quot;paper&quot;, defaults to 1.02 for vertical legends and&#10;            defaults to 0 for horizontal legends. When `xref` is&#10;            &quot;container&quot;, defaults to 1 for vertical legends and&#10;            defaults to 0 for horizontal legends. Must be between 0&#10;            and 1 if `xref` is &quot;container&quot;. and between &quot;-2&quot; and 3&#10;            if `xref` is &quot;paper&quot;.&#10;        xanchor&#10;            Sets the legend's horizontal position anchor. This&#10;            anchor binds the `x` position to the &quot;left&quot;, &quot;center&quot;&#10;            or &quot;right&quot; of the legend. Value &quot;auto&quot; anchors legends&#10;            to the right for `x` values greater than or equal to&#10;            2/3, anchors legends to the left for `x` values less&#10;            than or equal to 1/3 and anchors legends with respect&#10;            to their center otherwise.&#10;        xref&#10;            Sets the container `x` refers to. &quot;container&quot; spans the&#10;            entire `width` of the plot. &quot;paper&quot; refers to the width&#10;            of the plotting area only.&#10;        y&#10;            Sets the y position with respect to `yref` (in&#10;            normalized coordinates) of the legend. When `yref` is&#10;            &quot;paper&quot;, defaults to 1 for vertical legends, defaults&#10;            to &quot;-0.1&quot; for horizontal legends on graphs w/o range&#10;            sliders and defaults to 1.1 for horizontal legends on&#10;            graph with one or multiple range sliders. When `yref`&#10;            is &quot;container&quot;, defaults to 1. Must be between 0 and 1&#10;            if `yref` is &quot;container&quot; and between &quot;-2&quot; and 3 if&#10;            `yref` is &quot;paper&quot;.&#10;        yanchor&#10;            Sets the legend's vertical position anchor. This anchor&#10;            binds the `y` position to the &quot;top&quot;, &quot;middle&quot; or&#10;            &quot;bottom&quot; of the legend. Value &quot;auto&quot; anchors legends at&#10;            their bottom for `y` values less than or equal to 1/3,&#10;            anchors legends to at their top for `y` values greater&#10;            than or equal to 2/3 and anchors legends with respect&#10;            to their middle otherwise.&#10;        yref&#10;            Sets the container `y` refers to. &quot;container&quot; spans the&#10;            entire `height` of the plot. &quot;paper&quot; refers to the&#10;            height of the plotting area only.&#10;        &#10;Did you mean &quot;title&quot;?&#10;&#10;Bad property path:&#10;items&#10;^^^^^">mocker = &lt;pytest_mock.plugin.MockerFixture object at 0x134223690&gt;
+dummy_wrapper = &lt;tx2.wrapper.Wrapper object at 0x134222e50&gt;
+dummy_df =                      text  target
+0           testing row 0       0
+1           testing row 1       0
+2  testing row 2, awesome       1
+3  testing row 3, awesome       1
+
+    def test_plot_embedding_projections_w_errorfocus_no_crash(
+        mocker,  # noqa: F811 -- mocker has to be passed in as fixture
+        dummy_wrapper,
+        dummy_df,
+    ):
+        tx2.utils.DISABLE_DEBOUNCE = True
+        dash = Dashboard(dummy_wrapper)
+        dash.chk_focus_errors = type("checkbox", (object,), {})()
+        dash.chk_focus_errors.value = True
+&gt;       plot_embedding_projections(dummy_df.text.iloc[0], dash)
+
+tests/test_visualizations.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tx2/utils.py:103: in debounced
+    timer.start()
+tx2/utils.py:77: in start
+    self._callback()
+tx2/utils.py:98: in call_it
+    fn(*args, **kwargs)
+tx2/visualization.py:417: in plot_embedding_projections
+    fig.update_layout(legend=dict(items=legend_elements))
+.venv/lib/python3.11/site-packages/plotly/graph_objs/_figure.py:218: in update_layout
+    return super().update_layout(dict1, overwrite, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:1415: in update_layout
+    self.layout.update(dict1, overwrite=overwrite, **kwargs)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:5195: in update
+    BaseFigure._perform_update(self, kwargs, overwrite=overwrite)
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:3971: in _perform_update
+    BaseFigure._perform_update(plotly_obj[key], val)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+plotly_obj = layout.Legend()
+update_obj = {'items': [{'marker': {'color': '#1f77b4'}, 'mode': 'markers', 'name': 'awesome', 'showlegend': True, ...}, {'marker': {'color': '#ff7f0e'}, 'mode': 'markers', 'name': 'not-awesome', 'showlegend': True, ...}]}
+overwrite = False
+
+    @staticmethod
+    def _perform_update(plotly_obj, update_obj, overwrite=False):
+        """
+        Helper to support the update() methods on :class:`BaseFigure` and
+        :class:`BasePlotlyType`
+    
+        Parameters
+        ----------
+        plotly_obj : BasePlotlyType|tuple[BasePlotlyType]
+            Object to up updated
+        update_obj : dict|list[dict]|tuple[dict]
+            When ``plotly_obj`` is an instance of :class:`BaseFigure`,
+            ``update_obj`` should be a dict
+    
+            When ``plotly_obj`` is a tuple of instances of
+            :class:`BasePlotlyType`, ``update_obj`` should be a tuple or list
+            of dicts
+        """
+        from _plotly_utils.basevalidators import (
+            CompoundValidator,
+            CompoundArrayValidator,
+        )
+    
+        if update_obj is None:
+            # Nothing to do
+            return
+        elif isinstance(plotly_obj, BasePlotlyType):
+            # Handle initializing subplot ids
+            # -------------------------------
+            # This should be valid even if xaxis2 hasn't been initialized:
+            # &gt;&gt;&gt; layout.update(xaxis2={'title': 'xaxis 2'})
+            for key in update_obj:
+                # special handling for missing keys that match _subplot_re_match
+                if key not in plotly_obj and isinstance(plotly_obj, BaseLayoutType):
+                    # try _subplot_re_match
+                    match = plotly_obj._subplot_re_match(key)
+                    if match:
+                        # We need to create a subplotid object
+                        plotly_obj[key] = {}
+                        continue
+    
+                err = _check_path_in_prop_tree(plotly_obj, key, error_cast=ValueError)
+                if err is not None:
+&gt;                   raise err
+E                   ValueError: Invalid property specified for object of type plotly.graph_objs.layout.Legend: 'items'
+E                   
+E                   Did you mean "title"?
+E                   
+E                       Valid properties:
+E                           bgcolor
+E                               Sets the legend background color. Defaults to
+E                               `layout.paper_bgcolor`.
+E                           bordercolor
+E                               Sets the color of the border enclosing the legend.
+E                           borderwidth
+E                               Sets the width (in px) of the border enclosing the
+E                               legend.
+E                           entrywidth
+E                               Sets the width (in px or fraction) of the legend. Use 0
+E                               to size the entry based on the text width, when
+E                               `entrywidthmode` is set to "pixels".
+E                           entrywidthmode
+E                               Determines what entrywidth means.
+E                           font
+E                               Sets the font used to text the legend items.
+E                           groupclick
+E                               Determines the behavior on legend group item click.
+E                               "toggleitem" toggles the visibility of the individual
+E                               item clicked on the graph. "togglegroup" toggles the
+E                               visibility of all items in the same legendgroup as the
+E                               item clicked on the graph.
+E                           grouptitlefont
+E                               Sets the font for group titles in legend. Defaults to
+E                               `legend.font` with its size increased about 10%.
+E                           indentation
+E                               Sets the indentation (in px) of the legend entries.
+E                           itemclick
+E                               Determines the behavior on legend item click. "toggle"
+E                               toggles the visibility of the item clicked on the
+E                               graph. "toggleothers" makes the clicked item the sole
+E                               visible item on the graph. False disables legend item
+E                               click interactions.
+E                           itemdoubleclick
+E                               Determines the behavior on legend item double-click.
+E                               "toggle" toggles the visibility of the item clicked on
+E                               the graph. "toggleothers" makes the clicked item the
+E                               sole visible item on the graph. False disables legend
+E                               item double-click interactions.
+E                           itemsizing
+E                               Determines if the legend items symbols scale with their
+E                               corresponding "trace" attributes or remain "constant"
+E                               independent of the symbol size on the graph.
+E                           itemwidth
+E                               Sets the width (in px) of the legend item symbols (the
+E                               part other than the title.text).
+E                           maxheight
+E                               Sets the max height (in px) of the legend, or max
+E                               height ratio (reference height * ratio) if less than or
+E                               equal to 1. Default value is: 0.5 for horizontal
+E                               legends; 1 for vertical legends. The minimum allowed
+E                               height is 30px. For a ratio of 0.5, the legend will
+E                               take up to 50% of the reference height before
+E                               displaying a scrollbar. The reference height is the
+E                               full layout height with the following exception:
+E                               vertically oriented legends with a `yref` of `"paper",
+E                               located to the side of the plot. In this case, the
+E                               reference height is the plot height.
+E                           orientation
+E                               Sets the orientation of the legend.
+E                           title
+E                               :class:`plotly.graph_objects.layout.legend.Title`
+E                               instance or dict with compatible properties
+E                           titleclick
+E                               Determines the behavior on legend title click. "toggle"
+E                               toggles the visibility of all items in the legend.
+E                               "toggleothers" toggles the visibility of all other
+E                               legends. False disables legend title click
+E                               interactions. Defaults to "toggle" when there are
+E                               multiple legends, False otherwise. Not supported for
+E                               legends containing pie and pie-like traces.
+E                           titledoubleclick
+E                               Determines the behavior on legend title double-click.
+E                               "toggle" toggles the visibility of all items in the
+E                               legend. "toggleothers" toggles the visibility of all
+E                               other legends. False disables legend title double-click
+E                               interactions. Defaults to "toggleothers" when there are
+E                               multiple legends, False otherwise. Not supported for
+E                               legends containing pie and pie-like traces.
+E                           tracegroupgap
+E                               Sets the amount of vertical space (in px) between
+E                               legend groups.
+E                           traceorder
+E                               Determines the order at which the legend items are
+E                               displayed. If "normal", the items are displayed top-to-
+E                               bottom in the same order as the input data. If
+E                               "reversed", the items are displayed in the opposite
+E                               order as "normal". If "grouped", the items are
+E                               displayed in groups (when a trace `legendgroup` is
+E                               provided). if "grouped+reversed", the items are
+E                               displayed in the opposite order as "grouped".
+E                           uirevision
+E                               Controls persistence of legend-driven changes in trace
+E                               and pie label visibility. Defaults to
+E                               `layout.uirevision`.
+E                           valign
+E                               Sets the vertical alignment of the symbols with respect
+E                               to their associated text.
+E                           visible
+E                               Determines whether or not this legend is visible.
+E                           x
+E                               Sets the x position with respect to `xref` (in
+E                               normalized coordinates) of the legend. When `xref` is
+E                               "paper", defaults to 1.02 for vertical legends and
+E                               defaults to 0 for horizontal legends. When `xref` is
+E                               "container", defaults to 1 for vertical legends and
+E                               defaults to 0 for horizontal legends. Must be between 0
+E                               and 1 if `xref` is "container". and between "-2" and 3
+E                               if `xref` is "paper".
+E                           xanchor
+E                               Sets the legend's horizontal position anchor. This
+E                               anchor binds the `x` position to the "left", "center"
+E                               or "right" of the legend. Value "auto" anchors legends
+E                               to the right for `x` values greater than or equal to
+E                               2/3, anchors legends to the left for `x` values less
+E                               than or equal to 1/3 and anchors legends with respect
+E                               to their center otherwise.
+E                           xref
+E                               Sets the container `x` refers to. "container" spans the
+E                               entire `width` of the plot. "paper" refers to the width
+E                               of the plotting area only.
+E                           y
+E                               Sets the y position with respect to `yref` (in
+E                               normalized coordinates) of the legend. When `yref` is
+E                               "paper", defaults to 1 for vertical legends, defaults
+E                               to "-0.1" for horizontal legends on graphs w/o range
+E                               sliders and defaults to 1.1 for horizontal legends on
+E                               graph with one or multiple range sliders. When `yref`
+E                               is "container", defaults to 1. Must be between 0 and 1
+E                               if `yref` is "container" and between "-2" and 3 if
+E                               `yref` is "paper".
+E                           yanchor
+E                               Sets the legend's vertical position anchor. This anchor
+E                               binds the `y` position to the "top", "middle" or
+E                               "bottom" of the legend. Value "auto" anchors legends at
+E                               their bottom for `y` values less than or equal to 1/3,
+E                               anchors legends to at their top for `y` values greater
+E                               than or equal to 2/3 and anchors legends with respect
+E                               to their middle otherwise.
+E                           yref
+E                               Sets the container `y` refers to. "container" spans the
+E                               entire `height` of the plot. "paper" refers to the
+E                               height of the plotting area only.
+E                           
+E                   Did you mean "title"?
+E                   
+E                   Bad property path:
+E                   items
+E                   ^^^^^
+
+.venv/lib/python3.11/site-packages/plotly/basedatatypes.py:3949: ValueError</failure></testcase><testcase classname="tests.test_visualizations" name="test_plot_metrics_no_crash" time="0.034" /><testcase classname="tests.test_visualizations" name="test_plot_confusion_matrix_no_crash" time="0.016" /><testcase classname="tests.test_wrapper" name="test_wrapper_init_no_crash" time="0.001" /><testcase classname="tests.test_wrapper" name="test_wrapper_init_np_no_crash" time="0.001" /><testcase classname="tests.test_wrapper" name="test_wrapper_prepare_no_crash" time="0.005" /><testcase classname="tests.test_wrapper" name="test_wrapper_np_prepare_no_crash" time="0.031" /></testsuite></testsuites>
