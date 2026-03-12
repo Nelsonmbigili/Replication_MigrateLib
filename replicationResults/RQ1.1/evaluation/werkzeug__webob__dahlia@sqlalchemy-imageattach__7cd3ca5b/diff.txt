@@ -1,0 +1,89 @@
+7,8c7
+< from werkzeug.test import Client
+< from werkzeug.wrappers import Response
+---
+> from webob import Request
+57,58c56,57
+<         'http://localhost/__images__/testing/234/1/1234.405x640.jpe',
+<         'http://localhost/__images__/testing/234/1/1234.405x640.jpg'
+---
+>         'http://localhost:80/__images__/testing/234/1/1234.405x640.jpe',
+>         'http://localhost:80/__images__/testing/234/1/1234.405x640.jpg'
+61,62c60,64
+<         start_response('200 OK', [('Content-Type', 'text/plain')])
+<         yield http_fs_store.locate(image)
+---
+>         start_response(
+>             '200 OK',
+>             [('Content-Type', 'text/plain; charset=utf-8')]
+>         )
+>         yield http_fs_store.locate(image).encode('utf-8')
+64,67c66,71
+<     client = Client(app, Response)
+<     actual_url = client.get('/').data
+<     assert remove_query(actual_url.decode()) in expected_urls
+<     response = client.get('/__images__/testing/234/1/1234.405x640.jpe')
+---
+>     request = Request.blank('/')
+>     response = request.get_response(app)
+>     actual_url = response.text
+>     assert remove_query(actual_url) in expected_urls
+>     request = Request.blank('/__images__/testing/234/1/1234.405x640.jpe')
+>     response = request.get_response(app)
+69,70c73,74
+<     assert response.data == expected_data
+<     assert response.mimetype == 'image/jpeg'
+---
+>     assert response.body == expected_data
+>     assert response.content_type == 'image/jpeg'
+80,82c84,89
+<         start_response('200 OK', [('Content-Type', 'text/plain')])
+<         yield 'fallback: '
+<         yield environ['PATH_INFO']
+---
+>         start_response(
+>             '200 OK',
+>             [('Content-Type', 'text/plain; charset=utf-8')]
+>         )
+>         yield b'fallback: '
+>         yield environ['PATH_INFO'].encode('utf-8')
+89d95
+<     client = Client(app, Response)
+91c97,98
+<     response = client.get('/static/context_test.py')
+---
+>     request = Request.blank('/static/context_test.py')
+>     response = request.get_response(app)
+93c100
+<     assert response.mimetype == 'text/x-python'
+---
+>     assert response.content_type == 'text/x-python'
+95c102
+<         assert response.data == f.read()
+---
+>         assert response.body == f.read()
+98c105,106
+<     response = client.get('/static/stores/fs_test.py')
+---
+>     request = Request.blank('/static/stores/fs_test.py')
+>     response = request.get_response(app)
+100c108
+<     assert response.mimetype == 'text/x-python'
+---
+>     assert response.content_type == 'text/x-python'
+102c110
+<         assert response.data == f.read()
+---
+>         assert response.body == f.read()
+105c113,114
+<     response = client.get('/static/not-exist')
+---
+>     request = Request.blank('/static/not-exist')
+>     response = request.get_response(app)
+108,109c117,119
+<     response = client.get('/static-not/')
+<     assert response.data == b'fallback: /static-not/'
+---
+>     request = Request.blank('/static-not/')
+>     response = request.get_response(app)
+>     assert response.text == 'fallback: /static-not/'

@@ -1,0 +1,72 @@
+LLM Changes
+
++@click.command()
++@click.argument('old_molecule_file')
++def main(old_molecule_file):
++    if not os.path.isfile(old_molecule_file):
++        raise click.UsageError('Unable to find {}. Exiting.'.format(old_molecule_file))
++
++    m = migrate.Migrate(old_molecule_file)
++    old_role_dir = os.path.join(os.path.dirname(old_molecule_file))
++    old_dot_molecule_dir = os.path.join(old_role_dir, '.molecule')
++    old_test_dir = os.path.join(old_role_dir, 'tests')
++    old_playbook = os.path.join(old_role_dir, 'playbook.yml')
++    molecule_dir = os.path.join(old_role_dir, 'molecule')
++    scenario_dir = os.path.join(molecule_dir, 'default')
++    test_dir = os.path.join(scenario_dir, 'tests')
++    molecule_file = os.path.join(scenario_dir, 'molecule.yml')
++    role_name = os.path.basename(os.path.normpath(old_role_dir))
++
++    options = {
++        'role_name': role_name,
++        'scenario_name': 'default',
++        'driver_name': 'vagrant',
++    }
+					. . .
+					. . .
+					. . .
+
++if __name__ == '__main__':
++    main()
+
+Developer changes
+
++@click.command()
++@click.argument('old_molecule_file', required=True)
++@click.option(
++    '--driver-name',
++    '-d',
++    type=click.Choice(['vagrant']),
++    default='vagrant',
++    help='Name of driver to migrate. (vagrant)')
++def main(old_molecule_file, driver_name):  # pragma: no cover
++    """ Migrate a Molecule v1 role to the v2 format. """
++
++    c = Convert(old_molecule_file, driver_name)
++    c.migrate()
++
++
++if __name__ == '__main__':
++    main()
+
+
+Developer performs a major architectural refactor introduces a class; LLM does not 
+Should not define correctness
+
+Use of click.option, llm opted for minimal semantic change.
+
+LLM error handling 
+  
++     if not os.path.isfile(old_molecule_file):
++         raise click.UsageError('Unable to find {}. Exiting.'.format(old_molecule_file))
++
+
+
+Developer Error handling 
+
++        if not os.path.isfile(self._old_molecule_file):
++            msg = 'Unable to find {}. Exiting.'.format(self._old_molecule_file)
++            util.sysexit_with_message(msg)
+
+
+

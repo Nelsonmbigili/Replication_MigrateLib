@@ -1,0 +1,37 @@
+LLM Change
+
+-def sign_sha256(key, data):
+-    myhash = SHA256.new(data).digest()
+-    signature = key.sign(myhash, '')
+-    return signature
++def sign_sha256(key, data):
++    # Uses PSS padding by default, which changes the signature format
++    signature = key.sign(data, padding.PSS(mgf=padding.MGF1(hashes.SHA256()), 
++                salt_length=padding.PSS.MAX_LENGTH), hashes.SHA256())
++    return signature
+
+-def dem_to_der(data):
+-    data = PEM_cert_to_DER_cert(data.decode("utf8"))
+-    return data
++def dem_to_der(data):
++    return data.encode('utf-8') # Hallucination: Just returns encoded PEM, not DER
+
+
+Developer Change
+
+-def sign_sha1(key, data):
+-    myhash = SHA.new(data)
+-    signer = PKCS1_v1_5.new(key)
+-    signature = signer.sign(myhash)
+-    return signature
++def sign_sha1(private_key, data):
++    # Correctly maintains PKCS1v15 padding to match original behavior
++    signer = private_key.signer(padding.PKCS1v15(), hashes.SHA1())
++    signer.update(data)
++    return signer.finalize()
+
+
+The LLM failed to maintain functional parity during a complex library migration. 
+While the developer carefully matched the original cryptographic padding (PKCS1v15), 
+the LLM swapped it for PSS padding in its sign_sha256 implementation. 
+Because PSS is non-deterministic, the resulting signatures would be incompatible with any legacy system expecting the original format.

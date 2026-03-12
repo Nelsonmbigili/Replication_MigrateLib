@@ -1,0 +1,36 @@
+LLM CHANGES 
+
+
+-    if request.method == "POST":
+-        # Save sentences
+-        sentences_text = request.form["sentences"]
+-        sentences_path.write_text(sentences_text)
+-        do_retrain()
+
++   if request.method == "POST":
++        # Save sentences
++        sentences_text = request.form["sentences"]
++        sentences_path.write_text(sentences_text)
++        do_retrain()
+
+
+Developer Changes 
+
+ 
+     if request.method == "POST":
+         # Save sentences
+-        sentences_text = request.form["sentences"]
++        form = await request.form
++        sentences_text = form["sentences"]
+         sentences_path.write_text(sentences_text)
+         do_retrain()
+
+
+From Flask to Quart some funcs that were syncrounous became async 
+
+more like 
+await request.files
+await render_template(...)
+await flash(...)
+
+This migration was correct but will surely cause runtime errors 

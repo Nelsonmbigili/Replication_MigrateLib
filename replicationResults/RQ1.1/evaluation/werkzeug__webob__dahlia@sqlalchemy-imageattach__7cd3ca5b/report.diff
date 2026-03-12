@@ -1,0 +1,34 @@
+LLM Change 
+-    client = Client(app, Response)
+-    actual_url = client.get('/').data
++    client = TestApp(app)
++    actual_url = client.get('/').body
++    assert remove_query(actual_url.decode()) in expected_urls
+
+-    app = http_fs_store.wsgi_middleware(app)
++    app = http_fs_store.make_wsgi_app(app)
+
+-    yield http_fs_store.locate(image)
++    yield http_fs_store.locate(image)
+
+
+
+Developer Change
+-    client = Client(app, Response)
++    request = Request.blank('/')
++    response = request.get_response(app)
++    actual_url = response.text
++    assert remove_query(actual_url) in expected_urls
+
+-    app = http_fs_store.wsgi_middleware(app)
++    app = http_fs_store.wsgi_middleware(app) # Keep existing middleware call
+
+-    yield http_fs_store.locate(image)
++    yield http_fs_store.locate(image).encode('utf-8')
+
+
+The LLM used a non exixting function "make_wsgi_app" for the API
+LLM failed to add .encode('utf-8') to the yielded strings, making the code trigger a TypeError at runtime
+Was labeled partialy correct 
+Is it correct even with a wrong function name
+
