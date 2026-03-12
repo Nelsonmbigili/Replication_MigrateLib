@@ -1,0 +1,62 @@
+LLM Changes
+
+-import os
+-from ufoLib.glifLib import GlyphSet
+-import pkg_resources
+-
+-DATADIR = os.path.join(os.path.dirname(__file__), 'data')
+
++import os
++from fontTools.ttLib import TTFont
++
++DATADIR = os.path.join(os.path.dirname(__file__), 'data')
+
+in pens.py
+
+
+
+
+Developer Chnages
+
+ import os
+-from ufoLib.glifLib import GlyphSet
++from fontTools.ufoLib.glifLib import GlyphSet
+ import pkg_resources
+
+
+in pens.py
+
+ from fontTools.pens.reverseContourPen import ReverseContourPen
+-from ufoLib.pointPen import BasePointToSegmentPen
+-from ufoLib.pointPen import ReverseContourPointPen
++from fontTools.pens.pointPen import BasePointToSegmentPen
++from fontTools.pens.pointPen import ReverseContourPointPen
+ 
+ 
+ class Cu2QuPen(AbstractPen):
+
+
+
+ufoLib.pointPen.BasePointToSegmentPen was moved to fontTools.pens.pointPen.BasePointToSegmentPen
+The developer They simply updated the import path 
+from ufoLib.glifLib to fontTools.ufoLib.glifLib. This keeps the code logic identical.
+
+The LLM on the other hand Replaced ufoLib.glifLib.GlyphSet with fontTools.ttLib.TTFont.
+
+GlyphSet is designed to read a directory of XML-based source files (UFO format). 
+TTFont is designed to read a single binary file (TTF/OTF). 
+Pointing TTFont at a directory will cause a FileNotFoundError or IsADirectoryError.
+
+consider  
+
+
+LLM Change 
+def __init__(self, other_pen, max_err, reverse_direction=False,
+-                 stats=None, ignore_single_points=False):
+
+def __init__(self, other_point_pen, max_err, reverse_direction=False,
++                 stats=None):
++        PointPen.__init__(self)
+
+any initilisation of the class Cu2QuPen(AbstractPen) with "ignore_single_points" using developers intent will case an error
+

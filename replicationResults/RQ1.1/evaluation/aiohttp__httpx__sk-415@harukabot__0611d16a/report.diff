@@ -1,0 +1,31 @@
+In LLM changes
+
+async def get(self, url):
+
+-        async with aiohttp.request('GET', url=url, headers=self.DEFAULT_HEADERS) as resp:
+-            return await resp.json(encoding='utf-8')
+
++        async with httpx.AsyncClient() as client:
++            resp = await client.get(url=url, headers=self.DEFAULT_HEADERS)
++            return resp.json()
+
+In Developer changes
+
+async def get(self, url):
+-        async with aiohttp.request('GET', url=url, headers=self.DEFAULT_HEADERS) as resp:
+-            return await resp.json(encoding='utf-8')
++        async with httpx.AsyncClient() as client:
++            r = await client.get(url, headers=self.DEFAULT_HEADERS)
++        self.cookies = dict(r.cookies)
++        r.encoding = 'utf-8'
++        return r.json()
+
+Consider r.encoding = 'utf-8' the LLM skiped and assumed it was labled correct
+
+In aiohttp, the .json() method that requires await and takes an explicit encoding parameter.
+
+In httpx, the .json() method is a standard synchronous method that decodes based on the response's encoding attribute.
+
+LLM likely assumed httpx would handle the encoding automatically
+
+Is it correct?
