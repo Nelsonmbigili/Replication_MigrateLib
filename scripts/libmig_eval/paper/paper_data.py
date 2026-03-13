@@ -96,7 +96,7 @@ def _one_mig_result(mig: Mig):
     return result
 
 
-def load_per_mig_results(refresh=False):
+def load_per_mig_results(refresh=True):
     """
     Load the results data from the cache or generate it if it does not exist.
     :param refresh: if True, regenerate the data even if it exists in the cache

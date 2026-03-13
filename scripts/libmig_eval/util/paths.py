@@ -49,8 +49,8 @@ class Paths:
 
     @property
     def paper_root(self):
-        #return self.project_group_root / "LibMig-paper" # for paper
-        return self.project_group_root / "../phd-thesis/tex/c5-tool"   # for thesis
+        return self.project_group_root / "LibMig-paper" # for paper
+        # return self.project_group_root / "../phd-thesis/tex/c5-tool"   # for thesis
 
     @property
     def seart_meta_list(self):
@@ -75,6 +75,7 @@ class Paths:
     def mig_out_path(self, mig_or_mig_id: Mig | str, suffix=MODEL_CODE):
         id = mig_or_mig_id.id if isinstance(mig_or_mig_id, Mig) else mig_or_mig_id
         return self.results_root / f"libmig_out.{suffix}" / id
+        # return self.results_root / id  # testing original results
 
     def load_mig_report(self, mig: Mig):
         path = self.mig_out_path(mig) / "report.yaml"

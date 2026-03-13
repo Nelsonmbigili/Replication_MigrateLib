@@ -132,7 +132,7 @@ def main():
         "llmmig",
         "merge_skipped",
         "async_transform",
-        # "manual_edit",
+        # "manual_edit", Out of replication scope
     ]
     runner = MigRunner(process_que_db, rounds=set(rounds), dry_run=False, use_cache=True, smart_skip_tests=False,
                        remove_repo_after_done=True)
