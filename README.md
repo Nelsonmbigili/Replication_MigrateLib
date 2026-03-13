@@ -72,7 +72,7 @@ replicationResults/    # Our replication results used in analysis and reporting
 2. The paths are already configured in the path.py in utils folder
 
 3. For **RQ1.1** We selected 10 migrations from [PyMigBench](https://github.com/ualberta-smr/PyMigBench) and found their equivalent LLM migrations in [An Empirical Study of Python Library Migration Using Large Language Models - artifacts](https://figshare.com/articles/conference_contribution/An_Empirical_Study_of_Python_Library_Migration_Using_Large_Language_Models_-_artifacts/25459000) These are alredy provided with our analysis.
-4. For **RQ1.2** Create a file **/scripts/secrets/secrets.yaml** where environment variables will live in the format below:
+4. For **RQ2.1** Create a file **/scripts/secrets/secrets.yaml** where environment variables will live in the format below:
 ``` bash
 LIBIO_API_KEY: "Your Key"
 GITHUB_ACCESS_TOKENS: 
