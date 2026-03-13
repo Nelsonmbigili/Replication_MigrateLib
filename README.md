@@ -1,101 +1,79 @@
-<p style="border:1px; border-style:solid; border-color:black; padding: 1em;">
-CS-UH 3260 Software Analytics<br/>
-Replication Study Guidelines<br/>
-Dr. Sarah Nadi, NYUAD
-</p>
 
-# Replication Repository README Template -- CS-UH-3260 Software Analytics
+## 1. Project Title and Overview
+
+**Namu Go**  (New York University Abu Dhabi) and **Nelson Mbigili**  (New York University Abu Dhabi) 
 
 
-## Overview
 
-This repo provides a template and and guidelines for creating a README file for your replication study repository. The README serves as the primary documentation for your repository and helps evaluators understand your work, navigate your repository structure, and reproduce your replication. You can create a repo based on this template and modify the README and content as needed.
-
-
-## README Structure Template
-
-Your repository README should include the following sections:
-
-### 1. Project Title and Overview
-
-- **Paper Title**: [Full title of the replicated paper]
-- **Authors**: [Original paper authors]
-- **Replication Team**: [Your team members' names]
+- **Paper Title**: Replication of *MigrateLib*: A Tool for End-to-End Python Library Migration
+- **Authors**: Mohayeminul Islam, Ajay Kumar Jha, May Mahmoud, and Sarah Nadi
+- **Replication Team**: Namu Go and Nelson Mbigili
 - **Course**: CS-UH 3260 Software Analytics, NYUAD
 - **Brief Description**: 
-  - 2-3 sentences summarizing what the original paper is about
-  - 2-3 sentences summarizing what this replication study does
+    - **Original Paper Summary**:
 
-### 2. Repository Structure
+   The original paper introduces **MigrateLib**, an end-to-end tool for automating Python library migration by combining **Large Language Models (LLMs)** with **static and dynamic program analysis**. The authors show that while LLM-only migration achieves moderate correctness, integrating analysis-driven post-processing substantially improves migration success across real-world codebases.
 
-Document your repository structure clearly. Organize your repository using the following standard structure:
+  - **Replication Scope Summary**:
+
+   This repository replicates and evaluates key claims from the original paper. In particular, this replication:
+    1. Evaluates **RQ1.1 outcomes** by randomly selecting 10 migrations and manually checking the LLM migration vs. the labeled code changes in [PyMigBench](https://github.com/ualberta-smr/PyMigBench) to access validity
+
+    2. Reproduces the **RQ2-1 experiment**, evaluating migration correctness across **717** real-world Python library migration scenarios.
+    3. Assesses whether the effectiveness improvements reported for the full MigrateLib pipeline can be independently reproduced.
+  
+  All scripts, datasets, and evaluation artifacts needed to reproduce the replication results are provided in this repository.
+---
+
+##  2. Repository Structure 
+
+
+###
+
+This repository has the following structure
 
 ```
-README                    # Documentation for your repository
-datasets/                 # Subset of data you used (if any). If you used the whole dataset, include instructions on how to download it
-replication_scripts/      # Scripts used in your replication:
-                          #   - If you used scripts as-is: document which scripts you ran
-                          #   - If you modified scripts: include the modified scripts
-                          #   - If you created new scripts: include all new scripts
-outputs/                  # Your generated results only
-logs/                     # Console output, errors, screenshots
-notes/                    # Optional if you have any notes you took during reproduction (E.g., where you noted discrepencies etc)
+## Repository Structure
+
+README.md              # Main documentation for the replication study
+Instructs.md           # Step-by-step instructions for running the replication
+datasets/              # Datasets and benchmarks used in the replication study
+scripts/               # Scripts used for running experiments and analysis
+                           - Includes original, modified, and newly created scripts
+LibMig/                # Symbolic link to the original MigrateLib tool source code
+migratelib/            # Original MigrateLib tool source code (as provided by authors)
+LibMig-paper/          # Replication paper source with replication datasets 
+LibMig-paper-org/      # Original paper source files produced with original dataset
+results/               # Original paper results of migrations
+replicationResults/    # Our replication results used in analysis and reporting
 ```
 
-**For each folder and file, provide a brief description of what it contains.**
 
 ### 3. Setup Instructions
+#### Prerequisites
 
-- **Prerequisites**: Required software, tools, and versions
-  - OS requirements
-  - Programming language versions (Python, R, etc.)
-  - Required packages/libraries and versions
-  - Any other dependencies
-- **Installation Steps**: Step-by-step instructions to set up the environment
-  - How to install dependencies
-  - How to configure paths or settings
-  - Any environment variables needed
+- **Operating System:** Linux or macOS  
+- **Tools:** `git`, `pip`, `virtualenv` or `venv`
+- **LLM Access:** API access to an OpenAI-compatible LLM service  
+ 
+
+> All required Python packages and exact versions are specified in `requirements.txt`.
+
+---
+
+#### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <url>
+   ```
 
 ### 4. GenAI Usage
 
-**GenAI Usage**: Briefly document any use of generative AI tools (e.g., ChatGPT, GitHub Copilot, Cursor) during the replication process. Include:
+- **Tool Used:** [Google Gemini](https://gemini.google.com/)
 
-  - Which tools were used
-  - How they were used (e.g., understanding scripts, exploring datasets, understanding data fields, debugging)
-  - Brief description of the assistance provided
+- **How It Was Used:**
+  - To understand the overall **codebase structure and execution flow** in early stages
+  - To quickly identify and understand the **purpose and usage of various Python libraries** involved in the migration pipeline, supporting evaluation and analysis.
+  - To assist with **debugging errors**, particularly those related to **package version mismatches** and **virtual environment setup** issues.
 
-
-## Grading Criteria for README
-
-Your README will be evaluated based on the following aspects (Total: 40 points):
-
-### 1. Completeness (10 points)
-- [ ] All required sections are present
-- [ ] Each section contains sufficient detail
-- [ ] Repository structure is fully documented
-- [ ] All files and folders are explained
-- [ ] GenAI usage is documented (if any AI tools were used)
-
-### 2. Clarity and Organization (5 points)
-- [ ] Information is well-organized and easy to follow
-- [ ] Instructions are clear and unambiguous
-- [ ] Professional writing and formatting
-- [ ] Proper use of markdown formatting (headers, code blocks, lists)
-
-### 3. Setup and Reproducibility (10 points)
-- [ ] Setup instructions are complete and accurate, i.e., we were able to rerun the scripts following your instructions and obtain the results you reported
-
-
-## Best Practices
-
-1. **Be Specific**: Include exact versions, paths, and commands rather than vague descriptions
-2. **Keep It Updated**: Ensure the README reflects the current state of your repository
-3. **Test Your Instructions**: Have someone else (or yourself in a fresh environment) follow the setup instructions
-4. **Document AI Usage**: If you used any GenAI tools, be transparent about how they were used (e.g., understanding scripts, exploring datasets, understanding data fields)
-
-
-## Acknowledgement
-
-This guideline was developed with the assistance of [Cursor](https://www.cursor.com/), an AI-powered code editor. This tool was used to:
-
-- Draft and refine this documentation iteratively
