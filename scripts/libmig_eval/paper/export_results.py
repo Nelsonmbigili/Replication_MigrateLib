@@ -26,7 +26,7 @@ class ExportResults:
 
     def __init__(self, paths: Paths):
         self.paths = paths
-        self.per_mig_results = load_per_mig_results(refresh=False)
+        self.per_mig_results = load_per_mig_results(refresh=True)
 
     def run(self):
         print("Exporting results...")
@@ -41,9 +41,9 @@ class ExportResults:
             **self.repo_filter_stats(),
             **self.lib_filter_stats(),
             **self.experiment_data_stats(),
-            **self.lib_pair_filter_stats(),
+            # **self.lib_pair_filter_stats(), # Out of replication scope
             **self.mig_correctness_stats(),
-            **self.manual_edit_results(),
+            # **self.manual_edit_results(),  # Out of replication scope
         }
 
         latex_data.update(results)

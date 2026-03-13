@@ -127,7 +127,8 @@ class ChartPlotter:
 
     def dev_effort_save_stacked_bar(self):
         df = self.per_mig_result
-        df = df[df["manual_edit_correctness"] == 1.0]
+        df = df[df["manual_edit_correctness"] == 1.0] # Out of replication Scope
+        df = df[df["llmmig_has_result"] == True]
         df = pd.DataFrame({
             "id": df["id"],
             "auto": df["premig_to_best_migloc"].fillna(0.0),
@@ -208,17 +209,17 @@ def export_charts():
         charts_root.mkdir(exist_ok=True, parents=True)
 
     for fig, img_file, data in [
-        #plotter.ablation_violins_overlapping(),
-        # plotter.ablation_histogram(),
-        # plotter.mig_correctness_violin(),
-        plotter.dev_effort_save_stacked_bar(),
+        plotter.ablation_violins_overlapping(), 
+        # plotter.ablation_histogram(), 
+        plotter.mig_correctness_violin(),
+        plotter.dev_effort_save_stacked_bar(), # Not usefull for replication scope
     ]:
         fig.show()
         fig.write_image(charts_root.joinpath(img_file).as_posix())
-        # latex_chart_data = charts_root / img_file.replace(".pdf", "") / "data.csv"
-        # if not latex_chart_data.parent.exists():
-        # latex_chart_data.parent.mkdir(parents=True, exist_ok=True)
-        # data.to_csv(latex_chart_data, index=False)
+        latex_chart_data = charts_root / img_file.replace(".pdf", "") / "data.csv"
+        if not latex_chart_data.parent.exists():
+            latex_chart_data.parent.mkdir(parents=True, exist_ok=True)
+        data.to_csv(latex_chart_data, index=False)
 
 
 if __name__ == '__main__':
